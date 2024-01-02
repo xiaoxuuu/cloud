@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cc.xiaoxu</groupId>
+    <artifactId>cloud</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0</version>
+    <name>cloud</name>
+    <description>A Spring Cloud Project.</description>
+
+    <properties>
+        <!-- 内置 -->
+        <cloud.version>1.0</cloud.version>
+        <java.version>17</java.version>
+
+        <!-- mvn 参数-->
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- 打包相关参数 -->
+        <jib-maven-plugin.version>3.3.2</jib-maven-plugin.version>
+        <spring-boot-maven-plugin.version>3.1.1</spring-boot-maven-plugin.version>
+        <build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
+
+        <!-- 镜像仓库信息 -->
+        <env.namespace>?</env.namespace>
+        <env.image_warehouse.url>?</env.image_warehouse.url>
+
+        <!-- 镜像仓库鉴权信息 -->
+        <env.image_warehouse.username>?</env.image_warehouse.username>
+        <env.image_warehouse.password>?</env.image_warehouse.password>
+
+        <!-- JVM 设置 -->
+        <env.jvm.xms>-Xms256m</env.jvm.xms>
+        <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
+
+        <!-- spring -->
+        <spring-boot-dependencies.version>3.1.1</spring-boot-dependencies.version>
+        <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
+        <mybatis-plus-boot-starter.version>3.5.5</mybatis-plus-boot-starter.version>
+
+        <!-- 工具类相关 -->
+        <lombok.version>1.18.30</lombok.version>
+        <xutil.version>1.1.4</xutil.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <fastjson2.version>2.0.45</fastjson2.version>
+
+        <!-- feign 相关 -->
+        <spring-cloud-starter-openfeign.version>4.1.0</spring-cloud-starter-openfeign.version>
+        <feign-hystrix.version>13.1</feign-hystrix.version>
+        <feign-httpclient.version>13.1</feign-httpclient.version>
+
+        <!-- 文档 -->
+        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
+
+        <!-- MySQL -->
+        <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!-- 工具类 -->
+            <dependency>
+                <groupId>live.xiaoxu</groupId>
+                <artifactId>xutil</artifactId>
+                <version>${xutil.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons-beanutils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+
+            <!-- spring-boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- feign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${spring-cloud-starter-openfeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-hystrix</artifactId>
+                <version>${feign-hystrix.version}</version>
+            </dependency>
+
+            <!-- httpclient -->
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-httpclient</artifactId>
+                <version>${feign-httpclient.version}</version>
+            </dependency>
+
+            <!--mysql-->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
+            <!-- mybatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- mybatis-plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus-boot-starter.version}</version>
+            </dependency>
+
+            <!-- 文档 -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 仓库 -->
+    <repositories>
+        <!-- maven.org 中央仓库 -->
+        <repository>
+            <id>maven-repo</id>
+            <name>maven repo</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <!-- aliyun -->
+        <repository>
+            <id>aliyun-public</id>
+            <name>aliyun public</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>aliyun-central</id>
+            <name>aliyun central</name>
+            <url>https://maven.aliyun.com/repository/central</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <!-- Spring -->
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>
