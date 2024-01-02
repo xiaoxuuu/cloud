@@ -49,7 +49,6 @@
 
         <!-- 工具类相关 -->
         <lombok.version>1.18.30</lombok.version>
-        <xutil.version>1.1.4</xutil.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-collections4.version>4.4</commons-collections4.version>

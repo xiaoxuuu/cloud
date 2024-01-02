@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>cloud-core</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>cloud-core-utils</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
