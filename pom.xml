@@ -6,6 +6,9 @@
     <groupId>cc.xiaoxu</groupId>
     <artifactId>cloud</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>cloud-core</module>
+    </modules>
     <version>1.0</version>
     <name>cloud</name>
     <description>A Spring Cloud Project.</description>
@@ -16,10 +19,11 @@
         <java.version>17</java.version>
 
         <!-- mvn 参数-->
+        <project.encoding>UTF-8</project.encoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
 
         <!-- 打包相关参数 -->
         <jib-maven-plugin.version>3.3.2</jib-maven-plugin.version>
