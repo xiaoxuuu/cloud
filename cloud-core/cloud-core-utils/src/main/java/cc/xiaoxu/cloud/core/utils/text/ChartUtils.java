@@ -22,7 +22,7 @@ public class ChartUtils {
      * @return String
      */
     public static String camelToUnderline(String param, Integer charType) {
-        if (XStringUtils.isBlank(param)) {
+        if (StringUtils.isBlank(param)) {
             return "";
         }
         int len = param.length();
@@ -52,7 +52,7 @@ public class ChartUtils {
      * @return String
      */
     public static String underlineToCamel(String param) {
-        if (XStringUtils.isBlank(param)) {
+        if (StringUtils.isBlank(param)) {
             return "";
         }
         int len = param.length();
