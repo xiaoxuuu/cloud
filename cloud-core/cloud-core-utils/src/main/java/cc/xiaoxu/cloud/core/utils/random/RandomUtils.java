@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.text;
+package cc.xiaoxu.cloud.core.utils.random;
 
 import java.util.Random;
 
