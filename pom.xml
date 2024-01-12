@@ -3,23 +3,25 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cc.xiaoxu</groupId>
     <artifactId>cloud</artifactId>
+    <description>A Spring Cloud Project.</description>
+    <groupId>cc.xiaoxu</groupId>
+    <name>cloud</name>
     <packaging>pom</packaging>
+    <version>1.0</version>
+
     <modules>
         <module>cloud-core</module>
+        <module>cloud-service</module>
     </modules>
-    <version>1.0</version>
-    <name>cloud</name>
-    <description>A Spring Cloud Project.</description>
 
     <properties>
         <!-- 内置 -->
         <cloud.version>1.0</cloud.version>
         <java.version>17</java.version>
+        <project.encoding>UTF-8</project.encoding>
 
         <!-- mvn 参数-->
-        <project.encoding>UTF-8</project.encoding>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
@@ -54,11 +56,6 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <fastjson2.version>2.0.45</fastjson2.version>
 
-        <!-- feign 相关 -->
-        <spring-cloud-starter-openfeign.version>4.1.0</spring-cloud-starter-openfeign.version>
-        <feign-hystrix.version>13.1</feign-hystrix.version>
-        <feign-httpclient.version>13.1</feign-httpclient.version>
-
         <!-- 文档 -->
         <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
 
@@ -68,6 +65,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- 内部依赖 -->
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-core-spring</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
             <!-- lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -77,9 +80,9 @@
 
             <!-- 工具类 -->
             <dependency>
-                <groupId>live.xiaoxu</groupId>
-                <artifactId>xutil</artifactId>
-                <version>${xutil.version}</version>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-core-utils</artifactId>
+                <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -109,25 +112,6 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <!-- feign -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>${spring-cloud-starter-openfeign.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-hystrix</artifactId>
-                <version>${feign-hystrix.version}</version>
-            </dependency>
-
-            <!-- httpclient -->
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-httpclient</artifactId>
-                <version>${feign-httpclient.version}</version>
             </dependency>
 
             <!--mysql-->
