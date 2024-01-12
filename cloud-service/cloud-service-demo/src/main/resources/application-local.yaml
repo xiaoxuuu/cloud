@@ -1,0 +1,6 @@
+server:
+  port: 10002
+# 日志输出配置
+logging:
+  level:
+    live.xiaoxu: DEBUG
