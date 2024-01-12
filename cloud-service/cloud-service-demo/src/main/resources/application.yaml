@@ -1,0 +1,12 @@
+spring:
+  config:
+    import:
+      - optional:api.yaml
+      - optional:logging.yaml
+  application:
+    name: test
+  profiles:
+    active: ${cloud.profiles.active:local}
+server:
+  port: 10002
+  forward-headers-strategy: framework
