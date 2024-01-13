@@ -5,21 +5,28 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud</artifactId>
+        <artifactId>cloud-core</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-core</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>cloud-core-utils</module>
-        <module>cloud-core-spring</module>
-        <module>cloud-core-redis</module>
-    </modules>
+    <artifactId>cloud-core-redis</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!-- 核心依赖 -->
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-core-spring</artifactId>
+        </dependency>
+        <!-- redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+    </dependencies>
 </project>
