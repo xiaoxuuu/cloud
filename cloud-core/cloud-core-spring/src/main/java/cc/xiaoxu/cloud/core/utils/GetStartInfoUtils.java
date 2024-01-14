@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.utils;
+package cc.xiaoxu.cloud.core.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ConfigurableApplicationContext;
