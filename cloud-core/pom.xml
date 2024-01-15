@@ -15,6 +15,7 @@
         <module>cloud-core-utils</module>
         <module>cloud-core-spring</module>
         <module>cloud-core-redis</module>
+        <module>cloud-core-mysql</module>
     </modules>
 
     <properties>
