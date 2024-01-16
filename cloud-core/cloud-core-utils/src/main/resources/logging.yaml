@@ -1,0 +1,5 @@
+# 日志输出配置
+logging:
+  level:
+    cc.xiaoxu: INFO
+  config: classpath:logback-spring.xml
