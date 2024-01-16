@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.dao;
 
-import live.xiaoxu.cloud.plugin.mysql.bean.entity.BaseEntity;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 
 public class BaseEntityProvider extends BaseProvider<BaseEntity> {
 
