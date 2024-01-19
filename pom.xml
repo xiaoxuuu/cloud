@@ -12,7 +12,7 @@
 
     <modules>
         <module>cloud-core</module>
-        <module>cloud-service</module>
+        <module>cloud-api</module>
     </modules>
 
     <properties>
