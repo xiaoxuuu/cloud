@@ -8,8 +8,8 @@
 基础架构
 cloud
 ├── cloud-service              // [10___] 服务
-│   ├── cloud-service-xx       // [10001] xx服务
-│   └── cloud-service-xx       // [10002] xx服务
+│   ├── cloud-api-xx           // [10001] xx服务
+│   └── cloud-api-xx           // [10002] xx服务
 ├── cloud-gateway              //         网关
 ├── cloud-core                 //         插件
 │   ├── cloud-core-util        //         基础工具
