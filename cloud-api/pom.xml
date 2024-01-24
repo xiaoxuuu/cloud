@@ -11,6 +11,9 @@
 
     <artifactId>cloud-api</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>cloud-api-demo</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
