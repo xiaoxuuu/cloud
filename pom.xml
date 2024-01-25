@@ -71,6 +71,18 @@
                 <artifactId>cloud-core-spring</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-core-utils</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-core-mysql</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+
             <!-- lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -79,11 +91,6 @@
             </dependency>
 
             <!-- 工具类 -->
-            <dependency>
-                <groupId>cc.xiaoxu</groupId>
-                <artifactId>cloud-core-utils</artifactId>
-                <version>${cloud.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>

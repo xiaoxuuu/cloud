@@ -5,20 +5,26 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud</artifactId>
+        <artifactId>cloud-api</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-api</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>cloud-api-demo</module>
-        <module>cloud-api-file</module>
-    </modules>
+    <artifactId>cloud-api-file</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-core-utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-core-mysql</artifactId>
+        </dependency>
+    </dependencies>
 </project>
