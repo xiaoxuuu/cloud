@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-core-mysql</artifactId>
+            <artifactId>cloud-core-spring</artifactId>
         </dependency>
     </dependencies>
 </project>
