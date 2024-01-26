@@ -10,7 +10,3 @@ spring:
 server:
   port: 10002
   forward-headers-strategy: framework
-
-# 启动类输出配置
-app:
-  version: 1.0

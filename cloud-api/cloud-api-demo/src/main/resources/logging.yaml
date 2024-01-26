@@ -1,4 +1,0 @@
-# 日志输出配置
-logging:
-  level:
-    cc.xiaoxu.cloud: INFO
