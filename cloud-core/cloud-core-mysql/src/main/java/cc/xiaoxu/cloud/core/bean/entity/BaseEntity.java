@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.core.bean.entity;
 
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
