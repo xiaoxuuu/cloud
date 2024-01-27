@@ -54,6 +54,16 @@ public class DateConstants {
     public static final String YEAR = "yyyy";
 
     /**
+     * 月
+     */
+    public static final String MONTH = "MM";
+
+    /**
+     * 日
+     */
+    public static final String DAY = "dd";
+
+    /**
      * 周
      */
     public static final String WEEK = "E";
@@ -62,6 +72,7 @@ public class DateConstants {
      * 时分秒
      */
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+    public static final String SHORT_TIME_FORMAT = "HHmmss";
 
     /**
      * 时分

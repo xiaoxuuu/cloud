@@ -132,12 +132,13 @@ public class DateUtils {
     }
 
     /**
-     * 获取当前年份
+     * 获取当前日期
      *
-     * @return 当前年份
+     * @param pattern 格式
+     * @return 日期
      */
-    public static int getCurrentYear() {
-        return Integer.parseInt(localDateTimeToString(LocalDateTime.now(), DateConstants.YEAR));
+    public static String getCurrent(String pattern) {
+        return localDateTimeToString(LocalDateTime.now(), DateConstants.YEAR);
     }
 
     /**
@@ -167,7 +168,7 @@ public class DateUtils {
      */
     public static List<Integer> getLastSomeYear(int someYear) {
 
-        return getLastSomeYear(someYear, getCurrentYear());
+        return getLastSomeYear(someYear, Integer.parseInt(getCurrent(DateConstants.YEAR)));
     }
 
     /**
