@@ -3,6 +3,7 @@ spring:
     import:
       - optional:api.yaml
       - optional:logging.yaml
+      - optional:file-server.yaml
   application:
     name: file
   profiles:
