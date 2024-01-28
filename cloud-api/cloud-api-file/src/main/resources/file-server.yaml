@@ -1,0 +1,6 @@
+# 文件服务
+fileServer:
+  type: 'local'
+  # 请注意，本地文件服务仅用于非微服务情况
+  local:
+    endpoint: http://localhost:${server.port}
