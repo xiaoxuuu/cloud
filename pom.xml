@@ -13,6 +13,7 @@
     <modules>
         <module>cloud-core</module>
         <module>cloud-api</module>
+        <module>cloud-single</module>
     </modules>
 
     <properties>
@@ -39,6 +40,10 @@
         <!-- 镜像仓库鉴权信息 -->
         <env.image_warehouse.username>?</env.image_warehouse.username>
         <env.image_warehouse.password>?</env.image_warehouse.password>
+
+        <!-- MySQL 鉴权信息 -->
+        <env.api.mysql.ip>127.0.0.1:3306</env.api.mysql.ip>
+        <env.api.mysql.password>password</env.api.mysql.password>
 
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
@@ -76,10 +81,14 @@
                 <artifactId>cloud-core-utils</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-core-mysql</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-api-file</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
 
