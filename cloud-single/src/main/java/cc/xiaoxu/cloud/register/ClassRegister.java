@@ -1,12 +1,11 @@
 package cc.xiaoxu.cloud.register;
 
-import indi.easy.handler.RequestUrlFilter;
+import cc.xiaoxu.cloud.handler.RequestUrlFilter;
+import jakarta.annotation.Resource;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 @Component
 public class ClassRegister {
