@@ -1,20 +1,14 @@
 package cc.xiaoxu.cloud.file.controller;
 
+import cc.xiaoxu.cloud.file.bean.DeleteFileVO;
 import cc.xiaoxu.cloud.file.bean.FileVO;
 import cc.xiaoxu.cloud.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.rmi.ServerException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/file")
@@ -31,8 +25,8 @@ public class FileController {
      */
     @PostMapping(value = "/host")
     @Operation(summary = "获取文件HOST")
-    public ResultBean<String> getHost() {
-        return ResultBean.success("成功", fileService.getHost());
+    public String getHost() {
+        return fileService.getHost();
     }
 
     /**
@@ -43,31 +37,19 @@ public class FileController {
      */
     @PostMapping(value = "/upload")
     @Operation(summary = "上传文件")
-    public ResultBean<FileVO> upload(@RequestPart(name = "file") MultipartFile file) {
-        return ResultBean.success("成功", fileService.uploadFile(file));
-    }
-
-    /**
-     * 文件查询
-     */
-    @PostMapping(value = "/query")
-    @Operation(summary = "文件查询")
-    public ResultBean<List<FileRecordVO>> fileQuery(@RequestBody FileQueryVO vo) {
-        return ResultBean.success("成功", fileService.fileQuery(vo));
+    public FileVO upload(@RequestPart(name = "file") MultipartFile file) {
+        return fileService.uploadFile(file);
     }
 
     /**
      * 删除文件
      *
-     * @param dto 文件名字集合
+     * @param  vo 文件id集合
      */
     @PostMapping(value = "/delete")
     @Operation(summary = "删除文件")
-    public ResultBean<String> delete(@RequestBody FileDTO dto) throws ServerException, InsufficientDataException,
-            ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException,
-            XmlParserException, InternalException {
-        fileService.removeObjects(dto.getFileNameList());
-        return ResultBean.success();
+    public void delete(@RequestBody DeleteFileVO vo) {
+        fileService.remove(vo.getFileIdList());
     }
 
     /**
@@ -76,21 +58,21 @@ public class FileController {
      * @param dto 文件名字
      * @return 文件流
      */
-    @PostMapping(value = "/download")
+    @PostMapping(value = "/download/{id}")
     @Operation(summary = "下载文件")
-    public ResponseEntity<byte[]> download(@RequestBody FileDTO dto) {
-        return fileService.download(dto.getFileName());
+    public ResponseEntity<byte[]> download(@PathVariable("id") String id) {
+        return fileService.download(id);
     }
 
     /**
-     * 获取预览文件地址
+     * 文件查询
      *
-     * @param dto 文件名字
-     * @return 文件预览路径
+     * @param id 文件id
+     * @return 文件
      */
-    @PostMapping(value = "/preview")
-    @Operation(summary = "获取预览文件地址")
-    public ResultBean<String> preview(@RequestBody FileDTO dto) {
-        return ResultBean.success("成功", fileService.getPreviewUrl(dto.getFileName()));
+    @PostMapping(value = "/get/{id}")
+    @Operation(summary = "下载文件")
+    public FileVO get(@PathVariable("id") String id) {
+        return fileService.get(id);
     }
 }

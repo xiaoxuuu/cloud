@@ -7,11 +7,8 @@ import java.util.List;
 
 @Data
 @Schema(description = "文件请求数据")
-public class File {
+public class DeleteFileVO {
 
-    @Schema(description = "文件名称")
-    private String fileName;
-
-    @Schema(description = "文件名字集合")
-    private List<String> fileNameList;
+    @Schema(description = "文件id集合")
+    private List<String> fileIdList;
 }
