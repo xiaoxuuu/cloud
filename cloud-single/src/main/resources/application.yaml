@@ -1,0 +1,13 @@
+spring:
+  config:
+    import:
+      - optional:api.yaml
+      - optional:logging.yaml
+      - optional:file-server.yaml
+  application:
+    name: single
+  profiles:
+    active: ${cloud.profiles.active:local}
+server:
+  port: 9999
+  forward-headers-strategy: framework
