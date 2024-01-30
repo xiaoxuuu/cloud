@@ -1,0 +1,9 @@
+# 日志输出配置
+logging:
+  level:
+    cc.xiaoxu.cloud: INFO
+spring:
+  datasource:
+    url: 'jdbc:mysql://''@env.api.mysql.ip@''/api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai'
+    username: root
+    password: '@env.api.mysql.password@'
