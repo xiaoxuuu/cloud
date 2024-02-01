@@ -1,0 +1,29 @@
+spring:
+  data:
+    redis:
+      host: ''
+      password: ''
+      port: ''
+      database: ''
+      # lettuce 客户端配置
+      lettuce:
+        # 连接池配置
+        pool:
+          # 连接池最大连接数（使用负值表示没有限制） 默认 8
+          max-active: 3
+          # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+          max-wait: -1
+          # 连接池中的最大空闲连接 默认 8
+          max-idle: 2
+          # 连接池中的最小空闲连接 默认 0
+          min-idle: 0
+        shutdown-timeout: 200s
+        cluster:
+          # 集群刷新
+          refresh:
+            #自动刷新集群 默认 false 关闭
+            adaptive: true
+            # 20 秒自动刷新一次
+            period: 2s
+      # 连接超时时间（毫秒）
+      timeout: 1000
