@@ -1,8 +1,8 @@
-package cc.xiaoxu.cloud.file.controller;
+package cc.xiaoxu.cloud.api.file.controller;
 
-import cc.xiaoxu.cloud.file.bean.DeleteFileVO;
-import cc.xiaoxu.cloud.file.bean.FileVO;
-import cc.xiaoxu.cloud.file.service.FileService;
+import cc.xiaoxu.cloud.api.file.bean.DeleteFileVO;
+import cc.xiaoxu.cloud.api.file.bean.FileVO;
+import cc.xiaoxu.cloud.api.file.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;

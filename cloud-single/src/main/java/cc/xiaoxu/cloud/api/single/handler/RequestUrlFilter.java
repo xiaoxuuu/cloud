@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.handler;
+package cc.xiaoxu.cloud.api.single.handler;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

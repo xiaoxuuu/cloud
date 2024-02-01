@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.service.demo.controller;
+package cc.xiaoxu.cloud.api.demo.controller;
 
 import lombok.*;
 import lombok.experimental.Accessors;

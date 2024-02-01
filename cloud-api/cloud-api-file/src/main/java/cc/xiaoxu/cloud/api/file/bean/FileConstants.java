@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.file.bean;
+package cc.xiaoxu.cloud.api.file.bean;
 
 public class FileConstants {
 
