@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.redis;
+package cc.xiaoxu.cloud.core.cache.redis;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
