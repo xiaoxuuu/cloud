@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.core.aspect;
 
 import cc.xiaoxu.cloud.core.annotation.CacheResult;
-import cc.xiaoxu.cloud.core.redis.RedisService;
+import cc.xiaoxu.cloud.core.cache.redis.RedisService;
 import cc.xiaoxu.cloud.core.utils.ServletUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.core.utils.constants.SystemConstants;

@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.redis;
+package cc.xiaoxu.cloud.core.cache;
 
 import cc.xiaoxu.cloud.core.constants.RedisConstants;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
@@ -19,20 +19,20 @@ import java.util.concurrent.TimeUnit;
  * @author XiaoXu
  */
 @Component
-public class RedisManage {
+public class CacheManage {
 
     private final Long defaultTime;
     private final TimeUnit defaultTimeUnit;
-    private final RedisService redisService;
+    private final CacheService cacheService;
 
     /**
      * 默认构造
      *
-     * @param redisService Spring 注入
+     * @param cacheService Spring 注入
      */
     @Autowired
-    public RedisManage(RedisService redisService) {
-        this.redisService = redisService;
+    public CacheManage(CacheService cacheService) {
+        this.cacheService = cacheService;
         this.defaultTime = 180L;
         this.defaultTimeUnit = TimeUnit.DAYS;
     }
@@ -40,12 +40,12 @@ public class RedisManage {
     /**
      * 动态构造
      *
-     * @param redisService    redis 工具类
+     * @param cacheService    redis 工具类
      * @param defaultTime     默认过期时间
      * @param defaultTimeUnit 默认过期单位
      */
-    public RedisManage(RedisService redisService, Long defaultTime, TimeUnit defaultTimeUnit) {
-        this.redisService = redisService;
+    public CacheManage(CacheService cacheService, Long defaultTime, TimeUnit defaultTimeUnit) {
+        this.cacheService = cacheService;
         this.defaultTime = defaultTime;
         this.defaultTimeUnit = defaultTimeUnit;
     }
@@ -102,9 +102,9 @@ public class RedisManage {
         // 读缓存
         String redisKey = RedisConstants.UNIFIED_CACHE + getRedisKey(key);
         if (!forceRaedFromDatabase) {
-            String enableCache = redisService.getCacheObject(RedisConstants.UNIFIED_CACHE + RedisConstants.ENABLE_CACHE);
+            String enableCache = cacheService.getCacheObject(RedisConstants.UNIFIED_CACHE + RedisConstants.ENABLE_CACHE);
             if ("yes".equals(enableCache)) {
-                T cacheObject = redisService.getCacheObject(redisKey);
+                T cacheObject = cacheService.getCacheObject(redisKey);
                 if (Objects.nonNull(cacheObject)) {
                     return cacheObject;
                 }
@@ -116,8 +116,8 @@ public class RedisManage {
 
         // 写缓存
         if (Objects.nonNull(call)) {
-            redisService.deleteObject(redisKey);
-            redisService.setCacheObject(redisKey, call, timeout, timeUnit);
+            cacheService.deleteObject(redisKey);
+            cacheService.setCacheObject(redisKey, call, timeout, timeUnit);
         }
         return call;
     }
@@ -152,6 +152,6 @@ public class RedisManage {
 
     public void remove(String key) {
 
-        redisService.deleteObject(key);
+        cacheService.deleteObject(key);
     }
 }

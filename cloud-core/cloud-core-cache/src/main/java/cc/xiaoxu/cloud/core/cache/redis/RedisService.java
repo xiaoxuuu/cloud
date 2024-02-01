@@ -1,6 +1,11 @@
-package cc.xiaoxu.cloud.core.redis;
+package cc.xiaoxu.cloud.core.cache.redis;
 
+import cc.xiaoxu.cloud.core.cache.CacheService;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,19 +16,27 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Description: Redis工具类 基于spring和redis的redisTemplate工具类 针对所有的hash 都是以h开头的方法 针对所有的Set 都是以s开头的方法 针对所有的List 都是以l开头的方法
- * @Author: Matt
- * @ClassName: RedisUtils
- * @DateTime: 2021/5/27 14:57
+ * <p>Redis 工具类</p>
+ * <p>基于 spring 和 redis 的 redisTemplate 工具类</p>
+ * <p>针对所有的 hash 都是以 h 开头的方法</p>
+ * <p>针对所有的 Set 都是以 s 开头的方法</p>
+ * <p>针对所有的 List 都是以 l 开头的方法</p>
+ *
+ * @author 小徐
+ * @since 2024/2/1 10:01
  */
+@Slf4j
 @Component
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
-public class RedisService {
+@ConditionalOnProperty(prefix = "cache", name = "type", havingValue = "redis", matchIfMissing = true)
+public class RedisService implements CacheService, InitializingBean {
 
-    public final RedisTemplate redisTemplate;
+    @Resource
+    public RedisTemplate redisTemplate;
 
-    public RedisService(RedisTemplate redisTemplate) {
-        this.redisTemplate = redisTemplate;
+    @Override
+    public void afterPropertiesSet() {
+        log.error("使用 redis 内存服务器");
     }
 
     /**
