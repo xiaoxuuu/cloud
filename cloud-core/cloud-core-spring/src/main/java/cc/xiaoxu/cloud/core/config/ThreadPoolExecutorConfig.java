@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.config;
+package cc.xiaoxu.cloud.core.config;
 
-import cc.xiaoxu.cloud.threads.Threads;
+import cc.xiaoxu.cloud.core.threads.Threads;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

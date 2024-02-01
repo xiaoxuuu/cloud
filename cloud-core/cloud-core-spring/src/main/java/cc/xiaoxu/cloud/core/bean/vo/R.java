@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.bean.vo;
+package cc.xiaoxu.cloud.core.bean.vo;
 
-import cc.xiaoxu.cloud.bean.enums.REnum;
+import cc.xiaoxu.cloud.core.bean.enums.REnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.threads;
+package cc.xiaoxu.cloud.core.threads;
 
 import java.util.concurrent.*;
 

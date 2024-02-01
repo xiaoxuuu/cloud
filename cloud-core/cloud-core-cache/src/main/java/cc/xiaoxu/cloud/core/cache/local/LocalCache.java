@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.cache.local;
 
-import cc.xiaoxu.cloud.exception.CustomException;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
