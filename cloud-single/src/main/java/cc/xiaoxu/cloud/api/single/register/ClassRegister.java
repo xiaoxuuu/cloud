@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.register;
+package cc.xiaoxu.cloud.api.single.register;
 
-import cc.xiaoxu.cloud.handler.RequestUrlFilter;
+import cc.xiaoxu.cloud.api.single.handler.RequestUrlFilter;
 import jakarta.annotation.Resource;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

@@ -1,12 +1,12 @@
-package cc.xiaoxu.cloud.file.service;
+package cc.xiaoxu.cloud.api.file.service;
 
+import cc.xiaoxu.cloud.api.file.bean.FileRecord;
+import cc.xiaoxu.cloud.api.file.dao.FileRecordMapper;
 import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
-import cc.xiaoxu.cloud.file.bean.FileRecord;
-import cc.xiaoxu.cloud.file.dao.FileRecordMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;

@@ -1,11 +1,11 @@
-package cc.xiaoxu.cloud.file.service;
+package cc.xiaoxu.cloud.api.file.service;
 
+import cc.xiaoxu.cloud.api.file.bean.FileConstants;
+import cc.xiaoxu.cloud.api.file.bean.FileVO;
+import cc.xiaoxu.cloud.api.file.config.LocalFileConfig;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
-import cc.xiaoxu.cloud.file.bean.FileConstants;
-import cc.xiaoxu.cloud.file.bean.FileVO;
-import cc.xiaoxu.cloud.file.config.LocalFileConfig;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;

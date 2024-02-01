@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.file.service;
+package cc.xiaoxu.cloud.api.file.service;
 
-import cc.xiaoxu.cloud.file.bean.FileVO;
+import cc.xiaoxu.cloud.api.file.bean.FileVO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
