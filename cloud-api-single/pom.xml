@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-single</artifactId>
+    <artifactId>cloud-api-single</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
