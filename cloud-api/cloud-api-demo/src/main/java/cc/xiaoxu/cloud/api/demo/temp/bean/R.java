@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo.bean;
+package cc.xiaoxu.cloud.api.demo.temp.bean;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -69,5 +69,4 @@ public class R<T> implements Serializable {
 		apiResult.setMessage(message);
 		return apiResult;
 	}
-
 }
