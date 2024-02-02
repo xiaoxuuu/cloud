@@ -19,7 +19,7 @@
     <properties>
         <!-- 内置 -->
         <cloud.version>1.0</cloud.version>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <project.encoding>UTF-8</project.encoding>
 
         <!-- mvn 参数-->
