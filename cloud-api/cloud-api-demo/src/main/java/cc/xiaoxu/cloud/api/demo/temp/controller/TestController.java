@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.api.demo.controller;
+package cc.xiaoxu.cloud.api.demo.temp.controller;
 
-import cc.xiaoxu.cloud.api.demo.bean.R;
+import cc.xiaoxu.cloud.api.demo.temp.bean.R;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
