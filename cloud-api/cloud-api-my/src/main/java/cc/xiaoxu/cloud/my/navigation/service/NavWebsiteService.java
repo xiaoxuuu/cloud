@@ -10,6 +10,7 @@ import cc.xiaoxu.cloud.my.navigation.dao.NavWebsiteMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -27,11 +28,8 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     /**
      * 数据缓存
      */
+    @Setter
     private List<NavWebsite> navList = new ArrayList<>();
-
-    public void setNavList(List<NavWebsite> navLis) {
-        this.navList = navLis;
-    }
 
     /**
      * 搜索
@@ -103,8 +101,8 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
 
         NavWebsiteShowVO vo = new NavWebsiteShowVO();
         BeanUtils.copyProperties(navWebsite, vo);
-        vo.setTypeSet(Set.of(navWebsite.getType().split(",")));
-        vo.setLabelSet(Set.of(navWebsite.getLabel().split(",")));
+        vo.setTypeSet(Set.of(Optional.ofNullable(navWebsite.getType()).orElse("").split(",")));
+        vo.setLabelSet(Set.of(Optional.ofNullable(navWebsite.getLabel()).orElse("").split(",")));
         NavWebsiteIcon navWebsiteIcon = navWebsiteIconService.getNavIconMap().getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());
         vo.setIconType(navWebsiteIcon.getType());
         // 翻译网站图标
