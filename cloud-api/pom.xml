@@ -14,6 +14,7 @@
     <modules>
         <module>cloud-api-demo</module>
         <module>cloud-api-file</module>
+        <module>cloud-api-my</module>
     </modules>
 
     <properties>

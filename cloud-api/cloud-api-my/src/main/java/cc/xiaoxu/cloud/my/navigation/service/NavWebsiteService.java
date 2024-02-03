@@ -1,0 +1,127 @@
+package cc.xiaoxu.cloud.my.navigation.service;
+
+import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsite;
+import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsiteIcon;
+import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteAddVisitNumVO;
+import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteSearchVO;
+import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteShowVO;
+import cc.xiaoxu.cloud.my.navigation.dao.NavWebsiteMapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Slf4j
+@Service
+public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite> {
+
+    @Resource
+    private NavWebsiteIconService navWebsiteIconService;
+
+    /**
+     * 数据缓存
+     */
+    private List<NavWebsite> navList = new ArrayList<>();
+
+    public void setNavList(List<NavWebsite> navLis) {
+        this.navList = navLis;
+    }
+
+    /**
+     * 搜索
+     */
+    public List<NavWebsiteShowVO> search(NavWebsiteSearchVO vo) {
+
+        Map<String, NavWebsiteIcon> navIconMap = navWebsiteIconService.getNavIconMap();
+        return navList.stream()
+                // 关键字
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(vo.getKeyword())) {
+                        return containsValue(k.getShortName(), vo.getKeyword()) ||
+                                containsValue(k.getWebsiteName(), vo.getKeyword()) ||
+                                containsValue(k.getUrl(), vo.getKeyword()) ||
+                                containsValue(k.getDescription(), vo.getKeyword());
+                    }
+                    return true;
+                })
+                // 转换类型
+                .map(this::tran)
+                // 按照类型过滤
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(vo.getType())) {
+                        return k.getTypeSet().contains(vo.getType());
+                    }
+                    return true;
+                })
+                // 按照标签过滤
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(vo.getLabel())) {
+                        return k.getLabelSet().contains(vo.getLabel());
+                    }
+                    return true;
+                })
+                // 按访问次数倒序
+                .sorted(Comparator.comparing(NavWebsiteShowVO::getVisitNum, Comparator.reverseOrder())
+                        // 按 id 倒序
+                        .thenComparing(NavWebsiteShowVO::getId, Comparator.reverseOrder()))
+                .limit(30)
+                .toList();
+    }
+
+    /**
+     * 模糊匹配
+     */
+    private boolean containsValue(String value, String keyword) {
+
+        String valueLowerCase = value.toLowerCase();
+        String keywordLowerCase = keyword.toLowerCase();
+        return valueLowerCase.contains(keywordLowerCase);
+    }
+
+    /**
+     * 查询全量数据
+     */
+    public List<NavWebsite> getList() {
+
+        LambdaQueryWrapper<NavWebsite> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(NavWebsite::getState, StateEnum.E.getCode());
+        List<NavWebsite> list = this.list(queryWrapper);
+        log.debug("查询到 {} 条已知网站收藏...", list.size());
+        return list;
+    }
+
+    /**
+     * 翻译 bean
+     */
+    private NavWebsiteShowVO tran(NavWebsite navWebsite) {
+
+        NavWebsiteShowVO vo = new NavWebsiteShowVO();
+        BeanUtils.copyProperties(navWebsite, vo);
+        vo.setTypeSet(Set.of(navWebsite.getType().split(",")));
+        vo.setLabelSet(Set.of(navWebsite.getLabel().split(",")));
+        NavWebsiteIcon navWebsiteIcon = navWebsiteIconService.getNavIconMap().getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());
+        vo.setIconType(navWebsiteIcon.getType());
+        // 翻译网站图标
+        vo.setIcon(navWebsiteIcon.getIcon());
+        return vo;
+    }
+
+    /**
+     * 添加访问次数
+     */
+    public void addVisitNum(NavWebsiteAddVisitNumVO vo) {
+
+        for (NavWebsite navWebsite : navList) {
+            if (navWebsite.getId().equals(vo.getId())) {
+                navWebsite.setVisitNum(navWebsite.getVisitNum() + 1);
+            }
+        }
+        this.baseMapper.update(vo.getId());
+    }
+}

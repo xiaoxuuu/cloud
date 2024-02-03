@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql:3306/api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+  data:
+    redis:
+      host: redis
+
+app:
+  config:
+    # 每天一次
+    task-corn: '0 0 0 * * ?'
+
+# 日志输出配置
+logging:
+  level:
+    cc.xiaoxu.cloud: WARN
