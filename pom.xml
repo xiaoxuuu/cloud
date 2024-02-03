@@ -42,8 +42,16 @@
         <env.image_warehouse.password>?</env.image_warehouse.password>
 
         <!-- MySQL 鉴权信息 -->
-        <env.api.mysql.ip>127.0.0.1:3306</env.api.mysql.ip>
-        <env.api.mysql.password>password</env.api.mysql.password>
+        <env.api.mysql.host>localhost</env.api.mysql.host>
+        <env.api.mysql.port>3306</env.api.mysql.port>
+        <env.api.mysql.username>root</env.api.mysql.username>
+        <env.api.mysql.password>root</env.api.mysql.password>
+
+        <!-- redis 鉴权信息 -->
+        <env.api.redis.host>localhost</env.api.redis.host>
+        <env.api.redis.port>6379</env.api.redis.port>
+        <env.api.redis.password>password</env.api.redis.password>
+        <env.api.redis.database>0</env.api.redis.database>
 
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
@@ -84,6 +92,11 @@
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-core-mysql</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-core-cache</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
             <dependency>

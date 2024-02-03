@@ -1,9 +1,10 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ''
-    username: ''
-    password: ''
+    # 此处配置文件在各个应用中单独配置
+    #    url: ''
+    #    username: ''
+    #    password: ''
     # 指定为 HikariDataSource
     type: com.zaxxer.hikari.HikariDataSource
     # hikari 连接池配置

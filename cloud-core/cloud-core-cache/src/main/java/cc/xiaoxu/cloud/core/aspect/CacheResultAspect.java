@@ -44,7 +44,7 @@ public class CacheResultAspect {
     /**
      * 对所有加了注解的 controller 进行拦截
      */
-    @Pointcut("execution(public * live.xiaoxu.*.controller.*.*(..)) && @annotation(live.xiaoxu.cloud.plugin.redis.annotation.CacheResult)")
+    @Pointcut("execution(public * cc.xiaoxu.cloud.*.controller.*.*(..)) && @annotation(cc.xiaoxu.cloud.core.annotation.CacheResult)")
     public void addAdvice() {
     }
 

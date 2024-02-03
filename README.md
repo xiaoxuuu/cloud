@@ -9,7 +9,8 @@
 cloud
 ├── cloud-api              // [10___] 服务
 │   ├── cloud-api-demo     // [10001] 测试服务
-│   └── cloud-api-file     // [10002] 文件服务
+│   ├── cloud-api-file     // [10002] 文件服务
+│   └── cloud-api-my       // [10003] 自有服务
 ├── cloud-api-single       // [ 9999] 聚合服务
 ├── cloud-gateway          //         TODO 网关
 ├── cloud-core             //         插件

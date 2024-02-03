@@ -1,10 +1,11 @@
 spring:
   data:
     redis:
-      host: ''
-      password: ''
-      port: ''
-      database: ''
+      # 此处配置文件在各个应用中单独配置
+      #      host: ''
+      #      password: ''
+      #      port: ''
+      #      database: ''
       # lettuce 客户端配置
       lettuce:
         # 连接池配置

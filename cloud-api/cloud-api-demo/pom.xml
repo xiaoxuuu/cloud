@@ -13,9 +13,9 @@
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -76,19 +76,19 @@
                     </container>
                     <!-- 基础镜像，如果是私服，需要加上鉴权信息，和 to 下的 auth 节点相同 -->
                     <from>
-                        <image>${env.image_warehouse.url}/${env.namespace}/openjdk:${maven.compiler.target}</image>
+                        <image>${env.image.warehouse.url}/${env.namespace}/openjdk:${maven.compiler.target}</image>
                         <auth>
-                            <username>${env.image_warehouse.username}</username>
-                            <password>${env.image_warehouse.password}</password>
+                            <username>${env.image.warehouse.username}</username>
+                            <password>${env.image.warehouse.password}</password>
                         </auth>
                     </from>
                     <!-- 构建后的镜像名称以及私服地址、鉴权信息 -->
                     <to>
-                        <image>${env.image_warehouse.url}/${env.namespace}/${project.artifactId}:${cloud.version}
+                        <image>${env.image.warehouse.url}/${env.namespace}/${project.artifactId}:${cloud.version}
                         </image>
                         <auth>
-                            <username>${env.image_warehouse.username}</username>
-                            <password>${env.image_warehouse.password}</password>
+                            <username>${env.image.warehouse.username}</username>
+                            <password>${env.image.warehouse.password}</password>
                         </auth>
                     </to>
                     <!-- 允许非 https -->
