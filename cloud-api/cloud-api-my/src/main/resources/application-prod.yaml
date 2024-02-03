@@ -14,3 +14,6 @@ app:
 logging:
   level:
     cc.xiaoxu.cloud: WARN
+
+server:
+  port: 10001
