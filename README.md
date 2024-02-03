@@ -1,8 +1,13 @@
 # cc.xiaoxu.cloud
 
-## 架构
+# 打包
 
-## 结构介绍
+```shell
+# 打包及推送命令
+mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install
+```
+
+## 架构介绍
 
 ```text
 基础架构

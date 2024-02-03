@@ -85,11 +85,7 @@
                     </container>
                     <!-- 基础镜像，如果是私服，需要加上鉴权信息，和 to 下的 auth 节点相同 -->
                     <from>
-                        <image>${env.image.warehouse.url}/${env.namespace}/openjdk:${maven.compiler.target}</image>
-                        <auth>
-                            <username>${env.image.warehouse.username}</username>
-                            <password>${env.image.warehouse.password}</password>
-                        </auth>
+                        <image>openjdk:{java.version}</image>
                     </from>
                     <!-- 构建后的镜像名称以及私服地址、鉴权信息 -->
                     <to>
@@ -104,7 +100,6 @@
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
                 <!-- 将 jib 与 mvn 构建的生命周期绑定 mvn install 自动构造镜像 -->
-                <!-- 打包及推送命令 mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -->
                 <executions>
                     <execution>
                         <phase>install</phase>
