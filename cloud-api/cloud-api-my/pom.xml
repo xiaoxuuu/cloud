@@ -85,7 +85,7 @@
                     </container>
                     <!-- 基础镜像，如果是私服，需要加上鉴权信息，和 to 下的 auth 节点相同 -->
                     <from>
-                        <image>openjdk:${java.version}</image>
+                        <image>${env.image.warehouse.url}/${env.namespace}/openjdk:${java.version}</image>
                     </from>
                     <!-- 构建后的镜像名称以及私服地址、鉴权信息 -->
                     <to>
