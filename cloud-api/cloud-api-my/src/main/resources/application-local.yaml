@@ -1,0 +1,10 @@
+# 启动类输出配置
+app:
+  config:
+    # 每 5 秒一次
+    task-corn: '0/5 * * * * ?'
+
+# 日志输出配置
+logging:
+  level:
+    cc.xiaoxu.cloud: DEBUG
