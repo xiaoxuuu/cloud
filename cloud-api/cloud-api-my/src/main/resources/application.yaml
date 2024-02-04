@@ -17,7 +17,7 @@ spring:
     active: local
   # 此变量可在 POM.xml 中配置 properties 属性读取
   datasource:
-    url: jdbc:mysql://@env.api.mysql.host@:@env.api.mysql.port@/api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://@env.api.mysql.host@:@env.api.mysql.port@/api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false
     username: @env.api.mysql.username@
     password: @env.api.mysql.password@
   # 此变量可在 POM.xml 中配置 properties 属性读取
