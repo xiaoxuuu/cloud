@@ -1,6 +1,5 @@
 package cc.xiaoxu.cloud.my.navigation.task;
 
-import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.navigation.service.NavWebsiteIconService;
@@ -46,7 +45,7 @@ public class WebsiteCheckTask {
         log.warn("获取网站名称数据...");
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
         for (NavWebsite navWebsite : navWebsiteList) {
-            log.warn("获取网站名称数据：{}（{}）", navWebsite.getShortName(), navWebsite.getUrl());
+            log.warn("获取网站名称数据：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
             String websiteTitle;
             boolean success = true;
             try {
@@ -56,16 +55,17 @@ public class WebsiteCheckTask {
                 success = false;
             }
             websiteTitle = StringUtils.isBlank(websiteTitle) ? "获取到空数据" : websiteTitle;
-            log.warn("获取到网站名称：{}（{}）", websiteTitle, navWebsite.getShortName());
-            try {
-                navWebsiteService.lambdaUpdate()
-                        .eq(NavWebsite::getId, navWebsite.getId())
-                        .set(NavWebsite::getWebsiteName, websiteTitle)
-                        .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
-                        .update();
-            } catch (Exception e) {
-                throw new CustomException("保存失败：" + e.getMessage());
+            log.warn("获取到网站名称：【{}】【{}】", websiteTitle, navWebsite.getShortName());
+            if (success) {
+                navWebsite.setLastAvailableTime(DateUtils.getNowTime());
             }
+            // FIXME 无法保存
+//            navWebsiteService.updateById(navWebsite);
+//            navWebsiteService.lambdaUpdate()
+//                    .eq(NavWebsite::getId, navWebsite.getId())
+//                    .set(NavWebsite::getWebsiteName, websiteTitle)
+//                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
+//                    .update();
         }
         refreshData();
     }
