@@ -2,7 +2,10 @@
 app:
   config:
     # 每 5 秒一次
-    task-corn: '0/5 * * * * ?'
+    #    refresh-data: '0/5 * * * * ?'
+    refresh-data: '0 0 0 * * ?'
+    # 每天一次
+    refresh-website-name: '0 0 0 * * ?'
 
 # 日志输出配置
 logging:

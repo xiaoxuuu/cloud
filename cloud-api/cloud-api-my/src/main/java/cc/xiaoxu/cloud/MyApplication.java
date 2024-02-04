@@ -23,5 +23,6 @@ public class MyApplication {
         // 手动执行定时任务
         WebsiteCheckTask task = ctx.getBean(WebsiteCheckTask.class);
         task.refreshData();
+        task.getWebsiteName();
     }
 }
