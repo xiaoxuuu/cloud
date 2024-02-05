@@ -42,10 +42,10 @@ public class WebsiteCheckTask {
     @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteName() {
 
-        log.warn("获取网站名称数据...");
+        log.info("获取网站名称数据...");
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
         for (NavWebsite navWebsite : navWebsiteList) {
-            log.warn("获取网站名称数据：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
+            log.debug("获取网站名称数据：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
             String websiteTitle;
             boolean success = true;
             try {
@@ -53,19 +53,18 @@ public class WebsiteCheckTask {
             } catch (Exception e) {
                 websiteTitle = e.getMessage();
                 success = false;
+                log.error("未获取到网站标题：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
             }
             websiteTitle = StringUtils.isBlank(websiteTitle) ? "获取到空数据" : websiteTitle;
-            log.warn("获取到网站名称：【{}】【{}】", websiteTitle, navWebsite.getShortName());
+            log.info("获取到网站名称：【{}】【{}】", websiteTitle, navWebsite.getShortName());
             if (success) {
                 navWebsite.setLastAvailableTime(DateUtils.getNowTime());
             }
-            // FIXME 无法保存
-//            navWebsiteService.updateById(navWebsite);
-//            navWebsiteService.lambdaUpdate()
-//                    .eq(NavWebsite::getId, navWebsite.getId())
-//                    .set(NavWebsite::getWebsiteName, websiteTitle)
-//                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
-//                    .update();
+            navWebsiteService.lambdaUpdate()
+                    .eq(NavWebsite::getId, navWebsite.getId())
+                    .set(NavWebsite::getWebsiteName, websiteTitle)
+                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
+                    .update();
         }
         refreshData();
     }
