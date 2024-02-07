@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.navigation.service;
 
 import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteAddVisitNumVO;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
 import java.util.*;
 
 @Slf4j
@@ -103,11 +105,42 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         BeanUtils.copyProperties(navWebsite, vo);
         vo.setTypeSet(Set.of(Optional.ofNullable(navWebsite.getType()).orElse("").split(",")));
         vo.setLabelSet(Set.of(Optional.ofNullable(navWebsite.getLabel()).orElse("").split(",")));
+        vo.setLastVisitDesc(getLastVisitDesc(navWebsite.getLastAvailableTime()));
         NavWebsiteIcon navWebsiteIcon = navWebsiteIconService.getNavIconMap().getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());
         vo.setIconType(navWebsiteIcon.getType());
         // 翻译网站图标
         vo.setIcon(navWebsiteIcon.getIcon());
         return vo;
+    }
+
+    private String getLastVisitDesc(String date) {
+
+        if (StringUtils.isBlank(date)) {
+            return "从未成功";
+        }
+        long currentTimeMillis = System.currentTimeMillis();
+        long oldDateMillis = DateUtils.stringToLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        long l = currentTimeMillis - oldDateMillis;
+        if (l < 1000 * 60 * 60) {
+            return "刚刚";
+        }
+        if (l < 1000 * 60 * 60 * 24) {
+            return "一天内";
+        }
+        if (l < 1000 * 60 * 60 * 24 * 3) {
+            return "三天内";
+        }
+        if (l < 1000 * 60 * 60 * 24 * 7) {
+            return "一周内";
+        }
+        if (l < 1000L * 60 * 60 * 24 * 30) {
+            return "30天内";
+        }
+        if (l < 1000L * 60 * 60 * 24 * 365) {
+            return "一年内";
+        }
+        return "超过一年";
     }
 
     /**
