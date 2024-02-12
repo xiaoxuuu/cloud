@@ -10,4 +10,4 @@ app:
 # 日志输出配置
 logging:
   level:
-    cc.xiaoxu.cloud: DEBUG
+    cc.xiaoxu.cloud: INFO

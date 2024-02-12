@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.util.List;
@@ -39,21 +38,24 @@ public class WebsiteCheckTask {
     /**
      * 每天抓取一次数据到数据库
      */
-    @Transactional(rollbackFor = Exception.class)
     @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteName() {
 
         long currentTimeMillis = System.currentTimeMillis();
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
-        log.info("获取网站名称数据...");
-        for (NavWebsite navWebsite : navWebsiteList) {
-            long oldDateMillis = DateUtils.stringToLocalDateTime(navWebsite.getLastAvailableTime()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-            long time = currentTimeMillis - oldDateMillis;
-            if (time < 1000 * 60 * 60 * 23) {
-                continue;
+        log.info("获取网站名称数据 {}...", navWebsiteList.size());
+
+        for (int i = 0; i < navWebsiteList.size(); i++) {
+            NavWebsite navWebsite = navWebsiteList.get(i);
+            String lastAvailableTime = navWebsite.getLastAvailableTime();
+            if (StringUtils.isNotBlank(lastAvailableTime)) {
+                long oldDateMillis = DateUtils.stringToLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long time = currentTimeMillis - oldDateMillis;
+                if (time < 1000 * 60 * 60 * 23) {
+                    continue;
+                }
             }
 
-            log.debug("获取网站名称数据：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
             String websiteTitle;
             boolean success = true;
             try {
@@ -61,11 +63,11 @@ public class WebsiteCheckTask {
             } catch (Exception e) {
                 websiteTitle = e.getMessage();
                 success = false;
-                log.error("未获取到网站标题：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
+                log.warn("未获取到网站标题：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), navWebsite.getShortName(), navWebsite.getUrl());
             }
             websiteTitle = StringUtils.isBlank(websiteTitle) ? "获取到空数据" : websiteTitle;
-            log.info("获取到网站名称：【{}】【{}】", websiteTitle, navWebsite.getShortName());
             if (success) {
+                log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
                 navWebsite.setLastAvailableTime(DateUtils.getNowTime());
             }
             navWebsiteService.lambdaUpdate()
@@ -74,6 +76,7 @@ public class WebsiteCheckTask {
                     .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
                     .update();
         }
+        log.info("操作结束...");
         refreshData();
     }
 }
