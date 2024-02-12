@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
@@ -42,9 +43,16 @@ public class WebsiteCheckTask {
     @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteName() {
 
-        log.info("获取网站名称数据...");
+        long currentTimeMillis = System.currentTimeMillis();
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
+        log.info("获取网站名称数据...");
         for (NavWebsite navWebsite : navWebsiteList) {
+            long oldDateMillis = DateUtils.stringToLocalDateTime(navWebsite.getLastAvailableTime()).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            long time = currentTimeMillis - oldDateMillis;
+            if (time < 1000 * 60 * 60 * 23) {
+                continue;
+            }
+
             log.debug("获取网站名称数据：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
             String websiteTitle;
             boolean success = true;
