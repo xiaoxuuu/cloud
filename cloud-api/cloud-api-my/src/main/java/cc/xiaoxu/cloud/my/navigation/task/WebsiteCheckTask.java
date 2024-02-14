@@ -48,7 +48,7 @@ public class WebsiteCheckTask {
         for (int i = 0; i < navWebsiteList.size(); i++) {
             NavWebsite navWebsite = navWebsiteList.get(i);
             String lastAvailableTime = navWebsite.getLastAvailableTime();
-            // 跳过 3 天内成功访问的数据
+            // 跳过 72 小时内成功访问的数据
             if (StringUtils.isNotBlank(lastAvailableTime)) {
                 long oldDateMillis = DateUtils.stringToLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 long time = currentTimeMillis - oldDateMillis;
