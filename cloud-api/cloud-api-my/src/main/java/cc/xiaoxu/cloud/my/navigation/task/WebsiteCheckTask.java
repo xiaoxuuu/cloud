@@ -62,11 +62,10 @@ public class WebsiteCheckTask {
             try {
                 websiteTitle = WebsiteUtil.getWebsiteTitle(navWebsite.getUrl());
             } catch (Exception e) {
-                websiteTitle = e.getMessage();
+                websiteTitle = "";
                 success = false;
                 log.warn("未获取到网站标题：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), navWebsite.getShortName(), navWebsite.getUrl());
             }
-            websiteTitle = StringUtils.isBlank(websiteTitle) ? "获取到空数据" : websiteTitle;
             if (success) {
                 log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
                 navWebsite.setLastAvailableTime(DateUtils.getNowTime());
