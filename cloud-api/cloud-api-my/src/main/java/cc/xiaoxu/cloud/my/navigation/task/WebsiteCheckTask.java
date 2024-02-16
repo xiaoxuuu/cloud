@@ -60,7 +60,7 @@ public class WebsiteCheckTask {
             String websiteTitle;
             boolean success = true;
             try {
-                websiteTitle = WebsiteUtil.getWebsiteTitle(navWebsite.getUrl());
+                websiteTitle = WebsiteUtil.getTitle(navWebsite.getUrl());
             } catch (Exception e) {
                 websiteTitle = "";
                 success = false;
