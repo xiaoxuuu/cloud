@@ -13,7 +13,7 @@ mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P local
 
 打包完成后，服务器拉取对应镜像即可
 
-## 架构介绍
+# 架构介绍
 
 ```text
 基础架构
