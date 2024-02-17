@@ -6,7 +6,7 @@
 
 ```shell
 # 打包及推送命令
-mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P local,releases
+mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P local,releases -T 12
 ```
 
 ## 发布
