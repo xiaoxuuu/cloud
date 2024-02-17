@@ -80,6 +80,9 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     private boolean containsValue(String value, String keyword) {
 
         String valueLowerCase = value.toLowerCase();
+        if (StringUtils.isBlank(valueLowerCase)) {
+            return false;
+        }
         String keywordLowerCase = keyword.toLowerCase();
         return valueLowerCase.contains(keywordLowerCase);
     }
