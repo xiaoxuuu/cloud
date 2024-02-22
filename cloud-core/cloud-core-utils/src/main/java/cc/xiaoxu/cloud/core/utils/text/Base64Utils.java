@@ -25,16 +25,25 @@ public class Base64Utils {
     }
 
     /**
-     * String 类型转 byte 数组
+     * 编码
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String encode(String str) {
+
+        return Base64.getEncoder().encodeToString(str.getBytes());
+    }
+
+    /**
+     * 解码
      *
      * @param base64 字符串
-     * @return byte 数组
+     * @return 结果
      */
-    public static byte[] decodeBase64(String base64) {
+    public static String decode(String base64) {
 
-        String[] parts = base64.split(",");
-        String base64String = parts[1];
-        return Base64.getDecoder().decode(base64String);
+        return new String(Base64.getDecoder().decode(base64));
     }
 
     /**
