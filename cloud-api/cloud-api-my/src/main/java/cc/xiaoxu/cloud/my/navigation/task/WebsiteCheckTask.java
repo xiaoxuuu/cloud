@@ -10,8 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @Slf4j
@@ -38,35 +38,45 @@ public class WebsiteCheckTask {
     /**
      * 每天抓取一次数据到数据库
      */
-    @Transactional(rollbackFor = Exception.class)
     @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteName() {
 
-        log.warn("获取网站名称数据...");
+        long currentTimeMillis = System.currentTimeMillis();
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
-        for (NavWebsite navWebsite : navWebsiteList) {
-            log.warn("获取网站名称数据：【{}】【{}】", navWebsite.getShortName(), navWebsite.getUrl());
+        log.info("获取网站名称数据 {}...", navWebsiteList.size());
+
+        for (int i = 0; i < navWebsiteList.size(); i++) {
+            NavWebsite navWebsite = navWebsiteList.get(i);
+            String lastAvailableTime = navWebsite.getLastAvailableTime();
+            // 跳过 72 小时内成功访问的数据
+            if (StringUtils.isNotBlank(lastAvailableTime)) {
+                long oldDateMillis = DateUtils.stringToLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long time = currentTimeMillis - oldDateMillis;
+                if (time < 1000 * 60 * 60 * 24 * 3) {
+                    continue;
+                }
+            }
+
             String websiteTitle;
             boolean success = true;
             try {
-                websiteTitle = WebsiteUtil.getWebsiteTitle(navWebsite.getUrl());
+                websiteTitle = WebsiteUtil.getTitle(navWebsite.getUrl());
             } catch (Exception e) {
-                websiteTitle = e.getMessage();
+                websiteTitle = "";
                 success = false;
+                log.warn("未获取到网站标题：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), navWebsite.getShortName(), navWebsite.getUrl());
             }
-            websiteTitle = StringUtils.isBlank(websiteTitle) ? "获取到空数据" : websiteTitle;
-            log.warn("获取到网站名称：【{}】【{}】", websiteTitle, navWebsite.getShortName());
             if (success) {
+                log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
                 navWebsite.setLastAvailableTime(DateUtils.getNowTime());
             }
-            // FIXME 无法保存
-//            navWebsiteService.updateById(navWebsite);
-//            navWebsiteService.lambdaUpdate()
-//                    .eq(NavWebsite::getId, navWebsite.getId())
-//                    .set(NavWebsite::getWebsiteName, websiteTitle)
-//                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
-//                    .update();
+            navWebsiteService.lambdaUpdate()
+                    .eq(NavWebsite::getId, navWebsite.getId())
+                    .set(NavWebsite::getWebsiteName, websiteTitle)
+                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
+                    .update();
         }
+        log.info("操作结束...");
         refreshData();
     }
 }
