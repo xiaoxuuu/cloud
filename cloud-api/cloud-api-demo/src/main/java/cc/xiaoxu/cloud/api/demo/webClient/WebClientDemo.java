@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.api.demo.webClient;
 
+import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import cc.xiaoxu.cloud.core.utils.text.Base64Utils;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
@@ -18,30 +20,30 @@ import java.security.cert.X509Certificate;
 
 public class WebClientDemo {
 
-    public static void execute() {
+    public static void execute(String id) {
 
-        String id = "53510000MJY8498812";
+        IdDTO idDTO = new IdDTO(id);
         String contentType = "application/json;charset=UTF-8";
-        String referer = "https://xxgs.chinanpo.mca.gov.cn/gsxt/newDetails?b=eyJpZCI6IjUzNTEwMDAwTUpZODQ5ODgxMiJ9";
+        String referer = "https://xxgs.chinanpo.mca.gov.cn/gsxt/newDetails?b=" + Base64Utils.encode(JsonUtils.toString(idDTO));
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36";
 
         WebClient client = buildWebClient();
         PublicApi publicApi = HttpServiceProxyFactory.builder().clientAdapter(WebClientAdapter.forClient(client)).build().createClient(PublicApi.class);
 
-        System.out.println(publicApi.detail(new IdDTO(id), contentType, referer, userAgent));
+        System.out.println(publicApi.detail(idDTO, contentType, referer, userAgent));
     }
 
-    public static void post() {
+    public static void post(String id) {
 
         WebClient webClient = WebClient.builder().clientConnector(new ReactorClientHttpConnector(buildHttpClient())).build();
 
         String url = "https://xxgs.chinanpo.mca.gov.cn/gsxt/PlatformSHZZFRKGSXT/biz/ma/shzzgsxt/a/getAae01CertificateInfo.html";
-        String requestBody = "{\"id\":\"53510000MJY8498812\"}";
+        String requestBody = JsonUtils.toString(new IdDTO(id));
 
         String response = webClient.post()
                 .uri(url)
                 .header("Content-Type", "application/json;charset=UTF-8")
-                .header("Referer", "https://xxgs.chinanpo.mca.gov.cn/gsxt/newDetails?b=eyJpZCI6IjUzNTEwMDAwTUpZODQ5ODgxMiJ9")
+                .header("Referer", "https://xxgs.chinanpo.mca.gov.cn/gsxt/newDetails?b=" + Base64Utils.encode(requestBody))
                 .header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
                 .bodyValue(requestBody)
                 .retrieve()
