@@ -5,8 +5,8 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import lombok.SneakyThrows;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import reactor.netty.http.client.HttpClient;
@@ -16,25 +16,24 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.security.cert.X509Certificate;
 
-@Component
-public class WebClient {
+public class WebClientDemo {
 
-    public void execute() {
+    public static void execute() {
 
         String id = "53510000MJY8498812";
         String contentType = "application/json;charset=UTF-8";
         String referer = "https://xxgs.chinanpo.mca.gov.cn/gsxt/newDetails?b=eyJpZCI6IjUzNTEwMDAwTUpZODQ5ODgxMiJ9";
         String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36";
 
-        org.springframework.web.reactive.function.client.WebClient client = buildWebClient();
+        WebClient client = buildWebClient();
         PublicApi publicApi = HttpServiceProxyFactory.builder().clientAdapter(WebClientAdapter.forClient(client)).build().createClient(PublicApi.class);
 
         System.out.println(publicApi.detail(new IdDTO(id), contentType, referer, userAgent));
     }
 
-    public void post() {
+    public static void post() {
 
-        org.springframework.web.reactive.function.client.WebClient webClient = org.springframework.web.reactive.function.client.WebClient.builder().clientConnector(new ReactorClientHttpConnector(buildHttpClient())).build();
+        WebClient webClient = WebClient.builder().clientConnector(new ReactorClientHttpConnector(buildHttpClient())).build();
 
         String url = "https://xxgs.chinanpo.mca.gov.cn/gsxt/PlatformSHZZFRKGSXT/biz/ma/shzzgsxt/a/getAae01CertificateInfo.html";
         String requestBody = "{\"id\":\"53510000MJY8498812\"}";
@@ -53,7 +52,7 @@ public class WebClient {
     }
 
     @SneakyThrows
-    private HttpClient buildHttpClient() {
+    private static HttpClient buildHttpClient() {
 
         TrustManager[] trustAllCerts = new TrustManager[]{
                 new X509TrustManager() {
@@ -75,9 +74,9 @@ public class WebClient {
         return HttpClient.create().secure(t -> t.sslContext(context));
     }
 
-    private org.springframework.web.reactive.function.client.WebClient buildWebClient() {
+    private static WebClient buildWebClient() {
 
-        org.springframework.web.reactive.function.client.WebClient.Builder builder = org.springframework.web.reactive.function.client.WebClient.builder().clientConnector(new ReactorClientHttpConnector(buildHttpClient()));
+        WebClient.Builder builder = WebClient.builder().clientConnector(new ReactorClientHttpConnector(buildHttpClient()));
 
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 // 设置最大内存缓冲区为 16MB
