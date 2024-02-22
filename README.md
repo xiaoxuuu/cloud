@@ -1,13 +1,19 @@
 # cc.xiaoxu.cloud
 
-# 打包
+# 打包发布流程
+
+## 打包
 
 ```shell
 # 打包及推送命令
-mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install
+mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P local,releases -T 12
 ```
 
-## 架构介绍
+## 发布
+
+打包完成后，服务器拉取对应镜像即可
+
+# 架构介绍
 
 ```text
 基础架构

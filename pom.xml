@@ -35,11 +35,11 @@
 
         <!-- 镜像仓库信息 -->
         <env.namespace>?</env.namespace>
-        <env.image_warehouse.url>?</env.image_warehouse.url>
+        <env.image.warehouse.url>?</env.image.warehouse.url>
 
         <!-- 镜像仓库鉴权信息 -->
-        <env.image_warehouse.username>?</env.image_warehouse.username>
-        <env.image_warehouse.password>?</env.image_warehouse.password>
+        <env.image.warehouse.username>?</env.image.warehouse.username>
+        <env.image.warehouse.password>?</env.image.warehouse.password>
 
         <!-- MySQL 鉴权信息 -->
         <env.api.mysql.host>localhost</env.api.mysql.host>

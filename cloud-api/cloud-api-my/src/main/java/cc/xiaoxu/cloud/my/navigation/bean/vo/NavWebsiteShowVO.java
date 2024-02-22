@@ -38,4 +38,7 @@ public class NavWebsiteShowVO {
 
     @Schema(description = "访问次数")
     private Integer visitNum;
+
+    @Schema(description = "上次访问时间")
+    private String lastVisitDesc;
 }
