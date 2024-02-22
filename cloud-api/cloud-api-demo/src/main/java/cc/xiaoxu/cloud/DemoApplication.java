@@ -1,6 +1,5 @@
 package cc.xiaoxu.cloud;
 
-import cc.xiaoxu.cloud.api.demo.webClient.WebClient;
 import cc.xiaoxu.cloud.core.utils.GetStartInfoUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +17,5 @@ public class DemoApplication {
         // 获取 Spring Boot 上下文
         ConfigurableApplicationContext ctx = SpringApplication.run(DemoApplication.class, args);
         log.error(GetStartInfoUtils.getLog(ctx));
-        WebClient webClient = ctx.getBean(WebClient.class);
-        webClient.execute();
     }
 }
