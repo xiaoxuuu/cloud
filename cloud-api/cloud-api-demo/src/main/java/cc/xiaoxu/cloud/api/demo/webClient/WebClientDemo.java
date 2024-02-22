@@ -20,7 +20,7 @@ import java.security.cert.X509Certificate;
 
 public class WebClientDemo {
 
-    public static void execute(String id) {
+    public static String execute(String id) {
 
         IdDTO idDTO = new IdDTO(id);
         String contentType = "application/json;charset=UTF-8";
@@ -30,17 +30,17 @@ public class WebClientDemo {
         WebClient client = buildWebClient();
         PublicApi publicApi = HttpServiceProxyFactory.builder().clientAdapter(WebClientAdapter.forClient(client)).build().createClient(PublicApi.class);
 
-        System.out.println(publicApi.detail(idDTO, contentType, referer, userAgent));
+        return publicApi.detail(idDTO, contentType, referer, userAgent);
     }
 
-    public static void post(String id) {
+    public static String post(String id) {
 
         WebClient webClient = WebClient.builder().clientConnector(new ReactorClientHttpConnector(buildHttpClient())).build();
 
         String url = "https://xxgs.chinanpo.mca.gov.cn/gsxt/PlatformSHZZFRKGSXT/biz/ma/shzzgsxt/a/getAae01CertificateInfo.html";
         String requestBody = JsonUtils.toString(new IdDTO(id));
 
-        String response = webClient.post()
+        return webClient.post()
                 .uri(url)
                 .header("Content-Type", "application/json;charset=UTF-8")
                 .header("Referer", "https://xxgs.chinanpo.mca.gov.cn/gsxt/newDetails?b=" + Base64Utils.encode(requestBody))
@@ -49,8 +49,6 @@ public class WebClientDemo {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-
-        System.out.println(response);
     }
 
     @SneakyThrows
