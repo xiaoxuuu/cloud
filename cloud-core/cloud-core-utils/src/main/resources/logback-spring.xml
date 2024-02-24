@@ -16,15 +16,15 @@
     <property name="CONSOLE_LOG_PATTERN_WITHOUT_STYLE"
               value="%d{yyyy-MM-dd HH:mm:ss.SSS} %relative %-5level [%+10.10thread] %-40.40logger{40}: %msg %n"/>
     <!-- 文件最大大小 -->
-    <property name="MAX_FILE_SIZE" value="50MB"/>
+    <property name="MAX_FILE_SIZE" value="100MB"/>
     <!-- 文件保存天数 -->
-    <property name="MAX_HISTORY" value="10"/>
+    <property name="MAX_HISTORY" value="30"/>
     <!-- 文件最大保存大小 -->
-    <property name="TOTAL_SIZE_CAP" value="20GB"/>
+    <property name="TOTAL_SIZE_CAP" value="10GB"/>
     <!-- 文件编码 -->
     <property name="CHARSET" value="UTF-8"/>
 
-    <!--输出到控制台-->
+    <!-- 输出控制台配置 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- 此日志 appender 是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -37,7 +37,7 @@
         </encoder>
     </appender>
 
-    <!--输出到文件-->
+    <!--输出文件配置-->
     <!-- 时间滚动输出 level 为 DEBUG 日志 -->
     <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 正在记录的日志文件的路径及文件名 -->
@@ -48,16 +48,16 @@
             <!-- 设置字符集 -->
             <charset>${CHARSET}</charset>
         </encoder>
-        <!-- SizeAndTimeBasedRollingPolicy 配置更灵活,所以改用 SizeAndTimeBasedRollingPolicy -->
-        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            &lt;!&ndash; 每天日志归档路径以及格式 &ndash;&gt;
+        <!-- SizeAndTimeBasedRollingPolicy 配置更灵活，所以改用 SizeAndTimeBasedRollingPolicy -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 每天日志归档路径以及格式 -->
             <fileNamePattern>${LOG_PATH}/info/log-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            &lt;!&ndash;日志文件保留天数&ndash;&gt;
+            <!-- 日志文件保留天数 -->
             <maxHistory>15</maxHistory>
-        </rollingPolicy>-->
+        </rollingPolicy>
         <!-- 日志记录器的滚动策略，按日期，按大小记录 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- rollover daily -->
@@ -169,19 +169,19 @@
     </logger>
 
     <!-- 配置多环境日志输出，可以在 application.properties 中配置选择哪个 profiles: spring.profiles.active=dev -->
-    <!-- 生产环境：输出到文件 -->
-    <!--<springProfile name="pro">
-        <root level="info">
-            <appender-ref ref="DEBUG_FILE" />
-            <appender-ref ref="INFO_FILE" />
-            <appender-ref ref="ERROR_FILE" />
-            <appender-ref ref="WARN_FILE" />
-        </root>
-    </springProfile>-->
     <!-- 开发环境：打印控制台 -->
-    <!--<springProfile name="dev">
+    <springProfile name="dev">
         <root level="debug">
-            <appender-ref ref="STDOUT" />
+            <appender-ref ref="STDOUT"/>
         </root>
-    </springProfile>-->
+    </springProfile>
+    <!-- 生产环境：输出到文件 -->
+    <springProfile name="prod">
+        <root level="info">
+            <appender-ref ref="DEBUG_FILE"/>
+            <appender-ref ref="INFO_FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+            <appender-ref ref="WARN_FILE"/>
+        </root>
+    </springProfile>
 </configuration>
