@@ -1,4 +1,7 @@
-${AnsiColor.BLUE}Spring Boot
+${AnsiColor.BLUE}┏┓    •
+┗┓┏┓┏┓┓┏┓┏┓
+┗┛┣┛┛ ┗┛┗┗┫
+  ┛       ┛
 ${AnsiColor.BRIGHT_RED}${AnsiStyle.BOLD}Spring Boot Version: ${spring-boot.formatted-version}
 Application Name: ${spring.application.name} (${app.version})
 Port: ${server.port}
