@@ -2,4 +2,4 @@
 logging:
   level:
     cc.xiaoxu.cloud: INFO
-  config: classpath:logback-spring.xml
+  config: classpath:logback.xml
