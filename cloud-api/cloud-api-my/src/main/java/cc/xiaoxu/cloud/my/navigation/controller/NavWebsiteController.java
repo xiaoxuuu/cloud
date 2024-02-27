@@ -23,6 +23,7 @@ public class NavWebsiteController {
     @Resource
     private WebsiteCheckTask websiteCheckTask;
 
+    // TODO 基于 ES 的分词搜索
     @Operation(summary = "搜索", description = "获取列表")
     @PostMapping("/search")
     public @ResponseBody
@@ -31,6 +32,7 @@ public class NavWebsiteController {
         return navWebsiteService.search(vo);
     }
 
+    // TODO 基于 redis 的限流
     @Operation(summary = "添加访问次数", description = "添加访问次数")
     @PostMapping("/add-visit-num")
     public @ResponseBody
