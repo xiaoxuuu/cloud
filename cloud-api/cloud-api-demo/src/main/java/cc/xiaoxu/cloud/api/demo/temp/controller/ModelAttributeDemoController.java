@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @SessionAttributes("myModel")
 public class ModelAttributeDemoController {
 
-    // 将数据存储在会话中
+    // 将数据存储在会话中，使用该数据时，执行方法（仅一次）
     @ModelAttribute("myModel")
     public MyModel storeData() {
+        System.out.println("storeData");
         MyModel myModel = new MyModel();
         myModel.setName("John");
         myModel.setAge(30);
@@ -26,6 +27,6 @@ public class ModelAttributeDemoController {
     public String getData(HttpSession httpSession, ModelMap modelMap) {
 
         System.out.println(modelMap.get("myModel"));
-        return "result";
+        return ((MyModel) modelMap.get("myModel")).getName();
     }
 }
