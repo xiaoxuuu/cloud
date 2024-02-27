@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.my.navigation.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class WebsiteUtil {
 
     // 处理 301 问题
@@ -27,7 +30,7 @@ public class WebsiteUtil {
 
         // 获取网页的标题的正则表达式
         String searchTitle = "(<title>|<TITLE>)(.*?)(</title>|</TITLE>)";
-        // 获得content
+        // 获得 content
         Pattern pattern = Pattern.compile(searchTitle);
         try {
             Matcher matcher = pattern.matcher(getHtmlCode(httpUrl));
@@ -35,7 +38,7 @@ public class WebsiteUtil {
                 return matcher.group(2);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("正则获取网站标题失败：{}", e.getLocalizedMessage());
         }
         return null;
     }
