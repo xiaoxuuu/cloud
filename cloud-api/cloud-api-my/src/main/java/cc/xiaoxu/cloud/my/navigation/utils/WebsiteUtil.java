@@ -59,7 +59,7 @@ public class WebsiteUtil {
         // 获得当前 URL 的字节流（缓冲）
         URLConnection connection = url.openConnection();
         // 设置超时时间
-        connection.setReadTimeout(5 * 1000);
+        connection.setReadTimeout(500);
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
         String input;
         // 当前行存在数据时
