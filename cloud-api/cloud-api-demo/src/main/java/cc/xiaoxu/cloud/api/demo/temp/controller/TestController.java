@@ -57,7 +57,7 @@ public class TestController {
 
         try {
             String json = getBody(request);
-            log.info("┌── 盒子设备心跳：{}", json);
+            log.info("┌── 收到盒子设备心跳");
             if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
                 if (json.endsWith("=")) {
                     json = json.substring(0, json.length() - 1);
@@ -65,7 +65,7 @@ public class TestController {
 
                 json = URLUtil.decode(json);
                 AiBoxHeartBeat aiBoxHeartBeat = JsonUtils.parse(json, AiBoxHeartBeat.class);
-                log.info("└── 盒子设备心跳：{}", JsonUtils.toString(aiBoxHeartBeat));
+                log.info("└── 盒子设备心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
             } else {
                 log.error("└── 盒子设备心跳读取错误：{}", json);
             }
