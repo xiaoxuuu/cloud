@@ -75,6 +75,29 @@ public class TestController {
         return R.ok();
     }
 
+    @RequestMapping(value = {"/camera/heartbeat"}, name = "视频源心跳")
+    public R<Void> cameraHeartBeat(HttpServletRequest request) {
+        try {
+            String json = getBody(request);
+            log.info("┌── 视频源心跳：{}", json);
+            if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
+                if (json.endsWith("=")) {
+                    json = json.substring(0, json.length() - 1);
+                }
+
+                json = URLUtil.decode(json);
+                AiBoxHeartBeat aiBoxHeartBeat = JsonUtils.parse(json, AiBoxHeartBeat.class);
+                log.info("└── 视频源心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
+            } else {
+                log.error("└── 视频源心跳读取错误：{}", json);
+            }
+        } catch (Exception var4) {
+            log.error("└── 视频源心跳处理异常：", var4);
+        }
+
+        return R.ok();
+    }
+
     public static String getBody(ServletRequest request) {
         try (final BufferedReader reader = request.getReader()) {
             return IoUtil.read(reader);
