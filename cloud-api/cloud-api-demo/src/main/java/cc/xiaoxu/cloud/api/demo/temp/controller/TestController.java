@@ -79,7 +79,7 @@ public class TestController {
     public R<Void> cameraHeartBeat(HttpServletRequest request) {
         try {
             String json = getBody(request);
-            log.info("┌── 视频源心跳：{}", json);
+            log.info("┌── 收到视频源心跳");
             if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
                 if (json.endsWith("=")) {
                     json = json.substring(0, json.length() - 1);
