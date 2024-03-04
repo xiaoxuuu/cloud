@@ -27,7 +27,7 @@ public class TestController {
     @RequestMapping(value = {"/research"}, name = "自研AI分析结果")
     public R<Void> research(@RequestParam(name = "StructData", required = false) String structData, @RequestParam(name = "ImageData", required = false) MultipartFile imageData, HttpServletRequest request) {
         String nowTime = DateUtils.getNowTime();
-        log.error("┌── 接收到数据：" + nowTime);
+        log.warn("┌── 【盒子数据】：" + nowTime);
         log.info("├── StructData：{}", structData);
         log.info("├── ImageData 图片大小：{}", imageData != null ? imageData.getSize() : 0L);
         if (imageData != null && imageData.getSize() > 0L) {
@@ -35,7 +35,7 @@ public class TestController {
         } else {
             log.info("├── ImageData 图片名不存在");
         }
-        log.error("└── " + nowTime);
+        log.info("└── " + nowTime);
         return R.ok();
     }
 
@@ -45,9 +45,10 @@ public class TestController {
     @RequestMapping(value = {"/heartbeat"}, name = "盒子设备心跳")
     public R<Void> heartbeat(HttpServletRequest request) {
 
+        String nowTime = DateUtils.getNowTime();
+        log.warn("┌── 【设备心跳】：" + nowTime);
         try {
             String json = getBody(request);
-            log.info("┌── 收到盒子设备心跳");
             if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
                 if (json.endsWith("=")) {
                     json = json.substring(0, json.length() - 1);
@@ -55,21 +56,24 @@ public class TestController {
 
                 json = URLUtil.decode(json);
                 AiBoxHeartBeat aiBoxHeartBeat = JsonUtils.parse(json, AiBoxHeartBeat.class);
-                log.info("└── 盒子设备心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
+                log.info("├── 盒子设备心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
             } else {
-                log.error("└── 盒子设备心跳读取错误：{}", json);
+                log.error("├── 盒子设备心跳读取错误：{}", json);
             }
         } catch (Exception var4) {
-            log.error("└── 盒子设备心跳处理异常：", var4);
+            log.error("├── 盒子设备心跳处理异常：", var4);
         }
+        log.info("└── " + nowTime);
         return R.ok();
     }
 
     @RequestMapping(value = {"/camera/heartbeat"}, name = "视频源心跳")
     public R<Void> cameraHeartBeat(HttpServletRequest request) {
+
+        String nowTime = DateUtils.getNowTime();
+        log.warn("┌── 【视频源心跳】：" + nowTime);
         try {
             String json = getBody(request);
-            log.info("┌── 收到视频源心跳");
             if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
                 if (json.endsWith("=")) {
                     json = json.substring(0, json.length() - 1);
@@ -77,14 +81,14 @@ public class TestController {
 
                 json = URLUtil.decode(json);
                 AiBoxHeartBeat aiBoxHeartBeat = JsonUtils.parse(json, AiBoxHeartBeat.class);
-                log.info("└── 视频源心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
+                log.info("├── 视频源心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
             } else {
-                log.error("└── 视频源心跳读取错误：{}", json);
+                log.error("├── 视频源心跳读取错误：{}", json);
             }
         } catch (Exception var4) {
-            log.error("└── 视频源心跳处理异常：", var4);
+            log.error("├── 视频源心跳处理异常：", var4);
         }
-
+        log.info("└── " + nowTime);
         return R.ok();
     }
 
