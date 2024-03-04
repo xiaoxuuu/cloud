@@ -24,18 +24,6 @@ import java.io.IOException;
 @RequestMapping(path = {"/ai/aibox"})
 public class TestController {
 
-    @RequestMapping(value = {"/analyze"}, name = "AI分析结果")
-    public R<Void> analyze(@RequestParam(name = "StructData", required = false) String structData, @RequestParam(name = "ImageData", required = false) MultipartFile imageData, HttpServletRequest request) {
-//        log.error("================================================================================================");
-//        log.info("接收到 AI 分析结果 StructData：{}", structData);
-//        log.info("接收到 AI 分析结果图片大小：{}", imageData != null ? imageData.getSize() : 0L);
-        if (imageData != null && imageData.getSize() > 0L) {
-//            log.info("接收到 AI 分析结果图片名：{}", imageData.getOriginalFilename());
-        }
-//        log.error("================================================================================================");
-        return R.ok();
-    }
-
     @RequestMapping(value = {"/research"}, name = "自研AI分析结果")
     public R<Void> research(@RequestParam(name = "StructData", required = false) String structData, @RequestParam(name = "ImageData", required = false) MultipartFile imageData, HttpServletRequest request) {
         String nowTime = DateUtils.getNowTime();
@@ -51,7 +39,9 @@ public class TestController {
         return R.ok();
     }
 
-    // curl -X POST http://172.19.70.7:10001/ai/aibox/heartbeat -d '{ "DeviceId" : "1" }'
+    /**
+     * curl -X POST http://172.19.70.7:10001/ai/aibox/heartbeat -d '{ "DeviceId" : "1" }'
+     */
     @RequestMapping(value = {"/heartbeat"}, name = "盒子设备心跳")
     public R<Void> heartbeat(HttpServletRequest request) {
 
