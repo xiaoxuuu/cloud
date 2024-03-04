@@ -10,12 +10,14 @@
     <contextName>logback</contextName>
     <!-- name 的值是变量的名称，value 的值时变量定义的值。通过定义的值会被插入到 logger 上下文中。定义变量后，可以使 ${} 来使用变量-->
     <property name="LOG_PATH" value="logs"/>
-    <!-- 输出格式，参见：https://logback.qos.ch/manual/layouts.html 页面的 PatternLayout -->
+    <!-- 输出配置 -->
+    <!-- 格式配置：https://logback.qos.ch/manual/layouts.html#ClassicPatternLayout -->
+    <!-- 颜色配置：https://logback.qos.ch/manual/layouts.html#coloring -->
     <property name="CONSOLE_LOG_PATTERN"
-              value="%cyan(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta(%relative) %highlight(%-5level) %highlight([%+10.10thread] %-40.40logger{40}: %msg) %n"/>
+              value="%highlight(%-5level) %cyan(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight([%-10.10thread] %+4.4line [%+40.40(%logger{40}.%method)]: %msg) %n"/>
     <!-- 输出格式，不包含样式 -->
     <property name="CONSOLE_LOG_PATTERN_WITHOUT_STYLE"
-              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %relative %-5level [%+10.10thread] %-40.40logger{40}: %msg %n"/>
+              value="%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %relative [%-10.10thread] %+4.4line [%+50.50(%logger{50}.%method)]: %msg %n"/>
     <!-- 文件最大大小 -->
     <property name="MAX_FILE_SIZE" value="100MB"/>
     <!-- 文件保存天数 -->
@@ -27,6 +29,8 @@
 
     <!-- 输出控制台配置 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 启用 Jansi 库的 ANSI 颜色代码 -->
+        <withJansi>true</withJansi>
         <!-- 此日志 appender 是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>debug</level>
