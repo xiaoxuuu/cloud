@@ -1,4 +1,5 @@
 # 日志输出配置
 logging:
   level:
-    cc.xiaoxu.cloud: DEBUG
+    root: INFO
+    cc.xiaoxu.cloud: INFO
