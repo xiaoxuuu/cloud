@@ -6,7 +6,7 @@ spring:
   application:
     name: demo
   profiles:
-    active: local
+    active: dev
 server:
   port: 10001
   forward-headers-strategy: framework
