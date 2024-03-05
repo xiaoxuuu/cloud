@@ -46,9 +46,10 @@ public class TestController {
     public R<Void> heartbeat(HttpServletRequest request) {
 
         String nowTime = DateUtils.getNowTime();
-        log.warn("┌── 【设备心跳】：" + nowTime);
+        log.debug("┌── 【设备心跳】：" + nowTime);
         try {
             String json = getBody(request);
+            log.debug("├── 设备心跳：{}", json.replace("\n", " "));
             if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
                 if (json.endsWith("=")) {
                     json = json.substring(0, json.length() - 1);
@@ -56,14 +57,14 @@ public class TestController {
 
                 json = URLUtil.decode(json);
                 AiBoxHeartBeat aiBoxHeartBeat = JsonUtils.parse(json, AiBoxHeartBeat.class);
-                log.info("├── 盒子设备心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
+                log.debug("├── 盒子设备心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
             } else {
-                log.error("├── 盒子设备心跳读取错误：{}", json);
+                log.debug("├── 盒子设备心跳读取错误：{}", json);
             }
         } catch (Exception var4) {
             log.error("├── 盒子设备心跳处理异常：", var4);
         }
-        log.info("└── " + nowTime);
+        log.debug("└── " + nowTime);
         return R.ok();
     }
 
@@ -71,9 +72,10 @@ public class TestController {
     public R<Void> cameraHeartBeat(HttpServletRequest request) {
 
         String nowTime = DateUtils.getNowTime();
-        log.warn("┌── 【视频源心跳】：" + nowTime);
+        log.debug("┌── 【视频源心跳】：" + nowTime);
         try {
             String json = getBody(request);
+            log.debug("├── 视频源心跳：{}", json.replace("\n", " "));
             if (StringUtils.isNotEmpty(json) && StringUtils.contains(json, "DeviceId")) {
                 if (json.endsWith("=")) {
                     json = json.substring(0, json.length() - 1);
@@ -81,14 +83,14 @@ public class TestController {
 
                 json = URLUtil.decode(json);
                 AiBoxHeartBeat aiBoxHeartBeat = JsonUtils.parse(json, AiBoxHeartBeat.class);
-                log.info("├── 视频源心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
+                log.debug("├── 视频源心跳结果：{}", JsonUtils.toString(aiBoxHeartBeat));
             } else {
                 log.error("├── 视频源心跳读取错误：{}", json);
             }
         } catch (Exception var4) {
             log.error("├── 视频源心跳处理异常：", var4);
         }
-        log.info("└── " + nowTime);
+        log.debug("└── " + nowTime);
         return R.ok();
     }
 
