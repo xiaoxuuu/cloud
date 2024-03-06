@@ -21,10 +21,10 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping(path = {"/ai/aibox"})
+@RequestMapping(path = {"/api/ai/aibox"})
 public class TestController {
 
-    @RequestMapping(value = {"/research"}, name = "自研AI分析结果")
+    @RequestMapping(value = {"/analyze"}, name = "自研AI分析结果")
     public R<Void> research(@RequestParam(name = "StructData", required = false) String structData, @RequestParam(name = "ImageData", required = false) MultipartFile imageData, HttpServletRequest request) {
         String nowTime = DateUtils.getNowTime();
         log.warn("┌── 【盒子数据】：" + nowTime);
