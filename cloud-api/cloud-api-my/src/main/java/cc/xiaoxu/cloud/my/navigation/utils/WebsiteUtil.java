@@ -15,11 +15,6 @@ import java.util.regex.Pattern;
 @Slf4j
 public class WebsiteUtil {
 
-    // 处理 301 问题
-    public static void main(String[] args) {
-        System.out.println("【" + getTitle("https://xiaoxu.cc/") + "】");
-    }
-
     /**
      * 获取网页的标题
      *
@@ -34,7 +29,7 @@ public class WebsiteUtil {
         Pattern pattern = Pattern.compile(searchTitle);
         try {
             Matcher matcher = pattern.matcher(getHtmlCode(httpUrl));
-            while (matcher.find()) {
+            if (matcher.find()) {
                 return matcher.group(2);
             }
         } catch (IOException e) {
