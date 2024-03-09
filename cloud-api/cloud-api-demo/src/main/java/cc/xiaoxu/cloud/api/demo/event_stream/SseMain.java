@@ -9,6 +9,12 @@ import java.net.URL;
 public class SseMain {
 
     public static void main(String[] args) {
+
+        get();
+    }
+
+    public static void get() {
+
         try {
             // 生成传入的 URL 的对象
             URI uri = URI.create("http://127.0.0.1:10001/events");
