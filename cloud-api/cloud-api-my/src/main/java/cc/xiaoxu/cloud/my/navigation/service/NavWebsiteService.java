@@ -93,7 +93,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     public List<NavWebsite> getList() {
 
         LambdaQueryWrapper<NavWebsite> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(NavWebsite::getState, StateEnum.E.getCode());
+        queryWrapper.eq(NavWebsite::getState, StateEnum.ENABLE.getCode());
         List<NavWebsite> list = this.list(queryWrapper);
         log.debug("查询到 {} 条已知网站收藏...", list.size());
         return list;
