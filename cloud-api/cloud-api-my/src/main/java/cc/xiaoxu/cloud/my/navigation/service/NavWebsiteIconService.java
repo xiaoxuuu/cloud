@@ -35,7 +35,7 @@ public class NavWebsiteIconService extends ServiceImpl<NavWebsiteIconMapper, Nav
     public List<NavWebsiteIcon> getList() {
 
         LambdaQueryWrapper<NavWebsiteIcon> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(NavWebsiteIcon::getState, StateEnum.E.getCode());
+        queryWrapper.eq(NavWebsiteIcon::getState, StateEnum.ENABLE.getCode());
         List<NavWebsiteIcon> list = this.list(queryWrapper);
         log.debug("查询到 {} 条已知网站图标...", list.size());
         return list;

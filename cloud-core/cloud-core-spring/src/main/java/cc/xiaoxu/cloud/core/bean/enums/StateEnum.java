@@ -9,12 +9,12 @@ import lombok.Getter;
 public enum StateEnum implements EnumInterface<String> {
 
     /**
-     * 启用 E；删除 D；禁用 L；审核中 T；
+     * 数据状态
      */
-    E("E", "启用"),
-    D("D", "删除"),
-    L("L", "禁用"),
-    T("T", "审核");
+    ENABLE("E", "启用"),
+    DELETE("D", "删除"),
+    LOCK("L", "禁用"),
+    AUDITING("T", "审核");
 
     private final String code;
     private final String introduction;

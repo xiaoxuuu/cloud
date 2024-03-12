@@ -39,7 +39,7 @@ public class FileRecordService extends ServiceImpl<FileRecordMapper, FileRecord>
         fileRecord.setSuffix(suffix);
         fileRecord.setMd5(md5);
         fileRecord.setFileSize(String.valueOf(file.getSize()));
-        fileRecord.setState(StateEnum.E.getCode());
+        fileRecord.setState(StateEnum.ENABLE.getCode());
         save(fileRecord);
         return fileRecord.getId();
     }
