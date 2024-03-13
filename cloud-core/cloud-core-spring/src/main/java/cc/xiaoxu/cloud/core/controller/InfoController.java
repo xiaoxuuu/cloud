@@ -37,7 +37,7 @@ public class InfoController {
         Map<String, String> map = new HashMap<>();
         map.put("打包时间", packageTime.replace("_", " "));
         map.put("启动时间", startTime.replace("_", " "));
-        map.put("主机时间", DateUtils.getNowTime());
+        map.put("主机时间", DateUtils.getNowString());
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             map.put("主机名", inetAddress.getHostName());

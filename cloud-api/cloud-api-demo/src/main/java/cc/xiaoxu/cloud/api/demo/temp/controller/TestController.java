@@ -26,7 +26,7 @@ public class TestController {
 
     @RequestMapping(value = {"/analyze"}, name = "自研AI分析结果")
     public R<Void> research(@RequestParam(name = "StructData", required = false) String structData, @RequestParam(name = "ImageData", required = false) MultipartFile imageData, HttpServletRequest request) {
-        String nowTime = DateUtils.getNowTime();
+        String nowTime = DateUtils.getNowString();
         log.warn("┌── 【盒子数据】：" + nowTime);
         log.info("├── StructData：{}", structData);
         log.info("├── ImageData 图片大小：{}", imageData != null ? imageData.getSize() : 0L);
@@ -45,7 +45,7 @@ public class TestController {
     @RequestMapping(value = {"/heartbeat"}, name = "盒子设备心跳")
     public R<Void> heartbeat(HttpServletRequest request) {
 
-        String nowTime = DateUtils.getNowTime();
+        String nowTime = DateUtils.getNowString();
         log.debug("┌── 【设备心跳】：" + nowTime);
         try {
             String json = getBody(request);
@@ -71,7 +71,7 @@ public class TestController {
     @RequestMapping(value = {"/camera/heartbeat"}, name = "视频源心跳")
     public R<Void> cameraHeartBeat(HttpServletRequest request) {
 
-        String nowTime = DateUtils.getNowTime();
+        String nowTime = DateUtils.getNowString();
         log.debug("┌── 【视频源心跳】：" + nowTime);
         try {
             String json = getBody(request);
