@@ -68,12 +68,12 @@ public class WebsiteCheckTask {
             }
             if (success) {
                 log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
-                navWebsite.setLastAvailableTime(DateUtils.getNowTime());
+                navWebsite.setLastAvailableTime(DateUtils.getNowString());
             }
             navWebsiteService.lambdaUpdate()
                     .eq(NavWebsite::getId, navWebsite.getId())
                     .set(NavWebsite::getWebsiteName, websiteTitle)
-                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowTime())
+                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowString())
                     .update();
         }
         log.info("操作结束...");

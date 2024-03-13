@@ -146,8 +146,17 @@ public class DateUtils {
      *
      * @return 当前时间
      */
-    public static String getNowTime() {
+    public static String getNowString() {
         return localDateTimeToString(LocalDateTime.now(), DateConstants.DEFAULT_DATE_TIME_FORMAT);
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return 当前时间
+     */
+    public static Date getNowDate() {
+        return localDateTimeToDate(LocalDateTime.now());
     }
 
     /**
@@ -156,7 +165,7 @@ public class DateUtils {
      * @param pattern 样式
      * @return 当前时间
      */
-    public static String getNowTime(String pattern) {
+    public static String getNowString(String pattern) {
         return localDateTimeToString(LocalDateTime.now(), pattern);
     }
 
