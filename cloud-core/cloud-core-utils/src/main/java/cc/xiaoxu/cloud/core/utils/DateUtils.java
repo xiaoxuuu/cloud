@@ -58,7 +58,7 @@ public class DateUtils {
      * {@link String String} 转 {@link LocalDateTime LocalDateTime}
      *
      * @param date    日期
-     * @param pattern 日期格式，参考：{@link live.xiaoxu.constants.DateConstants DateConstants}
+     * @param pattern 日期格式，参考：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants DateConstants}
      * @return 转换结果
      */
     public static LocalDateTime stringToLocalDateTime(String date, String pattern) {
@@ -70,7 +70,7 @@ public class DateUtils {
     /**
      * {@link String String} 转 {@link LocalDateTime LocalDateTime}
      *
-     * @param date 日期，默认格式：{@link live.xiaoxu.constants.DateConstants#DEFAULT_DATE_TIME_FORMAT DateConstants.DEFAULT_DATE_FORMAT}
+     * @param date 日期，默认格式：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants#DEFAULT_DATE_TIME_FORMAT DateConstants.DEFAULT_DATE_FORMAT}
      * @return 转换结果
      */
     public static LocalDateTime stringToLocalDateTime(String date) {
@@ -83,7 +83,7 @@ public class DateUtils {
      * {@link LocalDateTime LocalDateTime} 转 {@link String String}
      *
      * @param localDateTime 日期
-     * @param pattern       日期格式，参考：{@link live.xiaoxu.constants.DateConstants DateConstants}
+     * @param pattern       日期格式，参考：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants DateConstants}
      * @return 转换结果
      */
     public static String localDateTimeToString(LocalDateTime localDateTime, String pattern) {
@@ -94,7 +94,7 @@ public class DateUtils {
     /**
      * {@link LocalDateTime LocalDateTime} 转 {@link String String}
      *
-     * @param localDateTime 日期，默认格式：{@link live.xiaoxu.constants.DateConstants#DEFAULT_DATE_TIME_FORMAT DateConstants.DEFAULT_DATE_FORMAT}
+     * @param localDateTime 日期，默认格式：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants#DEFAULT_DATE_TIME_FORMAT DateConstants.DEFAULT_DATE_FORMAT}
      * @return 转换结果
      */
     public static String localDateTimeToString(LocalDateTime localDateTime) {
@@ -213,7 +213,7 @@ public class DateUtils {
 
     /**
      * <p>将常见日期自动转换为 {@link LocalDateTime LocalDateTime}</p>
-     * <p>{@link String String} 类型默认使用 {@link XDateUtils#stringToLocalDateTime(String date) XDateUtils.stringToLocalDateTime(String date)} 方法</p>
+     * <p>{@link String String} 类型默认使用 {@link DateUtils#stringToLocalDateTime(String date) XDateUtils.stringToLocalDateTime(String date)} 方法</p>
      *
      * @param o 日期
      * @return 结果
