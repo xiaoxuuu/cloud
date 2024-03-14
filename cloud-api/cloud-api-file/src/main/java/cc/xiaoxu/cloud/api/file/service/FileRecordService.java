@@ -34,7 +34,7 @@ public class FileRecordService extends ServiceImpl<FileRecordMapper, FileRecord>
         } catch (IOException e) {
             throw new CustomException("未获取到文件名：" + e.getMessage());
         }
-        fileRecord.setName(DateUtils.getCurrent(DateConstants.SHORT_TIME_FORMAT) + md5 + "." + suffix);
+        fileRecord.setName(DateUtils.getNowString(DateConstants.SHORT_TIME_FORMAT) + md5 + "." + suffix);
         fileRecord.setPath(relativePath);
         fileRecord.setSuffix(suffix);
         fileRecord.setMd5(md5);

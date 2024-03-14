@@ -48,9 +48,9 @@ public class LocalFileService implements FileService {
     private String getRelativePath() {
 
         return "localFile" + FileConstants.FILE_SEPARATOR +
-                DateUtils.getCurrent(DateConstants.YEAR) + FileConstants.FILE_SEPARATOR +
-                DateUtils.getCurrent(DateConstants.MONTH) + FileConstants.FILE_SEPARATOR +
-                DateUtils.getCurrent(DateConstants.DAY);
+                DateUtils.getNowString(DateConstants.YEAR) + FileConstants.FILE_SEPARATOR +
+                DateUtils.getNowString(DateConstants.MONTH) + FileConstants.FILE_SEPARATOR +
+                DateUtils.getNowString(DateConstants.DAY);
     }
 
     private String getUploadPath() {
