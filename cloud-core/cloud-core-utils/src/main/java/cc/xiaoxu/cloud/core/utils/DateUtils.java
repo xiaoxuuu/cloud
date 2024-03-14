@@ -137,8 +137,8 @@ public class DateUtils {
      * @param pattern 格式
      * @return 日期
      */
-    public static String getCurrent(String pattern) {
-        return localDateTimeToString(LocalDateTime.now(), DateConstants.YEAR);
+    public static String getNowCustomString(String pattern) {
+        return localDateTimeToString(LocalDateTime.now(), pattern);
     }
 
     /**
@@ -177,7 +177,7 @@ public class DateUtils {
      */
     public static List<Integer> getLastSomeYear(int someYear) {
 
-        return getLastSomeYear(someYear, Integer.parseInt(getCurrent(DateConstants.YEAR)));
+        return getLastSomeYear(someYear, Integer.parseInt(getNowString(DateConstants.YEAR)));
     }
 
     /**
