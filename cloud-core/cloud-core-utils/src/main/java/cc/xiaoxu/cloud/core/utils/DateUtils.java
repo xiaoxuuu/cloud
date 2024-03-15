@@ -220,22 +220,15 @@ public class DateUtils {
      */
     public static LocalDateTime cast(Object o) {
 
-        if (null == o) {
-            return null;
-        } else if (o instanceof String) {
-            return stringToLocalDateTime((String) o);
-        } else if (o instanceof Date) {
-            return dateToLocalDateTime((Date) o);
-        } else if (o instanceof LocalDateTime) {
-            return (LocalDateTime) o;
-        } else if (o instanceof Instant) {
-            return ((Instant) o).atZone(ZONE_ID).toLocalDateTime();
-        } else if (o instanceof LocalDate) {
-            return ((LocalDate) o).atStartOfDay(ZONE_ID).toLocalDateTime();
-        } else if (o instanceof ZonedDateTime) {
-            return ((ZonedDateTime) o).toLocalDateTime();
-        } else {
-            throw new RuntimeException("日期转换时遇到暂不支持的数据类型");
-        }
+        return switch (o) {
+            case null -> null;
+            case String s -> stringToLocalDateTime(s);
+            case Date date -> dateToLocalDateTime(date);
+            case LocalDateTime localDateTime -> localDateTime;
+            case Instant instant -> instant.atZone(ZONE_ID).toLocalDateTime();
+            case LocalDate localDate -> localDate.atStartOfDay(ZONE_ID).toLocalDateTime();
+            case ZonedDateTime zonedDateTime -> zonedDateTime.toLocalDateTime();
+            default -> throw new RuntimeException("日期转换时遇到暂不支持的数据类型");
+        };
     }
 }
