@@ -208,7 +208,7 @@ public class DateUtils {
      */
     public static boolean moreThan(Object l1, Object l2) {
 
-        return cast(l1).isAfter(cast(l2));
+        return toLocalDateTime(l1).isAfter(toLocalDateTime(l2));
     }
 
     /**
@@ -218,7 +218,7 @@ public class DateUtils {
      * @param o 日期
      * @return 结果
      */
-    public static LocalDateTime cast(Object o) {
+    public static LocalDateTime toLocalDateTime(Object o) {
 
         return switch (o) {
             case null -> null;
