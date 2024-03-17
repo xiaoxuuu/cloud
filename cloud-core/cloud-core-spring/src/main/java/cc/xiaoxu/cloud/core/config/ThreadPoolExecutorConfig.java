@@ -38,39 +38,20 @@ public class ThreadPoolExecutorConfig {
      */
     private static final int KEEP_ALIVE_SECONDS = 300;
 
-    @Bean("threadPoolExecutor")
-    public ThreadPoolTaskExecutor getAsyncExecutor() {
-
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-
-        // 核心线程数（默认线程数）
-        taskExecutor.setCorePoolSize(CORE_POOL_SIZE);
-
-        // 最大线程数
-        taskExecutor.setMaxPoolSize(MAX_POOL_SIZE);
-
-        // 缓冲队列大小
-        taskExecutor.setQueueCapacity(QUEUE_CAPACITY);
-
-        // 允许线程空闲时间（单位：默认为秒）
-        taskExecutor.setKeepAliveSeconds(KEEP_ALIVE_SECONDS);
-
-        // 线程池对拒绝任务的处理策略
-        taskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-        taskExecutor.initialize();
-        return taskExecutor;
-    }
-
     @Bean(name = "threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        // 最大线程数
         executor.setMaxPoolSize(MAX_POOL_SIZE);
+        // 核心线程数（默认线程数）
         executor.setCorePoolSize(CORE_POOL_SIZE);
+        // 缓冲队列大小
         executor.setQueueCapacity(QUEUE_CAPACITY);
+        // 允许线程空闲时间（单位：默认为秒）
         executor.setKeepAliveSeconds(KEEP_ALIVE_SECONDS);
         // 线程名字前缀
-        executor.setThreadNamePrefix("threadPool-");
+        executor.setThreadNamePrefix("thread-");
         // 线程池对拒绝任务(无线程可用)的处理策略
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         // 设置核心线程池超时关闭,默认false一直存在
