@@ -3,12 +3,11 @@ package cc.xiaoxu.cloud.api.demo.event_stream;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @RestController
@@ -20,9 +19,8 @@ public class SseController {
 
     private final CopyOnWriteArrayList<SseEmitter> emitterList = new CopyOnWriteArrayList<>();
 
-    @PostMapping(value = "/events", produces = "text/event-stream")
-//    @GetMapping(value = "/events", produces = "text/event-stream")
-    public SseEmitter events(HttpServletResponse response) throws IOException {
+    @RequestMapping(value = "/events", method = {RequestMethod.GET, RequestMethod.POST}, produces = "text/event-stream")
+    public SseEmitter events(HttpServletResponse response) {
 
         // 设置响应的字符编码为 UTF-8
         response.setCharacterEncoding("UTF-8");
