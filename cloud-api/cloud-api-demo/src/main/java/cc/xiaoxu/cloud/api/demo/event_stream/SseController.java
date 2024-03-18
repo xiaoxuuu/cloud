@@ -1,6 +1,8 @@
 package cc.xiaoxu.cloud.api.demo.event_stream;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +14,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RestController
 @RequestMapping("/sse")
 public class SseController {
+
+    @Resource
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private final CopyOnWriteArrayList<SseEmitter> emitterList = new CopyOnWriteArrayList<>();
 
@@ -32,7 +37,7 @@ public class SseController {
         String conversationId = "181";
 
         // 定时发送消息
-        new Thread(() -> {
+        Runnable emitterSender = () -> {
             try {
                 emitter.send(new JsonResult<>("START", null));
                 emitter.send(new JsonResult<>("ID", 1));
@@ -49,7 +54,8 @@ public class SseController {
             } finally {
                 emitter.complete();
             }
-        }).start();
+        };
+        threadPoolTaskExecutor.execute(emitterSender);
         return emitter;
     }
 
