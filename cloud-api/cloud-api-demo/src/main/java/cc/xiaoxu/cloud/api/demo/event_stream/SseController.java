@@ -8,16 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 @RestController
 @RequestMapping("/sse")
 public class SseController {
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
-
-    private final CopyOnWriteArrayList<SseEmitter> emitterList = new CopyOnWriteArrayList<>();
 
     @RequestMapping(value = "/events", method = {RequestMethod.GET, RequestMethod.POST}, produces = "text/event-stream")
     public SseEmitter events(HttpServletResponse response) {
@@ -29,16 +25,14 @@ public class SseController {
         response.setHeader("Connection", "keep-alive");
 
         SseEmitter emitter = new SseEmitter();
-        // 保持对 SseEmitter 的引用，以便后续发送消息
-        emitterList.add(emitter);
 
-        String conversationId = "181";
+        Integer conversationId = 181;
 
         // 定时发送消息
         Runnable emitterSender = () -> {
             try {
                 emitter.send(new JsonResult<>("START", null));
-                emitter.send(new JsonResult<>("ID", 1));
+                emitter.send(new JsonResult<>("ID", conversationId));
                 emitter.send(new JsonResult<>("NAME", "你好"));
                 for (int i = 0; i < 20; i++) {
 
@@ -55,14 +49,5 @@ public class SseController {
         };
         threadPoolTaskExecutor.execute(emitterSender);
         return emitter;
-    }
-
-    // 用于关闭所有SseEmitter的辅助方法
-    public void closeAllEmitters() {
-        for (SseEmitter emitter : emitterList) {
-            if (emitter != null) {
-                emitter.complete();
-            }
-        }
     }
 }
