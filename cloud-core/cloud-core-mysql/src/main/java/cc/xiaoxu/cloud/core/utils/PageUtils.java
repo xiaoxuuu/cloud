@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.core.utils;
 
+import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -86,5 +87,10 @@ public class PageUtils {
         List<R> collect = pageInterface.getRecords().stream().map(mapper).collect(Collectors.toList());
         page.setRecords(collect);
         return page;
+    }
+
+    public static <T> Page<T> getPageCondition(PageDTO dto) {
+
+        return new Page<T>().setCurrent(dto.getCurrent()).setSize(dto.getSize()).addOrder(dto.getOrders());
     }
 }
