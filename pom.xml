@@ -14,6 +14,7 @@
         <module>cloud-core</module>
         <module>cloud-api</module>
         <module>cloud-api-single</module>
+        <module>cloud-gateway</module>
     </modules>
 
     <properties>
