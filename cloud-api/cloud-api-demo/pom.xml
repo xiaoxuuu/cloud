@@ -62,6 +62,7 @@
                             <jvmFlag>${env.jvm.xms}</jvmFlag>
                             <jvmFlag>${env.jvm.xmx}</jvmFlag>
                             <jvmFlag>-Dfile.encoding=utf-8</jvmFlag>
+                            <jvmFlag>-Duser.timezone=Asia/Shanghai</jvmFlag>
                         </jvmFlags>
                         <!-- 创建时间 -->
                         <creationTime>${maven.build.timestamp}</creationTime>
