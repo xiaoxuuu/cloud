@@ -60,6 +60,9 @@
 
         <!-- spring -->
         <spring-boot-dependencies.version>3.1.1</spring-boot-dependencies.version>
+        <spring-cloud-starter-gateway.version>4.0.9</spring-cloud-starter-gateway.version>
+        <spring-cloud-starter-alibaba-nacos-discovery.version>2023.0.0.0-RC1
+        </spring-cloud-starter-alibaba-nacos-discovery.version>
         <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
         <mybatis-plus-boot-starter.version>3.5.5</mybatis-plus-boot-starter.version>
 
@@ -142,6 +145,17 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- spring-cloud-gateway -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${spring-cloud-starter-gateway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-starter-alibaba-nacos-discovery.version}</version>
             </dependency>
 
             <!--mysql-->
