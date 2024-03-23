@@ -10,6 +10,16 @@ import org.springframework.validation.ObjectError;
 @AllArgsConstructor
 public class R<T> {
 
+    /**
+     * 成功
+     */
+    public static final int SUCCESS = 200;
+
+    /**
+     * 失败
+     */
+    public static final int FAIL = 500;
+
     @Schema(name = "返回编码", example = "0")
     public int respCode;
 
@@ -58,6 +68,11 @@ public class R<T> {
             respVo.setRespMsg(e.getMessage());
         }
         return respVo;
+    }
+
+    public static <T> R<T> fail(int code, String msg) {
+
+        return new R<>(code, msg, null, code <= 19999);
     }
 
     public static <T> R<T> fail(REnum rEnum) {
