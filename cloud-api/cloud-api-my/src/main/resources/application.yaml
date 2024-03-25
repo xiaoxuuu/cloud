@@ -13,7 +13,7 @@ spring:
   application:
     name: my
   profiles:
-    active: local
+    active: dev
   # 此变量可在 POM.xml 中配置 properties 属性读取
   datasource:
     url: jdbc:mysql://@env.api.mysql.host@:@env.api.mysql.port@/d_api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True

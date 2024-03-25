@@ -7,7 +7,7 @@ spring:
   application:
     name: single
   profiles:
-    active: local
+    active: dev
 server:
   port: 9999
   forward-headers-strategy: framework
