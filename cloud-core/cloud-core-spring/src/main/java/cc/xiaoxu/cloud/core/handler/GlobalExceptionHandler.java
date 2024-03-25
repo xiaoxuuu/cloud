@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.core.handler;
 
-import cc.xiaoxu.cloud.core.bean.enums.REnum;
-import cc.xiaoxu.cloud.core.bean.vo.R;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.vo.R;
+import cc.xiaoxu.cloud.core.utils.vo.REnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.ObjectError;
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
         log.error("运行时异常拦截: {}", e.getMessage());
         e.printStackTrace();
-        return R.fail(REnum.RUNTIME_EXCEPTION, e);
+        return R.fail(REnum.RUNTIME_EXCEPTION, e.getLocalizedMessage());
     }
 
     /**
@@ -59,6 +59,6 @@ public class GlobalExceptionHandler {
         ObjectError objectError = e.getBindingResult().getAllErrors().get(0);
         log.error("参数校验异常拦截: {}", objectError.getDefaultMessage());
         // 然后提取错误提示信息进行返回
-        return R.fail(objectError);
+        return R.fail(REnum.PARAM_ERROR, objectError.getDefaultMessage());
     }
 }

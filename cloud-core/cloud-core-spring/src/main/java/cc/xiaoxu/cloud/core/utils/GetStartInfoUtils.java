@@ -12,6 +12,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 public class GetStartInfoUtils {
 
+    /**
+     * 返回配置信息，cloud-gateway - GatewayApplication 存在同名方法，需同步修改
+     */
     public static String getLog(ConfigurableApplicationContext ctx) {
 
         String notConfigured = "Not Configured";

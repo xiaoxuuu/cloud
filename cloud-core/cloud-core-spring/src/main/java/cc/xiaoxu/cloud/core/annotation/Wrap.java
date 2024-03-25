@@ -1,9 +1,11 @@
 package cc.xiaoxu.cloud.core.annotation;
 
+import cc.xiaoxu.cloud.core.utils.vo.R;
+
 import java.lang.annotation.*;
 
 /**
- * <p>用于将 controller 返回值用 {@link cc.xiaoxu.cloud.core.bean.vo.R ResponseVO} 包裹</p>
+ * <p>用于将 controller 返回值用 {@link R ResponseVO} 包裹</p>
  * <p>可作用于方法于类上</p>
  * <p>依赖 {@link cc.xiaoxu.cloud.core.advice.ResponseBodyWrapAdvice JSONResponseBodyAdvice}</p>
  *
