@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.core.advice;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
-import cc.xiaoxu.cloud.core.bean.vo.R;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import cc.xiaoxu.cloud.core.utils.vo.R;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

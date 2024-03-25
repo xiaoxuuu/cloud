@@ -1,0 +1,10 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: gateway
+logging:
+  level:
+    root: INFO
+    cc.xiaoxu.cloud: INFO

@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.utils;
 
-import cc.xiaoxu.cloud.core.bean.vo.R;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import cc.xiaoxu.cloud.core.utils.vo.R;
 import cc.xiaoxu.cloud.filter.GlobalCacheRequestFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;

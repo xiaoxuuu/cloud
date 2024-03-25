@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: gateway
+  profiles:
+    active: dev
+  # 配置引入
+  config:
+    import:
+      - optional:cloud.yaml
+      - optional:logging.yaml
+  # nacos 配置
+  cloud:
+    nacos:
+      # nacos 服务地址
+      discovery:
+        username: @env.nacos.username@
+        password: @env.nacos.password@
+        namespace: ${spring.profiles.active}
+        server-addr: @env.nacos.server@
+logging:
+  level:
+    root: DEBUG
+    cc.xiaoxu.cloud: DEBUG

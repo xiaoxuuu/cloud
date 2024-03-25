@@ -58,23 +58,29 @@
         <env.jvm.xms>-Xms256m</env.jvm.xms>
         <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
 
+        <!-- nacos -->
+        <env.nacos.server>127.0.0.1:8848</env.nacos.server>
+        <env.nacos.username>nacos</env.nacos.username>
+        <env.nacos.password>nacos</env.nacos.password>
+
         <!-- spring -->
         <spring-boot-dependencies.version>3.1.1</spring-boot-dependencies.version>
         <spring-cloud-starter-gateway.version>4.0.9</spring-cloud-starter-gateway.version>
-        <spring-cloud-starter-alibaba-nacos-discovery.version>2023.0.0.0-RC1
+        <spring-cloud-starter-alibaba-nacos-discovery.version>2021.0.6.0
         </spring-cloud-starter-alibaba-nacos-discovery.version>
         <mybatis-spring-boot-starter.version>3.0.3</mybatis-spring-boot-starter.version>
         <mybatis-plus-boot-starter.version>3.5.5</mybatis-plus-boot-starter.version>
 
         <!-- 工具类相关 -->
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-collections4.version>4.4</commons-collections4.version>
         <fastjson2.version>2.0.46</fastjson2.version>
 
         <!-- 文档 -->
-        <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
+        <springdoc-openapi-starter-webmvc-ui.version>2.4.0</springdoc-openapi-starter-webmvc-ui.version>
+        <swagger-annotations-jakarta.version>2.2.21</swagger-annotations-jakarta.version>
 
         <!-- MySQL -->
         <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
@@ -184,6 +190,12 @@
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
+                <version>${swagger-annotations-jakarta.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

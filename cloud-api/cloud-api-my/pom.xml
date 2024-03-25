@@ -30,6 +30,7 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <!-- 此项配置用于 yaml 文件中以 @@ 的形式引用 pom.xml 内容 -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

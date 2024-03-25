@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.core.exception;
 
-import cc.xiaoxu.cloud.core.bean.enums.REnum;
-import cc.xiaoxu.cloud.core.bean.vo.R;
+import cc.xiaoxu.cloud.core.utils.vo.R;
+import cc.xiaoxu.cloud.core.utils.vo.REnum;
 import lombok.Getter;
 
 @Getter

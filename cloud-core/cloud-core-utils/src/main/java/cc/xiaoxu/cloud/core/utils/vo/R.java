@@ -1,10 +1,8 @@
-package cc.xiaoxu.cloud.core.bean.vo;
+package cc.xiaoxu.cloud.core.utils.vo;
 
-import cc.xiaoxu.cloud.core.bean.enums.REnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.validation.ObjectError;
 
 @Data
 @AllArgsConstructor
@@ -60,13 +58,10 @@ public class R<T> {
         return respVo;
     }
 
-    public static <T> R<T> fail(REnum rEnum, Exception e) {
+    public static <T> R<T> fail(REnum rEnum, String msg) {
 
         R<T> respVo = new R<>(rEnum);
-        if (null != e) {
-            e.printStackTrace();
-            respVo.setRespMsg(e.getMessage());
-        }
+        respVo.setRespMsg(msg);
         return respVo;
     }
 
@@ -78,12 +73,5 @@ public class R<T> {
     public static <T> R<T> fail(REnum rEnum) {
 
         return fail(rEnum, null);
-    }
-
-    public static <T> R<T> fail(ObjectError objectError) {
-
-        R<T> respVo = new R<>(REnum.PARAM_ERROR);
-        respVo.setRespMsg(objectError.getDefaultMessage());
-        return respVo;
     }
 }
