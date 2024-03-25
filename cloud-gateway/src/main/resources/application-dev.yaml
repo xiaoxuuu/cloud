@@ -6,5 +6,5 @@ spring:
     name: gateway
 logging:
   level:
-    root: DEBUG
-    cc.xiaoxu.cloud: DEBUG
+    root: INFO
+    cc.xiaoxu.cloud: INFO
