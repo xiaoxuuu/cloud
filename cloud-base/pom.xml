@@ -14,7 +14,7 @@
     <modules>
         <module>cloud-base-utils</module>
         <module>cloud-base-spring</module>
-        <module>cloud-base-cache</module>
+        <module>cloud-base-redis</module>
         <module>cloud-base-mysql</module>
         <module>cloud-base-core</module>
     </modules>
