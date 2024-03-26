@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-core-spring</artifactId>
+            <artifactId>cloud-base-spring</artifactId>
         </dependency>
 
         <dependency>

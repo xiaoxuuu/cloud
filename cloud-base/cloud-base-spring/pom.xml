@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud-core</artifactId>
+        <artifactId>cloud-base</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-core-spring</artifactId>
+    <artifactId>cloud-base-spring</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,7 +21,7 @@
         <!-- 工具 -->
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-core-utils</artifactId>
+            <artifactId>cloud-base-utils</artifactId>
         </dependency>
 
         <!-- SpringBoot -->

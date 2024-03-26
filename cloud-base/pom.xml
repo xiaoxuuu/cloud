@@ -9,13 +9,14 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-core</artifactId>
+    <artifactId>cloud-base</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>cloud-core-utils</module>
-        <module>cloud-core-spring</module>
-        <module>cloud-core-cache</module>
-        <module>cloud-core-mysql</module>
+        <module>cloud-base-utils</module>
+        <module>cloud-base-spring</module>
+        <module>cloud-base-cache</module>
+        <module>cloud-base-mysql</module>
+        <module>cloud-base-core</module>
     </modules>
 
     <properties>

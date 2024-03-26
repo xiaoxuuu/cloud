@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-core-utils</artifactId>
+            <artifactId>cloud-base-utils</artifactId>
         </dependency>
 
         <!-- SpringCloud Gateway -->
