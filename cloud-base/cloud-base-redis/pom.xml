@@ -23,6 +23,7 @@
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-spring</artifactId>
         </dependency>
+
         <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

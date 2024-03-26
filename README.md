@@ -22,12 +22,11 @@ cloud
 │   ├── cloud-api-demo     // [10001] 测试/演示服务
 │   ├── cloud-api-file     // [10002] 文件服务
 │   └── cloud-api-my       // [10003] 自有服务
-├── cloud-api-aggregation  // [ 9999] 聚合服务
+├── cloud-api-aggregation  // [ 9999] 聚合服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
 ├── cloud-gateway          // [ 8888] 网关
-└── cloud-base             //         插件
-    ├── cloud-base-redis   //         redis 模块
-    ├── cloud-base-core    //         core 核心模块
-    ├── cloud-base-mysql   //         mysql 模块
-    ├── cloud-base-spring  //         Spring 模块，构建一个基础的 Spring Web 服务引用这个即可
-    └── cloud-base-util    //         仅仅包含基础工具
+└── cloud-base
+    ├── cloud-base-mysql   //         mysql
+    ├── cloud-base-redis   //         redis
+    ├── cloud-base-spring  //         构建一个基础的 Spring Web 服务引用这个即可
+    └── cloud-base-util    //         仅包含基础工具
 ```
