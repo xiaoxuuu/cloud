@@ -19,15 +19,15 @@ mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P local
 基础架构
 cloud
 ├── cloud-api              // [10___] 服务
-│   ├── cloud-api-demo     // [10001] 测试服务
+│   ├── cloud-api-demo     // [10001] 测试/演示服务
 │   ├── cloud-api-file     // [10002] 文件服务
 │   └── cloud-api-my       // [10003] 自有服务
-├── cloud-api-single       // [ 9999] 聚合服务
+├── cloud-api-aggregation  // [ 9999] 聚合服务
 ├── cloud-gateway          // [ 8888] 网关
-├── cloud-core             //         插件
-│   ├── cloud-core-cache   //         cache 缓存模块   此模块依赖于 cloud-core-spring
-│   ├── cloud-core-mysql   //         mysql 数据库模块 此模块依赖于 cloud-core-spring
-│   ├── cloud-core-spring  //         Spring 核心模块  此模块依赖于 cloud-core-util
-│   └── cloud-core-util    //         基础工具
-└── pom.xml                //         依赖管理
+└── cloud-base             //         插件
+    ├── cloud-base-cache   //         cache  缓存模块
+    ├── cloud-base-core    //         core   核心模块
+    ├── cloud-base-mysql   //         mysql  数据库模块
+    ├── cloud-base-spring  //         Spring 核心模块
+    └── cloud-base-util    //         基础工具
 ```

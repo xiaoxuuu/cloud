@@ -13,7 +13,7 @@
     <modules>
         <module>cloud-base</module>
         <module>cloud-api</module>
-        <module>cloud-api-single</module>
+        <module>cloud-api-aggregation</module>
         <module>cloud-gateway</module>
     </modules>
 
