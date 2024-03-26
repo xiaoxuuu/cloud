@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Slf4j
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = "cc.xiaoxu.cloud")
-@MapperScan(basePackages = {"cc.xiaoxu.cloud.my.**.dao"})
+@MapperScan(basePackages = {"cc.xiaoxu.cloud.my.**.dao.mysql"})
 public class MyApplication {
 
     public static void main(String[] args) {
@@ -22,10 +22,6 @@ public class MyApplication {
         log.error(GetStartInfoUtils.getLog(ctx));
         // 手动执行定时任务
         WebsiteCheckTask task = ctx.getBean(WebsiteCheckTask.class);
-        log.warn("刷新数据");
-        task.refreshData();
-        log.warn("重新获取网站标题");
-        task.getWebsiteName();
         log.warn("刷新数据");
         task.refreshData();
     }

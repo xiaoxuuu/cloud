@@ -25,6 +25,7 @@ cloud
 ├── cloud-api-aggregation  // [ 9999] 聚合服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
 ├── cloud-gateway          // [ 8888] 网关
 └── cloud-base
+    ├── cloud-base-es      //         elasticsearch
     ├── cloud-base-mysql   //         mysql
     ├── cloud-base-redis   //         redis
     ├── cloud-base-spring  //         构建一个基础的 Spring Web 服务引用这个即可

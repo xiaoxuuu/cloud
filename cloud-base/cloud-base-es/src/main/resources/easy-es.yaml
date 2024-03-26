@@ -1,0 +1,65 @@
+# [配置 | Easy-Es](https://www.easy-es.cn/pages/eddebb/)
+easy-es:
+  # 开启 EE 自动配置，默认为 true，若为 false 时，则认为不启用本框架
+  enable: true
+  # 打印 banner，默认为 true
+  banner: true
+  # es 连接地址，引用服务自行填写
+  #address: 127.0.0.0:9200
+  # username: 有设置才填写，非必须
+  # password: 有设置才填写，非必须
+  # 默认值为 http 可缺省 也支持 https 免 ssl 方式 配置此值为 https 即可
+  schema: http
+  global-config:
+    # 是否开启小黑子模式，默认关闭，开启后日志将更有趣，提升编码乐趣，仅供娱乐，切勿用于其它任何用途
+    i-kun-mode: false
+    # 索引处理模式，smoothly：平滑模式，not_smoothly：非平滑模式，manual：手动模式，，默认开启此模式
+    process-index-mode: manual
+    # 开启控制台打印通过本框架生成的 DSL 语句，默认为开启，测试稳定后的生产环境建议关闭，以提升少量性能
+    print-dsl: true
+    # 当前项目是否分布式项目，默认为 true，在非手动托管索引模式下，若为分布式项目则会获取分布式锁，非分布式项目只需 synchronized 锁.
+    distributed: false
+    # 重建索引超时时间，单位小时，默认 72H 可根据 ES 中存储的数据量调整
+    reindexTimeOutHours: 72
+    # 异步处理索引是否阻塞主线程，默认阻塞，数据量过大时调整为非阻塞异步进行，项目启动更快
+    async-process-index-blocking: true
+    # 分布式环境下，平滑模式，当前客户端激活最新索引最大重试次数
+    # 若数据量过大，重建索引数据迁移时间超过 4320/60=72H，可调大此参数值
+    # 此参数值决定最大重试次数，超出此次数后仍未成功，则终止重试并记录异常日志
+    active-release-index-max-retry: 4320
+    # 分布式环境下，平滑模式，当前客户端激活最新索引重试时间间隔
+    # 若您期望最终一致性的时效性更高，可调小此值，但会牺牲一些性能
+    active-release-index-fixed-delay: 60
+
+    db-config:
+      # 是否开启下划线转驼峰，默认为 false
+      map-underscore-to-camel-case: false
+      # 索引前缀，可用于区分环境，默认为空 用法和 MP 的 tablePrefix 一样的作用和用法
+      #index-prefix: daily_
+      # id 生成策略 customize 为自定义，id 值由用户生成，比如取 MySQL 中的数据 id，如缺省此项配置，则 id 默认策略为 es 自动生成
+      # auto：由 ES 自动生成，是默认的配置，无需您额外配置 推荐
+      # uuid：系统生成 UUID，然后插入 ES (不推荐)
+      # customize：用户自定义，在此类型下，用户可以将任意数据类型的 id 存入 es 作为 es 中的数据 id
+      #   比如将 mysql 自增的 id 作为 es 的 id，可以开启此模式，或通过 @TableId(type) 注解指定.
+      id-type: customize
+      # 字段更新策略，默认为 not_null
+      field-strategy: not_empty
+      # 查询所有匹配数据，默认开启，若不开启，会导致无法获取数据总条数，其它功能不受影响，
+      # 若查询数量突破 1W 条时，需要同步调整 @IndexName 注解中的 maxResultWindow 也大于 1W，并重建索引后方可在后续查询中生效、
+      # (不推荐，建议分页查询).
+      # not_null：非 Null 判断，字段值为非 Null 时，才会被更新
+      # not_empty：非空判断，字段值为非空字符串时才会被更新
+      # ignore：忽略判断，无论字段值为什么，都会被更新
+      # 在配置了全局策略后，您仍可以通过注解针对个别类进行个性化配置，全局配置的优先级是小于注解配置的
+      enable-track-total-hits: true
+      # 数据刷新策略，默认为不刷新，若对数据时效性要求比较高，可以调整为 immediate，但性能损耗高，也可以调整为折中的 wait_until
+      # none: 默认策略，不刷新数据
+      # immediate: 立即刷新，会损耗较多性能，对数据实时性要求高的场景下适用
+      # wait_until: 请求提交数据后，等待数据完成刷新(1s)，再结束请求 性能损耗适中
+      refresh-policy: immediate
+      # 批量更新接口的阈值 默认值为 1W
+      # 突破此值需要同步调整 enable-track-total-hits=true，@IndexName.maxResultWindow > 1w，并重建索引.
+      batch-update-threshold: 10000
+      # 是否智能为字段添加 .keyword 后缀，默认开启
+      # 开启后会根据当前字段的索引类型及当前查询类型自动推断本次查询是否需要拼接 .keyword 后缀
+      smartAddKeywordSuffix: true

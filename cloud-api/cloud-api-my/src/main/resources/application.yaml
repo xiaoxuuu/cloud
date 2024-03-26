@@ -10,11 +10,21 @@ spring:
       - optional:mybatis-plus.yaml
       - optional:spring-datasource.yaml
       - optional:spring-redis.yaml
+      - optional:easy-es.yaml
   application:
     name: my
   profiles:
     active: dev
-  # 此变量可在 POM.xml 中配置 properties 属性读取
+  # nacos 配置
+  cloud:
+    nacos:
+      # nacos 服务地址
+      discovery:
+        # 此变量可在 POM.xml 中配置 properties 属性读取
+        username: @env.nacos.username@
+        password: @env.nacos.password@
+        namespace: ${spring.profiles.active}
+        server-addr: @env.nacos.server@
   datasource:
     url: jdbc:mysql://@env.api.mysql.host@:@env.api.mysql.port@/d_api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
     username: @env.api.mysql.username@
@@ -26,3 +36,7 @@ spring:
       port: @env.api.redis.port@
       password: @env.api.redis.password@
       database: @env.api.redis.database@
+
+easy-es:
+  # es 连接地址
+  address: @env.api.es.host@:@env.api.es.port@
