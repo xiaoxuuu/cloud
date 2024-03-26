@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-base-cache</artifactId>
+    <artifactId>cloud-base-redis</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>

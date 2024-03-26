@@ -25,9 +25,9 @@ cloud
 ├── cloud-api-aggregation  // [ 9999] 聚合服务
 ├── cloud-gateway          // [ 8888] 网关
 └── cloud-base             //         插件
-    ├── cloud-base-cache   //         cache  缓存模块
-    ├── cloud-base-core    //         core   核心模块
-    ├── cloud-base-mysql   //         mysql  数据库模块
-    ├── cloud-base-spring  //         Spring 核心模块
-    └── cloud-base-util    //         基础工具
+    ├── cloud-base-redis   //         redis 模块
+    ├── cloud-base-core    //         core 核心模块
+    ├── cloud-base-mysql   //         mysql 模块
+    ├── cloud-base-spring  //         Spring 模块，构建一个基础的 Spring Web 服务引用这个即可
+    └── cloud-base-util    //         仅仅包含基础工具
 ```

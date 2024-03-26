@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-base-cache</artifactId>
+            <artifactId>cloud-base-redis</artifactId>
         </dependency>
     </dependencies>
 
