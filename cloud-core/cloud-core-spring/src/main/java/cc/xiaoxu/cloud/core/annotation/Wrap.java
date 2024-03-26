@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.annotation;
 
-import cc.xiaoxu.cloud.core.utils.vo.R;
+import cc.xiaoxu.cloud.core.bean.vo.R;
 
 import java.lang.annotation.*;
 

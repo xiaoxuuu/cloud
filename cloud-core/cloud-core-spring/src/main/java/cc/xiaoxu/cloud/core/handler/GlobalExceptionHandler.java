@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.core.handler;
 
+import cc.xiaoxu.cloud.core.bean.vo.R;
+import cc.xiaoxu.cloud.core.bean.vo.REnum;
 import cc.xiaoxu.cloud.core.exception.CustomException;
-import cc.xiaoxu.cloud.core.utils.vo.R;
-import cc.xiaoxu.cloud.core.utils.vo.REnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.ObjectError;
