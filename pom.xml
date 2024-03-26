@@ -11,7 +11,7 @@
     <version>1.0</version>
 
     <modules>
-        <module>cloud-core</module>
+        <module>cloud-base</module>
         <module>cloud-api</module>
         <module>cloud-api-single</module>
         <module>cloud-gateway</module>
@@ -94,22 +94,22 @@
             <!-- 内部依赖 -->
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
-                <artifactId>cloud-core-spring</artifactId>
+                <artifactId>cloud-base-spring</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
-                <artifactId>cloud-core-utils</artifactId>
+                <artifactId>cloud-base-utils</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
-                <artifactId>cloud-core-mysql</artifactId>
+                <artifactId>cloud-base-mysql</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
-                <artifactId>cloud-core-cache</artifactId>
+                <artifactId>cloud-base-cache</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
             <dependency>

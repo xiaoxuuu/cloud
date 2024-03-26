@@ -20,11 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-core-mysql</artifactId>
+            <artifactId>cloud-base-mysql</artifactId>
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-core-cache</artifactId>
+            <artifactId>cloud-base-cache</artifactId>
         </dependency>
     </dependencies>
 
