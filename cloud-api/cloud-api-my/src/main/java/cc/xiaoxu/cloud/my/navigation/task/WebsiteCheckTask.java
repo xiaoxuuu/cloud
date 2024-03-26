@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.navigation.task;
 
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsite;
+import cc.xiaoxu.cloud.my.navigation.bean.mysql.NavWebsite;
 import cc.xiaoxu.cloud.my.navigation.service.NavWebsiteIconService;
 import cc.xiaoxu.cloud.my.navigation.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.navigation.utils.WebsiteUtil;

@@ -54,6 +54,12 @@
         <env.api.redis.password>password</env.api.redis.password>
         <env.api.redis.database>0</env.api.redis.database>
 
+        <!-- elasticsearch 鉴权信息 -->
+        <env.api.es.host>localhost</env.api.es.host>
+        <env.api.es.port>9200</env.api.es.port>
+        <env.api.es.username></env.api.es.username>
+        <env.api.es.password></env.api.es.password>
+
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
         <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
@@ -87,6 +93,9 @@
 
         <!-- MySQL -->
         <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
+
+        <!-- elasticsearch -->
+        <easy-es-boot-starter.version>2.0.0-beta7</easy-es-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -95,6 +104,11 @@
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-base-mysql</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-base-es</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
             <dependency>
@@ -178,7 +192,6 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-
             <!-- mybatis -->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -204,6 +217,12 @@
                 <version>${swagger-annotations-jakarta.version}</version>
             </dependency>
 
+            <!-- elasticsearch -->
+            <dependency>
+                <groupId>org.dromara.easy-es</groupId>
+                <artifactId>easy-es-boot-starter</artifactId>
+                <version>${easy-es-boot-starter.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

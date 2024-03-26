@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.navigation.bean.entity;
+package cc.xiaoxu.cloud.my.navigation.bean.mysql;
 
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import cc.xiaoxu.cloud.my.navigation.bean.enums.IconTypeEnum;

@@ -2,12 +2,12 @@ package cc.xiaoxu.cloud.my.navigation.service;
 
 import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsite;
-import cc.xiaoxu.cloud.my.navigation.bean.entity.NavWebsiteIcon;
+import cc.xiaoxu.cloud.my.navigation.bean.mysql.NavWebsite;
+import cc.xiaoxu.cloud.my.navigation.bean.mysql.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.my.navigation.bean.vo.NavWebsiteShowVO;
-import cc.xiaoxu.cloud.my.navigation.dao.NavWebsiteMapper;
+import cc.xiaoxu.cloud.my.navigation.dao.mysql.NavWebsiteMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
