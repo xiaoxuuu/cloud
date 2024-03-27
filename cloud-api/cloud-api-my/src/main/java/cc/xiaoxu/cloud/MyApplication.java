@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud;
 
 import cc.xiaoxu.cloud.core.utils.GetStartInfoUtils;
-import cc.xiaoxu.cloud.my.navigation.task.WebsiteCheckTask;
+import cc.xiaoxu.cloud.my.task.WebsiteCheckTask;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
