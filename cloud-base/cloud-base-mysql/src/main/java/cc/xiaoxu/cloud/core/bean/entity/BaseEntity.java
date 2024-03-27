@@ -26,9 +26,6 @@ public class BaseEntity {
     @Schema(description = "状态")
     private String state;
 
-    /**
-     * 描述
-     */
     @Schema(description = "描述")
     private String remark;
 
