@@ -21,7 +21,7 @@ public class NavWebsiteEs {
     @IndexId(type = IdType.CUSTOMIZE)
     private String id;
 
-    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD)
+    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
     @Schema(description = "搜索内容，包含以下字段：shortName websiteName url description label type")
     private String shortName;
 //

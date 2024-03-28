@@ -4,7 +4,7 @@ import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
-import cc.xiaoxu.cloud.my.task.WebsiteCheckTask;
+import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckTask;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
