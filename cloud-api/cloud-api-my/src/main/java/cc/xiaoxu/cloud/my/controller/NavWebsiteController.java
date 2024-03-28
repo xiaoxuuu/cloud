@@ -4,7 +4,7 @@ import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
-import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckTask;
+import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -21,7 +21,7 @@ public class NavWebsiteController {
     private NavWebsiteService navWebsiteService;
 
     @Resource
-    private WebsiteCheckTask websiteCheckTask;
+    private WebsiteCheckScheduled websiteCheckScheduled;
 
     // TODO 基于 ES 的分词搜索
     @Operation(summary = "搜索", description = "获取列表")
@@ -46,6 +46,6 @@ public class NavWebsiteController {
     public @ResponseBody
     void refreshData() {
 
-        websiteCheckTask.refreshData();
+        websiteCheckScheduled.refreshData();
     }
 }

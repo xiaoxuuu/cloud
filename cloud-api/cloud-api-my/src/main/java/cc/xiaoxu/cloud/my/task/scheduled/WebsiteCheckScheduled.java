@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class WebsiteCheckTask {
+public class WebsiteCheckScheduled {
 
     @Resource
     private NavWebsiteService navWebsiteService;
