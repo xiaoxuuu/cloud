@@ -7,9 +7,9 @@ spring:
 
 app:
   config:
-    # 每天一次
-    refresh-data: '0 0 0 * * ?'
-    # 每天一次
+    # 每天三点执行
+    refresh-data: '0 0 3 * * ?'
+    # 每天零点执行
     refresh-website-name: '0 0 0 * * ?'
 
 # 日志输出配置
