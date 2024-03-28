@@ -3,7 +3,7 @@ easy-es:
   # 开启 EE 自动配置，默认为 true，若为 false 时，则认为不启用本框架
   enable: true
   # 打印 banner，默认为 true
-  banner: true
+  banner: false
   # es 连接地址，引用服务自行填写
   #address: 127.0.0.0:9200
   # username: 有设置才填写，非必须

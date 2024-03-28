@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.task;
+package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
