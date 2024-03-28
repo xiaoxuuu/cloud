@@ -5,6 +5,7 @@ import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.dao.mysql.NavWebsiteIconMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Getter
 @Slf4j
 @Service
 public class NavWebsiteIconService extends ServiceImpl<NavWebsiteIconMapper, NavWebsiteIcon> {
@@ -20,10 +22,6 @@ public class NavWebsiteIconService extends ServiceImpl<NavWebsiteIconMapper, Nav
      * 数据缓存
      */
     private Map<String, NavWebsiteIcon> navIconMap;
-
-    public Map<String, NavWebsiteIcon> getNavIconMap() {
-        return navIconMap;
-    }
 
     public void setNavIconMap(List<NavWebsiteIcon> navIconList) {
         this.navIconMap = navIconList.stream().collect(Collectors.toMap(NavWebsiteIcon::getId, a -> a));
