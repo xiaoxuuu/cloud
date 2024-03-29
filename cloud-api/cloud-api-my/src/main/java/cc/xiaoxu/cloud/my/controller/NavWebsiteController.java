@@ -23,7 +23,6 @@ public class NavWebsiteController {
     @Resource
     private WebsiteCheckScheduled websiteCheckScheduled;
 
-    // TODO 基于 ES 的分词搜索
     @Operation(summary = "搜索", description = "获取列表")
     @PostMapping("/search")
     public @ResponseBody

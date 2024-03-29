@@ -22,23 +22,31 @@ public class NavWebsiteEs {
     private String id;
 
     @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
-    @Schema(description = "搜索内容，包含以下字段：shortName websiteName url description label type")
+    @Schema(description = "展示名称")
     private String shortName;
-//
-//    @Schema(description = "网站名称（抓取）")
-//    private String websiteName;
-//
-//    @Schema(description = "链接")
-//    private String url;
-//
-//    @Schema(description = "网站描述")
-//    private String description;
-//
-//    @Schema(description = "标签")
-//    private String label;
-//
-//    @Schema(description = "类型")
-//    private String type;
+
+    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
+    @Schema(description = "网站名称（抓取）")
+    private String websiteName;
+
+    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
+    @Schema(description = "链接")
+    private String url;
+
+    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
+    @Schema(description = "网站描述")
+    private String description;
+
+    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
+    @Schema(description = "标签")
+    private String label;
+
+    @IndexField(fieldType = FieldType.TEXT, analyzer = Analyzer.IK_SMART, searchAnalyzer = Analyzer.IK_MAX_WORD, ignoreCase = true)
+    @Schema(description = "类型")
+    private String type;
+
+    @Schema(description = "图标id")
+    private String iconId;
 
     @Schema(description = "上次正常访问时间（抓取）")
     private String lastAvailableTime;

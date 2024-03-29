@@ -1,7 +1,9 @@
 package cc.xiaoxu.cloud.my.task.scheduled;
 
-import cc.xiaoxu.cloud.core.cache.CacheManage;
+import cc.xiaoxu.cloud.core.cache.CacheService;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
+import cc.xiaoxu.cloud.my.bean.constant.CacheConstant;
 import cc.xiaoxu.cloud.my.bean.es.NavWebsiteEs;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
@@ -35,11 +37,8 @@ public class WebsiteCheckScheduled {
     private NavWebsiteEsMapper navWebsiteEsMapper;
 
     @Resource
-    private CacheManage cacheManage;
+    private CacheService cacheService;
 
-    /**
-     * 定时缓存图标数据到内存
-     */
     @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
 
@@ -52,25 +51,25 @@ public class WebsiteCheckScheduled {
         log.debug("刷新图标数据至 Redis...");
         List<NavWebsiteIcon> iconList = navWebsiteIconService.getList();
         Map<String, NavWebsiteIcon> iconMap = iconList.stream().collect(Collectors.toMap(NavWebsiteIcon::getId, a -> a));
-        iconMap.forEach((key, value) -> cacheManage.setCache(key, value.getIcon()));
+        cacheService.setCacheObject(CacheConstant.NAV_ICON_MAP, iconMap);
     }
 
-    /**
-     * 定时缓存数据到内存
-     */
     public void refreshUrl() {
 
         log.debug("刷新网站数据至缓存...");
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
-        LambdaEsUpdateWrapper<NavWebsiteEs> deleteWrapper = new LambdaEsUpdateWrapper<NavWebsiteEs>().eq(NavWebsiteEs::getId, "-1");
-        navWebsiteEsMapper.delete(deleteWrapper);
-        List<NavWebsiteEs> list = navWebsiteList.stream().map(k -> new NavWebsiteEs()).toList();
+        navWebsiteEsMapper.delete(new LambdaEsUpdateWrapper<>());
+        List<NavWebsiteEs> list = navWebsiteList.stream().map(this::tran).toList();
         navWebsiteEsMapper.insertBatch(list);
     }
 
-    /**
-     * 每天抓取一次数据到数据库
-     */
+    private NavWebsiteEs tran(NavWebsite entity) {
+
+        NavWebsiteEs es = new NavWebsiteEs();
+        BeanUtils.populate(entity, es);
+        return es;
+    }
+
     @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteName() {
 
