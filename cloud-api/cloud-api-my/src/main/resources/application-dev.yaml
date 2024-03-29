@@ -10,7 +10,7 @@ app:
 # 日志输出配置
 logging:
   level:
-    cc.xiaoxu.cloud: INFO
+    cc.xiaoxu.cloud: DEBUG
 easy-es:
   # es 连接地址
   address: 127.0.0.1:9200

@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud;
 
 import cc.xiaoxu.cloud.core.utils.GetStartInfoUtils;
 import cc.xiaoxu.cloud.my.task.EsTask;
-import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -20,12 +19,10 @@ public class MyApplication {
 
         // 获取 Spring Boot 上下文
         ConfigurableApplicationContext ctx = SpringApplication.run(MyApplication.class, args);
-        log.error(GetStartInfoUtils.getLog(ctx));
 
         EsTask esTask = ctx.getBean(EsTask.class);
         esTask.createIndex();
 
-        WebsiteCheckScheduled scheduled = ctx.getBean(WebsiteCheckScheduled.class);
-        scheduled.refreshData();
+        log.error(GetStartInfoUtils.getLog(ctx));
     }
 }
