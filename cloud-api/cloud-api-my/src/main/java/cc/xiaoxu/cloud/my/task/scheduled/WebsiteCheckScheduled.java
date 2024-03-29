@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.core.cache.CacheManage;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.my.bean.es.NavWebsiteEs;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
+import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.dao.es.NavWebsiteEsMapper;
 import cc.xiaoxu.cloud.my.service.NavWebsiteIconService;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -35,15 +38,28 @@ public class WebsiteCheckScheduled {
     private CacheManage cacheManage;
 
     /**
-     * 定时缓存数据到内存
+     * 定时缓存图标数据到内存
      */
     @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
 
-        // TODO redis
-        log.debug("刷新图标数据至缓存...");
-        cacheManage.setCache("", navWebsiteIconService.getList());
-        navWebsiteIconService.setNavIconMap(navWebsiteIconService.getList());
+        refreshIcon();
+        refreshUrl();
+    }
+
+    public void refreshIcon() {
+
+        log.debug("刷新图标数据至 Redis...");
+        List<NavWebsiteIcon> iconList = navWebsiteIconService.getList();
+        Map<String, NavWebsiteIcon> iconMap = iconList.stream().collect(Collectors.toMap(NavWebsiteIcon::getId, a -> a));
+        iconMap.forEach((key, value) -> cacheManage.setCache(key, value.getIcon()));
+    }
+
+    /**
+     * 定时缓存数据到内存
+     */
+    public void refreshUrl() {
+
         log.debug("刷新网站数据至缓存...");
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
         LambdaEsUpdateWrapper<NavWebsiteEs> deleteWrapper = new LambdaEsUpdateWrapper<NavWebsiteEs>().eq(NavWebsiteEs::getId, "-1");
@@ -94,6 +110,6 @@ public class WebsiteCheckScheduled {
                     .update();
         }
         log.info("操作结束...");
-        refreshData();
+        refreshUrl();
     }
 }
