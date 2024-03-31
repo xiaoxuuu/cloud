@@ -50,7 +50,6 @@ public class WebsiteCheckScheduled {
     public void refreshUrl() {
 
         log.debug("刷新网站数据至缓存...");
-        List<NavWebsite> navWebsiteList = navWebsiteService.getList();
         navWebsiteService.setNavList(navWebsiteService.getList());
     }
 
