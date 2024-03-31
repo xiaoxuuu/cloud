@@ -11,6 +11,3 @@ app:
 logging:
   level:
     cc.xiaoxu.cloud: DEBUG
-easy-es:
-  # es 连接地址
-  address: 127.0.0.1:9200

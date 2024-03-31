@@ -1,16 +1,12 @@
 package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.core.cache.CacheService;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.my.bean.constant.CacheConstant;
-import cc.xiaoxu.cloud.my.bean.es.NavWebsiteEs;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteShowVO;
-import cc.xiaoxu.cloud.my.dao.es.NavWebsiteEsMapper;
 import cc.xiaoxu.cloud.my.dao.mysql.NavWebsiteMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,8 +14,6 @@ import jakarta.annotation.Resource;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.dromara.easyes.core.biz.OrderByParam;
-import org.dromara.easyes.core.kernel.EsWrappers;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +27,6 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     @Resource
     private NavWebsiteIconService navWebsiteIconService;
 
-    @Resource
-    private NavWebsiteEsMapper navWebsiteEsMapper;
-
-    @Resource
-    private CacheService cacheService;
-
     /**
      * 数据缓存
      */
@@ -50,37 +38,40 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
      */
     public List<NavWebsiteShowVO> search(NavWebsiteSearchVO vo) {
 
-        List<NavWebsiteEs> list = EsWrappers.lambdaChainQuery(navWebsiteEsMapper)
-                .like(NavWebsiteEs::getShortName, vo.getKeyword()).or()
-                .like(NavWebsiteEs::getWebsiteName, vo.getKeyword()).or()
-                .like(NavWebsiteEs::getUrl, vo.getKeyword()).or()
-                .like(NavWebsiteEs::getDescription, vo.getKeyword()).or()
-                .like(NavWebsiteEs::getLabel, vo.getKeyword()).or()
-                .like(NavWebsiteEs::getType, vo.getKeyword()).or()
-                .like(NavWebsiteEs::getRemark, vo.getKeyword()).or()
-//                .orderBy(true, false, NavWebsiteEs::getVisitNum, NavWebsiteEs::getId)
-                .orderBy(true, getOrder())
-                .limit(30)
-                .list();
-        Map<String, NavWebsiteIcon> map = cacheService.getCacheObject(CacheConstant.NAV_ICON_MAP);
-        return list.stream()
+        Map<String, NavWebsiteIcon> navIconMap = navWebsiteIconService.getNavIconMap();
+        return navList.stream()
+                // 关键字
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(vo.getKeyword())) {
+                        return containsValue(k.getShortName(), vo.getKeyword()) ||
+                                containsValue(k.getWebsiteName(), vo.getKeyword()) ||
+                                containsValue(k.getUrl(), vo.getKeyword()) ||
+                                containsValue(k.getDescription(), vo.getKeyword());
+                    }
+                    return true;
+                })
                 // 转换类型
-                .map(k -> tran(k, map))
+                .map(this::tran)
+                // 按照类型过滤
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(vo.getType())) {
+                        return k.getTypeSet().contains(vo.getType());
+                    }
+                    return true;
+                })
+                // 按照标签过滤
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(vo.getLabel())) {
+                        return k.getLabelSet().contains(vo.getLabel());
+                    }
+                    return true;
+                })
+                // 按访问次数倒序
+                .sorted(Comparator.comparing(NavWebsiteShowVO::getVisitNum, Comparator.reverseOrder())
+                        // 按 id 倒序
+                        .thenComparing(NavWebsiteShowVO::getId, Comparator.reverseOrder()))
+                .limit(30)
                 .toList();
-
-    }
-
-    private List<OrderByParam> getOrder() {
-
-        OrderByParam id = new OrderByParam();
-        id.setOrder("_id");
-        id.setSort("DESC");
-
-        OrderByParam visitNum = new OrderByParam();
-        visitNum.setOrder("visitNum");
-        visitNum.setSort("DESC");
-
-        return List.of(visitNum, id);
     }
 
     /**
@@ -111,14 +102,14 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     /**
      * 翻译 bean
      */
-    private NavWebsiteShowVO tran(NavWebsiteEs navWebsite, Map<String, NavWebsiteIcon> map) {
+    private NavWebsiteShowVO tran(NavWebsite navWebsite) {
 
         NavWebsiteShowVO vo = new NavWebsiteShowVO();
         BeanUtils.copyProperties(navWebsite, vo);
         vo.setTypeSet(Set.of(Optional.ofNullable(navWebsite.getType()).orElse("").split(",")));
         vo.setLabelSet(Set.of(Optional.ofNullable(navWebsite.getLabel()).orElse("").split(",")));
         vo.setLastVisitDesc(getLastVisitDesc(navWebsite.getLastAvailableTime()));
-        NavWebsiteIcon navWebsiteIcon = map.getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());
+        NavWebsiteIcon navWebsiteIcon = navWebsiteIconService.getNavIconMap().getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());
         vo.setIconType(navWebsiteIcon.getType());
         // 翻译网站图标
         vo.setIcon(navWebsiteIcon.getIcon());

@@ -2,19 +2,15 @@ package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.core.cache.CacheService;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.bean.constant.CacheConstant;
-import cc.xiaoxu.cloud.my.bean.es.NavWebsiteEs;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
-import cc.xiaoxu.cloud.my.dao.es.NavWebsiteEsMapper;
 import cc.xiaoxu.cloud.my.service.NavWebsiteIconService;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.utils.WebsiteUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.dromara.easyes.core.conditions.update.LambdaEsUpdateWrapper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,9 +28,6 @@ public class WebsiteCheckScheduled {
 
     @Resource
     private NavWebsiteIconService navWebsiteIconService;
-
-    @Resource
-    private NavWebsiteEsMapper navWebsiteEsMapper;
 
     @Resource
     private CacheService cacheService;
@@ -58,16 +51,7 @@ public class WebsiteCheckScheduled {
 
         log.debug("刷新网站数据至缓存...");
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
-        navWebsiteEsMapper.delete(new LambdaEsUpdateWrapper<>());
-        List<NavWebsiteEs> list = navWebsiteList.stream().map(this::tran).toList();
-        navWebsiteEsMapper.insertBatch(list);
-    }
-
-    private NavWebsiteEs tran(NavWebsite entity) {
-
-        NavWebsiteEs es = new NavWebsiteEs();
-        BeanUtils.populate(entity, es);
-        return es;
+        navWebsiteService.setNavList(navWebsiteService.getList());
     }
 
     @Scheduled(cron = "${app.config.refresh-website-name}")

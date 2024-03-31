@@ -10,7 +10,6 @@ spring:
       - optional:mybatis-plus.yaml
       - optional:spring-datasource.yaml
       - optional:spring-redis.yaml
-      - optional:easy-es.yaml
   application:
     name: my
   profiles:
@@ -36,7 +35,3 @@ spring:
       port: @env.api.redis.port@
       password: @env.api.redis.password@
       database: @env.api.redis.database@
-
-easy-es:
-  # es 连接地址
-  address: @env.api.es.host@:@env.api.es.port@
