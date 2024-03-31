@@ -38,7 +38,6 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
      */
     public List<NavWebsiteShowVO> search(NavWebsiteSearchVO vo) {
 
-        Map<String, NavWebsiteIcon> navIconMap = navWebsiteIconService.getNavIconMap();
         return navList.stream()
                 // 关键字
                 .filter(k -> {
