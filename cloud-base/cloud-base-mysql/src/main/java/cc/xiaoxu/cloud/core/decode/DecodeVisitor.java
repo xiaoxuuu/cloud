@@ -14,6 +14,7 @@ import net.sf.jsqlparser.statement.alter.AlterSession;
 import net.sf.jsqlparser.statement.alter.AlterSystemStatement;
 import net.sf.jsqlparser.statement.alter.RenameTableStatement;
 import net.sf.jsqlparser.statement.alter.sequence.AlterSequence;
+import net.sf.jsqlparser.statement.analyze.Analyze;
 import net.sf.jsqlparser.statement.comment.Comment;
 import net.sf.jsqlparser.statement.create.index.CreateIndex;
 import net.sf.jsqlparser.statement.create.schema.CreateSchema;
@@ -30,6 +31,7 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.merge.Merge;
 import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.statement.select.*;
+import net.sf.jsqlparser.statement.show.ShowIndexStatement;
 import net.sf.jsqlparser.statement.show.ShowTablesStatement;
 import net.sf.jsqlparser.statement.truncate.Truncate;
 import net.sf.jsqlparser.statement.update.Update;
@@ -201,6 +203,11 @@ public class DecodeVisitor implements StatementVisitor, SelectVisitor, SelectIte
         Optional.ofNullable(between.getLeftExpression()).ifPresent(k -> k.accept(this));
         Optional.ofNullable(between.getBetweenExpressionStart()).ifPresent(k -> k.accept(this));
         Optional.ofNullable(between.getBetweenExpressionEnd()).ifPresent(k -> k.accept(this));
+    }
+
+    @Override
+    public void visit(OverlapsCondition overlapsCondition) {
+
     }
 
     /**
@@ -480,6 +487,11 @@ public class DecodeVisitor implements StatementVisitor, SelectVisitor, SelectIte
     }
 
     @Override
+    public void visit(SafeCastExpression safeCastExpression) {
+
+    }
+
+    @Override
     public void visit(Modulo modulo) {
 
     }
@@ -659,6 +671,11 @@ public class DecodeVisitor implements StatementVisitor, SelectVisitor, SelectIte
 
     @Override
     public void visit(GeometryDistance geometryDistance) {
+
+    }
+
+    @Override
+    public void visit(Analyze analyze) {
 
     }
 
@@ -862,6 +879,11 @@ public class DecodeVisitor implements StatementVisitor, SelectVisitor, SelectIte
     }
 
     @Override
+    public void visit(ShowIndexStatement showIndexStatement) {
+
+    }
+
+    @Override
     public void visit(ShowTablesStatement showTables) {
 
     }
@@ -1048,6 +1070,11 @@ public class DecodeVisitor implements StatementVisitor, SelectVisitor, SelectIte
 
     @Override
     public void visit(AlterSystemStatement alterSystemStatement) {
+
+    }
+
+    @Override
+    public void visit(UnsupportedStatement unsupportedStatement) {
 
     }
 
