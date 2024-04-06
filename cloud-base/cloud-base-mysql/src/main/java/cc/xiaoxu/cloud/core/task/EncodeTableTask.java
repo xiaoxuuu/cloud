@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.config;
+package cc.xiaoxu.cloud.core.task;
 
 import cc.xiaoxu.cloud.core.decode.DecodeInterceptor;
 import cc.xiaoxu.cloud.core.service.EncodeTableService;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class PostConstructManage {
+public class EncodeTableTask {
 
     @Value("${cloud.confusion:false}")
     private Boolean confusionEnable;
