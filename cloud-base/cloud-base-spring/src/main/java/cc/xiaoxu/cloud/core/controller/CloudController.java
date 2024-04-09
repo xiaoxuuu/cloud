@@ -1,6 +1,8 @@
 package cc.xiaoxu.cloud.core.controller;
 
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
+import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,5 +50,16 @@ public class CloudController {
         }
 
         return map.entrySet().stream().map(k -> k.getKey() + "：" + k.getValue()).collect(Collectors.joining("，"));
+    }
+
+    @GetMapping("/code")
+    @Operation(summary = "获取授权码", description = "执行高风险操作的授权码")
+    public String checkCode() {
+
+        return getRightCode();
+    }
+
+    private static String getRightCode() {
+        return MD5Utils.toMd5(DateUtils.getNowCustomString(DateConstants.DATE_MARK)).substring(0, 6);
     }
 }
