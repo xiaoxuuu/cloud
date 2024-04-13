@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StopWatch;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -124,7 +125,8 @@ public class StopWatchUtil {
             this.timeNanos = timeNanos;
             this.time = Util.getSimpleFormatTimeNanos(timeNanos);
             // 计算百分比
-            String percentageString = MathUtils.toString(MathUtils.multiply(MathUtils.divide(timeNanos, totalTimeNanos, 4), 100));
+            BigDecimal divide = totalTimeNanos == 0 ? BigDecimal.ZERO : MathUtils.divide(timeNanos, totalTimeNanos, 4);
+            String percentageString = MathUtils.toString(MathUtils.multiply(divide, 100));
             percentageString = percentageString.contains(".") ? percentageString : (percentageString + ".00");
             String[] split = percentageString.split("\\.");
             String integerPart = Util.supplement(split[0], true, 3, " ");
