@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
@@ -21,7 +22,21 @@ import java.util.stream.Stream;
  *
  * @author 小徐
  */
-public class StopWatchUtil {
+public class StopWatchUtil extends StopWatch {
+
+    /**
+     * 启动计时器时自动停止，并输出任务名
+     * @param taskName 任务名
+     * @param log 日志
+     */
+    public void start(String taskName, Logger log) {
+
+        if (super.isRunning()) {
+            super.stop();
+        }
+        log.info(taskName);
+        super.start(taskName);
+    }
 
     /**
      * @param sw StopWatch
@@ -31,6 +46,10 @@ public class StopWatchUtil {
 
         if (Objects.isNull(sw)) {
             return "";
+        }
+
+        if (sw.isRunning()) {
+            sw.stop();
         }
 
         // 总纳秒数
