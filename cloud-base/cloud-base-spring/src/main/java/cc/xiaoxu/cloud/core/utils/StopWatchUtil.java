@@ -34,8 +34,19 @@ public class StopWatchUtil extends StopWatch {
         if (super.isRunning()) {
             super.stop();
         }
-        log.info(taskName);
+        if (null != log) {
+            log.info(taskName);
+        }
         super.start(taskName);
+    }
+
+    /**
+     * 启动计时器时自动停止，并输出任务名
+     * @param taskName 任务名
+     */
+    public void start(String taskName) {
+
+        this.start(taskName, null);
     }
 
     /**
