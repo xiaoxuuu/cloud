@@ -20,6 +20,9 @@ public class StreamDemo {
         // 分组并取指定数据
         Map<Integer, List<Integer>> collect = streamBeanList.stream()
                 .collect(Collectors.groupingBy(StreamBean::age, Collectors.mapping(StreamBean::age, Collectors.toList())));
+        // 分组并计数
+        Map<Integer, Long> collect1 = streamBeanList.stream()
+                .collect(Collectors.groupingBy(StreamBean::age, Collectors.mapping(a -> a, Collectors.counting())));
     }
 
     public record StreamBean(String name, Integer age, List<String> hobby) {
