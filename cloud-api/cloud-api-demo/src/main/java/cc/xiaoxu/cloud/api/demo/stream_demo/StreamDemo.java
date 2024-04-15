@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.api.demo.stream_demo;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class StreamDemo {
@@ -16,5 +17,11 @@ public class StreamDemo {
         // 分组返回指定类型 map
         LinkedHashMap<Integer, List<StreamBean>> map = streamBeanList.stream()
                 .collect(Collectors.groupingBy(StreamBean::age, LinkedHashMap::new, Collectors.toList()));
+        // 分组并取指定数据
+        Map<Integer, List<Integer>> collect = streamBeanList.stream()
+                .collect(Collectors.groupingBy(StreamBean::age, Collectors.mapping(StreamBean::age, Collectors.toList())));
+    }
+
+    public record StreamBean(String name, Integer age, List<String> hobby) {
     }
 }
