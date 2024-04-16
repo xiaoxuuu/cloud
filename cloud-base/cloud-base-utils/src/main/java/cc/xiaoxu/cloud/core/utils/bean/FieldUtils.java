@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.core.utils.bean;
 
+import cc.xiaoxu.cloud.core.bean.func.FunctionGet;
+
 import java.io.Serializable;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Field;
