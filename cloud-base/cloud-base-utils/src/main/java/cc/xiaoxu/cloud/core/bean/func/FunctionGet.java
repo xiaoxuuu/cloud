@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.bean;
+package cc.xiaoxu.cloud.core.bean.func;
 
 import java.io.Serializable;
 
