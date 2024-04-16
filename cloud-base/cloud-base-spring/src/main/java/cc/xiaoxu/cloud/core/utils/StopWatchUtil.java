@@ -24,6 +24,13 @@ import java.util.stream.Stream;
  */
 public class StopWatchUtil extends StopWatch {
 
+    public StopWatchUtil() {
+    }
+
+    public StopWatchUtil(String id) {
+        super(id);
+    }
+
     /**
      * 启动计时器时自动停止，并输出任务名
      * @param taskName 任务名
