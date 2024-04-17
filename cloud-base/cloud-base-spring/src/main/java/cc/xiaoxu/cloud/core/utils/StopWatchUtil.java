@@ -1,8 +1,10 @@
 package cc.xiaoxu.cloud.core.utils;
 
+import cc.xiaoxu.cloud.core.bean.func.FunctionHandler;
 import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.springframework.util.StopWatch;
@@ -22,6 +24,7 @@ import java.util.stream.Stream;
  *
  * @author 小徐
  */
+@Slf4j
 public class StopWatchUtil extends StopWatch {
 
     public StopWatchUtil() {
@@ -47,13 +50,13 @@ public class StopWatchUtil extends StopWatch {
         super.start(taskName);
     }
 
-    /**
-     * 启动计时器时自动停止，并输出任务名
-     * @param taskName 任务名
-     */
-    public void start(String taskName) {
+    public void start(String taskName, FunctionHandler lineHandler) {
 
-        this.start(taskName, null);
+        if (super.isRunning()) {
+            super.stop();
+        }
+        lineHandler.handle(taskName);
+        super.start(taskName);
     }
 
     /**
