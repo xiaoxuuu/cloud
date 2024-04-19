@@ -41,7 +41,9 @@ public class StopWatchUtil extends StopWatch {
         if (super.isRunning()) {
             super.stop();
         }
-        lineHandler.handle(taskName);
+        if (null != lineHandler) {
+            lineHandler.handle(taskName);
+        }
         super.start(taskName);
     }
 
