@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StreamDemo {
 
@@ -14,8 +15,21 @@ public class StreamDemo {
 
     public static void main(String[] args) {
 
+        infinite();
     }
 
+    private static void infinite() {
+
+        // 生成无限流：10 个随机数
+        Stream.generate(Math::random)
+                .limit(10)
+                .forEach(System.out::println);
+
+        // 迭代产生无限流：从 1 循环到 10
+        Stream.iterate(1, n -> n + 1)
+                .limit(10)
+                .forEach(System.out::println);
+    }
     private static void groupingBy() {
         // 分组返回指定类型 map
         LinkedHashMap<Integer, List<StreamBean>> map = streamBeanList.stream()
