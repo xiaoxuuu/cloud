@@ -32,6 +32,11 @@ public class StreamDemo {
                 .forEach(System.out::println);
     }
 
+    private static void sum() {
+        int totalLength = streamBeanList.stream()
+                .mapToInt(StreamBean::age)
+                .sum();
+    }
     private static void collectingAndThen() {
         // 不需要结果的顺序时，可以使用无序流来提高性能。
         List<List<StreamBean>> collect = streamBeanList.stream()
