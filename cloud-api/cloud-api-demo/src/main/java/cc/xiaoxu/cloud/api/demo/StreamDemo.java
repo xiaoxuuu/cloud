@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.api.demo;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,6 +31,17 @@ public class StreamDemo {
                 .limit(10)
                 .forEach(System.out::println);
     }
+
+    private static void collectingAndThen() {
+        // 不需要结果的顺序时，可以使用无序流来提高性能。
+        List<List<StreamBean>> collect = streamBeanList.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        List::of
+                ));
+    }
+
     private static void groupingBy() {
         // 分组返回指定类型 map
         LinkedHashMap<Integer, List<StreamBean>> map = streamBeanList.stream()
