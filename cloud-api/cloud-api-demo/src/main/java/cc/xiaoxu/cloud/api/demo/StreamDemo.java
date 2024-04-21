@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class StreamDemo {
@@ -19,10 +20,11 @@ public class StreamDemo {
 
     public static void main(String[] args) {
 
-        indexed();
+        infinite();
     }
 
     private static void indexed() {
+        // TODO 索引访问
         LinkedHashMap<StreamBean, Integer> collect = streamBeanList.stream()
                 .collect(Collectors.toMap(
                         Function.identity(),
@@ -36,15 +38,18 @@ public class StreamDemo {
         return Collectors.reducing(0, T::hashCode, Integer::sum);
     }
 
-    /**
-     * 自定义收集器
-     */
     private static void customCollectors() {
+        // TODO 自定义收集器
         int totalLength = streamBeanList.stream().collect(sumLength());
     }
 
     private static void infinite() {
-        // 生成无限流：10 个随机数
+        // TODO 模拟滑动窗口
+        IntStream.iterate(1, n -> n + 1)
+                .limit(10)
+                .map(n -> n * n)
+                .forEach(System.out::println);
+//        // 生成无限流：10 个随机数
         Stream.generate(Math::random)
                 .limit(10)
                 .forEach(System.out::println);
@@ -83,6 +88,9 @@ public class StreamDemo {
         // 分组返回指定类型 map
         LinkedHashMap<Integer, List<StreamBean>> map = streamBeanList.stream()
                 .collect(Collectors.groupingBy(StreamBean::age, LinkedHashMap::new, Collectors.toList()));
+        // 多次分组
+        Map<Integer, Map<Integer, List<StreamBean>>> collect2 = streamBeanList.stream()
+                .collect(Collectors.groupingBy(StreamBean::age, Collectors.groupingBy(StreamBean::id)));
         // 分组并取指定数据
         Map<Integer, List<Integer>> collect = streamBeanList.stream()
                 .collect(Collectors.groupingBy(StreamBean::age, Collectors.mapping(StreamBean::age, Collectors.toList())));
