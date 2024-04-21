@@ -4,20 +4,32 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamDemo {
 
-    private static final List<StreamBean> streamBeanList = List.of(new StreamBean("Bob", 18, List.of("游泳")),
-            new StreamBean("Mark", 18, List.of("游泳")),
-            new StreamBean("Anna", 19, List.of("游泳")),
-            new StreamBean("Tom", 21, List.of("游泳")));
+    private static final List<StreamBean> streamBeanList = List.of(
+            new StreamBean(1, "Bob", 18, List.of("游泳")),
+            new StreamBean(2, "Mark", 18, List.of("游泳")),
+            new StreamBean(3, "Anna", 19, List.of("游泳")),
+            new StreamBean(4, "Tom", 21, List.of("游泳")));
 
     public static void main(String[] args) {
 
-        infinite();
+        indexed();
+    }
+
+    private static void indexed() {
+        LinkedHashMap<StreamBean, Integer> collect = streamBeanList.stream()
+                .collect(Collectors.toMap(
+                        Function.identity(),
+                        StreamBean::id,
+                        (existing, replacement) -> replacement,
+                        LinkedHashMap::new));
+        System.out.println();
     }
 
     public static <T> Collector<T, ?, Integer> sumLength() {
@@ -79,6 +91,6 @@ public class StreamDemo {
                 .collect(Collectors.groupingBy(StreamBean::age, Collectors.mapping(a -> a, Collectors.counting())));
     }
 
-    public record StreamBean(String name, Integer age, List<String> hobby) {
+    public record StreamBean(Integer id, String name, Integer age, List<String> hobby) {
     }
 }
