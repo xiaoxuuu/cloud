@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,8 +20,18 @@ public class StreamDemo {
         infinite();
     }
 
-    private static void infinite() {
+    public static <T> Collector<T, ?, Integer> sumLength() {
+        return Collectors.reducing(0, T::hashCode, Integer::sum);
+    }
 
+    /**
+     * 自定义收集器
+     */
+    private static void customCollectors() {
+        int totalLength = streamBeanList.stream().collect(sumLength());
+    }
+
+    private static void infinite() {
         // 生成无限流：10 个随机数
         Stream.generate(Math::random)
                 .limit(10)
