@@ -272,12 +272,10 @@ public class BasicMathUtils {
             return list;
         }
         for (Object val : valList) {
-            if (val instanceof Collection<?> valObjList) {
-                list.addAll(valObjList);
-            } else if (val instanceof Object[] objArray) {
-                list.addAll(Arrays.stream(objArray).toList());
-            } else {
-                list.add(val);
+            switch (val) {
+                case Collection<?> valObjList -> list.addAll(valObjList);
+                case Object[] objArray -> list.addAll(Arrays.stream(objArray).toList());
+                default -> list.add(val);
             }
         }
         return list;
