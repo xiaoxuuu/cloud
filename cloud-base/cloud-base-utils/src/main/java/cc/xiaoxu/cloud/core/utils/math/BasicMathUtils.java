@@ -230,34 +230,32 @@ public class BasicMathUtils {
 
     /**
      * <p>将常见数字自动转换为 {@link BigDecimal}</p>
-     * <p>当数字类型为{@link Double}时，调用{@link Double#toString(double) Double.toString()}，会按 double 的实际能表达的精度对尾数进行了截断。</p>
+     * <p>当数字类型为{@link Double}时，调用{@link Double#toString(double) Double.toString()}</p>
+     * <p>会按 double 的实际能表达的精度对尾数进行了截断。</p>
      *
-     * @param o 参数
+     * @param obj 参数
      * @return 结果
      */
-    protected static BigDecimal cast(Object o) {
+    protected static BigDecimal cast(Object obj) {
 
-        BigDecimal b = null;
-        if (null == o) {
-            return b;
+        if (null == obj) {
+            throw new RuntimeException("BasicMathUtils.cast obj can not be null");
         }
-        if (o instanceof String) {
-            b = StringUtils.isBlank((String) o) ? b : new BigDecimal((String) o);
-        } else if (o instanceof BigDecimal) {
-            b = (BigDecimal) o;
-        } else if (o instanceof Float) {
-            b = BigDecimal.valueOf((Float) o);
-        } else if (o instanceof Double) {
-            // 此方法内部其实执行{@link java.lang.Double#toString(double) toString()}，会按 double 的实际能表达的精度对尾数进行了截断。
-            b = BigDecimal.valueOf((Double) o);
-        } else if (o instanceof Byte || o instanceof Short || o instanceof Integer || o instanceof Long) {
-            b = new BigDecimal(o.toString());
-        } else if (o instanceof AtomicInteger) {
-            b = new BigDecimal(String.valueOf(((AtomicInteger) o).get()));
-        } else {
-            throw new RuntimeException("数字转换时遇到暂不支持的数据类型");
+        if (StringUtils.isBlank(obj.toString())) {
+            throw new RuntimeException("BasicMathUtils.cast obj not a number");
         }
-        return b;
+        return switch (obj) {
+            case String o -> new BigDecimal(o);
+            case BigDecimal o -> o;
+            case Float o -> BigDecimal.valueOf(o);
+            case Double o -> BigDecimal.valueOf(o);
+            case Byte o -> new BigDecimal(o.toString());
+            case Short o -> new BigDecimal(o.toString());
+            case Integer o -> new BigDecimal(o.toString());
+            case Long o -> new BigDecimal(o.toString());
+            case AtomicInteger o -> new BigDecimal(String.valueOf(((AtomicInteger) obj).get()));
+            default -> throw new RuntimeException("数字转换时遇到暂不支持的数据类型");
+        };
     }
 
     /**
@@ -273,8 +271,7 @@ public class BasicMathUtils {
             return list;
         }
         for (Object val : valList) {
-            if (val instanceof Collection) {
-                Collection<Object> valObjList = (Collection) val;
+            if (val instanceof Collection<?> valObjList) {
                 list.addAll(valObjList);
             } else {
                 list.add(val);
