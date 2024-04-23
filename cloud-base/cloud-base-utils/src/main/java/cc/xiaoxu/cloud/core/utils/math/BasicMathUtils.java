@@ -5,6 +5,7 @@ import cc.xiaoxu.cloud.core.utils.text.StringUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -273,6 +274,8 @@ public class BasicMathUtils {
         for (Object val : valList) {
             if (val instanceof Collection<?> valObjList) {
                 list.addAll(valObjList);
+            } else if (val instanceof Object[] objArray) {
+                list.addAll(Arrays.stream(objArray).toList());
             } else {
                 list.add(val);
             }
