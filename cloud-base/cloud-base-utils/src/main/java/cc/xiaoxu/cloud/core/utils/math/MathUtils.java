@@ -181,12 +181,11 @@ public class MathUtils extends BasicMathUtils {
         return cast(o1).compareTo(cast(o2)) < 0;
     }
 
-
     /**
      * 计算百分比
      * @param o1 数据 1
      * @param o2 数据 2
-     * @return 整数百分比，100.00% -> 10000, 12.34% -> 1234, 0.01% -> 1
+     * @return 整数百分比，例如：<p>0.01% -> 1</p><p>12.34% -> 1234</p><p>100.00% -> 10000</p>
      */
     public static Integer percentage(Object o1, Object o2) {
         return toInteger(divide(multiply(o1, 10000), o2, 0));
