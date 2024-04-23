@@ -43,7 +43,7 @@ public class MathUtils {
             return b;
         }
         List<Object> list = tranObjToList(valList);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return BigDecimal.ZERO;
         }
         for (Object val : list) {
@@ -81,7 +81,7 @@ public class MathUtils {
         }
         b1 = BigDecimal.ONE;
         List<Object> list = tranObjToList(valList);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return BigDecimal.ZERO;
         }
         for (Object val : list) {
@@ -202,7 +202,7 @@ public class MathUtils {
             return BigDecimal.ZERO;
         }
         List<Object> list = tranObjToList(valList);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return BigDecimal.ZERO;
         }
         return divide(sum(valList), list.size());
@@ -221,10 +221,10 @@ public class MathUtils {
             return max;
         }
         List<Object> list = tranObjToList(valList);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return BigDecimal.ZERO;
         }
-        max = cast(list.get(0));
+        max = cast(list.getFirst());
         for (Object val : list) {
             if (null == val) {
                 continue;
@@ -250,10 +250,10 @@ public class MathUtils {
             return min;
         }
         List<Object> list = tranObjToList(valList);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return BigDecimal.ZERO;
         }
-        min = cast(list.get(0));
+        min = cast(list.getFirst());
         for (Object val : list) {
             if (null == val) {
                 continue;
