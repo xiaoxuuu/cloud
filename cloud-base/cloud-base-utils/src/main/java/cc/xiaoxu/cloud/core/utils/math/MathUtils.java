@@ -303,6 +303,16 @@ public class MathUtils {
     }
 
     /**
+     * 计算百分比
+     * @param o1 数据 1
+     * @param o2 数据 2
+     * @return 整数百分比，100.00% -> 10000, 12.34% -> 1234, 0.01% -> 1
+     */
+    public static Integer percentage(Object o1, Object o2) {
+        return toInteger(divide(multiply(o1, 10000), o2, 0));
+    }
+
+    /**
      * 将不同类型数字转为字符串
      *
      * @param o                 数字
