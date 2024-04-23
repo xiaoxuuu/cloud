@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 数学计算工具类：提供加减乘除、平均值、最大值、最小值计算
+ * <p>数学计算基础工具类：提供加减乘除、数值转换</p>
  *
- * @author XiaoXu
- * @since 2022/11/9 10:19
+ * @author 小徐
+ * @since 2024/4/23 下午2:06
  */
 public class BasicMathUtils {
 
