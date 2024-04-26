@@ -36,6 +36,9 @@ public class EnumCustomizer implements PropertyCustomizer {
     public Schema<?> customize(Schema schema, AnnotatedType annotatedType) {
 
         Annotation[] ctxAnnotations = annotatedType.getCtxAnnotations();
+        if (null == ctxAnnotations) {
+            return schema;
+        }
         for (Annotation ctxAnnotation : ctxAnnotations) {
 
             // knife4j 兼容
