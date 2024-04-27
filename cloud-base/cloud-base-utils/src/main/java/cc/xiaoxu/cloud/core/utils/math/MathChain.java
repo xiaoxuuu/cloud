@@ -206,8 +206,8 @@ public class MathChain {
      *
      * @return 结果
      */
-    public BigDecimal toBigDecimal() {
+    public BigDecimal get() {
 
-        return MathUtils.toBigDecimal(value);
+        return value;
     }
 }
