@@ -219,7 +219,7 @@ public class BasicMathUtils {
     }
 
     /**
-     * 将 obj 转为 BigDecimal，null 默认返回 null
+     * 将 obj 转为 BigDecimal，null 抛异常
      *
      * @param o 参数
      * @return 结果
@@ -227,6 +227,17 @@ public class BasicMathUtils {
     public static BigDecimal toBigDecimal(Object o) {
 
         return cast(o);
+    }
+
+    /**
+     * 将多个 obj 转为 List<BigDecimal>，null 抛异常
+     *
+     * @param valList 参数
+     * @return 结果
+     */
+    public static List<BigDecimal> toBigDecimal(Object... valList) {
+
+        return tranObjToList(valList).stream().map(BasicMathUtils::cast).toList();
     }
 
     /**
