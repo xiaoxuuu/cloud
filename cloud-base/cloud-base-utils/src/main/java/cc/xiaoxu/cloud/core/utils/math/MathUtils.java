@@ -182,12 +182,36 @@ public class MathUtils extends BasicMathUtils {
     }
 
     /**
-     * 计算百分比
+     * 百分比
      * @param o1 数据 1
      * @param o2 数据 2
      * @return 整数百分比，例如：<p>0.01% -> 1</p><p>12.34% -> 1234</p><p>100.00% -> 10000</p>
      */
     public static Integer percentage(Object o1, Object o2) {
         return toInteger(divide(multiply(o1, 10000), o2, 0));
+    }
+
+    /**
+     * 中位数
+     * @param valList 数据
+     */
+    public static BigDecimal median(Object... valList) {
+
+        List<BigDecimal> bigDecimalList = toBigDecimal(valList).stream().sorted().toList();
+
+        int size = bigDecimalList.size();
+        int middle = size / 2;
+
+        // 检查列表大小
+        if (size % 2 == 1) {
+            // 如果列表大小为奇数，返回中间的元素
+            return bigDecimalList.get(middle);
+        } else {
+            // 如果列表大小为偶数，返回中间两个元素的平均值
+            BigDecimal lowerMiddle = bigDecimalList.get(middle - 1);
+            BigDecimal upperMiddle = bigDecimalList.get(middle);
+
+            return MathChain.of(lowerMiddle).sum(upperMiddle).divide(2).get();
+        }
     }
 }
