@@ -28,6 +28,11 @@ public class MathChain {
         this.value = MathUtils.toBigDecimal(val);
     }
 
+    public static MathChain of(Object val) {
+
+        return new MathChain(val);
+    }
+
     /**
      * 加法，内部调用{@link MathUtils#sum(Object...)}
      *
