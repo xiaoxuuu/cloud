@@ -240,7 +240,7 @@ public class DateUtils {
     public static String rfcTime(LocalDateTime localDateTime) {
 
         ZonedDateTime zonedDateTime = localDateTime.atZone(java.time.ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateConstants.RFC_PATTERN);
         return zonedDateTime.format(formatter);
     }
 }
