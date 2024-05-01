@@ -232,6 +232,11 @@ public class DateUtils {
         };
     }
 
+    public static String rfcTime() {
+
+        return rfcTime(LocalDateTime.now());
+    }
+
     public static String rfcTime(LocalDateTime localDateTime) {
 
         ZonedDateTime zonedDateTime = localDateTime.atZone(java.time.ZoneId.systemDefault());
