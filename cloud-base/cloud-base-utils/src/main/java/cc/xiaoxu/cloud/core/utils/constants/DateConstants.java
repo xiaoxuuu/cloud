@@ -78,4 +78,9 @@ public class DateConstants {
      * 时分
      */
     public static final String HOUR_MINUTE = "HH:mm";
+
+    /**
+     * RFC3339 格式
+     */
+    public static final String RFC_PATTERN = "yyyy-MM-dd'T'HH:mm:ssXXX";
 }
