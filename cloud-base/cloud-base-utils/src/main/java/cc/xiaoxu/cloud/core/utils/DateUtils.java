@@ -231,4 +231,11 @@ public class DateUtils {
             default -> throw new RuntimeException("日期转换时遇到暂不支持的数据类型");
         };
     }
+
+    public static String rfcTime(LocalDateTime localDateTime) {
+
+        ZonedDateTime zonedDateTime = localDateTime.atZone(java.time.ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        return zonedDateTime.format(formatter);
+    }
 }
