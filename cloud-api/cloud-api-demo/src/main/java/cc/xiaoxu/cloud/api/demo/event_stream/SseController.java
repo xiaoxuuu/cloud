@@ -1,7 +1,11 @@
 package cc.xiaoxu.cloud.api.demo.event_stream;
 
+import cc.xiaoxu.cloud.core.annotation.Wrap;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,6 +21,7 @@ public class SseController {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+    @Wrap(disabled = true)
     @RequestMapping(value = "/events", method = {RequestMethod.GET, RequestMethod.POST}, produces = "text/event-stream")
     public SseEmitter events(HttpServletResponse response) {
 
@@ -30,18 +35,16 @@ public class SseController {
 
         Integer conversationId = 181;
 
-        // 定时发送消息
+        // 发送消息
         Runnable emitterSender = () -> {
             try {
-                Random random = new Random();
                 emitter.send(new JsonResult<>("START", null));
                 emitter.send(new JsonResult<>("ID", conversationId));
                 emitter.send(new JsonResult<>("NAME", "你好"));
                 for (char c : markdown.toCharArray()) {
-                    Thread.sleep(random.nextInt(200) + 50);
+                    Thread.sleep(new Random().nextInt(200) + 50);
                     emitter.send(new JsonResult<>("MSG", c));
                 }
-
                 emitter.send(new JsonResult<>("END", null));
             } catch (Exception ignored) {
             } finally {
@@ -50,6 +53,16 @@ public class SseController {
         };
         threadPoolTaskExecutor.execute(emitterSender);
         return emitter;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JsonResult<T> {
+
+        private String type;
+
+        private T data;
     }
 
     public static final String markdown = """
