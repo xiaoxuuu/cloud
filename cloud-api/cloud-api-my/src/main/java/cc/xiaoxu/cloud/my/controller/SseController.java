@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo.event_stream;
+package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import jakarta.annotation.Resource;
