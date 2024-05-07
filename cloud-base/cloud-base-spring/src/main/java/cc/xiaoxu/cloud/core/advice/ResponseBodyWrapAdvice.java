@@ -54,7 +54,7 @@ public class ResponseBodyWrapAdvice implements ResponseBodyAdvice<Object> {
                                   @NotNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   @NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response) {
 
-        boolean bodyIsString = body instanceof String;
+        boolean bodyIsString = returnType.getParameterType() == String.class;
         R<Object> r;
         Object data;
         if (body instanceof R) {
