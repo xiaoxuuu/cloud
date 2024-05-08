@@ -21,4 +21,32 @@ public class Hex36Util {
         }
         return result.toString();
     }
+
+
+    // 将36进制字符串转换为十进制数
+    public static int convertFromBase36(String base36) {
+        int decimal = 0;
+        int length = base36.length();
+        for (int i = 0; i < length; i++) {
+            char ch = base36.charAt(length - i - 1);
+            int digit = getDigitFromChar(ch);
+            decimal += digit * (int) Math.pow(36, i);
+        }
+        return decimal;
+    }
+
+    // 将单个字符转换为0-35的数值
+    private static int getDigitFromChar(char ch) {
+        if (ch >= '0' && ch <= '9') {
+            return ch - '0';
+        }
+        if (ch >= 'A' && ch <= 'Z') {
+            return ch - 'A' + 10;
+        }
+        // 如果是小写字母，也需要处理
+        if (ch >= 'a' && ch <= 'z') {
+            return ch - 'a' + 10;
+        }
+        throw new IllegalArgumentException("无效的36进制数字: " + ch);
+    }
 }
