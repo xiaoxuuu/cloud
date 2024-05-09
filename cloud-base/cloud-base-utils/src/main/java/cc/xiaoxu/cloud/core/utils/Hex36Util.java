@@ -22,8 +22,9 @@ public class Hex36Util {
         return result.toString();
     }
 
-
-    // 将36进制字符串转换为十进制数
+    /**
+     * 将36进制字符串转换为十进制数
+     */
     public static int convertFromBase36(String base36) {
         int decimal = 0;
         int length = base36.length();
@@ -35,7 +36,9 @@ public class Hex36Util {
         return decimal;
     }
 
-    // 将单个字符转换为0-35的数值
+    /**
+     * 将单个字符转换为0-35的数值
+     */
     private static int getDigitFromChar(char ch) {
         if (ch >= '0' && ch <= '9') {
             return ch - '0';
