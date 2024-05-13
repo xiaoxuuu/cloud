@@ -5,6 +5,8 @@ import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
@@ -24,6 +26,9 @@ import java.util.stream.Stream;
  */
 public class StopWatchUtil extends StopWatch {
 
+    private static final Logger log = LoggerFactory.getLogger(StopWatchUtil.class);
+    private FunctionHandler lineHandler;
+
     public StopWatchUtil() {
     }
 
@@ -31,12 +36,21 @@ public class StopWatchUtil extends StopWatch {
         super(id);
     }
 
+    public StopWatchUtil(FunctionHandler lineHandler) {
+        this.lineHandler = lineHandler;
+    }
+
+    public StopWatchUtil(String id, FunctionHandler lineHandler) {
+        super(id);
+        this.lineHandler = lineHandler;
+    }
+
     /**
      * 启动计时器时自动停止，并输出任务名
      * @param taskName 任务名
      * @param lineHandler 日志输出函数
      */
-    public void start(String taskName, FunctionHandler lineHandler) {
+    public void start(String taskName) {
 
         if (super.isRunning()) {
             super.stop();
@@ -47,8 +61,11 @@ public class StopWatchUtil extends StopWatch {
         super.start(taskName);
     }
 
-    public void print(FunctionHandler lineHandler) {
+    public void print() {
 
+        if (null == lineHandler) {
+            log.error("未配置日志输出类");
+        }
         if (super.isRunning()) {
             super.stop();
         }
@@ -222,7 +239,7 @@ public class StopWatchUtil extends StopWatch {
             if (s.length() >= length) {
                 return s;
             }
-            String s1 = String.valueOf(str).repeat(length - s.length());
+            String s1 = java.lang.String.valueOf(str).repeat(length - s.length());
             if (flag) {
                 s1 = s1 + s;
             } else {
