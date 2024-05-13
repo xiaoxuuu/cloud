@@ -1,9 +1,17 @@
 package cc.xiaoxu.cloud.core.utils;
 
+/**
+ * <p>三十六进制工具类</p>
+ *
+ * @author 小徐
+ * @since 2024/5/13 下午3:34
+ */
 public class Hex36Util {
 
     /**
-     * 将十进制数转换为36进制字符串
+     * 将十进制数转换为 三十六进制字符串
+     * @param decimal 十进制数
+     * @return 三十六进制数
      */
     public static String convertToBase36(long decimal) {
 
@@ -23,7 +31,9 @@ public class Hex36Util {
     }
 
     /**
-     * 将36进制字符串转换为十进制数
+     * 将三十六进制字符串转换为十进制数
+     * @param base36 三十六进制数
+     * @return 十进制数
      */
     public static int convertFromBase36(String base36) {
         int decimal = 0;
@@ -37,7 +47,7 @@ public class Hex36Util {
     }
 
     /**
-     * 将单个字符转换为0-35的数值
+     * 将单个字符转换为 0-35 的数值，小写字母会转为大写字母
      */
     private static int getDigitFromChar(char ch) {
         if (ch >= '0' && ch <= '9') {
@@ -50,6 +60,6 @@ public class Hex36Util {
         if (ch >= 'a' && ch <= 'z') {
             return ch - 'a' + 10;
         }
-        throw new IllegalArgumentException("无效的36进制数字: " + ch);
+        throw new IllegalArgumentException("无效的 36 进制数字: " + ch);
     }
 }
