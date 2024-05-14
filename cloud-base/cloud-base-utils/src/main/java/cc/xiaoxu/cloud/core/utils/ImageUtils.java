@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.core.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Base64;
 
@@ -29,7 +30,7 @@ public class ImageUtils {
      */
     public static String encodeToBase64(String imageUrl) throws Exception {
 
-        URL url = new URL(imageUrl);
+        URL url = new URI(imageUrl).toURL();
         InputStream inputStream = url.openStream();
         byte[] bytes = toByteArray(inputStream);
         inputStream.close();
