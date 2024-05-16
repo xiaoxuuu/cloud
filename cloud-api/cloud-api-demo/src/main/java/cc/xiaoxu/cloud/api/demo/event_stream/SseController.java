@@ -30,6 +30,7 @@ public class SseController {
         response.setHeader("Content-Type", "text/event-steam");
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Connection", "keep-alive");
+        response.setHeader("X-Accel-Buffering", "no");
 
         SseEmitter emitter = new SseEmitter();
 
