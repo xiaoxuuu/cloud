@@ -50,7 +50,7 @@ public class SseController {
 
         // 设置响应的字符编码为 UTF-8
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-Type", "text/event-steam");
+        response.setHeader("Content-Type", MediaType.TEXT_EVENT_STREAM_VALUE);
         response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Connection", "keep-alive");
         response.setHeader("X-Accel-Buffering", "no");
