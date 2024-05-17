@@ -25,7 +25,7 @@ public class SseController {
 
     @Wrap(disabled = true)
     @RequestMapping(value = "/flux", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<JsonResult<String>> flux(HttpServletResponse response) {
+    public Flux<JsonResult<String>> flux() {
 
         return Flux.create(sink -> {
             try {
