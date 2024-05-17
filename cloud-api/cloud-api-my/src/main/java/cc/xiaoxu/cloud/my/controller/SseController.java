@@ -6,11 +6,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import reactor.core.publisher.Flux;
 
 import java.util.Random;
 
@@ -22,14 +24,34 @@ public class SseController {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Wrap(disabled = true)
-    @RequestMapping(value = "/events", method = {RequestMethod.GET, RequestMethod.POST}, produces = "text/event-stream")
+    @RequestMapping(value = "/flux", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<JsonResult<String>> flux() {
+
+        return Flux.create(sink -> {
+            try {
+                sink.next(new JsonResult<>("START", null));
+                sink.next(new JsonResult<>("ID", "181"));
+                sink.next(new JsonResult<>("NAME", "你好"));
+                for (char c : markdown.toCharArray()) {
+                    Thread.sleep(new Random().nextInt(10) + 5);
+                    sink.next(new JsonResult<>("MSG", String.valueOf(c)));
+                }
+                sink.next(new JsonResult<>("END", null));
+            } catch (Exception ignored) {
+            } finally {
+                sink.complete();
+            }
+        });
+    }
+
+    @Wrap(disabled = true)
+    @RequestMapping(value = "/events", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter events(HttpServletResponse response) {
 
         // 设置响应的字符编码为 UTF-8
         response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-Type", "text/event-steam");
-        response.setHeader("Cache-Control", "no-cache");
         response.setHeader("Connection", "keep-alive");
+        response.setHeader("X-Accel-Buffering", "no");
 
         SseEmitter emitter = new SseEmitter();
 
