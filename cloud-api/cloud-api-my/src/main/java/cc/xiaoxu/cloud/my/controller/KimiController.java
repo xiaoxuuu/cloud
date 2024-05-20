@@ -56,11 +56,11 @@ public class KimiController {
         // 发送消息
         Runnable emitterSender = () -> {
             try {
-                emitter.send(new SseVO<>("START", null));
-                emitter.send(new SseVO<>("ID", vo.getTalkId()));
-                emitter.send(new SseVO<>("NAME", vo.getQuestion()));
+                emitter.send(SseVO.start());
+                emitter.send(SseVO.id(vo.getTalkId()));
+                emitter.send(SseVO.name(vo.getQuestion()));
                 talkToKimi(vo, emitter);
-                emitter.send(new SseVO<>("END", null));
+                emitter.send(SseVO.end());
             } catch (Exception ignored) {
             } finally {
                 emitter.complete();
@@ -125,7 +125,7 @@ public class KimiController {
                     break;
                 }
                 if (StringUtils.isNotBlank(data)) {
-                    emitter.send(new SseVO<>("MSG", data));
+                    emitter.send(SseVO.msg(data));
                     System.out.print(data);
                 }
             }
