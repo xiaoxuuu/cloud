@@ -95,8 +95,8 @@ public class KimiController {
             URL url = URI.create("https://api.moonshot.cn/v1/chat/completions").toURL();
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "text/event-stream");
+            connection.setRequestProperty("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+            connection.setRequestProperty("Accept", MediaType.TEXT_EVENT_STREAM_VALUE);
             connection.setRequestProperty("Authorization", "Bearer " + vo.getApiKey());
             connection.setDoOutput(true);
             connection.setDoInput(true);
@@ -152,7 +152,13 @@ public class KimiController {
         }
         Choice choice = kimiResult.choices.getFirst();
         if ("stop".equals(choice.finishReason)) {
-            throw new KimiFinishException("" + kimiResult.choices().getFirst().usage.totalTokens);
+            if (null == choice.usage) {
+                return null;
+            }
+            if (null == choice.usage.totalTokens) {
+                return null;
+            }
+            throw new KimiFinishException("" + choice.usage.totalTokens);
         }
 
         if (null == choice.delta) {
