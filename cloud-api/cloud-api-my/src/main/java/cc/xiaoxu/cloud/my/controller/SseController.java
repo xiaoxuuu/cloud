@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.core.annotation.Wrap;
 import cc.xiaoxu.cloud.my.bean.vo.SseVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import reactor.core.publisher.Flux;
 
+import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @RestController
 @RequestMapping("/sse")
 public class SseController {
@@ -42,6 +46,8 @@ public class SseController {
         });
     }
 
+    private static final Map<String, SseEmitter> sseMap = new ConcurrentHashMap<>();
+
     @Wrap(disabled = true)
     @RequestMapping(value = "/events", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter events(HttpServletResponse response) {
@@ -51,7 +57,14 @@ public class SseController {
         response.setHeader("Connection", "keep-alive");
         response.setHeader("X-Accel-Buffering", "no");
 
+        SseEmitter sseEmitter = sseMap.get("vo.getTalkId()");
+        if (null != sseEmitter) {
+            return sseEmitter;
+        }
+
         SseEmitter emitter = new SseEmitter();
+        log.error("new SseEmitter()");
+        sseMap.put("vo.getTalkId()", emitter);
 
         Integer conversationId = 181;
 
@@ -69,6 +82,7 @@ public class SseController {
             } catch (Exception ignored) {
             } finally {
                 emitter.complete();
+                sseMap.remove("vo.getTalkId()");
             }
         };
         threadPoolTaskExecutor.execute(emitterSender);
