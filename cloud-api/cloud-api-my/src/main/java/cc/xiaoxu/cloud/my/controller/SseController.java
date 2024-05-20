@@ -31,14 +31,14 @@ public class SseController {
 
         return Flux.create(sink -> {
             try {
-                sink.next(new SseVO<>("START", null));
-                sink.next(new SseVO<>("ID", "181"));
-                sink.next(new SseVO<>("NAME", "你好"));
+                sink.next(SseVO.start());
+                sink.next(SseVO.id("181"));
+                sink.next(SseVO.name("会话181"));
                 for (char c : markdown.toCharArray()) {
                     Thread.sleep(new Random().nextInt(10) + 5);
-                    sink.next(new SseVO<>("MSG", String.valueOf(c)));
+                    sink.next(SseVO.msg(String.valueOf(c)));
                 }
-                sink.next(new SseVO<>("END", null));
+                sink.next(SseVO.end());
             } catch (Exception ignored) {
             } finally {
                 sink.complete();
@@ -71,14 +71,14 @@ public class SseController {
         // 发送消息
         Runnable emitterSender = () -> {
             try {
-                emitter.send(new SseVO<>("START", null));
-                emitter.send(new SseVO<>("ID", conversationId));
-                emitter.send(new SseVO<>("NAME", "你好"));
+                emitter.send(SseVO.start());
+                emitter.send(SseVO.id(conversationId));
+                emitter.send(SseVO.name("你好"));
                 for (char c : markdown.toCharArray()) {
                     Thread.sleep(new Random().nextInt(20) + 10);
-                    emitter.send(new SseVO<>("MSG", c));
+                    emitter.send(SseVO.msg(c));
                 }
-                emitter.send(new SseVO<>("END", null));
+                emitter.send(SseVO.end());
             } catch (Exception ignored) {
             } finally {
                 emitter.complete();
