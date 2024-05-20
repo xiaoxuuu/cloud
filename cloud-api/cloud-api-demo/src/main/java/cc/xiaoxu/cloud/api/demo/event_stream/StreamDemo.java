@@ -14,9 +14,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author sznp
- */
 @Slf4j
 public class StreamDemo {
 
