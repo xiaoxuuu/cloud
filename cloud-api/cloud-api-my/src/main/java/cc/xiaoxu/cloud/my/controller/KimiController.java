@@ -64,6 +64,7 @@ public class KimiController {
             } catch (Exception ignored) {
             } finally {
                 emitter.complete();
+                sseMap.remove(vo.getTalkId());
             }
         };
         threadPoolTaskExecutor.execute(emitterSender);
