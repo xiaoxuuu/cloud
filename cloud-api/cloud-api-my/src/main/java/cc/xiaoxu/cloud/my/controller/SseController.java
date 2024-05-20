@@ -1,11 +1,9 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import cc.xiaoxu.cloud.my.bean.vo.SseVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,18 +23,18 @@ public class SseController {
 
     @Wrap(disabled = true)
     @RequestMapping(value = "/flux", method = {RequestMethod.GET, RequestMethod.POST}, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<JsonResult<String>> flux() {
+    public Flux<SseVO<String>> flux() {
 
         return Flux.create(sink -> {
             try {
-                sink.next(new JsonResult<>("START", null));
-                sink.next(new JsonResult<>("ID", "181"));
-                sink.next(new JsonResult<>("NAME", "你好"));
+                sink.next(new SseVO<>("START", null));
+                sink.next(new SseVO<>("ID", "181"));
+                sink.next(new SseVO<>("NAME", "你好"));
                 for (char c : markdown.toCharArray()) {
                     Thread.sleep(new Random().nextInt(10) + 5);
-                    sink.next(new JsonResult<>("MSG", String.valueOf(c)));
+                    sink.next(new SseVO<>("MSG", String.valueOf(c)));
                 }
-                sink.next(new JsonResult<>("END", null));
+                sink.next(new SseVO<>("END", null));
             } catch (Exception ignored) {
             } finally {
                 sink.complete();
@@ -60,14 +58,14 @@ public class SseController {
         // 发送消息
         Runnable emitterSender = () -> {
             try {
-                emitter.send(new JsonResult<>("START", null));
-                emitter.send(new JsonResult<>("ID", conversationId));
-                emitter.send(new JsonResult<>("NAME", "你好"));
+                emitter.send(new SseVO<>("START", null));
+                emitter.send(new SseVO<>("ID", conversationId));
+                emitter.send(new SseVO<>("NAME", "你好"));
                 for (char c : markdown.toCharArray()) {
                     Thread.sleep(new Random().nextInt(20) + 10);
-                    emitter.send(new JsonResult<>("MSG", c));
+                    emitter.send(new SseVO<>("MSG", c));
                 }
-                emitter.send(new JsonResult<>("END", null));
+                emitter.send(new SseVO<>("END", null));
             } catch (Exception ignored) {
             } finally {
                 emitter.complete();
@@ -75,16 +73,6 @@ public class SseController {
         };
         threadPoolTaskExecutor.execute(emitterSender);
         return emitter;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class JsonResult<T> {
-
-        private String type;
-
-        private T data;
     }
 
     public static final String markdown = """
