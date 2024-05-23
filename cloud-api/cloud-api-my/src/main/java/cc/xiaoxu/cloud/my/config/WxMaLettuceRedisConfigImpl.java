@@ -27,7 +27,7 @@ public class WxMaLettuceRedisConfigImpl extends WxMpDefaultConfigImpl {
     }
 
     public WxMaLettuceRedisConfigImpl(@NonNull StringRedisTemplate stringRedisTemplate) {
-        this(stringRedisTemplate, null);
+        this(stringRedisTemplate, ACCESS_TOKEN_KEY);
     }
 
     private WxMaLettuceRedisConfigImpl(@NonNull WxRedisOps redisOps, String keyPrefix) {
