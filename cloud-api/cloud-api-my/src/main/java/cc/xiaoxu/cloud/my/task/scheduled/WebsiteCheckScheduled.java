@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.core.cache.CacheService;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.my.bean.constant.CacheConstant;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
 import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.service.NavWebsiteIconService;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -43,8 +40,7 @@ public class WebsiteCheckScheduled {
 
         log.debug("刷新图标数据至 Redis...");
         List<NavWebsiteIcon> iconList = navWebsiteIconService.getList();
-        Map<String, NavWebsiteIcon> iconMap = iconList.stream().collect(Collectors.toMap(NavWebsiteIcon::getId, a -> a));
-        cacheService.setCacheObject(CacheConstant.NAV_ICON_MAP, iconMap);
+        navWebsiteIconService.setNavIconMap(iconList);
     }
 
     public void refreshUrl() {

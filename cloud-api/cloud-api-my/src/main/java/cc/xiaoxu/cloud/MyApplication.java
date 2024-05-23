@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud;
 
 import cc.xiaoxu.cloud.core.utils.GetStartInfoUtils;
+import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +19,8 @@ public class MyApplication {
 
         // 获取 Spring Boot 上下文
         ConfigurableApplicationContext ctx = SpringApplication.run(MyApplication.class, args);
-
+        WebsiteCheckScheduled websiteCheckScheduled = ctx.getBean(WebsiteCheckScheduled.class);
+        websiteCheckScheduled.refreshData();
         log.error(GetStartInfoUtils.getLog(ctx));
     }
 }
