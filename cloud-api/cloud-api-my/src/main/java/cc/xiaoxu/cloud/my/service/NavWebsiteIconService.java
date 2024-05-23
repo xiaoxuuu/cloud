@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class NavWebsiteIconService extends ServiceImpl<NavWebsiteIconMapper, Nav
     /**
      * 数据缓存
      */
-    private Map<String, NavWebsiteIcon> navIconMap;
+    private Map<String, NavWebsiteIcon> navIconMap = new HashMap<>();
 
     public void setNavIconMap(List<NavWebsiteIcon> navIconList) {
         this.navIconMap = navIconList.stream().collect(Collectors.toMap(NavWebsiteIcon::getId, a -> a));
