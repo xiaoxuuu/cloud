@@ -35,3 +35,15 @@ spring:
       port: @env.api.redis.port@
       password: @env.api.redis.password@
       database: @env.api.redis.database@
+wx:
+  mp:
+    useRedis: true
+    configs:
+      # 第一个公众号的 appid
+      - appId: @env.api.wechat.mp.app.id@
+        # 公众号的 secret
+        secret: @env.api.wechat.mp.secret@
+        # 接口配置里的 Token 值
+        token: @env.api.wechat.mp.token@
+        # 接口配置里的 EncodingAESKey 值
+        aesKey: @env.api.wechat.mp.aes.key@

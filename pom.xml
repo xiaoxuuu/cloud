@@ -54,6 +54,12 @@
         <env.api.redis.password>password</env.api.redis.password>
         <env.api.redis.database>0</env.api.redis.database>
 
+        <!-- 微信公众号配置 -->
+        <env.api.wechat.mp.app.id>0</env.api.wechat.mp.app.id>
+        <env.api.wechat.mp.secret>0</env.api.wechat.mp.secret>
+        <env.api.wechat.mp.token>0</env.api.wechat.mp.token>
+        <env.api.wechat.mp.aes.key>0</env.api.wechat.mp.aes.key>
+
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
         <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
