@@ -1,6 +1,12 @@
 package cc.xiaoxu.cloud.core.utils;
 
-public class VirtualMachineUtil {
+/**
+ * <p>代码工具类</p>
+ *
+ * @author 小徐
+ * @since 2024/5/30 下午2:13
+ */
+public class CodeUtil {
 
     public static int getCurrentLineNumber() {
         return getLineNumber(2);
@@ -22,6 +28,11 @@ public class VirtualMachineUtil {
         return getInfo(4);
     }
 
+    /**
+     * 获取指定栈内容
+     * @param i 指定栈层数
+     * @return 对应名称信息
+     */
     private static String getInfo(int i) {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         if (stackTrace.length < i) {
