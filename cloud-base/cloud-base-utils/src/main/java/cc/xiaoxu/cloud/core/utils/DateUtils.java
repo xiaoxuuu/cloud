@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>日期工具类</p>
@@ -208,6 +209,9 @@ public class DateUtils {
      */
     public static boolean moreThan(Object l1, Object l2) {
 
+        if (Objects.isNull(l1) || Objects.isNull(l2)) {
+            return false;
+        }
         return toLocalDateTime(l1).isAfter(toLocalDateTime(l2));
     }
 
@@ -221,7 +225,6 @@ public class DateUtils {
     public static LocalDateTime toLocalDateTime(Object o) {
 
         return switch (o) {
-            case null -> null;
             case String s -> stringToLocalDateTime(s);
             case Date date -> dateToLocalDateTime(date);
             case LocalDateTime localDateTime -> localDateTime;
