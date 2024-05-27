@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author Xiao Xu
  */
 @RestController
-@Tag(name = "系统信息", description = "core 内置接口，用于查询模块信息，依赖 core 的服务均自带此接口")
+@Tag(name = "系统信息", description = "core-base-spring 内置接口，用于查询模块信息，依赖 core 的服务均自带此接口")
 @RequestMapping("/cloud")
 public class CloudController {
 
@@ -53,7 +53,7 @@ public class CloudController {
     }
 
     @GetMapping("/code")
-    @Operation(summary = "获取授权码", description = "执行高风险操作的授权码")
+    @Operation(summary = "获取授权码", description = "执行高风险操作的授权码，每天 00:00:00 自动更新")
     public String checkCode() {
 
         return getRightCode();
