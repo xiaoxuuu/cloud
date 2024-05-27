@@ -235,11 +235,20 @@ public class DateUtils {
         };
     }
 
+    /**
+     * 获取 RFC 格式时间
+     * @return RFC 格式时间
+     */
     public static String rfcTime() {
 
         return rfcTime(LocalDateTime.now());
     }
 
+    /**
+     * 获取 RFC 格式时间
+     * @param localDateTime 日期时间
+     * @return RFC 格式时间
+     */
     public static String rfcTime(LocalDateTime localDateTime) {
 
         ZonedDateTime zonedDateTime = localDateTime.atZone(java.time.ZoneId.systemDefault());
