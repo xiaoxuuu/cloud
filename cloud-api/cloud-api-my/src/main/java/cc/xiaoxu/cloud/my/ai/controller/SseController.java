@@ -1,7 +1,7 @@
-package cc.xiaoxu.cloud.my.controller;
+package cc.xiaoxu.cloud.my.ai.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
-import cc.xiaoxu.cloud.my.bean.vo.SseVO;
+import cc.xiaoxu.cloud.my.ai.bean.vo.SseVO;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
