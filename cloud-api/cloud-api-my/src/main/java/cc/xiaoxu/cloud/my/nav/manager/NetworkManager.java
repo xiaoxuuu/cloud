@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.manager;
+package cc.xiaoxu.cloud.my.nav.manager;
 
 import org.springframework.stereotype.Service;
 

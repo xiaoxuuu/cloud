@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.config;
+package cc.xiaoxu.cloud.my.wechat.config;
 
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import lombok.Data;

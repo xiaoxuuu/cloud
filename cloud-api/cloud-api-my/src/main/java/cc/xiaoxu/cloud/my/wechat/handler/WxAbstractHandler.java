@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.handler;
+package cc.xiaoxu.cloud.my.wechat.handler;
 
 
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;

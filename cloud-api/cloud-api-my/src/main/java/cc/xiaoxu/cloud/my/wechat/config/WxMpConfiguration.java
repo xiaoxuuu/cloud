@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.my.config;
+package cc.xiaoxu.cloud.my.wechat.config;
 
-import cc.xiaoxu.cloud.my.handler.MsgHandler;
+import cc.xiaoxu.cloud.my.wechat.handler.MsgHandler;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;

@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.config;
+package cc.xiaoxu.cloud.my.wechat.config;
 
 import lombok.NonNull;
 import me.chanjar.weixin.common.enums.TicketType;

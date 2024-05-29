@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.controller;
+package cc.xiaoxu.cloud.my.wechat.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
-package cc.xiaoxu.cloud.my.handler;
+package cc.xiaoxu.cloud.my.wechat.handler;
 
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
-import cc.xiaoxu.cloud.my.builder.TextBuilder;
+import cc.xiaoxu.cloud.my.wechat.builder.TextBuilder;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;

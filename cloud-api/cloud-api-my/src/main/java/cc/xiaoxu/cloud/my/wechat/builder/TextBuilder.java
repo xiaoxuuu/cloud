@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.builder;
+package cc.xiaoxu.cloud.my.wechat.builder;
 
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
