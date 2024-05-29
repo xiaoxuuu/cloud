@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.utils;
+package cc.xiaoxu.cloud.my.nav.utils;
 
 import lombok.extern.slf4j.Slf4j;
 

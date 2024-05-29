@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.bean.constant;
+package cc.xiaoxu.cloud.my.nav.bean.constant;
 
 public class CacheConstant {
 

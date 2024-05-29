@@ -1,10 +1,10 @@
-package cc.xiaoxu.cloud.my.controller;
+package cc.xiaoxu.cloud.my.nav.controller;
 
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteAddVisitNumVO;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteSearchVO;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteShowVO;
-import cc.xiaoxu.cloud.my.service.NavWebsiteService;
-import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
+import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteAddVisitNumVO;
+import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteSearchVO;
+import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteShowVO;
+import cc.xiaoxu.cloud.my.nav.service.NavWebsiteService;
+import cc.xiaoxu.cloud.my.nav.task.scheduled.WebsiteCheckScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
