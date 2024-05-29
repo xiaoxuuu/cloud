@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.config;
+package cc.xiaoxu.cloud.my.wechat.config;
 
 import me.chanjar.weixin.common.redis.WxRedisOps;
 import me.chanjar.weixin.common.util.locks.RedisTemplateSimpleDistributedLock;

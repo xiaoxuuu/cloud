@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.controller;
+package cc.xiaoxu.cloud.my.wechat.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
