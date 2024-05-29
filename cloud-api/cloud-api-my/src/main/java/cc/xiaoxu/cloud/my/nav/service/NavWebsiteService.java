@@ -1,13 +1,13 @@
-package cc.xiaoxu.cloud.my.service;
+package cc.xiaoxu.cloud.my.nav.service;
 
 import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
-import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteAddVisitNumVO;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteSearchVO;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteShowVO;
-import cc.xiaoxu.cloud.my.dao.mysql.NavWebsiteMapper;
+import cc.xiaoxu.cloud.my.nav.bean.mysql.NavWebsite;
+import cc.xiaoxu.cloud.my.nav.bean.mysql.NavWebsiteIcon;
+import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteAddVisitNumVO;
+import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteSearchVO;
+import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteShowVO;
+import cc.xiaoxu.cloud.my.nav.dao.mysql.NavWebsiteMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;

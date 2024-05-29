@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.my.dao.mysql;
+package cc.xiaoxu.cloud.my.nav.dao.mysql;
 
-import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
+import cc.xiaoxu.cloud.my.nav.bean.mysql.NavWebsite;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

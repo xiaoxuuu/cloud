@@ -1,8 +1,8 @@
-package cc.xiaoxu.cloud.my.service;
+package cc.xiaoxu.cloud.my.nav.service;
 
 import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
-import cc.xiaoxu.cloud.my.dao.mysql.NavWebsiteIconMapper;
+import cc.xiaoxu.cloud.my.nav.bean.mysql.NavWebsiteIcon;
+import cc.xiaoxu.cloud.my.nav.dao.mysql.NavWebsiteIconMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.Getter;

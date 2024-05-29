@@ -1,12 +1,12 @@
-package cc.xiaoxu.cloud.my.task.scheduled;
+package cc.xiaoxu.cloud.my.nav.task.scheduled;
 
 import cc.xiaoxu.cloud.core.cache.CacheService;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
-import cc.xiaoxu.cloud.my.bean.mysql.NavWebsite;
-import cc.xiaoxu.cloud.my.bean.mysql.NavWebsiteIcon;
-import cc.xiaoxu.cloud.my.service.NavWebsiteIconService;
-import cc.xiaoxu.cloud.my.service.NavWebsiteService;
-import cc.xiaoxu.cloud.my.utils.WebsiteUtil;
+import cc.xiaoxu.cloud.my.nav.bean.mysql.NavWebsite;
+import cc.xiaoxu.cloud.my.nav.bean.mysql.NavWebsiteIcon;
+import cc.xiaoxu.cloud.my.nav.service.NavWebsiteIconService;
+import cc.xiaoxu.cloud.my.nav.service.NavWebsiteService;
+import cc.xiaoxu.cloud.my.nav.utils.WebsiteUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
