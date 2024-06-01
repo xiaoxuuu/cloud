@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils;
+package cc.xiaoxu.cloud.core.utils.file;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
