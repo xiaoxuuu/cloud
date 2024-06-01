@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils;
+package cc.xiaoxu.cloud.core.utils.file;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -41,18 +41,21 @@ public class FileUtils {
      * @param filePath 需要获取的文件的 路径
      * @return 返回存储文件名和文件内容的map集合
      */
-    public static Map<String, String> getFilesDatas(String filePath) {
+    public static Map<String, String> getFilesDataMap(String filePath) {
 
         Map<String, String> files = new HashMap<>();
-        //需要获取的文件的路径
+        // 需要获取的文件的路径
         File file = new File(filePath);
-        String[] fileNameLists = file.list(); //存储文件名的String数组
-        File[] filePathLists = file.listFiles(); //存储文件路径的String数组
+        // 存储文件名的 String 数组
+        String[] fileNameLists = file.list();
+        // 存储文件路径的 String 数组
+        File[] filePathLists = file.listFiles();
         for (int i = 0; i < filePathLists.length; i++) {
             if (filePathLists[i].isFile()) {
-                try {//读取指定文件路径下的文件内容
+                try {
+                    // 读取指定文件路径下的文件内容
                     String fileDatas = readFile(filePathLists[i]);
-                    //把文件名作为key,文件内容为value 存储在map中
+                    // 把文件名作为 key，文件内容为 value 存储在 map 中
                     files.put(fileNameLists[i], fileDatas);
                 } catch (IOException e) {
                     e.printStackTrace();
