@@ -6,7 +6,7 @@ package cc.xiaoxu.cloud.core.utils;
  * @author 小徐
  * @since 2024/5/30 下午2:13
  */
-public class CodeUtil {
+public class CodeUtils {
 
     /**
      * 获取执行代码行号
