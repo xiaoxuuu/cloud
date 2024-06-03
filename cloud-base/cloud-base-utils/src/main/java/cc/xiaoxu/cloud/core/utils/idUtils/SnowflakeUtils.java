@@ -28,6 +28,7 @@ public class SnowflakeUtils {
      * 机器标识占用的位数，256个机器
      */
     private final static long MACHINE_BIT = 5L;
+
     /**
      * 数据中心占用的位数，4个数据中心
      */
@@ -62,27 +63,31 @@ public class SnowflakeUtils {
      * 时间部分向左移动的位数22(雪花算法总长度64,最高位是符号位，正数是0，负数是1，所以id一般是正数，最高位是 1)
      */
     private final static long TIMESTAMP_LEFT_LEFT = DATACENTER_LEFT + DATACENTER_BIT;
+
     /**
      * 数据中心
      */
     private final long datacenterId;
+
     /**
      * 机器标识
      */
     private final long machineId;
+
     /**
      * 序列号
      */
     private long sequence = 0L;
+
     /**
      * 上一次时间戳
      */
     private long lastTimestamp = -1L;
 
     public SnowflakeUtils() {
-        // 通过当前物理网卡地址获取datacenterId
+        // 通过当前物理网卡地址获取 datacenterId
         this.datacenterId = getDatacenterId(MAX_DATACENTER_NUM);
-        // 物理网卡地址+jvm进程pi获取workerId
+        // 物理网卡地址 + jvm 进程 pi 获取 workerId
         this.machineId = getMaxWorkerId(datacenterId, MAX_MACHINE_NUM);
     }
 
@@ -102,7 +107,7 @@ public class SnowflakeUtils {
     protected static long getDatacenterId(long maxDatacenterId) {
         long id = 0L;
         try {
-            // 获取本机(或者服务器ip地址)
+            // 获取本机(或者服务器 ip 地址)
             InetAddress ip = InetAddress.getLocalHost();
             NetworkInterface network = NetworkInterface.getByInetAddress(ip);
             // 一般不是null会进入else
@@ -129,16 +134,16 @@ public class SnowflakeUtils {
     protected static long getMaxWorkerId(long datacenterId, long maxWorkerId) {
         StringBuilder pid = new StringBuilder();
         pid.append(datacenterId);
-        // 获取jvm进程信息
+        // 获取 jvm 进程信息
         String name = ManagementFactory.getRuntimeMXBean().getName();
         if (StringUtils.isNotBlank(name)) {
             /*
-             * 获取进程PID
+             * 获取进程 PID
              */
             pid.append(name.split("@")[0]);
         }
         /*
-         * MAC + PID 的 hashcode 获取16个低位
+         * MAC + PID 的 hashcode 获取 16 个低位
          */
         return (pid.toString().hashCode() & 0xffff) % (maxWorkerId + 1);
     }
@@ -174,10 +179,14 @@ public class SnowflakeUtils {
 
         lastTimestamp = currTimestamp;
 
-        return (currTimestamp - START_TIMESTAMP) << TIMESTAMP_LEFT_LEFT // 时间戳部分
-                | datacenterId << DATACENTER_LEFT // 数据中心部分
-                | machineId << MACHINE_LEFT // 机器标识部分
-                | sequence; // 序列号部分
+        // 时间戳部分
+        return (currTimestamp - START_TIMESTAMP) << TIMESTAMP_LEFT_LEFT
+                // 数据中心部分
+                | datacenterId << DATACENTER_LEFT
+                // 机器标识部分
+                | machineId << MACHINE_LEFT
+                // 序列号部分
+                | sequence;
     }
 
     private long getNextMill() {
