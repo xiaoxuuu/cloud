@@ -1,12 +1,12 @@
 package cc.xiaoxu.cloud.core.utils;
 
 import cc.xiaoxu.cloud.core.bean.func.FunctionHandler;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.math.MathUtils;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
 import java.math.BigDecimal;
@@ -26,8 +26,8 @@ import java.util.stream.Stream;
  */
 public class StopWatchUtil extends StopWatch {
 
-    private static final Logger log = LoggerFactory.getLogger(StopWatchUtil.class);
     private FunctionHandler lineHandler;
+    private Boolean printLog = false;
 
     public StopWatchUtil() {
     }
@@ -36,36 +36,41 @@ public class StopWatchUtil extends StopWatch {
         super(id);
     }
 
-    public StopWatchUtil(FunctionHandler lineHandler) {
-        this.lineHandler = lineHandler;
-    }
-
-    public StopWatchUtil(String id, FunctionHandler lineHandler) {
+    public StopWatchUtil(String id, FunctionHandler lineHandler, Boolean printLog) {
         super(id);
         this.lineHandler = lineHandler;
+        this.printLog = printLog;
+        if (printLog) {
+            if (null == lineHandler) {
+                throw new CustomException("无可使用日志输出工具");
+            }
+            lineHandler.handle(id);
+        }
     }
 
-    /**
-     * 启动计时器时自动停止，并输出任务名
-     * @param taskName 任务名
-     * @param lineHandler 日志输出函数
-     */
-    public void start(String taskName) {
+    public void start(@NotNull String taskName) {
+
+        if (super.isRunning()) {
+            super.stop();
+        }
+        super.start(taskName);
+        if (printLog) {
+            lineHandler.handle(taskName);
+        }
+    }
+
+    public void print() {
 
         if (super.isRunning()) {
             super.stop();
         }
         if (null != lineHandler) {
-            lineHandler.handle(taskName);
+            lineHandler.handle(prettyPrintMs(this));
         }
-        super.start(taskName);
     }
 
-    public void print() {
+    public void print(FunctionHandler lineHandler) {
 
-        if (null == lineHandler) {
-            log.error("未配置日志输出类");
-        }
         if (super.isRunning()) {
             super.stop();
         }
