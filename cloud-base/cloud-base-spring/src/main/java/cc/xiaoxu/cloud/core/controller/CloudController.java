@@ -56,10 +56,10 @@ public class CloudController {
     @Operation(summary = "获取授权码", description = "执行高风险操作的授权码，每天 00:00:00 自动更新")
     public String checkCode() {
 
-        return getRightCode();
+        return getCheckCode();
     }
 
-    private static String getRightCode() {
+    private static String getCheckCode() {
         return MD5Utils.toMd5(DateUtils.getNowCustomString(DateConstants.DATE_MARK)).substring(0, 6);
     }
 }
