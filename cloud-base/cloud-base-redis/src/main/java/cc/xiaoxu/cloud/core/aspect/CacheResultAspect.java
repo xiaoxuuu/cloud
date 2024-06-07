@@ -34,6 +34,7 @@ public class CacheResultAspect {
     private static final Logger log = LoggerFactory.getLogger(CacheResultAspect.class);
 
     private final RedisService redisService;
+
     @Value("${spring.profiles.active}")
     private String active;
 
@@ -44,7 +45,7 @@ public class CacheResultAspect {
     /**
      * 对所有加了注解的 controller 进行拦截
      */
-    @Pointcut("execution(public * cc.xiaoxu.cloud.*.controller.*.*(..)) && @annotation(cc.xiaoxu.cloud.core.annotation.CacheResult)")
+    @Pointcut("@annotation(cc.xiaoxu.cloud.core.annotation.CacheResult)")
     public void addAdvice() {
     }
 
@@ -63,9 +64,9 @@ public class CacheResultAspect {
             url = url.substring(1);
         }
         // 获取调用入参
-        String responseString = JsonUtils.toString(pjp.getArgs());
+        String requestString = JsonUtils.toString(pjp.getArgs());
         // 构建 redis key
-        String redisKey = url + ":" + DigestUtils.md5DigestAsHex(responseString.getBytes());
+        String redisKey = url + ":" + DigestUtils.md5DigestAsHex(requestString.getBytes());
 
         // 获取注解
         Signature signature = pjp.getSignature();
@@ -101,8 +102,10 @@ public class CacheResultAspect {
         }
 
         // 判断 dev 环境
-        if (cacheResult.devSkip() && SystemConstants.SPRING_PROFILES_ACTIVE_DEV.equals(active)) {
-            updateRedisData = false;
+        if (cacheResult.devSkip()) {
+            if (SystemConstants.SPRING_PROFILES_ACTIVE_DEV.equals(active)) {
+                updateRedisData = false;
+            }
         }
 
         if (updateRedisData && Objects.nonNull(result)) {
