@@ -18,6 +18,11 @@ public class RedisConstants {
     public static final String ENABLE_UNIFIED_CACHE = "REDIS:ENABLE_UNIFIED_CACHE";
 
     /**
+     * 响应参数缓存 redis key
+     */
+    public static final String CACHE_RESULT = "REDIS:CACHE_RESULT:";
+
+    /**
      * 防重提交 redis key
      */
     public static final String REPEAT_SUBMIT_KEY = "REDIS:REPEAT_SUBMIT:";

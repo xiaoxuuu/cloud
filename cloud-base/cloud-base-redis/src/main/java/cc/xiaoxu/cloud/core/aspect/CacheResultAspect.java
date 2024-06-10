@@ -2,6 +2,8 @@ package cc.xiaoxu.cloud.core.aspect;
 
 import cc.xiaoxu.cloud.core.annotation.CacheResult;
 import cc.xiaoxu.cloud.core.cache.redis.RedisService;
+import cc.xiaoxu.cloud.core.constants.RedisConstants;
+import cc.xiaoxu.cloud.core.util.RedisKeyUtil;
 import cc.xiaoxu.cloud.core.utils.ServletUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.core.utils.constants.SystemConstants;
@@ -16,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 
 import java.util.Objects;
 
@@ -59,14 +60,7 @@ public class CacheResultAspect {
 
         // 获取调用 uri
         HttpServletRequest request = ServletUtils.getRequest();
-        String url = request.getRequestURI().replace("/", ":");
-        if (url.startsWith(":")) {
-            url = url.substring(1);
-        }
-        // 获取调用入参
-        String requestString = JsonUtils.toString(pjp.getArgs());
-        // 构建 redis key
-        String redisKey = url + ":" + DigestUtils.md5DigestAsHex(requestString.getBytes());
+        String redisKey = RedisKeyUtil.getRedisKey(pjp, request, RedisConstants.CACHE_RESULT);
 
         // 获取注解
         Signature signature = pjp.getSignature();
