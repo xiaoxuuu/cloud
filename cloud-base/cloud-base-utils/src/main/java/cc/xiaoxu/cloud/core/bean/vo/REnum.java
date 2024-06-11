@@ -25,6 +25,7 @@ public enum REnum implements EnumInterface<Integer>, EnumDescInterface {
     NO_AUTHORITY(20008, "没有操作权限，请使用管理员账号操作！"),
     WRONG_PASSWORD(20009, "密码错误"),
     WRONG_TOKEN(20010, "不合法 token"),
+    DUPLICATE_SUBMIT(20011, "请勿重复提交"),
     ;
 
     private final Integer code;
