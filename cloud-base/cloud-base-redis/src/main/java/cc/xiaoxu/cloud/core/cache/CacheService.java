@@ -36,4 +36,11 @@ public interface CacheService {
      * @param key
      */
     boolean deleteObject(final String key);
+
+    /**
+     * 对象是否存在
+     *
+     * @param key key
+     */
+    boolean containsKey(final String key);
 }

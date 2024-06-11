@@ -104,6 +104,11 @@ public class RedisService implements CacheService, InitializingBean {
         return redisTemplate.delete(key);
     }
 
+    @Override
+    public boolean containsKey(String key) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+    }
+
     /**
      * redisTemplate删除迷糊匹配的key的缓存
      */
