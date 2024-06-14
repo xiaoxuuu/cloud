@@ -73,7 +73,7 @@ public class Base64Utils {
         if (!fileSuffixMatcher.find()) {
             return defaultSuffix;
         }
-        return fileSuffixMatcher.group("fileSuffix");
+        return "." + fileSuffixMatcher.group("fileSuffix");
     }
 
     /**
