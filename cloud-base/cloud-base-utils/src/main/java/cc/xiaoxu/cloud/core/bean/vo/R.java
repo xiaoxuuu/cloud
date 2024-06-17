@@ -72,6 +72,6 @@ public class R<T> {
 
     public static <T> R<T> fail(REnum rEnum) {
 
-        return fail(rEnum, null);
+        return fail(rEnum, rEnum.getIntroduction());
     }
 }
