@@ -58,15 +58,13 @@ public class CacheResultAspect {
         // 更新数据进入 redis
         boolean updateRedisData;
 
-        // 获取调用 uri
         HttpServletRequest request = ServletUtils.getRequest();
         String redisKey = RedisKeyUtil.getRedisKey(pjp, request, RedisConstants.CACHE_RESULT);
 
-        // 获取注解
         Signature signature = pjp.getSignature();
-        // 此处 joinPoint 的实现类是 MethodInvocationProceedingJoinPoint
         MethodSignature methodSignature = (MethodSignature) signature;
-        // 获取参数名
+
+        // 获取注解
         CacheResult cacheResult = methodSignature.getMethod().getAnnotation(CacheResult.class);
         updateRedisData = cacheResult.renewal();
 

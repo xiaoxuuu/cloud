@@ -1,1 +1,2 @@
 cc.xiaoxu.cloud.core.aspect.CacheResultAspect
+cc.xiaoxu.cloud.core.aspect.NoRepeatSubmitAspect
