@@ -1,5 +1,8 @@
 package cc.xiaoxu.cloud.core.utils;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -192,6 +195,8 @@ public class PrettifyDateTime {
         }
     }
 
+    @Getter
+    @AllArgsConstructor
     enum TimeUnit {
 
         /**
@@ -208,18 +213,5 @@ public class PrettifyDateTime {
 
         private final String name;
         private final String desc;
-
-        TimeUnit(String name, String desc) {
-            this.name = name;
-            this.desc = desc;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getDesc() {
-            return desc;
-        }
     }
 }
