@@ -37,7 +37,7 @@ public class PrettifyDateTime {
      * 禁止实例化
      */
     private PrettifyDateTime() {
-        throw new IllegalAccessError("XEnumUtils.class");
+        throw new IllegalAccessError(this.getClass().getName());
     }
 
     /**
