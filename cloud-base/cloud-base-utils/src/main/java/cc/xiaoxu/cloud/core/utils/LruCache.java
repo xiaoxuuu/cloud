@@ -25,6 +25,18 @@ public class LruCache<K, V> extends LinkedHashMap<K, V> {
         this.maxElements = maxElements;
     }
 
+    /**
+     * 当数据超过额定数量时，自动移除最少使用的数据
+     * @param eldest The least recently inserted entry in the map, or if
+     *           this is an access-ordered map, the least recently accessed
+     *           entry.  This is the entry that will be removed if this
+     *           method returns {@code true}.  If the map was empty prior
+     *           to the {@code put} or {@code putAll} invocation resulting
+     *           in this invocation, this will be the entry that was just
+     *           inserted; in other words, if the map contains a single
+     *           entry, the eldest entry is also the newest.
+     * @return 操作师傅成功
+     */
     protected boolean removeEldestEntry(java.util.Map.Entry eldest) {
         return size() > maxElements;
     }
