@@ -46,7 +46,7 @@ public class CatchUtils<T> {
     }
 
     /**
-     * finally 执行语句
+     * finally 执行语句，无论是否出现异常，均会执行此代码
      *
      * @param finalRunnable 最终执行
      * @return this
