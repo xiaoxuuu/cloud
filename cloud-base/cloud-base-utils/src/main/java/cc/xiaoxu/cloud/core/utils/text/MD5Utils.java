@@ -20,7 +20,11 @@ public class MD5Utils {
 
     private static final char[] yT = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70};
 
+    /**
+     * 禁止实例化
+     */
     private MD5Utils() {
+        throw new IllegalAccessError(this.getClass().getName());
     }
 
     public static String p(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
