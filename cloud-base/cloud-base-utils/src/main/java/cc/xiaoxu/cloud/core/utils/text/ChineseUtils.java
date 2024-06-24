@@ -18,7 +18,11 @@ public final class ChineseUtils {
             "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
             "t", "w", "x", "y", "z"};
 
+    /**
+     * 禁止实例化
+     */
     private ChineseUtils() {
+        throw new IllegalAccessError(this.getClass().getName());
     }
 
     /**
