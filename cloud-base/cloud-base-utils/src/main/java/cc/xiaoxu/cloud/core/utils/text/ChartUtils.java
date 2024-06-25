@@ -8,11 +8,14 @@ package cc.xiaoxu.cloud.core.utils.text;
  */
 public class ChartUtils {
 
-    public static final char UNDERLINE = '_';
-
+    /**
+     * 禁止实例化
+     */
     private ChartUtils() {
-        throw new IllegalAccessError();
+        throw new IllegalAccessError(this.getClass().getName());
     }
+
+    public static final char UNDERLINE = '_';
 
     /**
      * 驼峰转下划线
