@@ -15,6 +15,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomDateUtils {
 
     /**
+     * 禁止实例化
+     */
+    private RandomDateUtils() {
+        throw new IllegalAccessError(this.getClass().getName());
+    }
+
+    /**
      * 最小时间
      */
     private LocalDateTime left;
@@ -23,12 +30,6 @@ public class RandomDateUtils {
      * 最大时间
      */
     private LocalDateTime right;
-
-    /**
-     * 禁止直接实例化
-     */
-    private RandomDateUtils() {
-    }
 
     /**
      * <p>初始化</p>
