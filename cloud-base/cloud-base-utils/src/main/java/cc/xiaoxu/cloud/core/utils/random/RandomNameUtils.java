@@ -13,6 +13,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomNameUtils {
 
     /**
+     * 禁止实例化
+     */
+    private RandomNameUtils() {
+        throw new IllegalAccessError(this.getClass().getName());
+    }
+
+    /**
      * 默认脱敏字
      */
     private static final String DEFAULT_DESENSITIZATION_NAME = "某";
@@ -119,12 +126,6 @@ public class RandomNameUtils {
      * 脱敏字
      */
     private String desensitizationName;
-
-    /**
-     * 禁止直接无参实例化
-     */
-    private RandomNameUtils() {
-    }
 
     /**
      * 设置是否使用单字姓
