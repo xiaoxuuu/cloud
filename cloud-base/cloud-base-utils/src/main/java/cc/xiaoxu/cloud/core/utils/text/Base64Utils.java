@@ -13,16 +13,16 @@ import java.util.regex.Pattern;
 public class Base64Utils {
 
     /**
-     * 获取文件后缀正则表达式
-     */
-    private static final Pattern FILE_SUFFIX_PATTERN = Pattern.compile("(?<=/)(?<fileSuffix>\\w.*?)(?=;)");
-
-    /**
      * 禁止实例化
      */
     private Base64Utils() {
         throw new IllegalAccessError(this.getClass().getName());
     }
+
+    /**
+     * 获取文件后缀正则表达式
+     */
+    private static final Pattern FILE_SUFFIX_PATTERN = Pattern.compile("(?<=/)(?<fileSuffix>\\w.*?)(?=;)");
 
     /**
      * 编码
