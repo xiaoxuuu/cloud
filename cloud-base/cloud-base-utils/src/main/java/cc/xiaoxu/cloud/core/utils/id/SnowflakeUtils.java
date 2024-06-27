@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.idUtils;
+package cc.xiaoxu.cloud.core.utils.id;
 
 import org.apache.commons.lang3.StringUtils;
 

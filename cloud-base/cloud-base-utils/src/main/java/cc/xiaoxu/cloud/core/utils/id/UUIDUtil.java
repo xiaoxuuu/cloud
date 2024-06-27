@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.idUtils;
+package cc.xiaoxu.cloud.core.utils.id;
 
 import java.io.Serial;
 import java.security.MessageDigest;
