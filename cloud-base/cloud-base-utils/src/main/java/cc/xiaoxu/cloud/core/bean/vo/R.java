@@ -30,13 +30,21 @@ public class R<T> {
     @Schema(name = "是否调用成功", example = "true")
     private Boolean success;
 
+    /**
+     * 使用系统内置数据构造
+     * @param rEnum 系统内置数据
+     */
     public R(REnum rEnum) {
         this.respMsg = rEnum.getIntroduction();
         this.respCode = rEnum.getCode();
         this.success = this.getRespCode() <= 19999;
     }
 
+    /**
+     * 禁止空参实例化
+     */
     private R() {
+        throw new IllegalAccessError(this.getClass().getName());
     }
 
     public static <T> R<T> success(T t) {
