@@ -1,6 +1,8 @@
 package cc.xiaoxu.cloud.core.utils.enums;
 
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumDescInterface;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -147,7 +149,7 @@ public final class EnumUtils {
     /**
      * 获取枚举描述
      *
-     * @param enumClass 继承了 {@link cc.xiaoxu.cloud.core.utils.enums.EnumDescInterface EnumDescInterface} 的枚举
+     * @param enumClass 继承了 {@link EnumDescInterface EnumDescInterface} 的枚举
      * @return 描述集合
      */
     public static List<String> getDesc(Class<?> enumClass) {
@@ -158,8 +160,8 @@ public final class EnumUtils {
     /**
      * 获取枚举描述
      *
-     * @param enumClass 继承了 {@link cc.xiaoxu.cloud.core.utils.enums.EnumDescInterface EnumDescInterface} 的枚举
-     * @param os        <p>继承了 {@link cc.xiaoxu.cloud.core.utils.enums.EnumDescInterface EnumDescInterface} 的枚举值集合</p>
+     * @param enumClass 继承了 {@link EnumDescInterface EnumDescInterface} 的枚举
+     * @param os        <p>继承了 {@link EnumDescInterface EnumDescInterface} 的枚举值集合</p>
      *                  <p>例：DemoEnum.class.getEnumConstants()</p>
      * @return 描述集合
      */

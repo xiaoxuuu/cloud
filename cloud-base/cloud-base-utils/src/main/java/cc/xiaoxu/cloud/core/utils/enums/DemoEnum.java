@@ -1,5 +1,8 @@
 package cc.xiaoxu.cloud.core.utils.enums;
 
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumDescInterface;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
+
 /**
  * 枚举示例
  *

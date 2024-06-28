@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.core.annotation;
 
-import cc.xiaoxu.cloud.core.utils.enums.EnumInterface;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.SneakyThrows;
