@@ -6,6 +6,7 @@ import cc.xiaoxu.cloud.core.cache.redis.RedisService;
 import cc.xiaoxu.cloud.core.constants.RedisConstants;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.util.RedisKeyUtil;
+import cc.xiaoxu.cloud.core.utils.PrettifyDateTime;
 import cc.xiaoxu.cloud.core.utils.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -54,7 +55,9 @@ public class NoRepeatSubmitAspect {
         // 这个值只是为了标记，不重要
         if (redisService.containsKey(redisKey)) {
             // 重复提交了抛出异常，如果是在项目中，根据具体情况处理。
-            throw new CustomException(REnum.DUPLICATE_SUBMIT);
+            String message = repeatSubmit.message();
+            Long expire = redisService.getExpire(redisKey);
+            throw new CustomException(REnum.DUPLICATE_SUBMIT, message.replace("{interval}", PrettifyDateTime.initWithMillisecond(expire).prettify()));
         }
 
         // 设置防重复操作限时标记（前置通知）

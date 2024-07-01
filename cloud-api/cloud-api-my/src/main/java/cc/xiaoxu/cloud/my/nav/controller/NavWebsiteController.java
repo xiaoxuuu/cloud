@@ -1,7 +1,5 @@
 package cc.xiaoxu.cloud.my.nav.controller;
 
-import cc.xiaoxu.cloud.core.annotation.CacheResult;
-import cc.xiaoxu.cloud.core.annotation.Wrap;
 import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.my.nav.bean.vo.NavWebsiteShowVO;
@@ -13,7 +11,6 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Random;
 
 @Tag(name = "导航", description = "导航控制器")
 @RestController
@@ -34,7 +31,6 @@ public class NavWebsiteController {
         return navWebsiteService.search(vo);
     }
 
-    // TODO 基于 redis 的限流
     @Operation(summary = "添加访问次数", description = "添加访问次数")
     @PostMapping("/add-visit-num")
     public @ResponseBody
@@ -49,14 +45,5 @@ public class NavWebsiteController {
     void refreshData() {
 
         websiteCheckScheduled.refreshData();
-    }
-
-    @Wrap(disabled = true)
-    @CacheResult(clazz = String.class, devSkip = false)
-    @Operation(summary = "测试", description = "手动刷新缓存数据")
-    @GetMapping("/test")
-    public @ResponseBody String test() {
-
-        return String.valueOf(new Random().nextInt());
     }
 }

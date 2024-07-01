@@ -84,6 +84,10 @@ public class RedisService implements CacheService, InitializingBean {
         return redisTemplate.expire(key, timeout, unit);
     }
 
+    public Long getExpire(String key) {
+        return redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
+    }
+
     /**
      * 获得缓存的基本对象。
      *
