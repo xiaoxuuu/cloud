@@ -1,10 +1,12 @@
 package cc.xiaoxu.cloud.core.utils.random;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 /**
  * <p>虚拟人信息</p>
@@ -45,7 +47,17 @@ public class FakePerson {
      */
     public Person getOne() {
 
+        return getOne(1);
+    }
+
+    /**
+     * 获取一个
+     * @return 人
+     */
+    public Person getOne(Integer id) {
+
         Person person = new Person();
+        person.setId(id);
         buildGender(person);
         return person;
     }
@@ -57,40 +69,37 @@ public class FakePerson {
      */
     public List<Person> getSome(int i) {
 
-        List<Person> list = new ArrayList<>(i);
-        for (int j = 0; j < i; j++) {
-            list.add(getOne());
-        }
-        return list;
+        return IntStream.of(i).boxed().map(this::getOne).toList();
     }
 
     /**
      * 处理性别
-     * @param person
      */
     private void buildGender(Person person) {
-        if (control.gender == 0) {
-            person.gender = random.nextBoolean() ? Person.Gender.WOMAN : Person.Gender.MAN;
+        if (control.gender == Gender.RANDOM) {
+            person.gender = random.nextBoolean() ? Gender.WOMAN : Gender.MAN;
         } else {
-            person.gender = control.gender == 1 ? Person.Gender.WOMAN : Person.Gender.MAN;
+            person.gender = control.gender;
         }
     }
 
     /**
-     * 输出控制
+     * 结果
      */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Person {
 
         /**
-         * 性别：
+         * id
+         */
+        private Integer id;
+
+        /**
+         * 性别
          */
         private Gender gender;
-
-        @AllArgsConstructor
-        public enum Gender {
-            MAN,
-            WOMAN
-        }
     }
 
     /**
@@ -99,12 +108,40 @@ public class FakePerson {
     public static class Control {
 
         /**
-         * 性别：未指定 0、女性 1、男 2
+         * 性别
          */
-        private Integer gender;
+        private Gender gender;
 
-        public Control() {
-            this.gender = 0;
+        /**
+         * 初始化
+         */
+        private Control() {
+            this.gender = Gender.RANDOM;
         }
+
+        /**
+         * 启动
+         * @return Control
+         */
+        public Control of() {
+            return new Control();
+        }
+
+        /**
+         * 性别
+         * @param gender 性别
+         * @return Control
+         */
+        public Control gender(Gender gender) {
+            this.gender = gender;
+            return this;
+        }
+    }
+
+    @AllArgsConstructor
+    public enum Gender {
+        RANDOM,
+        MAN,
+        WOMAN,
     }
 }
