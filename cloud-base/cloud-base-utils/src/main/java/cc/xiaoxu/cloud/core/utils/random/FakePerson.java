@@ -17,12 +17,12 @@ public class FakePerson {
     /**
      * 属性控制
      */
-    private Control control;
+    private final Control control;
 
     /**
      * 随机工具
      */
-    private Random random = new Random(System.currentTimeMillis());
+    private final Random random = new Random(System.currentTimeMillis());
 
     /**
      * 完全随机
@@ -33,7 +33,7 @@ public class FakePerson {
 
     /**
      * 可控随机
-     * @param control
+     * @param control 属性控制器
      */
     public FakePerson(Control control) {
         this.control = control;
