@@ -26,11 +26,6 @@ public @interface CacheResult {
     boolean list() default false;
 
     /**
-     * TODO 出参是否需要被 ResponseVO 包裹
-     */
-    boolean wrapped() default false;
-
-    /**
      * 自动续签：当从缓存读取到数据时，是否重置此数据过期时间
      */
     boolean renewal() default true;

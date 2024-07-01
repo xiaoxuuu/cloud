@@ -2,6 +2,8 @@ package cc.xiaoxu.cloud.core.aspect;
 
 import cc.xiaoxu.cloud.core.annotation.CacheResult;
 import cc.xiaoxu.cloud.core.cache.redis.RedisService;
+import cc.xiaoxu.cloud.core.constants.RedisConstants;
+import cc.xiaoxu.cloud.core.util.RedisKeyUtil;
 import cc.xiaoxu.cloud.core.utils.ServletUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.core.utils.constants.SystemConstants;
@@ -16,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.DigestUtils;
 
 import java.util.Objects;
 
@@ -34,6 +35,7 @@ public class CacheResultAspect {
     private static final Logger log = LoggerFactory.getLogger(CacheResultAspect.class);
 
     private final RedisService redisService;
+
     @Value("${spring.profiles.active}")
     private String active;
 
@@ -44,7 +46,7 @@ public class CacheResultAspect {
     /**
      * 对所有加了注解的 controller 进行拦截
      */
-    @Pointcut("execution(public * cc.xiaoxu.cloud.*.controller.*.*(..)) && @annotation(cc.xiaoxu.cloud.core.annotation.CacheResult)")
+    @Pointcut("@annotation(cc.xiaoxu.cloud.core.annotation.CacheResult)")
     public void addAdvice() {
     }
 
@@ -56,22 +58,13 @@ public class CacheResultAspect {
         // 更新数据进入 redis
         boolean updateRedisData;
 
-        // 获取调用 uri
         HttpServletRequest request = ServletUtils.getRequest();
-        String url = request.getRequestURI().replace("/", ":");
-        if (url.startsWith(":")) {
-            url = url.substring(1);
-        }
-        // 获取调用入参
-        String responseString = JsonUtils.toString(pjp.getArgs());
-        // 构建 redis key
-        String redisKey = url + ":" + DigestUtils.md5DigestAsHex(responseString.getBytes());
+        String redisKey = RedisKeyUtil.getRedisKey(pjp, request, RedisConstants.CACHE_RESULT);
+
+        Signature signature = pjp.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
 
         // 获取注解
-        Signature signature = pjp.getSignature();
-        // 此处 joinPoint 的实现类是 MethodInvocationProceedingJoinPoint
-        MethodSignature methodSignature = (MethodSignature) signature;
-        // 获取参数名
         CacheResult cacheResult = methodSignature.getMethod().getAnnotation(CacheResult.class);
         updateRedisData = cacheResult.renewal();
 
@@ -101,8 +94,10 @@ public class CacheResultAspect {
         }
 
         // 判断 dev 环境
-        if (cacheResult.devSkip() && SystemConstants.SPRING_PROFILES_ACTIVE_DEV.equals(active)) {
-            updateRedisData = false;
+        if (cacheResult.devSkip()) {
+            if (SystemConstants.SPRING_PROFILES_ACTIVE_DEV.equals(active)) {
+                updateRedisData = false;
+            }
         }
 
         if (updateRedisData && Objects.nonNull(result)) {

@@ -87,6 +87,15 @@ public class LocalCache {
     }
 
     /**
+     * 移除缓存
+     *
+     * @param key 缓存键
+     */
+    public static boolean containsKey(String key) {
+        return CACHE_MAP.containsKey(key);
+    }
+
+    /**
      * 清理过期的缓存数据
      */
     public static void clearCache() {

@@ -102,7 +102,7 @@ public class CacheManage {
         // 读缓存
         String redisKey = RedisConstants.UNIFIED_CACHE + getRedisKey(key);
         if (!forceRaedFromDatabase) {
-            String enableCache = cacheService.getCacheObject(RedisConstants.UNIFIED_CACHE + RedisConstants.ENABLE_CACHE);
+            String enableCache = cacheService.getCacheObject(RedisConstants.UNIFIED_CACHE + RedisConstants.ENABLE_UNIFIED_CACHE);
             if ("yes".equals(enableCache)) {
                 T cacheObject = cacheService.getCacheObject(redisKey);
                 if (Objects.nonNull(cacheObject)) {
