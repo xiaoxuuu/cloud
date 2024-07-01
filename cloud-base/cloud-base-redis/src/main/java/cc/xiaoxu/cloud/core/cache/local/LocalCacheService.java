@@ -47,4 +47,9 @@ public class LocalCacheService implements CacheService, InitializingBean {
         LocalCache.remove(key);
         return true;
     }
+
+    @Override
+    public boolean containsKey(String key) {
+        return LocalCache.containsKey(key);
+    }
 }

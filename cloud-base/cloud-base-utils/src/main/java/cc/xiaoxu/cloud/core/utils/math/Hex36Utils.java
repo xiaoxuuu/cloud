@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils;
+package cc.xiaoxu.cloud.core.utils.math;
 
 /**
  * <p>三十六进制工具类</p>
@@ -6,7 +6,7 @@ package cc.xiaoxu.cloud.core.utils;
  * @author 小徐
  * @since 2024/5/13 下午3:34
  */
-public class Hex36Util {
+public class Hex36Utils {
 
     /**
      * 将十进制数转换为 三十六进制字符串

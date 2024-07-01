@@ -84,6 +84,10 @@ public class RedisService implements CacheService, InitializingBean {
         return redisTemplate.expire(key, timeout, unit);
     }
 
+    public Long getExpire(String key) {
+        return redisTemplate.getExpire(key, TimeUnit.MILLISECONDS);
+    }
+
     /**
      * 获得缓存的基本对象。
      *
@@ -102,6 +106,11 @@ public class RedisService implements CacheService, InitializingBean {
      */
     public boolean deleteObject(final String key) {
         return redisTemplate.delete(key);
+    }
+
+    @Override
+    public boolean containsKey(String key) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
     /**

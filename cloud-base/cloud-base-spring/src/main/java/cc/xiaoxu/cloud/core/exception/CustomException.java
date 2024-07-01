@@ -14,6 +14,11 @@ public class CustomException extends RuntimeException {
         this.result = R.fail(rEnum);
     }
 
+    public CustomException(REnum rEnum, String msg) {
+        super(msg);
+        this.result = R.fail(rEnum.getCode(), msg);
+    }
+
     public CustomException(String message) {
         super(message);
         this.result = R.fail(message);
