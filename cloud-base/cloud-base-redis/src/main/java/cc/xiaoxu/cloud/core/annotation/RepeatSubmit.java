@@ -20,4 +20,11 @@ public @interface RepeatSubmit {
      * @return interval
      */
     int interval() default 1000;
+
+    /**
+     * 提示信息
+     *
+     * @return message
+     */
+    String message() default "不允许重复提交，请 {interval}后再试";
 }
