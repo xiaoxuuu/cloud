@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * <p>虚拟人信息</p>
@@ -19,7 +19,7 @@ public class FakePerson {
     /**
      * 属性控制
      */
-    private final Control control;
+    private Control control;
 
     /**
      * 随机工具
@@ -27,18 +27,28 @@ public class FakePerson {
     private final Random random = new Random(System.currentTimeMillis());
 
     /**
-     * 完全随机
+     * 私有构造，请使用 FakePerson.of 开始
      */
-    public FakePerson() {
+    private FakePerson() {
         this.control = new Control();
+    }
+
+
+    /**
+     * 启动
+     * @return FakePerson
+     */
+    public static FakePerson of() {
+        return new FakePerson();
     }
 
     /**
      * 可控随机
      * @param control 属性控制器
      */
-    public FakePerson(Control control) {
+    public FakePerson control(Control control) {
         this.control = control;
+        return this;
     }
 
     /**
@@ -69,7 +79,10 @@ public class FakePerson {
      */
     public List<Person> getSome(int i) {
 
-        return IntStream.of(i).boxed().map(this::getOne).toList();
+        return Stream.iterate(1, n -> n + 1)
+                .limit(i)
+                .map(this::getOne)
+                .toList();
     }
 
     /**
@@ -123,7 +136,7 @@ public class FakePerson {
          * 启动
          * @return Control
          */
-        public Control of() {
+        public static Control of() {
             return new Control();
         }
 
