@@ -10,6 +10,7 @@ public class FakePersonDemo {
 
         FakePerson.Control control = FakePerson.Control.of().gender(FakePerson.Gender.MAN);
         List<FakePerson.Person> some = FakePerson.of().control(control).getSome(100);
+        List<FakePerson.Person> random = FakePerson.of().getSome(100);
         System.out.println();
     }
 }
