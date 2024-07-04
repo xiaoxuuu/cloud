@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.random;
+package cc.xiaoxu.cloud.core.utils.random.person;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

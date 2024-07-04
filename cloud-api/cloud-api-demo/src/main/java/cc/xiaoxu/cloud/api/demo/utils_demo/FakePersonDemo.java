@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.api.demo.utils_demo;
 
-import cc.xiaoxu.cloud.core.utils.random.FakePerson;
+import cc.xiaoxu.cloud.core.utils.random.person.FakePerson;
 
 import java.util.List;
 
