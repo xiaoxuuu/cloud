@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person;
 
+import cc.xiaoxu.cloud.core.utils.random.person.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -149,12 +150,5 @@ public class FakePerson {
             this.gender = gender;
             return this;
         }
-    }
-
-    @AllArgsConstructor
-    public enum Gender {
-        RANDOM,
-        MAN,
-        WOMAN,
     }
 }
