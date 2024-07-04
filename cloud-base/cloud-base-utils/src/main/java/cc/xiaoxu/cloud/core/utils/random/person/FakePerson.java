@@ -1,9 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person;
 
 import cc.xiaoxu.cloud.core.utils.random.person.enums.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Random;
@@ -91,30 +88,12 @@ public class FakePerson {
      */
     private void buildGender(Person person) {
         if (control.gender == Gender.RANDOM) {
-            person.gender = random.nextBoolean() ? Gender.WOMAN : Gender.MAN;
+            person.setGender(random.nextBoolean() ? Gender.WOMAN : Gender.MAN);
         } else {
-            person.gender = control.gender;
+            person.setGender(control.gender);
         }
     }
 
-    /**
-     * 结果
-     */
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Person {
-
-        /**
-         * id
-         */
-        private Integer id;
-
-        /**
-         * 性别
-         */
-        private Gender gender;
-    }
 
     /**
      * 输出控制
