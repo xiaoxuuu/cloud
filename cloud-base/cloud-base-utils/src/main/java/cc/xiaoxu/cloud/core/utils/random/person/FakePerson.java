@@ -87,47 +87,10 @@ public class FakePerson {
      * 处理性别
      */
     private void buildGender(Person person) {
-        if (control.gender == Gender.RANDOM) {
+        if (control.getGender() == Gender.RANDOM) {
             person.setGender(random.nextBoolean() ? Gender.WOMAN : Gender.MAN);
         } else {
-            person.setGender(control.gender);
-        }
-    }
-
-
-    /**
-     * 输出控制
-     */
-    public static class Control {
-
-        /**
-         * 性别
-         */
-        private Gender gender;
-
-        /**
-         * 初始化
-         */
-        private Control() {
-            this.gender = Gender.RANDOM;
-        }
-
-        /**
-         * 启动
-         * @return Control
-         */
-        public static Control of() {
-            return new Control();
-        }
-
-        /**
-         * 性别
-         * @param gender 性别
-         * @return Control
-         */
-        public Control gender(Gender gender) {
-            this.gender = gender;
-            return this;
+            person.setGender(control.getGender());
         }
     }
 }
