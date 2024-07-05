@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * @author 小徐
  * @since 2024/7/1 下午2:46
  */
-public class FakePerson {
+public class PersonInitializer {
 
     /**
      * 属性控制
@@ -27,7 +27,7 @@ public class FakePerson {
     /**
      * 私有构造，请使用 FakePerson.of 开始
      */
-    private FakePerson() {
+    private PersonInitializer() {
         this.personControl = new PersonControl();
     }
 
@@ -36,15 +36,15 @@ public class FakePerson {
      * 启动
      * @return FakePerson
      */
-    public static FakePerson of() {
-        return new FakePerson();
+    public static PersonInitializer of() {
+        return new PersonInitializer();
     }
 
     /**
      * 可控随机
      * @param personControl 属性控制器
      */
-    public FakePerson control(PersonControl personControl) {
+    public PersonInitializer control(PersonControl personControl) {
         this.personControl = personControl;
         return this;
     }
