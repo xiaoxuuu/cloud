@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Control {
+public class PersonControl {
 
     /**
      * 性别
@@ -16,7 +16,7 @@ public class Control {
     /**
      * 初始化
      */
-    public Control() {
+    public PersonControl() {
         this.gender = Gender.RANDOM;
     }
 
@@ -24,8 +24,8 @@ public class Control {
      * 启动
      * @return Control
      */
-    public static Control of() {
-        return new Control();
+    public static PersonControl of() {
+        return new PersonControl();
     }
 
     /**
@@ -33,7 +33,7 @@ public class Control {
      * @param gender 性别
      * @return Control
      */
-    public Control gender(Gender gender) {
+    public PersonControl gender(Gender gender) {
         this.gender = gender;
         return this;
     }

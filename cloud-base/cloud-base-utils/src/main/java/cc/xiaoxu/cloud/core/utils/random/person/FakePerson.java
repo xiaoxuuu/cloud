@@ -17,7 +17,7 @@ public class FakePerson {
     /**
      * 属性控制
      */
-    private Control control;
+    private PersonControl personControl;
 
     /**
      * 随机工具
@@ -28,7 +28,7 @@ public class FakePerson {
      * 私有构造，请使用 FakePerson.of 开始
      */
     private FakePerson() {
-        this.control = new Control();
+        this.personControl = new PersonControl();
     }
 
 
@@ -42,10 +42,10 @@ public class FakePerson {
 
     /**
      * 可控随机
-     * @param control 属性控制器
+     * @param personControl 属性控制器
      */
-    public FakePerson control(Control control) {
-        this.control = control;
+    public FakePerson control(PersonControl personControl) {
+        this.personControl = personControl;
         return this;
     }
 
@@ -87,10 +87,10 @@ public class FakePerson {
      * 处理性别
      */
     private void buildGender(Person person) {
-        if (control.getGender() == Gender.RANDOM) {
+        if (personControl.getGender() == Gender.RANDOM) {
             person.setGender(random.nextBoolean() ? Gender.WOMAN : Gender.MAN);
         } else {
-            person.setGender(control.getGender());
+            person.setGender(personControl.getGender());
         }
     }
 }
