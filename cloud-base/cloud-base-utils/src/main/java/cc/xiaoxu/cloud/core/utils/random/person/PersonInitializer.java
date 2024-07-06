@@ -1,7 +1,5 @@
 package cc.xiaoxu.cloud.core.utils.random.person;
 
-import cc.xiaoxu.cloud.core.utils.random.person.enums.Gender;
-
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -30,7 +28,6 @@ public class PersonInitializer {
     private PersonInitializer() {
         this.personControl = new PersonControl();
     }
-
 
     /**
      * 启动
@@ -66,7 +63,7 @@ public class PersonInitializer {
 
         Person person = new Person();
         person.setId(id);
-        buildGender(person);
+        PersonRandomizer.buildGender(person, personControl, random);
         return person;
     }
 
@@ -81,16 +78,5 @@ public class PersonInitializer {
                 .limit(i)
                 .map(this::getOne)
                 .toList();
-    }
-
-    /**
-     * 处理性别
-     */
-    private void buildGender(Person person) {
-        if (personControl.getGender() == Gender.RANDOM) {
-            person.setGender(random.nextBoolean() ? Gender.WOMAN : Gender.MAN);
-        } else {
-            person.setGender(personControl.getGender());
-        }
     }
 }
