@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.core.utils.random.person;
 
+import cc.xiaoxu.cloud.core.utils.random.person.randomizer.PersonRandomizer;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;

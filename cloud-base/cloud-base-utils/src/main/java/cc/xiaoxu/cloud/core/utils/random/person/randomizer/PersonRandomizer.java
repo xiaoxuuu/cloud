@@ -1,5 +1,7 @@
-package cc.xiaoxu.cloud.core.utils.random.person;
+package cc.xiaoxu.cloud.core.utils.random.person.randomizer;
 
+import cc.xiaoxu.cloud.core.utils.random.person.Person;
+import cc.xiaoxu.cloud.core.utils.random.person.PersonControl;
 import cc.xiaoxu.cloud.core.utils.random.person.enums.Gender;
 
 import java.util.Random;
