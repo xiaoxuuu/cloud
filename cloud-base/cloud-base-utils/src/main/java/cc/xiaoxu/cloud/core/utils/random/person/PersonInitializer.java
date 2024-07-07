@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person;
 
-import cc.xiaoxu.cloud.core.utils.random.person.randomizer.PersonRandomizer;
+import cc.xiaoxu.cloud.core.utils.random.person.randomizer.GenderRandomizer;
 
 import java.util.List;
 import java.util.Random;
@@ -65,7 +65,7 @@ public class PersonInitializer {
 
         Person person = new Person();
         person.setId(id);
-        PersonRandomizer.buildGender(person, personControl, random);
+        person.setGender(GenderRandomizer.get(personControl, random));
         return person;
     }
 
