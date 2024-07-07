@@ -19,4 +19,9 @@ public class Person {
      * 性别
      */
     private Gender gender;
+
+    /**
+     * 邮箱
+     */
+    private String email;
 }
