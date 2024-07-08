@@ -10,9 +10,16 @@ import java.util.Random;
  */
 public class GenderRandomizer {
 
-    /**
-     * 处理性别
-     */
+    public static Gender get() {
+
+        return get(PersonControl.of(), new Random());
+    }
+
+    public static Gender get(PersonControl personControl) {
+
+        return get(personControl, new Random());
+    }
+
     public static Gender get(PersonControl personControl, Random random) {
 
         if (personControl.getGender() != Gender.RANDOM) {
