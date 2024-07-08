@@ -13,7 +13,7 @@ import java.util.Random;
 public class EmailRandomizer {
 
     private static final String[] email_suffix = "@gmail.com,@yahoo.com,@msn.com,@hotmail.com,@aol.com,@ask.com,@live.com,@qq.com,@0355.net,@163.com,@163.net,@263.net,@3721.net,@yeah.net,@googlemail.com,@126.com,@sina.com,@sohu.com,@yahoo.com.cn".split(",");
-    public static String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+    public static String base = "abcdefghijklmnopqrstuvwxyz0123456789._";
 
     public static String get() {
 
