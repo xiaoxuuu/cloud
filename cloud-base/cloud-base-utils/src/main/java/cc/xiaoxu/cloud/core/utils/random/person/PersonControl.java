@@ -14,10 +14,16 @@ public class PersonControl {
     private Gender gender;
 
     /**
+     * 邮箱
+     */
+    private Email email;
+
+    /**
      * 初始化
      */
     public PersonControl() {
         this.gender = Gender.RANDOM;
+        this.email = Email.of();
     }
 
     /**
@@ -36,5 +42,51 @@ public class PersonControl {
     public PersonControl gender(Gender gender) {
         this.gender = gender;
         return this;
+    }
+
+    /**
+     * 邮箱
+     * @param email 邮箱
+     * @return Control
+     */
+    public PersonControl email(Email email) {
+        this.email = email;
+        return this;
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Email {
+
+        /**
+         * 最短
+         */
+        private Integer min;
+
+        /**
+         * 最长
+         */
+        private Integer max;
+
+        /**
+         * 纯数字
+         */
+        private Boolean onlyNumber;
+
+        /**
+         * 纯字母
+         */
+        private Boolean onlyLetter;
+
+        private Email() {
+            this.min = 4;
+            this.max = 10;
+            this.onlyNumber = false;
+            this.onlyLetter = false;
+        }
+
+        public static Email of() {
+            return new Email();
+        }
     }
 }
