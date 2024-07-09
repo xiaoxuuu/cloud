@@ -88,5 +88,10 @@ public class PersonControl {
         public static Email of() {
             return new Email();
         }
+
+        public Email min(Integer min) {
+            this.min = min;
+            return this;
+        }
     }
 }
