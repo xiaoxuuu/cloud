@@ -93,5 +93,10 @@ public class PersonControl {
             this.min = min;
             return this;
         }
+
+        public Email max(Integer max) {
+            this.max = max;
+            return this;
+        }
     }
 }
