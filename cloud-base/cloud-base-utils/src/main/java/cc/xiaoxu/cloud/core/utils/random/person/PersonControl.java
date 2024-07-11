@@ -94,6 +94,11 @@ public class PersonControl {
             return this;
         }
 
+        public Email max(Integer max) {
+            this.max = max;
+            return this;
+        }
+
         public Email onlyNumber(Boolean onlyNumber) {
             this.onlyNumber = onlyNumber;
             return this;
