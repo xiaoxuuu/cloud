@@ -68,10 +68,14 @@ public class PersonControl {
          */
         private Integer max;
 
+        // TODO 纯数字暂不支持
+
         /**
          * 纯数字
          */
         private Boolean onlyNumber;
+
+        // TODO 纯数字暂不支持
 
         /**
          * 纯字母
