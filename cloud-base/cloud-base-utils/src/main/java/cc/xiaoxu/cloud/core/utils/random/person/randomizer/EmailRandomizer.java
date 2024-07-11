@@ -17,7 +17,7 @@ public class EmailRandomizer {
 
     public static String get() {
 
-        return email(4, 10, new Random(System.currentTimeMillis()));
+        return email(PersonControl.Email.of(), new Random(System.currentTimeMillis()));
     }
 
     public static String get(PersonControl personControl) {
