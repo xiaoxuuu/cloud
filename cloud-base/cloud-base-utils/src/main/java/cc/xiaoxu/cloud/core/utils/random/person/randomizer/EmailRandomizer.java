@@ -22,12 +22,16 @@ public class EmailRandomizer {
 
     public static String get(PersonControl personControl) {
 
-        return email(4, 10, new Random(System.currentTimeMillis()));
+        return email(personControl.getEmail(), new Random(System.currentTimeMillis()));
     }
 
     public static String get(PersonControl personControl, Random random) {
 
-        return email(4, 10, random);
+        return email(personControl.getEmail(), random);
+    }
+
+    private static String email(PersonControl.Email email, Random random) {
+        return email(email.getMin(), email.getMax(), random);
     }
 
     /**
