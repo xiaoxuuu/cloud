@@ -98,5 +98,10 @@ public class PersonControl {
             this.onlyNumber = onlyNumber;
             return this;
         }
+
+        public Email onlyLetter(Boolean onlyLetter) {
+            this.onlyLetter = onlyLetter;
+            return this;
+        }
     }
 }
