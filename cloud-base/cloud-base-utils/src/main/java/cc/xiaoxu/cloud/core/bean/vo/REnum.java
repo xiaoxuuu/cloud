@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.core.bean.vo;
 
-import cc.xiaoxu.cloud.core.utils.enums.EnumDescInterface;
-import cc.xiaoxu.cloud.core.utils.enums.EnumInterface;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumDescInterface;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

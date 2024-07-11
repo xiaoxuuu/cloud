@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.idUtils;
+package cc.xiaoxu.cloud.core.utils.id;
 
 /**
  * <p>雪花算法ID生成</p>

@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.core.annotation;
 
-import cc.xiaoxu.cloud.core.utils.enums.EnumInterface;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
@@ -37,7 +37,7 @@ public @interface SchemaEnum {
     /* 文档与校验公用参数 */
 
     /**
-     * 支持的枚举类列表，支持多个枚举同时展示，需继承{@link cc.xiaoxu.cloud.core.utils.enums.EnumInterface EnumInterface}
+     * 支持的枚举类列表，支持多个枚举同时展示，需继承{@link EnumInterface EnumInterface}
      */
     Class<? extends Enum<? extends EnumInterface<?>>> clazz();
 
