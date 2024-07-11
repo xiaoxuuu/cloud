@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.my.nav.bean.enums;
 
-import cc.xiaoxu.cloud.core.utils.enums.EnumInterface;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

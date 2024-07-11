@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils.enums;
+package cc.xiaoxu.cloud.core.utils.enums.inter;
 
 /**
  * <p>枚举描述接口，暂时无用</p>

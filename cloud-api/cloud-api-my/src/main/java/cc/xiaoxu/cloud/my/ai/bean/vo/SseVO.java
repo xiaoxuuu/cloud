@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.ai.bean.vo;
 
 import cc.xiaoxu.cloud.core.annotation.SchemaEnum;
-import cc.xiaoxu.cloud.core.utils.enums.EnumInterface;
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

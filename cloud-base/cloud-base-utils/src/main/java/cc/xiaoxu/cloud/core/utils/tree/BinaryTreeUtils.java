@@ -16,7 +16,7 @@ public class BinaryTreeUtils {
      * 禁止实例化
      */
     private BinaryTreeUtils() {
-        throw new IllegalAccessError("XBinaryTreeUtils.class");
+        throw new IllegalAccessError(this.getClass().getName());
     }
 
     /**

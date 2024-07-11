@@ -1,9 +1,9 @@
-package cc.xiaoxu.cloud.core.utils.enums;
+package cc.xiaoxu.cloud.core.utils.enums.inter;
 
 /**
  * <p>枚举功能拓展接口</p>
- * <p>实现此接口即可使用 {@link live.xiaoxu.util.XEnumUtils XEnumUtils} 中的方法</p>
- * <p>样例枚举请查看 {@link live.xiaoxu.enums.DemoEnum DemoEnum}</p>
+ * <p>实现此接口即可使用 {@link cc.xiaoxu.cloud.core.utils.enums.EnumUtils EnumUtils} 中的方法</p>
+ * <p>样例枚举请查看 {@link cc.xiaoxu.cloud.core.utils.enums.DemoEnum DemoEnum}</p>
  *
  * @author 小徐
  * @since 2022/12/9 13:45

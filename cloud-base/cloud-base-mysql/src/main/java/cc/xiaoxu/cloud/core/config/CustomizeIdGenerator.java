@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.config;
 
-import cc.xiaoxu.cloud.core.utils.idUtils.SnowflakeIdUtils;
+import cc.xiaoxu.cloud.core.utils.id.SnowflakeIdUtils;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
