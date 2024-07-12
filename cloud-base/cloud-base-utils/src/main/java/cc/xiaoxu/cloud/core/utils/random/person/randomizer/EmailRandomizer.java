@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person.randomizer;
 
 import cc.xiaoxu.cloud.core.utils.random.person.control.EmailControl;
-import cc.xiaoxu.cloud.core.utils.random.person.control.PersonControl;
 
 import java.util.Random;
 
@@ -21,14 +20,14 @@ public class EmailRandomizer {
         return email(EmailControl.of(), new Random(System.currentTimeMillis()));
     }
 
-    public static String get(PersonControl personControl) {
+    public static String get(EmailControl emailControl) {
 
-        return email(personControl.getEmail(), new Random(System.currentTimeMillis()));
+        return email(emailControl, new Random(System.currentTimeMillis()));
     }
 
-    public static String get(PersonControl personControl, Random random) {
+    public static String get(EmailControl emailControl, Random random) {
 
-        return email(personControl.getEmail(), random);
+        return email(emailControl, random);
     }
 
     private static String email(EmailControl email, Random random) {
