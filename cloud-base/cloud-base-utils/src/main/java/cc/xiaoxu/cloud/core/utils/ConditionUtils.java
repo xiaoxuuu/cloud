@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.core.utils;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * <p>条件执行器，可根据某条件的真假执行</p>
@@ -50,7 +51,6 @@ public class ConditionUtils<T> {
      */
     public static <T> ConditionUtils<T> of(T t, Function<T, Boolean> function) {
 
-        Objects.requireNonNull(t);
         Objects.requireNonNull(function);
         return new ConditionUtils<>(t, function);
     }
@@ -86,6 +86,26 @@ public class ConditionUtils<T> {
             consumerTrue.accept(t);
         } else {
             consumerFalse.accept(t);
+        }
+    }
+
+    /**
+     * 根据操作结果执行 consumer
+     */
+    public <X extends Throwable> void orThrow() {
+
+        if (function.apply(t)) {
+            throw new RuntimeException(String.valueOf(t));
+        }
+    }
+
+    /**
+     * 根据操作结果执行 consumer
+     */
+    public <X extends Throwable> void orThrow(Supplier<? extends X> exceptionSupplier) throws X {
+
+        if (function.apply(t)) {
+            throw exceptionSupplier.get();
         }
     }
 }
