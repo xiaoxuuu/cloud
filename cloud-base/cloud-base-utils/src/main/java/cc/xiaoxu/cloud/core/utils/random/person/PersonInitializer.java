@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person;
 
+import cc.xiaoxu.cloud.core.utils.random.person.control.PersonControl;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.EmailRandomizer;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.GenderRandomizer;
 
