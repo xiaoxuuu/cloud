@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person.control;
 
 import cc.xiaoxu.cloud.core.utils.ConditionUtils;
-import cc.xiaoxu.cloud.core.utils.random.person.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +12,7 @@ public class PersonControl {
     /**
      * 性别
      */
-    private Gender gender;
+    private GenderControl gender;
 
     /**
      * 邮箱
@@ -24,7 +23,7 @@ public class PersonControl {
      * 初始化
      */
     public PersonControl() {
-        this.gender = Gender.RANDOM;
+        this.gender = GenderControl.of();
         this.email = EmailControl.of();
     }
 
@@ -41,7 +40,7 @@ public class PersonControl {
      * @param gender 性别
      * @return Control
      */
-    public PersonControl gender(Gender gender) {
+    public PersonControl gender(GenderControl gender) {
         this.gender = gender;
         return this;
     }
@@ -57,12 +56,6 @@ public class PersonControl {
     }
 
     public PersonControl check() {
-
-        String check = email.check();
-        return this;
-    }
-
-    public PersonControl checkWithThrow() {
 
         ConditionUtils.of(email.check(), StringUtils::isNotBlank).orThrow();
         return this;
