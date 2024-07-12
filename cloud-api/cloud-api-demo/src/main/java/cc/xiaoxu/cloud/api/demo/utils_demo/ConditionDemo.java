@@ -12,5 +12,8 @@ public class ConditionDemo {
         System.out.println(ConditionUtils.of(a, StringUtils::isNotBlank).get());
         ConditionUtils.of(a, StringUtils::isNotBlank).handle(k -> System.out.println(123), System.out::println);
         ConditionUtils.of(a, StringUtils::isNotBlank).handle(k -> System.out.println(123), System.out::println);
+
+        ConditionUtils.of("", StringUtils::isBlank).orThrow();
+        ConditionUtils.of("123", StringUtils::isBlank).orThrow();
     }
 }
