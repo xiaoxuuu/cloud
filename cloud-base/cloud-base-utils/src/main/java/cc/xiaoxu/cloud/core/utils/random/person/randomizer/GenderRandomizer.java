@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random.person.randomizer;
 
-import cc.xiaoxu.cloud.core.utils.random.person.control.PersonControl;
+import cc.xiaoxu.cloud.core.utils.random.person.control.GenderControl;
 import cc.xiaoxu.cloud.core.utils.random.person.enums.Gender;
 
 import java.util.Random;
@@ -12,18 +12,18 @@ public class GenderRandomizer {
 
     public static Gender get() {
 
-        return get(PersonControl.of(), new Random());
+        return get(GenderControl.of(), new Random());
     }
 
-    public static Gender get(PersonControl personControl) {
+    public static Gender get(GenderControl genderControl) {
 
-        return get(personControl, new Random());
+        return get(genderControl, new Random());
     }
 
-    public static Gender get(PersonControl personControl, Random random) {
+    public static Gender get(GenderControl genderControl, Random random) {
 
-        if (personControl.getGender().getGender() != Gender.RANDOM) {
-            return personControl.getGender().getGender();
+        if (genderControl.getGender() != Gender.RANDOM) {
+            return genderControl.getGender();
         }
         return random.nextBoolean() ? Gender.WOMAN : Gender.MAN;
     }

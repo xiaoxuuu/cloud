@@ -12,19 +12,19 @@ public class PersonControl {
     /**
      * 性别
      */
-    private GenderControl gender;
+    private GenderControl genderControl;
 
     /**
      * 邮箱
      */
-    private EmailControl email;
+    private EmailControl emailControl;
 
     /**
      * 初始化
      */
     public PersonControl() {
-        this.gender = GenderControl.of();
-        this.email = EmailControl.of();
+        this.genderControl = GenderControl.of();
+        this.emailControl = EmailControl.of();
     }
 
     /**
@@ -41,7 +41,7 @@ public class PersonControl {
      * @return Control
      */
     public PersonControl gender(GenderControl gender) {
-        this.gender = gender;
+        this.genderControl = gender;
         return this;
     }
 
@@ -51,13 +51,13 @@ public class PersonControl {
      * @return Control
      */
     public PersonControl email(EmailControl email) {
-        this.email = email;
+        this.emailControl = email;
         return this;
     }
 
     public PersonControl check() {
 
-        ConditionUtils.of(email.check(), StringUtils::isNotBlank).orThrow();
+        ConditionUtils.of(emailControl.check(), StringUtils::isNotBlank).orThrow();
         return this;
     }
 }

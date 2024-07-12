@@ -67,8 +67,8 @@ public class PersonInitializer {
 
         Person person = new Person();
         person.setId(id);
-        person.setGender(GenderRandomizer.get(personControl, random));
-        person.setEmail(EmailRandomizer.get(personControl, random));
+        person.setGender(GenderRandomizer.get(personControl.getGenderControl(), random));
+        person.setEmail(EmailRandomizer.get(personControl.getEmailControl(), random));
         return person;
     }
 
