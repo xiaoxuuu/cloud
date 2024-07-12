@@ -22,8 +22,8 @@ public class GenderRandomizer {
 
     public static Gender get(PersonControl personControl, Random random) {
 
-        if (personControl.getGender() != Gender.RANDOM) {
-            return personControl.getGender();
+        if (personControl.getGender().getGender() != Gender.RANDOM) {
+            return personControl.getGender().getGender();
         }
         return random.nextBoolean() ? Gender.WOMAN : Gender.MAN;
     }
