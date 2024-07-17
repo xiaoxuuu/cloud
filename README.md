@@ -25,7 +25,18 @@ cloud
 
 ## 简单高效的随机工具（开发中）
 
-# 安装
+```java
+// 控制随机属性范围
+PersonControl control = PersonControl.of()
+        .gender(GenderControl.of().gender(Gender.RANDOM))
+        .email(EmailControl.of().min(1).max(2))
+        .check();
+List<Person> some = PersonInitializer.of().control(control).getSome(100);
+
+// 全部属性随机
+List<Person> random = PersonInitializer.of().getSome(100);
+```
+
 
 ## 打包
 
@@ -34,6 +45,6 @@ cloud
 mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P tencent -T 12
 ```
 
-# 部署
+# 发布
 
-打包完成后，服务器拉取对应镜像即可
+打包完成后，服务器拉取对应镜像即可：`docker pull xxx`
