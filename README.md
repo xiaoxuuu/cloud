@@ -37,6 +37,16 @@ List<Person> some = PersonInitializer.of().control(control).getSome(100);
 List<Person> random = PersonInitializer.of().getSome(100);
 ```
 
+## 简洁美观的异常捕获工具
+
+```java
+System.out.println(CatchUtils.of(() -> 1 / 0).handle());
+System.out.println(CatchUtils.of(() -> 1 / 0).or(() -> 1 + 1).handle());
+System.out.println(CatchUtils.of(() -> 1 / 0).t(9).handle());
+System.out.println(CatchUtils.of(() -> 1 / 0).or(() -> 1 + 1).t(9).handle());
+System.out.println(CatchUtils.of(() -> 1 + 1).t(99).last(() -> System.err.println("完成")).handle());
+```
+
 # 构建
 
 本项目推荐使用 docker 进行部署，故暂未提供传统部署方式。
