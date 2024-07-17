@@ -1,10 +1,10 @@
-# 项目简介
+# 简介
 
 此项目旨在提供一个简单上手的 Spring 框架集成脚手架，项目在 `cloud-base-util` 包中内嵌了一些高频使用的工具类。
 
 为了简化开发，可以通过启动 `cloud-api-aggregation` 来聚合调试所有子模块（待测试）。
 
-# 架构介绍
+# 架构
 
 ```text
 cloud
@@ -37,6 +37,23 @@ List<Person> some = PersonInitializer.of().control(control).getSome(100);
 List<Person> random = PersonInitializer.of().getSome(100);
 ```
 
+# 构建
+
+本项目推荐使用 docker 进行部署，故暂未提供传统部署方式。
+
+## 配置
+
+在 pom.xml 文件中配置你的镜像仓库：
+
+```xml
+<!-- 镜像仓库信息 -->
+<env.namespace>?</env.namespace>
+<env.image.warehouse.url>?</env.image.warehouse.url>
+
+<!-- 镜像仓库鉴权信息 -->
+<env.image.warehouse.username>?</env.image.warehouse.username>
+<env.image.warehouse.password>?</env.image.warehouse.password>
+```
 
 ## 打包
 
@@ -47,4 +64,9 @@ mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -P tence
 
 # 发布
 
-打包完成后，服务器拉取对应镜像即可：`docker pull xxx`
+打包完成后，服务器拉取对应镜像即可：
+
+```shell
+docker pull xxx
+docker run -itd xxx
+```
