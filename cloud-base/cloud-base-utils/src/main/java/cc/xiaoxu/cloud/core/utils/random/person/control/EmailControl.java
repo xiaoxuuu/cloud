@@ -17,14 +17,10 @@ public class EmailControl implements ControlInterface {
      */
     private Integer max;
 
-    // TODO 纯数字暂不支持
-
     /**
      * 纯数字
      */
     private Boolean onlyNumber;
-
-    // TODO 纯数字暂不支持
 
     /**
      * 纯字母
@@ -73,6 +69,9 @@ public class EmailControl implements ControlInterface {
         }
         if (max < min) {
             return "邮箱长度最长小于最短";
+        }
+        if (onlyLetter && onlyNumber) {
+            return "纯数字和纯字母不可同时选择";
         }
         return null;
     }
