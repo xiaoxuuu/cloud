@@ -13,7 +13,9 @@ import java.util.Random;
 public class EmailRandomizer {
 
     private static final String[] email_suffix = "@gmail.com,@yahoo.com,@msn.com,@hotmail.com,@aol.com,@ask.com,@live.com,@qq.com,@0355.net,@163.com,@163.net,@263.net,@3721.net,@yeah.net,@googlemail.com,@126.com,@sina.com,@sohu.com,@yahoo.com.cn".split(",");
-    public static String base = "abcdefghijklmnopqrstuvwxyz0123456789._";
+    public static String base_letter = "abcdefghijklmnopqrstuvwxyz";
+    public static String base_number = "0123456789";
+    public static String base_symbol = "._";
 
     public static String get() {
 
@@ -31,7 +33,7 @@ public class EmailRandomizer {
     }
 
     private static String email(EmailControl email, Random random) {
-        return email(email.getMin(), email.getMax(), random);
+        return email(email.getMin(), email.getMax(), email.getOnlyNumber(), email.getOnlyLetter(), random);
     }
 
     /**
@@ -40,12 +42,13 @@ public class EmailRandomizer {
      * @param lMin 最小长度
      * @param lMax 最大长度
      */
-    public static String email(int lMin, int lMax, Random random) {
+    public static String email(int lMin, int lMax, boolean onlyNumber, boolean onlyLetter, Random random) {
         int length = getNum(lMin, lMax, random);
         StringBuilder sb = new StringBuilder();
+        String randomStr = onlyLetter ? base_letter : onlyNumber ? base_number : (base_letter + base_symbol + base_number);
         for (int i = 0; i < length; i++) {
-            int number = (int) (Math.random() * base.length());
-            sb.append(base.charAt(number));
+            int number = (int) (Math.random() * randomStr.length());
+            sb.append(randomStr.charAt(number));
         }
         sb.append(email_suffix[(int) (Math.random() * email_suffix.length)]);
         return sb.toString();
