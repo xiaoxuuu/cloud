@@ -45,7 +45,7 @@ public class EmailRandomizer {
     public static String email(int lMin, int lMax, boolean onlyNumber, boolean onlyLetter, Random random) {
         int length = getNum(lMin, lMax, random);
         StringBuilder sb = new StringBuilder();
-        String randomStr = onlyLetter ? base_letter : onlyNumber ? base_number : (base_letter + base_symbol + base_number);
+        String randomStr = onlyLetter ? base_letter : (onlyNumber ? base_number : (base_letter + base_symbol + base_number));
         for (int i = 0; i < length; i++) {
             int number = (int) (Math.random() * randomStr.length());
             sb.append(randomStr.charAt(number));
