@@ -15,7 +15,7 @@ public class FakePersonDemo {
 
         PersonControl control = PersonControl.of()
                 .gender(GenderControl.of().gender(Gender.RANDOM))
-                .email(EmailControl.of().min(1).max(2))
+                .email(EmailControl.of().min(1).max(2).onlyLetter(true))
                 .check();
         List<Person> some = PersonInitializer.of().control(control).getSome(100);
         List<Person> random = PersonInitializer.of().getSome(100);
