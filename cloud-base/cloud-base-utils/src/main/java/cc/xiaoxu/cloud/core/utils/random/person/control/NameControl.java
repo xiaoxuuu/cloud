@@ -62,7 +62,6 @@ public class NameControl implements ControlInterface {
      * @return this
      */
     public NameControl useSurname(Boolean useSurname) {
-
         this.useSurname = useSurname;
         return this;
     }
@@ -74,7 +73,6 @@ public class NameControl implements ControlInterface {
      * @return this
      */
     public NameControl useDoubleSurname(Boolean useDoubleSurname) {
-
         this.useDoubleSurname = useDoubleSurname;
         return this;
     }
@@ -86,7 +84,6 @@ public class NameControl implements ControlInterface {
      * @return this
      */
     public NameControl useName(Boolean useName) {
-
         this.useName = useName;
         return this;
     }
@@ -98,7 +95,6 @@ public class NameControl implements ControlInterface {
      * @return this
      */
     public NameControl useDoubleName(Boolean useDoubleName) {
-
         this.useDoubleName = useDoubleName;
         return this;
     }
@@ -110,7 +106,6 @@ public class NameControl implements ControlInterface {
      * @return this
      */
     public NameControl desensitizationLength(int desensitizationLength) {
-
         this.desensitizationLength = desensitizationLength;
         return this;
     }
@@ -122,7 +117,6 @@ public class NameControl implements ControlInterface {
      * @return this
      */
     public NameControl desensitizationName(String desensitizationName) {
-
         this.desensitizationName = desensitizationName;
         return this;
     }
@@ -130,11 +124,17 @@ public class NameControl implements ControlInterface {
     @Override
     public String check() {
 
-        if (desensitizationLength < 1) {
+        if (desensitizationLength < 0) {
             return "脱敏长度最短不能低于 0";
         }
-        if (desensitizationLength > 0 && null == desensitizationName) {
+        if (desensitizationLength >= 1 && null == desensitizationName) {
             return "设置脱敏长度后，脱敏字不能为空";
+        }
+        if (!useSurname && !useDoubleSurname) {
+            return "单姓复姓不能同时关闭";
+        }
+        if (!useName && !useDoubleName) {
+            return "单字名双字名不能同时关闭";
         }
         return null;
     }

@@ -73,6 +73,7 @@ public class PersonControl {
 
     public PersonControl check() {
 
+        ConditionUtils.of(nameControl.check(), StringUtils::isNotBlank).orThrow();
         ConditionUtils.of(genderControl.check(), StringUtils::isNotBlank).orThrow();
         ConditionUtils.of(emailControl.check(), StringUtils::isNotBlank).orThrow();
         return this;
