@@ -10,10 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Person {
 
-    /**
-     * id
-     */
     private Integer id;
+
+    /**
+     * 姓名
+     */
+    private String name;
 
     /**
      * 性别

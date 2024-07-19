@@ -10,6 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 public class PersonControl {
 
     /**
+     * 姓名
+     */
+    private NameControl nameControl;
+
+    /**
      * 性别
      */
     private GenderControl genderControl;
@@ -23,6 +28,7 @@ public class PersonControl {
      * 初始化
      */
     public PersonControl() {
+        this.nameControl = NameControl.of();
         this.genderControl = GenderControl.of();
         this.emailControl = EmailControl.of();
     }
@@ -33,6 +39,16 @@ public class PersonControl {
      */
     public static PersonControl of() {
         return new PersonControl();
+    }
+
+    /**
+     * 姓名
+     * @param name 姓名
+     * @return Control
+     */
+    public PersonControl gender(NameControl name) {
+        this.nameControl = name;
+        return this;
     }
 
     /**
