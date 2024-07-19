@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.core.utils.random.person;
 import cc.xiaoxu.cloud.core.utils.random.person.control.PersonControl;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.EmailRandomizer;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.GenderRandomizer;
+import cc.xiaoxu.cloud.core.utils.random.person.randomizer.NameRandomizer;
 
 import java.util.List;
 import java.util.Random;
@@ -67,6 +68,7 @@ public class PersonInitializer {
 
         Person person = new Person();
         person.setId(id);
+        person.setName(NameRandomizer.get(personControl.getNameControl()));
         person.setGender(GenderRandomizer.get(personControl.getGenderControl(), random));
         person.setEmail(EmailRandomizer.get(personControl.getEmailControl(), random));
         return person;
