@@ -46,7 +46,7 @@ public class PersonControl {
      * @param name 姓名
      * @return Control
      */
-    public PersonControl gender(NameControl name) {
+    public PersonControl name(NameControl name) {
         this.nameControl = name;
         return this;
     }
