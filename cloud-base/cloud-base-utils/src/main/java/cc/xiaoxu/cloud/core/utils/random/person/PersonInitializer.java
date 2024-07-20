@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.core.utils.random.person.control.PersonControl;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.EmailRandomizer;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.GenderRandomizer;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.NameRandomizer;
+import cc.xiaoxu.cloud.core.utils.random.person.randomizer.PhoneRandomizer;
 
 import java.util.List;
 import java.util.Random;
@@ -70,6 +71,7 @@ public class PersonInitializer {
         person.setId(id);
         person.setName(NameRandomizer.get(personControl.getNameControl()));
         person.setGender(GenderRandomizer.get(personControl.getGenderControl(), random));
+        person.setPhone(PhoneRandomizer.get(personControl.getPhoneControl(), random));
         person.setEmail(EmailRandomizer.get(personControl.getEmailControl(), random));
         return person;
     }
