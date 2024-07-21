@@ -34,23 +34,6 @@ public class RandomUtils {
     }
 
     /**
-     * 返回Email
-     *
-     * @param lMin 最小长度
-     * @param lMax 最大长度
-     */
-    public static String email(int lMin, int lMax) {
-        int length = getNum(lMin, lMax);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            int number = (int) (Math.random() * base.length());
-            sb.append(base.charAt(number));
-        }
-        sb.append(email_suffix[(int) (Math.random() * email_suffix.length)]);
-        return sb.toString();
-    }
-
-    /**
      * 返回手机号码
      */
     public static String phone() {
