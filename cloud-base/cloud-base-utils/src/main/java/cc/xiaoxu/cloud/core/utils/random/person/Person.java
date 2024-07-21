@@ -23,6 +23,11 @@ public class Person {
     private Gender gender;
 
     /**
+     * 手机号
+     */
+    private String phone;
+
+    /**
      * 邮箱
      */
     private String email;

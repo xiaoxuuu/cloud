@@ -20,6 +20,11 @@ public class PersonControl {
     private GenderControl genderControl;
 
     /**
+     * 手机号
+     */
+    private PhoneControl phoneControl;
+
+    /**
      * 邮箱
      */
     private EmailControl emailControl;
@@ -30,6 +35,7 @@ public class PersonControl {
     public PersonControl() {
         this.nameControl = NameControl.of();
         this.genderControl = GenderControl.of();
+        this.phoneControl = PhoneControl.of();
         this.emailControl = EmailControl.of();
     }
 
@@ -58,6 +64,16 @@ public class PersonControl {
      */
     public PersonControl gender(GenderControl gender) {
         this.genderControl = gender;
+        return this;
+    }
+
+    /**
+     * 手机号
+     * @param phoneControl 手机号
+     * @return Control
+     */
+    public PersonControl phone(PhoneControl phoneControl) {
+        this.phoneControl = phoneControl;
         return this;
     }
 
