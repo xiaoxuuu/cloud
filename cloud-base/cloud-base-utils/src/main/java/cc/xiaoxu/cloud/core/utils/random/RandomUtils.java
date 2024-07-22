@@ -34,17 +34,6 @@ public class RandomUtils {
     }
 
     /**
-     * 返回手机号码
-     */
-    public static String phone() {
-        int index = getNum(0, telFirst.length - 1);
-        String first = telFirst[index];
-        String second = String.valueOf(getNum(1, 888) + 10000).substring(1);
-        String third = String.valueOf(getNum(1, 9100) + 10000).substring(1);
-        return first + second + third;
-    }
-
-    /**
      * 返回中文姓名
      */
     public static String name() {
