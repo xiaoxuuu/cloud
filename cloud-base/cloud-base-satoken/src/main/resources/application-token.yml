@@ -1,0 +1,6 @@
+sa-token:
+  # token前缀
+  token-prefix: Bearer
+  jwt-secret-key: asdasdasifhueuiwyurfewbfjsdafjk
+  token-name: XToken
+  timeout: 7200

@@ -13,4 +13,9 @@ public class SystemConstants {
      * dev 启动配置文件
      */
     public static final String SPRING_PROFILES_ACTIVE_DEV = "dev";
+
+    /**
+     * 下划线
+     */
+    public static final String UNDERLINE = "_";
 }
