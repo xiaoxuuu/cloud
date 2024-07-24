@@ -10,9 +10,19 @@ import org.apache.commons.lang3.StringUtils;
 public class PersonControl {
 
     /**
+     * 姓名
+     */
+    private NameControl nameControl;
+
+    /**
      * 性别
      */
     private GenderControl genderControl;
+
+    /**
+     * 手机号
+     */
+    private PhoneControl phoneControl;
 
     /**
      * 邮箱
@@ -23,7 +33,9 @@ public class PersonControl {
      * 初始化
      */
     public PersonControl() {
+        this.nameControl = NameControl.of();
         this.genderControl = GenderControl.of();
+        this.phoneControl = PhoneControl.of();
         this.emailControl = EmailControl.of();
     }
 
@@ -36,12 +48,32 @@ public class PersonControl {
     }
 
     /**
+     * 姓名
+     * @param name 姓名
+     * @return Control
+     */
+    public PersonControl name(NameControl name) {
+        this.nameControl = name;
+        return this;
+    }
+
+    /**
      * 性别
      * @param gender 性别
      * @return Control
      */
     public PersonControl gender(GenderControl gender) {
         this.genderControl = gender;
+        return this;
+    }
+
+    /**
+     * 手机号
+     * @param phoneControl 手机号
+     * @return Control
+     */
+    public PersonControl phone(PhoneControl phoneControl) {
+        this.phoneControl = phoneControl;
         return this;
     }
 
@@ -57,6 +89,8 @@ public class PersonControl {
 
     public PersonControl check() {
 
+        ConditionUtils.of(nameControl.check(), StringUtils::isNotBlank).orThrow();
+        ConditionUtils.of(genderControl.check(), StringUtils::isNotBlank).orThrow();
         ConditionUtils.of(emailControl.check(), StringUtils::isNotBlank).orThrow();
         return this;
     }
