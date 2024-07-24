@@ -1,0 +1,32 @@
+dubbo:
+  application:
+    id: ${spring.application.name}
+    name: ${dubbo.application.id}
+    qos-enable: true
+    qos-accept-foreign-ip: false
+  protocol:
+    name: dubbo
+    port: -1
+  # 注册中心配置
+  registry:
+    address: nacos://${spring.cloud.nacos.discovery.server-addr}
+    group: DUBBO_GROUP
+    parameters:
+      namespace: ${spring.cloud.nacos.discovery.namespace}
+    username: ${spring.cloud.nacos.discovery.username}
+    password: ${spring.cloud.nacos.discovery.password}
+    enable-empty-protection: false
+  # 消费者相关配置
+  consumer:
+    # 结果缓存(LRU算法)
+    # 会有数据不一致问题 建议在注解局部开启
+    cache: false
+    # 支持校验注解
+    validation: false
+    # 超时时间
+    timeout: 3000
+    # 初始化检查
+    check: false
+  scan:
+    # 接口实现类扫描
+    base-packages: com.easy.**.service
