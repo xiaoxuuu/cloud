@@ -94,6 +94,8 @@
 
         <!-- MySQL -->
         <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
+
+        <sa-token.version>1.38.0</sa-token.version>
     </properties>
 
     <dependencyManagement>
@@ -208,6 +210,13 @@
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger-annotations-jakarta.version}</version>
+            </dependency>
+
+            <!-- sa-token -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -17,6 +17,7 @@ cloud
 ├── cloud-base
 │   ├── cloud-base-mysql   //         mysql
 │   ├── cloud-base-redis   //         redis
+│   ├── cloud-base-satoken //         satoken
 │   ├── cloud-base-spring  //         构建一个基础的 Spring Web 服务引用这个即可
 │   └── cloud-base-util    //         仅包含基础工具
 └── cloud-gateway          // [ 8888] 网关
