@@ -61,7 +61,7 @@ public class NameControl implements ControlInterface {
      * @param useSurname 是否使用单字姓
      * @return this
      */
-    public NameControl useSurname(Boolean useSurname) {
+    public NameControl surname(Boolean useSurname) {
         this.useSurname = useSurname;
         return this;
     }
@@ -72,7 +72,7 @@ public class NameControl implements ControlInterface {
      * @param useDoubleSurname 是否使用复姓
      * @return this
      */
-    public NameControl useDoubleSurname(Boolean useDoubleSurname) {
+    public NameControl doubleSurname(Boolean useDoubleSurname) {
         this.useDoubleSurname = useDoubleSurname;
         return this;
     }
@@ -83,7 +83,7 @@ public class NameControl implements ControlInterface {
      * @param useName 是否使用单字名
      * @return this
      */
-    public NameControl useName(Boolean useName) {
+    public NameControl singleName(Boolean useName) {
         this.useName = useName;
         return this;
     }
@@ -94,7 +94,7 @@ public class NameControl implements ControlInterface {
      * @param useDoubleName 是否使用双字名
      * @return this
      */
-    public NameControl useDoubleName(Boolean useDoubleName) {
+    public NameControl doubleName(Boolean useDoubleName) {
         this.useDoubleName = useDoubleName;
         return this;
     }

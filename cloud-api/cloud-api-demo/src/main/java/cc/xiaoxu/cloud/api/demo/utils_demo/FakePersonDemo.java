@@ -13,7 +13,7 @@ public class FakePersonDemo {
     public static void main(String[] args) {
 
         PersonControl control = PersonControl.of()
-                .name(NameControl.of().useSurname(false).useDoubleSurname(true).desensitizationLength(2))
+                .name(NameControl.of().surname(false).doubleSurname(true).desensitizationLength(2))
                 .gender(GenderControl.of().gender(Gender.RANDOM))
                 .phone(PhoneControl.of().operator(PhoneOperator.RANDOM))
                 .email(EmailControl.of().min(1).max(2).onlyLetter(true))
