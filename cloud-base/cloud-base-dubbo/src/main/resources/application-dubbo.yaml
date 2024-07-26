@@ -29,4 +29,4 @@ dubbo:
     check: false
   scan:
     # 接口实现类扫描
-    base-packages: com.easy.**.service
+    base-packages: cc.xiaoxu.**.service
