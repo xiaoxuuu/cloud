@@ -1,0 +1,21 @@
+server:
+  port: 10000
+spring:
+  config:
+    import:
+      - optional:sa-token.yml
+      - optional:spring.yml
+      - optional:spring-redis.yaml
+      - optional:application-dubbo.yaml
+  application:
+    name: auth
+  profiles:
+    active: dev
+
+logging:
+  level:
+    root: info
+
+dubbo:
+  application:
+    qos-port: 23333
