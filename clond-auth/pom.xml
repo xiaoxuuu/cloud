@@ -12,9 +12,136 @@
     <artifactId>clond-auth</artifactId>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-dubbo</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-satoken</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-spring</artifactId>
+        </dependency>
+
+        <!-- nacos 服务发现-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- jar 打包插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- docker 打包插件 -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib-maven-plugin.version}</version>
+                <configuration>
+                    <!-- 容器相关设置 -->
+                    <container>
+                        <!-- jvm 参数 -->
+                        <jvmFlags>
+                            <jvmFlag>${env.jvm.xms}</jvmFlag>
+                            <jvmFlag>${env.jvm.xmx}</jvmFlag>
+                            <jvmFlag>-Dfile.encoding=utf-8</jvmFlag>
+                            <jvmFlag>-Duser.timezone=Asia/Shanghai</jvmFlag>
+                        </jvmFlags>
+                        <!-- 创建时间 -->
+                        <creationTime>${maven.build.timestamp}</creationTime>
+                        <!-- 放置应用程序内容的容器上的根目录 -->
+                        <appRoot>/home</appRoot>
+                        <!-- 容器在运行时公开的端口 -->
+                        <!--                        <ports>23333</ports>-->
+                        <!-- 容器中的工作目录 -->
+                        <workingDirectory>/home/java</workingDirectory>
+                        <mainClass>cc.xiaoxu.cloud.DemoApplication</mainClass>
+                        <!-- 指定运行的参数 -->
+                        <environment>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <!-- 打包时间，build-helper-maven-plugin 插件会自动赋值，可忽略报错 -->
+                            <time.package>${env.build.time}</time.package>
+                            <TZ>Asia/Shanghai</TZ>
+                        </environment>
+                    </container>
+                    <!-- 基础镜像，如果是私服，需要加上鉴权信息，和 to 下的 auth 节点相同 -->
+                    <from>
+                        <image>${env.image.warehouse.url}/${env.namespace}/openjdk:${maven.compiler.target}</image>
+                        <auth>
+                            <username>${env.image.warehouse.username}</username>
+                            <password>${env.image.warehouse.password}</password>
+                        </auth>
+                    </from>
+                    <!-- 构建后的镜像名称以及私服地址、鉴权信息 -->
+                    <to>
+                        <image>${env.image.warehouse.url}/${env.namespace}/${project.artifactId}:${cloud.version}
+                        </image>
+                        <auth>
+                            <username>${env.image.warehouse.username}</username>
+                            <password>${env.image.warehouse.password}</password>
+                        </auth>
+                    </to>
+                    <!-- 允许非 https -->
+                    <allowInsecureRegistries>true</allowInsecureRegistries>
+                </configuration>
+                <!-- 将 jib 与 mvn 构建的生命周期绑定 mvn install 自动构造镜像 -->
+                <!-- 打包及推送命令 mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -->
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- 打包时间 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>env.build.time</name>
+                            <pattern>yyyy-MM-dd_HH:mm:ss</pattern>
+                            <locale>zh_CN</locale>
+                            <timeZone>GMT+8</timeZone>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
