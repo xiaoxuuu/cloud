@@ -16,6 +16,7 @@
         <module>cloud-api-aggregation</module>
         <module>cloud-gateway</module>
         <module>clond-auth</module>
+        <module>cloud-remote</module>
     </modules>
 
     <properties>
