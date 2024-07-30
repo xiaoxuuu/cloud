@@ -3,7 +3,11 @@ package cc.xiaoxu.cloud.core.utils.random.person.randomizer;
 import cc.xiaoxu.cloud.core.utils.random.person.control.PhoneControl;
 import cc.xiaoxu.cloud.core.utils.random.person.enums.PhoneOperator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -33,15 +37,15 @@ public class PhoneRandomizer {
 
     public static String get() {
 
-        return get(PhoneControl.of(), new Random());
+        return get(PhoneControl.of(), ThreadLocalRandom.current());
     }
 
     public static String get(PhoneControl phoneControl) {
 
-        return get(phoneControl, new Random());
+        return get(phoneControl, ThreadLocalRandom.current());
     }
 
-    public static String get(PhoneControl phoneControl, Random random) {
+    public static String get(PhoneControl phoneControl, ThreadLocalRandom threadLocalRandom) {
 
         Set<PhoneOperator> phoneOperatorSet = Arrays.stream(phoneControl.getPhoneOperatorArray()).collect(Collectors.toSet());
         List<Integer> prefixList = new ArrayList<>();
@@ -61,9 +65,9 @@ public class PhoneRandomizer {
             }
         }
 
-        Integer prefix = prefixList.get(random.nextInt(prefixList.size()));
-        random.nextInt(99999999);
-        String formattedNumber = String.format("%08d", random.nextInt(99999999));
+        Integer prefix = prefixList.get(threadLocalRandom.nextInt(prefixList.size()));
+        threadLocalRandom.nextInt(99999999);
+        String formattedNumber = String.format("%08d", threadLocalRandom.nextInt(99999999));
         return prefix + formattedNumber;
     }
 }
