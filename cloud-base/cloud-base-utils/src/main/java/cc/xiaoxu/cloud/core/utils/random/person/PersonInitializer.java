@@ -7,7 +7,7 @@ import cc.xiaoxu.cloud.core.utils.random.person.randomizer.NameRandomizer;
 import cc.xiaoxu.cloud.core.utils.random.person.randomizer.PhoneRandomizer;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 /**
@@ -26,7 +26,7 @@ public class PersonInitializer {
     /**
      * 随机工具
      */
-    private final Random random = new Random(System.currentTimeMillis());
+    private final ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
 
     /**
      * 私有构造，请使用 FakePerson.of 开始
@@ -70,9 +70,9 @@ public class PersonInitializer {
         Person person = new Person();
         person.setId(id);
         person.setName(NameRandomizer.get(personControl.getNameControl()));
-        person.setGender(GenderRandomizer.get(personControl.getGenderControl(), random));
-        person.setPhone(PhoneRandomizer.get(personControl.getPhoneControl(), random));
-        person.setEmail(EmailRandomizer.get(personControl.getEmailControl(), random));
+        person.setGender(GenderRandomizer.get(personControl.getGenderControl(), threadLocalRandom));
+        person.setPhone(PhoneRandomizer.get(personControl.getPhoneControl(), threadLocalRandom));
+        person.setEmail(EmailRandomizer.get(personControl.getEmailControl(), threadLocalRandom));
         return person;
     }
 

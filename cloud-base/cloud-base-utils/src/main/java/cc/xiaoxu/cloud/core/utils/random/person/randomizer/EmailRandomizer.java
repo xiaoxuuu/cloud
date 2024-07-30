@@ -2,7 +2,7 @@ package cc.xiaoxu.cloud.core.utils.random.person.randomizer;
 
 import cc.xiaoxu.cloud.core.utils.random.person.control.EmailControl;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * <p>邮箱处理器</p>
@@ -19,21 +19,21 @@ public class EmailRandomizer {
 
     public static String get() {
 
-        return email(EmailControl.of(), new Random(System.currentTimeMillis()));
+        return email(EmailControl.of(), ThreadLocalRandom.current());
     }
 
     public static String get(EmailControl emailControl) {
 
-        return email(emailControl, new Random(System.currentTimeMillis()));
+        return email(emailControl, ThreadLocalRandom.current());
     }
 
-    public static String get(EmailControl emailControl, Random random) {
+    public static String get(EmailControl emailControl, ThreadLocalRandom threadLocalRandom) {
 
-        return email(emailControl, random);
+        return email(emailControl, threadLocalRandom);
     }
 
-    private static String email(EmailControl email, Random random) {
-        return email(email.getMin(), email.getMax(), email.getOnlyNumber(), email.getOnlyLetter(), random);
+    private static String email(EmailControl email, ThreadLocalRandom threadLocalRandom) {
+        return email(email.getMin(), email.getMax(), email.getOnlyNumber(), email.getOnlyLetter(), threadLocalRandom);
     }
 
     /**
@@ -42,8 +42,8 @@ public class EmailRandomizer {
      * @param lMin 最小长度
      * @param lMax 最大长度
      */
-    public static String email(int lMin, int lMax, boolean onlyNumber, boolean onlyLetter, Random random) {
-        int length = getNum(lMin, lMax, random);
+    public static String email(int lMin, int lMax, boolean onlyNumber, boolean onlyLetter, ThreadLocalRandom threadLocalRandom) {
+        int length = getNum(lMin, lMax, threadLocalRandom);
         StringBuilder sb = new StringBuilder();
         String randomStr = onlyLetter ? base_letter : (onlyNumber ? base_number : (base_letter + base_symbol + base_number));
         for (int i = 0; i < length; i++) {
@@ -54,7 +54,7 @@ public class EmailRandomizer {
         return sb.toString();
     }
 
-    public static int getNum(int start, int end, Random random) {
-        return random.nextInt(end - start + 1) + start;
+    public static int getNum(int start, int end, ThreadLocalRandom threadLocalRandom) {
+        return threadLocalRandom.nextInt(end - start + 1) + start;
     }
 }
