@@ -3,8 +3,8 @@ server:
 spring:
   config:
     import:
-      - optional:sa-token.yml
-      - optional:spring.yml
+      - optional:satoken.yaml
+      - optional:spring.yaml
       - optional:redis.yaml
       - optional:dubbo.yaml
   application:
