@@ -20,6 +20,7 @@ public class FakePersonDemo {
                 .check();
         List<Person> some = PersonInitializer.of().control(control).getSome(100);
         List<Person> random = PersonInitializer.of().getSome(100);
-        System.out.println();
+        System.out.println(some);
+        System.out.println(random);
     }
 }
