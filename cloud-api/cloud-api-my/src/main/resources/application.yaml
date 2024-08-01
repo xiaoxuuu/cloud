@@ -8,7 +8,7 @@ spring:
       - optional:cloud.yaml
       - optional:logging.yaml
       - optional:mysql.yaml
-      - optional:spring-redis.yaml
+      - optional:redis.yaml
   application:
     name: my
   profiles:
