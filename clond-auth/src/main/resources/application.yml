@@ -6,7 +6,7 @@ spring:
       - optional:sa-token.yml
       - optional:spring.yml
       - optional:spring-redis.yaml
-      - optional:application-dubbo.yaml
+      - optional:dubbo.yaml
   application:
     name: auth
   profiles:
