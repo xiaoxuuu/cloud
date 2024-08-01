@@ -7,8 +7,7 @@ spring:
     import:
       - optional:cloud.yaml
       - optional:logging.yaml
-      - optional:mybatis-plus.yaml
-      - optional:spring-datasource.yaml
+      - optional:mysql.yaml
       - optional:spring-redis.yaml
   application:
     name: my
