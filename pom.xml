@@ -97,6 +97,7 @@
         <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
 
         <sa-token.version>1.38.0</sa-token.version>
+        <dubbo-spring-boot-starter.version>3.2.14</dubbo-spring-boot-starter.version>
     </properties>
 
     <dependencyManagement>
@@ -228,6 +229,12 @@
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-spring-boot3-starter</artifactId>
                 <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo-spring-boot-starter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
