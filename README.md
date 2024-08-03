@@ -2,24 +2,25 @@
 
 此项目旨在提供一个简单上手的 Spring 框架集成脚手架，项目在 `cloud-base-util` 包中内嵌了一些高频使用的工具类。
 
-为了简化开发，可以通过启动 `cloud-api-aggregation` 来聚合调试所有子模块（待测试）。
+为了简化开发，可以通过启动 `cloud-api-aggregation` 来聚合调试所有子模块（待开发）。
 
 # 架构
 
 ```text
 cloud
 ├── cloud-auth             // [10000] 认证服务
-├── cloud-api              // [10___] 业务
+├── cloud-api              // [10___] 业务模块
 │   ├── cloud-api-demo     // [10001] 测试/演示服务
 │   ├── cloud-api-file     // [10002] 文件服务
 │   └── cloud-api-my       // [10003] 自有服务
 ├── cloud-api-aggregation  // [ 9999] 聚合业务服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
-├── cloud-base
+├── cloud-base             //         基础能力
 │   ├── cloud-base-mysql   //         mysql
 │   ├── cloud-base-redis   //         redis
 │   ├── cloud-base-satoken //         satoken
 │   ├── cloud-base-spring  //         构建一个基础的 Spring Web 服务引用这个即可
 │   └── cloud-base-util    //         仅包含基础工具
+├── cloud-bean             //         实体类模块
 └── cloud-gateway          // [ 8888] 网关
 └── cloud-remote           //         远程调用模块
 ```

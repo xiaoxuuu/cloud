@@ -17,6 +17,7 @@
         <module>cloud-gateway</module>
         <module>clond-auth</module>
         <module>cloud-remote</module>
+        <module>cloud-bean</module>
     </modules>
 
     <properties>
