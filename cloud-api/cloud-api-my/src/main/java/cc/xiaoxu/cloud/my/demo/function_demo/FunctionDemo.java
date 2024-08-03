@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo.function_demo;
+package cc.xiaoxu.cloud.my.demo.function_demo;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.api.demo.temp.controller;
+package cc.xiaoxu.cloud.my.demo.temp.controller;
 
-import cc.xiaoxu.cloud.api.demo.temp.bean.MyModel;
+import cc.xiaoxu.cloud.my.demo.temp.bean.MyModel;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
