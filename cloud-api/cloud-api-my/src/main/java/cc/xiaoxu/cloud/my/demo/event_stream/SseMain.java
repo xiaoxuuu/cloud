@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo.event_stream;
+package cc.xiaoxu.cloud.my.demo.event_stream;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

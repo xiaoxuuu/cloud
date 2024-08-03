@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo.temp.bean;
+package cc.xiaoxu.cloud.my.demo.temp.bean;
 
 import lombok.Data;
 

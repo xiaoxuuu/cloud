@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo;
+package cc.xiaoxu.cloud.my.demo;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import lombok.AllArgsConstructor;

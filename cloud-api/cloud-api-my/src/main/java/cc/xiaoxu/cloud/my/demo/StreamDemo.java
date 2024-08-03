@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.demo;
+package cc.xiaoxu.cloud.my.demo;
 
 import java.util.LinkedHashMap;
 import java.util.List;
