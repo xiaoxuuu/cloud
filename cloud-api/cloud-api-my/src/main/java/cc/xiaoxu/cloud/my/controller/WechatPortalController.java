@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/wx/portal/{appid}")
-public class WxPortalController {
+public class WechatPortalController {
 
     private final WxMpService wxService;
     private final WxMpMessageRouter messageRouter;

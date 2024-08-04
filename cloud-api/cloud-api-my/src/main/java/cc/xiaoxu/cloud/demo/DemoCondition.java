@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.demo;
+package cc.xiaoxu.cloud.demo;
 
 import cc.xiaoxu.cloud.core.utils.ConditionUtils;
 import org.apache.commons.lang3.StringUtils;

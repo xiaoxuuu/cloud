@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 @RequestMapping("/kimi")
 @AllArgsConstructor
-public class KimiController {
+public class AiKimiController {
 
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
