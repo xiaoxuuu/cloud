@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/wx/draft")
-public class WxDraftController {
+public class WechatDraftController {
 
     private final WxMpService wxService;
 

@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.demo;
+package cc.xiaoxu.cloud.demo;
 
 import lombok.extern.slf4j.Slf4j;
 

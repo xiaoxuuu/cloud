@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 @RestController
 @RequestMapping("/sse")
-public class SseController {
+public class DemoSseController {
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
