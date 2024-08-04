@@ -1,7 +1,7 @@
-package cc.xiaoxu.cloud.my.demo.temp.controller;
+package cc.xiaoxu.cloud.my.controller;
 
-import cc.xiaoxu.cloud.my.demo.temp.bean.MyModel;
 import jakarta.servlet.http.HttpSession;
+import lombok.Data;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 @RestController("/test")
 @SessionAttributes("myModel")
-public class ModelAttributeDemoController {
+public class DemoModelAttributeController {
 
     // 将数据存储在会话中，使用该数据时，执行方法（仅一次）
     @ModelAttribute("myModel")
@@ -28,5 +28,12 @@ public class ModelAttributeDemoController {
 
         System.out.println(modelMap.get("myModel"));
         return ((MyModel) modelMap.get("myModel")).getName();
+    }
+
+    @Data
+    public static class MyModel {
+
+        private String name;
+        private Integer age;
     }
 }

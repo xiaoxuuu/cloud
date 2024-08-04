@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.demo.utils_demo;
+package cc.xiaoxu.cloud.my.demo;
 
 import cc.xiaoxu.cloud.core.utils.random.person.Person;
 import cc.xiaoxu.cloud.core.utils.random.person.PersonInitializer;
@@ -8,7 +8,7 @@ import cc.xiaoxu.cloud.core.utils.random.person.enums.PhoneOperator;
 
 import java.util.List;
 
-public class FakePersonDemo {
+public class DemoFakePerson {
 
     public static void main(String[] args) {
 

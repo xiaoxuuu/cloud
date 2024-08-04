@@ -1,9 +1,9 @@
-package cc.xiaoxu.cloud.my.demo.utils_demo;
+package cc.xiaoxu.cloud.my.demo;
 
 import cc.xiaoxu.cloud.core.utils.ConditionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class ConditionDemo {
+public class DemoCondition {
 
     public static void main(String[] args) {
 
