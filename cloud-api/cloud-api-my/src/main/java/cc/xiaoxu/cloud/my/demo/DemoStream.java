@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class StreamDemo {
+public class DemoStream {
 
     private static final List<StreamBean> streamBeanList = List.of(
             new StreamBean(1, "Bob", 18, List.of("游泳")),

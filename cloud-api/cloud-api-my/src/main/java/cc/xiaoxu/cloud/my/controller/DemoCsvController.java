@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.demo;
+package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/csv")
-public class CsvController {
+public class DemoCsvController {
 
     @Wrap(disabled = true)
     @GetMapping("/download")

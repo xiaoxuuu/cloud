@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.demo.function_demo;
+package cc.xiaoxu.cloud.my.demo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @Slf4j
-public class FunctionDemo {
+public class DemoFunction {
 
     public static void main(String[] args) {
 

@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.demo.event_stream;
+package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import jakarta.annotation.Resource;
@@ -18,7 +18,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/sse")
-public class SseController {
+public class DemoEventStreamController {
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;

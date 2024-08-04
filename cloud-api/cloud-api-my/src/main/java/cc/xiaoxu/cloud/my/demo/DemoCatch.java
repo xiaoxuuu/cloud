@@ -1,8 +1,8 @@
-package cc.xiaoxu.cloud.my.demo.utils_demo;
+package cc.xiaoxu.cloud.my.demo;
 
 import cc.xiaoxu.cloud.core.utils.CatchUtils;
 
-public class CatchDemo {
+public class DemoCatch {
 
     public static void main(String[] args) {
 
