@@ -20,6 +20,10 @@
     <dependencies>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-bean-my</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-mysql</artifactId>
         </dependency>
         <dependency>
