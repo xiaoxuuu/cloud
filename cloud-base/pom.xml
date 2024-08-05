@@ -18,6 +18,7 @@
         <module>cloud-base-mysql</module>
         <module>cloud-base-satoken</module>
         <module>cloud-base-dubbo</module>
+        <module>cloud-base-doc</module>
     </modules>
 
     <properties>

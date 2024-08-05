@@ -16,11 +16,4 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-base-utils</artifactId>
-        </dependency>
-    </dependencies>
 </project>
