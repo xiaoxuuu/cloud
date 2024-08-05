@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.bean.vo;
+package cc.xiaoxu.cloud.bean.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

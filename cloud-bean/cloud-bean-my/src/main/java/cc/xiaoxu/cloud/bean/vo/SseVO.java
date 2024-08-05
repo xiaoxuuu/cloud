@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.my.bean.vo;
+package cc.xiaoxu.cloud.bean.vo;
 
 import cc.xiaoxu.cloud.core.annotation.SchemaEnum;
 import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;

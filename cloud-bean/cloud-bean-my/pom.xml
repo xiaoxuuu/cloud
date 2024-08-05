@@ -5,15 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud</artifactId>
+        <artifactId>cloud-bean</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-bean</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>cloud-bean-my</module>
-    </modules>
+    <artifactId>cloud-bean-my</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,4 +17,10 @@
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-utils</artifactId>
+        </dependency>
+    </dependencies>
 </project>
