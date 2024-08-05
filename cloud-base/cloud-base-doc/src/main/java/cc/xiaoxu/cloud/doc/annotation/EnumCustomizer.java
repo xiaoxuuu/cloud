@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.annotation;
+package cc.xiaoxu.cloud.doc.annotation;
 
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;

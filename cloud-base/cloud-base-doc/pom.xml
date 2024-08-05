@@ -5,15 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud</artifactId>
+        <artifactId>cloud-base</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-bean</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>cloud-bean-my</module>
-    </modules>
+    <artifactId>cloud-base-doc</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -26,14 +22,21 @@
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-utils</artifactId>
         </dependency>
+
+        <!-- spring 文档 -->
         <dependency>
-            <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-base-doc</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
+        <!-- SpringBoot 校验 -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-annotation</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
 </project>
