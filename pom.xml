@@ -145,6 +145,17 @@
                 <artifactId>cloud-bean-my</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
+            <!-- 服务 -->
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-api-file</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-api-my</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
 
             <!-- lombok -->
             <dependency>
