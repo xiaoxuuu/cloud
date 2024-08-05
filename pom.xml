@@ -103,7 +103,12 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- 内部依赖 -->
+            <!-- 基础依赖 -->
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-base-doc</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-base-dubbo</artifactId>
@@ -134,11 +139,7 @@
                 <artifactId>cloud-base-utils</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
-            <dependency>
-                <groupId>cc.xiaoxu</groupId>
-                <artifactId>cloud-api-file</artifactId>
-                <version>${cloud.version}</version>
-            </dependency>
+            <!-- bean -->
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-bean-my</artifactId>
