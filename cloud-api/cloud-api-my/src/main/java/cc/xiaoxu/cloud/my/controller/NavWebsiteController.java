@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.my.controller;
 
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteAddVisitNumVO;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteSearchVO;
-import cc.xiaoxu.cloud.my.bean.vo.NavWebsiteShowVO;
+import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVisitNumVO;
+import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
+import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import io.swagger.v3.oas.annotations.Operation;
