@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>cloud-bean-my</module>
+        <module>cloud-bean-common</module>
     </modules>
 
     <properties>

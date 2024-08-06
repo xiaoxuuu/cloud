@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.core.bean.vo;
+package cc.xiaoxu.cloud.bean.vo;
 
-import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
