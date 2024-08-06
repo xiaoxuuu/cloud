@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.bean.enums;
+package cc.xiaoxu.cloud.bean.enums;
 
 import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import lombok.AllArgsConstructor;

@@ -18,6 +18,11 @@
     </properties>
 
     <dependencies>
+        <!-- bean -->
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-bean-common</artifactId>
+        </dependency>
         <!-- 内部 -->
         <dependency>
             <groupId>cc.xiaoxu</groupId>
