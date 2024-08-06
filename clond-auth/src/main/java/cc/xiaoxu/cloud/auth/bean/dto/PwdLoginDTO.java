@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.auth.bean.dto;
 
-import cc.xiaoxu.cloud.core.bean.enums.AccountClient;
+import cc.xiaoxu.cloud.bean.enums.AccountClient;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

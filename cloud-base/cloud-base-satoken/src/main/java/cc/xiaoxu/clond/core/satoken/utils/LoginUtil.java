@@ -1,6 +1,6 @@
 package cc.xiaoxu.clond.core.satoken.utils;
 
-import cc.xiaoxu.cloud.core.bean.enums.AccountClient;
+import cc.xiaoxu.cloud.bean.enums.AccountClient;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.constants.SystemConstants;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;

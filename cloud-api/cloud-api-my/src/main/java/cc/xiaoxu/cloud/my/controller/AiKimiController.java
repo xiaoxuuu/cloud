@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.bean.vo.KimiVO;
+import cc.xiaoxu.cloud.bean.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
-import cc.xiaoxu.cloud.my.bean.vo.KimiVO;
-import cc.xiaoxu.cloud.my.bean.vo.SseVO;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
 import jakarta.servlet.http.HttpServletResponse;
