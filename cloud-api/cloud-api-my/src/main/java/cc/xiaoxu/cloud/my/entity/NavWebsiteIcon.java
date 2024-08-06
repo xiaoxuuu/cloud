@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.entity;
 
+import cc.xiaoxu.cloud.bean.enums.IconTypeEnum;
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
-import cc.xiaoxu.cloud.my.bean.enums.IconTypeEnum;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

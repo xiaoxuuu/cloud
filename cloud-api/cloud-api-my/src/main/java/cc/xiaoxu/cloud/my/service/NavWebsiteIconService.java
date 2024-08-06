@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.my.service;
 
-import cc.xiaoxu.cloud.core.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.my.dao.NavWebsiteIconMapper;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
