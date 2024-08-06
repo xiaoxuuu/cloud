@@ -15,14 +15,19 @@ cloud
 │   └── cloud-api-my       // [10003] 自有服务
 ├── cloud-api-aggregation  // [ 9999] 聚合业务服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
 ├── cloud-base             //         基础能力
+│   ├── cloud-base-doc     //         文档
 │   ├── cloud-base-mysql   //         mysql
 │   ├── cloud-base-redis   //         redis
 │   ├── cloud-base-satoken //         satoken
 │   ├── cloud-base-spring  //         构建一个基础的 Spring Web 服务引用这个即可
 │   └── cloud-base-util    //         仅包含基础工具
 ├── cloud-bean             //         实体类模块
-└── cloud-gateway          // [ 8888] 网关
+│   ├── cloud-bean-common  //         基础bean
+│   └── cloud-bean-my
+├── cloud-gateway          // [ 8888] 网关
 └── cloud-remote           //         远程调用模块
+    ├── cloud-remote-file
+    └── cloud-remote-my
 ```
 
 # 功能
