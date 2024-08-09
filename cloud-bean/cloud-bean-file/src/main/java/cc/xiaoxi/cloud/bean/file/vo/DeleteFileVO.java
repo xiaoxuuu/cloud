@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.file.bean;
+package cc.xiaoxi.cloud.bean.file.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

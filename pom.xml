@@ -147,6 +147,11 @@
             </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-bean-file</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-bean-my</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
