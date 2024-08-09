@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
-@RequestMapping("/sse")
+@RequestMapping("/demo/sse")
 public class DemoSseController {
 
     @Resource

@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
-@RequestMapping("/kimi")
+@RequestMapping("/ai/kimi")
 @AllArgsConstructor
 public class AiKimiController {
 
