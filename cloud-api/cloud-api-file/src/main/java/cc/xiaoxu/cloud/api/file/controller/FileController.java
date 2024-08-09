@@ -1,19 +1,22 @@
 package cc.xiaoxu.cloud.api.file.controller;
 
-import cc.xiaoxu.cloud.api.file.bean.DeleteFileVO;
-import cc.xiaoxu.cloud.api.file.bean.FileVO;
+import cc.xiaoxi.cloud.bean.file.vo.DeleteFileVO;
+import cc.xiaoxi.cloud.bean.file.vo.FileVO;
 import cc.xiaoxu.cloud.api.file.service.FileService;
+import cc.xiaoxu.cloud.remote.file.RemoteFile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+@DubboService
 @RestController
 @RequestMapping("/file")
 @Tag(name = "文件服务")
-public class FileController {
+public class FileController implements RemoteFile {
 
     @Resource
     private FileService fileService;

@@ -20,6 +20,10 @@
     <dependencies>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-utils</artifactId>
         </dependency>
         <dependency>
@@ -29,6 +33,10 @@
         <dependency>
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-mysql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-remote-file</artifactId>
         </dependency>
     </dependencies>
 </project>

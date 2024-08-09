@@ -5,15 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud</artifactId>
+        <artifactId>cloud-remote</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-remote</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>cloud-remote-file</module>
-    </modules>
+    <artifactId>cloud-remote-file</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,4 +17,10 @@
         <project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-bean-file</artifactId>
+        </dependency>
+    </dependencies>
 </project>
