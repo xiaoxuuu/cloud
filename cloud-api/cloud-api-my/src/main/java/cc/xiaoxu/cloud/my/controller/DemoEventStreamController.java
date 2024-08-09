@@ -17,7 +17,7 @@ import reactor.core.publisher.Flux;
 import java.util.Random;
 
 @RestController
-@RequestMapping("/sse")
+@RequestMapping("/demo/sse")
 public class DemoEventStreamController {
 
     @Resource

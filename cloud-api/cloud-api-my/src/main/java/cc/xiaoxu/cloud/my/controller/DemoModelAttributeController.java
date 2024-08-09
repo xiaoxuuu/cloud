@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-@RestController("/test")
+@RestController("/demo/test")
 @SessionAttributes("myModel")
 public class DemoModelAttributeController {
 

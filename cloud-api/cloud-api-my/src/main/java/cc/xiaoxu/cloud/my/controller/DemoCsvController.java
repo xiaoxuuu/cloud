@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/csv")
+@RequestMapping("/demo/csv")
 public class DemoCsvController {
 
     @Wrap(disabled = true)
