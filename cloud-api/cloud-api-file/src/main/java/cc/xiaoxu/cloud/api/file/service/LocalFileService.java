@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.api.file.service;
 
-import cc.xiaoxu.cloud.api.file.bean.FileConstants;
-import cc.xiaoxu.cloud.api.file.bean.FileVO;
+import cc.xiaoxi.cloud.bean.file.constant.FileConstants;
+import cc.xiaoxi.cloud.bean.file.vo.FileVO;
 import cc.xiaoxu.cloud.api.file.config.LocalFileConfig;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.DateUtils;

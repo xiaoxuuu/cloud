@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.api.file.bean;
+package cc.xiaoxu.cloud.api.file.entity;
 
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
