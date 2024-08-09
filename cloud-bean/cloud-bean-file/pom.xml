@@ -5,17 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cc.xiaoxu</groupId>
-        <artifactId>cloud</artifactId>
+        <artifactId>cloud-bean</artifactId>
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-bean</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>cloud-bean-my</module>
-        <module>cloud-bean-common</module>
-        <module>cloud-bean-file</module>
-    </modules>
+    <artifactId>cloud-bean-file</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -26,16 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-base-utils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-base-doc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-annotation</artifactId>
+            <artifactId>cloud-bean-common</artifactId>
         </dependency>
     </dependencies>
 </project>
