@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.my.controller;
 
-import cc.xiaoxu.cloud.bean.vo.KimiVO;
+import cc.xiaoxu.cloud.bean.vo.AiKimiVO;
 import cc.xiaoxu.cloud.bean.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import com.alibaba.fastjson2.JSON;
@@ -41,7 +41,7 @@ public class AiKimiController {
 
     @Wrap(disabled = true)
     @PostMapping(value = "/talk", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter events(@RequestBody KimiVO vo, HttpServletResponse response) {
+    public SseEmitter events(@RequestBody AiKimiVO vo, HttpServletResponse response) {
 
         setResponseHeader(response);
 
@@ -89,7 +89,7 @@ public class AiKimiController {
             }
             """;
 
-    public static void talkToKimi(KimiVO vo, SseEmitter emitter) {
+    public static void talkToKimi(AiKimiVO vo, SseEmitter emitter) {
 
         try {
             URL url = URI.create("https://api.moonshot.cn/v1/chat/completions").toURL();
