@@ -63,6 +63,9 @@
         <env.api.wechat.mp.token>0</env.api.wechat.mp.token>
         <env.api.wechat.mp.aes.key>0</env.api.wechat.mp.aes.key>
 
+        <!-- 阿里云百炼配置 -->
+        <env.api.ali.bailian.api.key>0</env.api.ali.bailian.api.key>
+
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
         <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
@@ -104,6 +107,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- 服务 -->
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-api-ai</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-api-file</artifactId>
@@ -151,6 +159,11 @@
                 <version>${cloud.version}</version>
             </dependency>
             <!-- bean -->
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-bean-ai</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-bean-common</artifactId>

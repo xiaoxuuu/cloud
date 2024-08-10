@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:mysql://mysql:3306/d_api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
+  data:
+    redis:
+      host: redis
+
+app:
+  config:
+    # 每天三点执行
+    refresh-data: '0 0 3 * * ?'
+    # 每天零点执行
+    refresh-website-name: '0 0 0 * * ?'
+
+# 日志输出配置
+logging:
+  level:
+    cc.xiaoxu.cloud: WARN

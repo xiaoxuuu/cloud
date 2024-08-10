@@ -15,6 +15,7 @@
         <module>cloud-bean-my</module>
         <module>cloud-bean-common</module>
         <module>cloud-bean-file</module>
+        <module>cloud-bean-ai</module>
     </modules>
 
     <properties>

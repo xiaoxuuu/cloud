@@ -1,0 +1,13 @@
+# 启动类输出配置
+app:
+  config:
+    # 每 5 秒一次
+    #    refresh-data: '0/5 * * * * ?'
+    refresh-data: '0 0 0 * * ?'
+    # 每天一次
+    refresh-website-name: '0 0 0 * * ?'
+
+# 日志输出配置
+logging:
+  level:
+    cc.xiaoxu.cloud: DEBUG
