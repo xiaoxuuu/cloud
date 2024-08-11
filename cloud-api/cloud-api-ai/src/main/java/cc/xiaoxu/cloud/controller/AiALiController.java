@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.controller;
 
-import cc.xiaoxu.cloud.bean.ai.vo.AiALiSplitTxtPageVO;
+import cc.xiaoxu.cloud.bean.ai.vo.ALiSplitTxtPageVO;
 import com.alibaba.dashscope.embeddings.*;
 import com.alibaba.dashscope.exception.ApiException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
@@ -27,22 +27,22 @@ public class AiALiController {
 
     public static void main(String[] args) throws Exception {
 
-        AiALiSplitTxtPageVO aiALiSplitTxtPageVO = new AiALiSplitTxtPageVO();
+        ALiSplitTxtPageVO ALiSplitTxtPageVO = new ALiSplitTxtPageVO();
 
-        aiALiSplitTxtPageVO.setApiKey("sk-9fa9419e92924aa5bae89905d4f86779");
-        aiALiSplitTxtPageVO.setWorkspaceId("llm-1xz44kjs8q87eosk");
-        aiALiSplitTxtPageVO.setIndexId("tcrsa5xbag");
-        aiALiSplitTxtPageVO.setFiled("file_86789d2490cf4931b38bb2bce15c3104_10134373");
-        aiALiSplitTxtPageVO.setPageNum(1);
-        aiALiSplitTxtPageVO.setPageSize(10);
+        ALiSplitTxtPageVO.setApiKey("sk-9fa9419e92924aa5bae89905d4f86779");
+        ALiSplitTxtPageVO.setWorkspaceId("llm-1xz44kjs8q87eosk");
+        ALiSplitTxtPageVO.setIndexId("tcrsa5xbag");
+        ALiSplitTxtPageVO.setFiled("file_86789d2490cf4931b38bb2bce15c3104_10134373");
+        ALiSplitTxtPageVO.setPageNum(1);
+        ALiSplitTxtPageVO.setPageSize(10);
         AiALiController aiALiController = new AiALiController();
-        String s = aiALiController.readSplitTxt(aiALiSplitTxtPageVO);
+        String s = aiALiController.readSplitTxt(ALiSplitTxtPageVO);
         System.out.println(s);
     }
 
     @Operation(summary = "读取分片数据", description = "读取阿里云分片好的文件数据")
     @PostMapping("/read_split_txt")
-    public @ResponseBody String readSplitTxt(@RequestBody AiALiSplitTxtPageVO vo) throws Exception {
+    public @ResponseBody String readSplitTxt(@RequestBody ALiSplitTxtPageVO vo) throws Exception {
 
         Client client = AiALiController.createClient();
         ListChunksRequest listChunksRequest = new ListChunksRequest()
