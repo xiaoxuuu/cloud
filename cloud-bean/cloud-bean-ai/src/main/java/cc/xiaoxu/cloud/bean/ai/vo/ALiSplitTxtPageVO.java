@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AiALiSplitTxtPageVO {
+public class ALiSplitTxtPageVO {
 
     @Schema(description = "sk")
     private String apiKey;

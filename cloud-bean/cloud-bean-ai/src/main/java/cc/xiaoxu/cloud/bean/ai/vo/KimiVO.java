@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AiKimiVO {
+public class KimiVO {
 
     @Schema(description = "apiKey")
     private String apiKey;
