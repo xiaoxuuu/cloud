@@ -29,6 +29,7 @@ public class AiALiController {
 
         ALiSplitTxtPageVO ALiSplitTxtPageVO = new ALiSplitTxtPageVO();
 
+        // TODO 推送代码前移除 key
         ALiSplitTxtPageVO.setApiKey("sk-9fa9419e92924aa5bae89905d4f86779");
         ALiSplitTxtPageVO.setWorkspaceId("llm-1xz44kjs8q87eosk");
         ALiSplitTxtPageVO.setIndexId("tcrsa5xbag");
@@ -86,6 +87,7 @@ public class AiALiController {
     public static Client createClient() throws Exception {
         // 工程代码泄露可能会导致 AccessKey 泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考。
         // 建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html。
+        // TODO 推送代码前移除 key
         Config config = new Config()
                 // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
                 .setAccessKeyId("LTAI5tPnQuSgaViEAfG1zaZY")
@@ -112,6 +114,7 @@ public class AiALiController {
     public static void fileCall() throws ApiException, NoApiKeyException {
         BatchTextEmbeddingParam param = BatchTextEmbeddingParam.builder()
                 .model(BatchTextEmbedding.Models.TEXT_EMBEDDING_ASYNC_V1)
+                // TODO 推送代码前移除 key
                 .apiKey("sk-9fa9419e92924aa5bae89905d4f86779")
                 .url("https://modelscope.oss-cn-beijing.aliyuncs.com/resource/text_embedding_file.txt")
                 .build();
