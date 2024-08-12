@@ -15,7 +15,7 @@
         <module>cloud-base-utils</module>
         <module>cloud-base-spring</module>
         <module>cloud-base-redis</module>
-        <module>cloud-base-mysql</module>
+        <module>cloud-base-database</module>
         <module>cloud-base-satoken</module>
         <module>cloud-base-dubbo</module>
         <module>cloud-base-doc</module>

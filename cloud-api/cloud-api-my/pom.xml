@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
-            <artifactId>cloud-base-mysql</artifactId>
+            <artifactId>cloud-base-database</artifactId>
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
