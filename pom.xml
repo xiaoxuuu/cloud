@@ -63,6 +63,9 @@
         <env.api.wechat.mp.token>0</env.api.wechat.mp.token>
         <env.api.wechat.mp.aes.key>0</env.api.wechat.mp.aes.key>
 
+        <!-- 阿里云配置 -->
+        <env.api.ali.access.key.id>0</env.api.ali.access.key.id>
+        <env.api.ali.access.key.secret>0</env.api.ali.access.key.secret>
         <!-- 阿里云百炼配置 -->
         <env.api.ali.bailian.api.key>0</env.api.ali.bailian.api.key>
 
