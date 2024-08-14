@@ -37,6 +37,5 @@ spring:
 ali:
   bailian:
     api-key: @env.api.ali.bailian.api.key@
-    workspace-id: @env.api.ali.bailian.workspace.id@
   access-key-id: @env.api.ali.access.key@
   access-key-secret: @env.api.ali.access.key.secret@
