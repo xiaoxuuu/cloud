@@ -1,6 +1,8 @@
 package cc.xiaoxu.cloud.controller;
 
 import cc.xiaoxu.cloud.bean.ai.vo.ALiSplitTxtPageVO;
+import cc.xiaoxu.cloud.core.utils.ConditionUtils;
+import cc.xiaoxu.cloud.core.utils.text.StringUtils;
 import com.alibaba.dashscope.embeddings.*;
 import com.alibaba.dashscope.exception.ApiException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
@@ -13,6 +15,7 @@ import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.Common;
 import com.aliyun.teautil.models.RuntimeOptions;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,27 +28,22 @@ import java.util.stream.Collectors;
 
 public class AiALiController {
 
-    public static void main(String[] args) throws Exception {
+    @Value("${ali.bailian.api-key}")
+    private String apiKey;
 
-        ALiSplitTxtPageVO ALiSplitTxtPageVO = new ALiSplitTxtPageVO();
+    @Value("${ali.access-key-id}")
+    private String accessKeyId;
 
-        // TODO 推送代码前移除 key
-        ALiSplitTxtPageVO.setApiKey("sk-9fa9419e92924aa5bae89905d4f86779");
-        ALiSplitTxtPageVO.setWorkspaceId("llm-1xz44kjs8q87eosk");
-        ALiSplitTxtPageVO.setIndexId("tcrsa5xbag");
-        ALiSplitTxtPageVO.setFiled("file_86789d2490cf4931b38bb2bce15c3104_10134373");
-        ALiSplitTxtPageVO.setPageNum(1);
-        ALiSplitTxtPageVO.setPageSize(10);
-        AiALiController aiALiController = new AiALiController();
-        String s = aiALiController.readSplitTxt(ALiSplitTxtPageVO);
-        System.out.println(s);
-    }
+    @Value("${ali.access-key-secret}")
+    private String accessKeySecret;
 
     @Operation(summary = "读取分片数据", description = "读取阿里云分片好的文件数据")
     @PostMapping("/read_split_txt")
     public @ResponseBody String readSplitTxt(@RequestBody ALiSplitTxtPageVO vo) throws Exception {
 
-        Client client = AiALiController.createClient();
+        ConditionUtils.of(vo.getApiKey(), StringUtils::isBlank).handle(k -> vo.setApiKey(apiKey));
+
+        Client client = createClient();
         ListChunksRequest listChunksRequest = new ListChunksRequest()
                 .setFiled(vo.getFiled())
                 .setIndexId(vo.getIndexId())
@@ -84,15 +82,12 @@ public class AiALiController {
      *
      * @throws Exception
      */
-    public static Client createClient() throws Exception {
+    public Client createClient() throws Exception {
         // 工程代码泄露可能会导致 AccessKey 泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考。
         // 建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html。
-        // TODO 推送代码前移除 key
         Config config = new Config()
-                // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
-                .setAccessKeyId("LTAI5tPnQuSgaViEAfG1zaZY")
-                // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
-                .setAccessKeySecret("pyK9of22HPjKbroc2LIhpM5u9679EX");
+                .setAccessKeyId(accessKeyId)
+                .setAccessKeySecret(accessKeySecret);
         // Endpoint 请参考 https://api.aliyun.com/product/bailian
         config.endpoint = "bailian.cn-beijing.aliyuncs.com";
         return new Client(config);
@@ -101,7 +96,7 @@ public class AiALiController {
     public static void textCall() throws ApiException, NoApiKeyException {
         TextEmbeddingParam param = TextEmbeddingParam
                 .builder()
-                .model(TextEmbedding.Models.TEXT_EMBEDDING_V1)
+                .model(TextEmbedding.Models.TEXT_EMBEDDING_V2)
                 .texts(Arrays.asList("风急天高猿啸哀", "渚清沙白鸟飞回", "无边落木萧萧下", "不尽长江滚滚来")).build();
         TextEmbedding textEmbedding = new TextEmbedding();
         TextEmbeddingResult result = textEmbedding.call(param);
@@ -111,24 +106,14 @@ public class AiALiController {
     /**
      * 向量转换
      */
-    public static void fileCall() throws ApiException, NoApiKeyException {
+    public void fileCall() throws ApiException, NoApiKeyException {
         BatchTextEmbeddingParam param = BatchTextEmbeddingParam.builder()
-                .model(BatchTextEmbedding.Models.TEXT_EMBEDDING_ASYNC_V1)
-                // TODO 推送代码前移除 key
-                .apiKey("sk-9fa9419e92924aa5bae89905d4f86779")
+                .model(BatchTextEmbedding.Models.TEXT_EMBEDDING_ASYNC_V2)
+                .apiKey(apiKey)
                 .url("https://modelscope.oss-cn-beijing.aliyuncs.com/resource/text_embedding_file.txt")
                 .build();
         BatchTextEmbedding textEmbedding = new BatchTextEmbedding();
         BatchTextEmbeddingResult result = textEmbedding.call(param);
         System.out.println(result);
     }
-
-//    public static void main(String[] args) {
-//        try {
-//            textCall();
-//        } catch (ApiException | NoApiKeyException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        System.exit(0);
-//    }
 }
