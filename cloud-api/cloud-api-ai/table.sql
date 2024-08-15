@@ -3,9 +3,9 @@ CREATE TABLE t_knowledge
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(32),
     file_id     VARCHAR(32),
-    state       VARCHAR(1),
+    state       VARCHAR(1) NOT NULL,
     remark      VARCHAR(16),
-    create_time DATE,
+    create_time DATE       NOT NULL,
     create_id   INT,
     modify_time DATE,
     modify_id   INT
@@ -27,9 +27,9 @@ CREATE TABLE t_knowledge_section
     knowledge_id INT NOT NULL,
     cut_content  TEXT,
     embedding    vector(1536),
-    state        VARCHAR(1),
+    state       VARCHAR(1) NOT NULL,
     remark       VARCHAR(16),
-    create_time  DATE,
+    create_time DATE       NOT NULL,
     create_id    INT,
     modify_time  DATE,
     modify_id    INT
