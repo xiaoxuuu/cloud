@@ -2,12 +2,12 @@ CREATE TABLE t_knowledge
 (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(32),
-    file_id     VARCHAR(32),
+    file_id     VARCHAR(64),
     state       VARCHAR(1) NOT NULL,
     remark      VARCHAR(16),
-    create_time DATE       NOT NULL,
+    create_time TIMESTAMP NOT NULL,
     create_id   INT,
-    modify_time DATE,
+    modify_time TIMESTAMP,
     modify_id   INT
 );
 COMMENT ON TABLE t_knowledge IS '知识表';
@@ -24,14 +24,14 @@ COMMENT ON COLUMN t_knowledge.modify_id IS '编辑人id';
 CREATE TABLE t_knowledge_section
 (
     id           SERIAL PRIMARY KEY,
-    knowledge_id INT NOT NULL,
+    knowledge_id INT        NOT NULL,
     cut_content  TEXT,
     embedding    vector(1536),
-    state       VARCHAR(1) NOT NULL,
+    state        VARCHAR(1) NOT NULL,
     remark       VARCHAR(16),
-    create_time DATE       NOT NULL,
+    create_time  TIMESTAMP  NOT NULL,
     create_id    INT,
-    modify_time  DATE,
+    modify_time  TIMESTAMP,
     modify_id    INT
 );
 COMMENT ON TABLE t_knowledge_section IS '知识表切片数据';
