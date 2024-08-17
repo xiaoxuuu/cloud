@@ -5,10 +5,7 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.entity.KnowledgeSection;
 import com.aliyun.bailian20231229.Client;
-import com.aliyun.bailian20231229.models.CreateIndexRequest;
-import com.aliyun.bailian20231229.models.CreateIndexResponse;
-import com.aliyun.bailian20231229.models.SubmitIndexJobRequest;
-import com.aliyun.bailian20231229.models.SubmitIndexJobResponse;
+import com.aliyun.bailian20231229.models.*;
 import com.aliyun.tea.TeaException;
 import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
@@ -84,12 +81,34 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         }
     }
 
+    public void readSection(String indexId, String fileId, String workspaceId, Integer pageNum, Integer pageSize) {
+
+        Client client = createClient();
+        ListChunksRequest listChunksRequest = new ListChunksRequest()
+                .setIndexId(indexId)
+                .setFiled(fileId)
+                .setPageNum(pageNum)
+                .setPageSize(pageSize)
+                .setFields(java.util.Arrays.asList("content"));
+        RuntimeOptions runtime = new RuntimeOptions();
+        java.util.Map<String, String> headers = new java.util.HashMap<>();
+        try {
+            // 复制代码运行请自行打印 API 的返回值
+            client.listChunksWithOptions(workspaceId, listChunksRequest, headers, runtime);
+        } catch (TeaException error) {
+            String errorMsg = "readSection 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            String errorMsg = "readSection 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        }
+    }
+
     /**
      * <b>description</b> :
      * <p>使用AK&amp;SK初始化账号Client</p>
      * @return Client
-     *
-     * @throws Exception
      */
     public Client createClient() {
         // 工程代码泄露可能会导致 AccessKey 泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考。
