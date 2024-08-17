@@ -7,6 +7,8 @@ import cc.xiaoxu.cloud.entity.KnowledgeSection;
 import com.aliyun.bailian20231229.Client;
 import com.aliyun.bailian20231229.models.CreateIndexRequest;
 import com.aliyun.bailian20231229.models.CreateIndexResponse;
+import com.aliyun.bailian20231229.models.SubmitIndexJobRequest;
+import com.aliyun.bailian20231229.models.SubmitIndexJobResponse;
 import com.aliyun.tea.TeaException;
 import com.aliyun.teaopenapi.models.Config;
 import com.aliyun.teautil.models.RuntimeOptions;
@@ -59,6 +61,25 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "createIndex 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        }
+    }
+
+    public void submitTask(String indexId, String workspaceId) {
+
+        Client client = createClient();
+        SubmitIndexJobRequest submitIndexJobRequest = new SubmitIndexJobRequest().setIndexId(indexId);
+        RuntimeOptions runtime = new RuntimeOptions();
+        java.util.Map<String, String> headers = new java.util.HashMap<>();
+        try {
+            SubmitIndexJobResponse submitIndexJobResponse = client.submitIndexJobWithOptions(workspaceId, submitIndexJobRequest, headers, runtime);
+            // 处理结果
+        } catch (TeaException error) {
+            String errorMsg = "submitTask 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            String errorMsg = "submitTask 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
         }
     }
