@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "id - 请求参数")
 public class IdDTO {
 
-    @Schema(description = "主键id")
+    @Schema(description = "id")
     private String id;
 }
