@@ -10,9 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ALiSplitTxtPageVO {
 
-    @Schema(description = "sk")
-    private String apiKey;
-
     @Schema(description = "业务空间id")
     private String workspaceId;
 
@@ -21,10 +18,4 @@ public class ALiSplitTxtPageVO {
 
     @Schema(description = "文件ID")
     private String filed;
-
-    @Schema(description = "页数")
-    private Integer pageNum;
-
-    @Schema(description = "每页文件大小")
-    private Integer pageSize;
 }
