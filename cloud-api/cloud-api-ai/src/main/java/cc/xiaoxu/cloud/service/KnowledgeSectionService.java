@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.service;
 
 import cc.xiaoxu.cloud.bean.ai.vo.ALiSplitTxtPageVO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.entity.KnowledgeSection;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -46,6 +48,8 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         KnowledgeSection knowledgeSection = new KnowledgeSection();
         knowledgeSection.setKnowledgeId(knowledgeId);
         knowledgeSection.setCutContent(content);
+        knowledgeSection.setState(StateEnum.ENABLE.getCode());
+        knowledgeSection.setCreateTime(new Date());
         return knowledgeSection;
     }
 }
