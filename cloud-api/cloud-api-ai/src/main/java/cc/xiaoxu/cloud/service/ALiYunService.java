@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -39,7 +42,7 @@ public class ALiYunService {
                 .setDocumentIds(List.of(fileId))
                 .setSinkType("DEFAULT");
         RuntimeOptions runtime = new RuntimeOptions();
-        java.util.Map<String, String> headers = new java.util.HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         try {
             CreateIndexResponse indexWithOptions = client.createIndexWithOptions(workspaceId, createIndexRequest, headers, runtime);
             // 处理结果
@@ -58,7 +61,7 @@ public class ALiYunService {
         Client client = createClient();
         SubmitIndexJobRequest submitIndexJobRequest = new SubmitIndexJobRequest().setIndexId(indexId);
         RuntimeOptions runtime = new RuntimeOptions();
-        java.util.Map<String, String> headers = new java.util.HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         try {
             SubmitIndexJobResponse submitIndexJobResponse = client.submitIndexJobWithOptions(workspaceId, submitIndexJobRequest, headers, runtime);
             // 处理结果
@@ -72,7 +75,7 @@ public class ALiYunService {
         }
     }
 
-    public void readSection(String indexId, String fileId, String workspaceId, Integer pageNum, Integer pageSize) {
+    public List<String> readSection(String indexId, String fileId, String workspaceId, Integer pageNum, Integer pageSize) {
 
         Client client = createClient();
         ListChunksRequest listChunksRequest = new ListChunksRequest()
@@ -80,12 +83,13 @@ public class ALiYunService {
                 .setFiled(fileId)
                 .setPageNum(pageNum)
                 .setPageSize(pageSize)
-                .setFields(java.util.Arrays.asList("content"));
+                .setFields(Arrays.asList("content"));
         RuntimeOptions runtime = new RuntimeOptions();
-        java.util.Map<String, String> headers = new java.util.HashMap<>();
+        Map<String, String> headers = new HashMap<>();
         try {
             // 复制代码运行请自行打印 API 的返回值
-            client.listChunksWithOptions(workspaceId, listChunksRequest, headers, runtime);
+            ListChunksResponse listChunksResponse = client.listChunksWithOptions(workspaceId, listChunksRequest, headers, runtime);
+            return listChunksResponse.body.getData().nodes.stream().map(ListChunksResponseBody.ListChunksResponseBodyDataNodes::getText).toList();
         } catch (TeaException error) {
             String errorMsg = "readSection 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
