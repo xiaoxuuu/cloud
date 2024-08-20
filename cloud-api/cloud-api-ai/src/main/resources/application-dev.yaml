@@ -1,11 +1,8 @@
-# 启动类输出配置
-app:
-  config:
-    # 每 5 秒一次
-    #    refresh-data: '0/5 * * * * ?'
-    refresh-data: '0 0 0 * * ?'
-    # 每天一次
-    refresh-website-name: '0 0 0 * * ?'
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.5.111:5432/postgres?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
+    username: postgres
+    password: root
 
 # 日志输出配置
 logging:
