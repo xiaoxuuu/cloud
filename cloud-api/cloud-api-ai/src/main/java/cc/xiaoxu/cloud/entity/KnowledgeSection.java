@@ -20,7 +20,7 @@ import java.util.List;
 public class KnowledgeSection extends BaseEntity {
 
     @Schema(description = "知识id")
-    private String knowledgeId;
+    private Integer knowledgeId;
 
     @Schema(description = "知识切片内容")
     private String cutContent;

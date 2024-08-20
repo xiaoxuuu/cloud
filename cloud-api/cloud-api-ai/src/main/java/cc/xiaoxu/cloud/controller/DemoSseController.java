@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.my.controller;
+package cc.xiaoxu.cloud.controller;
 
-import cc.xiaoxu.cloud.bean.vo.SseVO;
+import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
