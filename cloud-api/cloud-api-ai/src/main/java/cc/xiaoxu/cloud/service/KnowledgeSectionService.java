@@ -22,6 +22,8 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     public boolean rebuild(ALiSplitTxtPageVO vo) {
 
+        int knowledgeId = 2;
+
         boolean hasNext = true;
         int pageNum = 1;
         List<String> readSectionList = new ArrayList<>();
@@ -37,8 +39,12 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         }
 
         log.info("读取完成，一共 {} 条数据", readSectionList.size());
+        // 移除旧数据
+        lambdaUpdate()
+                .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
+                .remove();
         // 数据入库
-        List<KnowledgeSection> knowledgeSectionList = readSectionList.stream().map(k -> buildKnowledgeSection(2, k)).toList();
+        List<KnowledgeSection> knowledgeSectionList = readSectionList.stream().map(k -> buildKnowledgeSection(knowledgeId, k)).toList();
         saveBatch(knowledgeSectionList, 1000);
         return true;
     }
