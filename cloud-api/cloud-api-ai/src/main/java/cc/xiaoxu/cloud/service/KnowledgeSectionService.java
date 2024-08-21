@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.service;
 
-import cc.xiaoxu.cloud.bean.ai.vo.SplitTxtVO;
+import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.entity.KnowledgeSection;
@@ -20,7 +20,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     private final ALiYunService aLiYunService;
 
-    public boolean rebuild(SplitTxtVO vo) {
+    public boolean rebuild(SplitTxtDTO dto) {
 
         int knowledgeId = 2;
 
@@ -29,7 +29,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         List<String> readSectionList = new ArrayList<>();
         while (hasNext) {
             // 每次处理 1000 条数据
-            List<String> readSectionListTemp = aLiYunService.readSection(vo.getIndexId(), vo.getFiled(), vo.getWorkspaceId(), pageNum, 1000);
+            List<String> readSectionListTemp = aLiYunService.readSection(dto.getIndexId(), dto.getFiled(), dto.getWorkspaceId(), pageNum, 1000);
             readSectionList.addAll(readSectionListTemp);
             log.info("读取到 {} 条数据", readSectionListTemp.size());
             if (readSectionListTemp.isEmpty()) {
