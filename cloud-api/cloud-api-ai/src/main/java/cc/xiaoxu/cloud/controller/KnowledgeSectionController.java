@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.controller;
 
-import cc.xiaoxu.cloud.bean.ai.vo.ALiSplitTxtPageVO;
+import cc.xiaoxu.cloud.bean.ai.vo.SplitTxtVO;
 import cc.xiaoxu.cloud.service.KnowledgeSectionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ public class KnowledgeSectionController {
 
     @PostMapping("/rebuild")
     @Operation(summary = "重新构建切片")
-    public boolean rebuild(@Valid @RequestBody ALiSplitTxtPageVO vo) {
+    public boolean rebuild(@Valid @RequestBody SplitTxtVO vo) {
         return knowledgeSectionService.rebuild(vo);
     }
 }

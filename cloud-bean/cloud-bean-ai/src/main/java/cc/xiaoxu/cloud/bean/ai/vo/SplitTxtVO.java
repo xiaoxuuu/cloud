@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ALiSplitTxtPageVO {
+public class SplitTxtVO {
 
     @Schema(description = "业务空间id")
     private String workspaceId;
