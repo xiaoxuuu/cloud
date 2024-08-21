@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.entity;
+package cc.xiaoxu.cloud.bean.ai.vo;
 
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgre;
+import cc.xiaoxu.cloud.bean.vo.BaseVO;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @TableName("t_knowledge_section")
 @NoArgsConstructor
 @AllArgsConstructor
-public class KnowledgeSection extends BaseEntityForPostgre {
+public class KnowledgeSectionVO extends BaseVO {
 
     @Schema(description = "知识id")
     private Integer knowledgeId;
@@ -25,4 +25,7 @@ public class KnowledgeSection extends BaseEntityForPostgre {
 
     @Schema(description = "知识切片向量，1536 维")
     private String embedding;
+
+    @Schema(description = "距离")
+    private String distance;
 }

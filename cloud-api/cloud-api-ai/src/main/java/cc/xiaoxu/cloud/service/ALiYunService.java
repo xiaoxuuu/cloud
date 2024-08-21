@@ -1,10 +1,7 @@
 package cc.xiaoxu.cloud.service;
 
 import cc.xiaoxu.cloud.core.exception.CustomException;
-import com.alibaba.dashscope.embeddings.TextEmbedding;
-import com.alibaba.dashscope.embeddings.TextEmbeddingParam;
-import com.alibaba.dashscope.embeddings.TextEmbeddingResult;
-import com.alibaba.dashscope.embeddings.TextEmbeddingResultItem;
+import com.alibaba.dashscope.embeddings.*;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.aliyun.bailian20231229.Client;
 import com.aliyun.bailian20231229.models.*;
@@ -35,6 +32,16 @@ public class ALiYunService {
 
     /**
      * 文本向量化计算
+     * @param text 文本
+     * @return 向量化结果
+     */
+    public String vector(String text) {
+
+        return String.valueOf(vector(List.of(text)).getFirst().getEmbedding());
+    }
+
+    /**
+     * 文本向量化计算
      * @param textList 文本
      * @return 向量化结果
      */
@@ -52,6 +59,27 @@ public class ALiYunService {
             throw new CustomException(e.getMessage());
         }
         return result.getOutput().getEmbeddings();
+    }
+
+    /**
+     * 向量转换-批量
+     * @param url https://modelscope.oss-cn-beijing.aliyuncs.com/resource/text_embedding_file.txt
+     * @return
+     */
+    public String vectorUrl(String url) {
+        BatchTextEmbeddingParam param = BatchTextEmbeddingParam.builder()
+                .model(BatchTextEmbedding.Models.TEXT_EMBEDDING_ASYNC_V2)
+                .apiKey(apiKey)
+                .url(url)
+                .build();
+        BatchTextEmbedding textEmbedding = new BatchTextEmbedding();
+        BatchTextEmbeddingResult result = null;
+        try {
+            result = textEmbedding.call(param);
+        } catch (NoApiKeyException e) {
+            throw new CustomException(e.getMessage());
+        }
+        return result.getOutput().getUrl();
     }
 
     public void createIndex(String indexName, String fileId, String workspaceId) {
