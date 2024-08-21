@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.bean.ai.vo;
+package cc.xiaoxu.cloud.bean.ai.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SplitTxtVO {
+public class SplitTxtDTO {
 
     @Schema(description = "业务空间id")
     private String workspaceId;
