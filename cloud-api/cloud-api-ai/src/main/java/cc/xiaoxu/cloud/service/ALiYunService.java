@@ -1,6 +1,11 @@
 package cc.xiaoxu.cloud.service;
 
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import com.alibaba.dashscope.embeddings.TextEmbedding;
+import com.alibaba.dashscope.embeddings.TextEmbeddingParam;
+import com.alibaba.dashscope.embeddings.TextEmbeddingResult;
+import com.alibaba.dashscope.embeddings.TextEmbeddingResultItem;
+import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.aliyun.bailian20231229.Client;
 import com.aliyun.bailian20231229.models.*;
 import com.aliyun.tea.TeaException;
@@ -27,6 +32,27 @@ public class ALiYunService {
 
     @Value("${ali.access-key-secret}")
     private String accessKeySecret;
+
+    /**
+     * 文本向量化计算
+     * @param textList 文本
+     * @return 向量化结果
+     */
+    public List<TextEmbeddingResultItem> vector(List<String> textList) {
+        TextEmbeddingParam param = TextEmbeddingParam
+                .builder()
+                .model(TextEmbedding.Models.TEXT_EMBEDDING_V2)
+                .apiKey(apiKey)
+                .texts(textList).build();
+        TextEmbedding textEmbedding = new TextEmbedding();
+        TextEmbeddingResult result;
+        try {
+            result = textEmbedding.call(param);
+        } catch (NoApiKeyException e) {
+            throw new CustomException(e.getMessage());
+        }
+        return result.getOutput().getEmbeddings();
+    }
 
     public void createIndex(String indexName, String fileId, String workspaceId) {
 
@@ -105,7 +131,7 @@ public class ALiYunService {
      * <p>使用AK&amp;SK初始化账号Client</p>
      * @return Client
      */
-    public Client createClient() {
+    private Client createClient() {
         // 工程代码泄露可能会导致 AccessKey 泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考。
         // 建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html。
         Config config = new Config()

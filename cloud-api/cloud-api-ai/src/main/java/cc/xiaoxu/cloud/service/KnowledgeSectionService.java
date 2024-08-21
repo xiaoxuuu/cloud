@@ -1,9 +1,12 @@
 package cc.xiaoxu.cloud.service;
 
 import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
+import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import cc.xiaoxu.cloud.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.entity.KnowledgeSection;
+import com.alibaba.dashscope.embeddings.TextEmbeddingResultItem;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -57,5 +62,25 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         knowledgeSection.setState(StateEnum.ENABLE.getCode());
         knowledgeSection.setCreateTime(new Date());
         return knowledgeSection;
+    }
+
+    public boolean calcVector(IdDTO dto) {
+
+        List<KnowledgeSection> list = lambdaQuery()
+                .eq(KnowledgeSection::getKnowledgeId, Integer.parseInt(dto.getId()))
+                .isNull(KnowledgeSection::getEmbedding)
+                .list();
+        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 25);
+        for (List<KnowledgeSection> knowledgeSections : lists) {
+            List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
+            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunService.vector(cutList);
+            Map<Integer, List<Double>> map = embeddingResultItemList.stream().collect(Collectors.toMap(TextEmbeddingResultItem::getTextIndex, TextEmbeddingResultItem::getEmbedding));
+            for (int i = 0; i < knowledgeSections.size(); i++) {
+                if (map.containsKey(i)) {
+                    getBaseMapper().updateEmbedding(String.valueOf(map.get(i)), knowledgeSections.get(i).getId());
+                }
+            }
+        }
+        return true;
     }
 }
