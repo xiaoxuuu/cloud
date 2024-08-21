@@ -1,6 +1,8 @@
 package cc.xiaoxu.cloud.entity;
 
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgre;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -9,15 +11,17 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("t_knowledge_section")
 @NoArgsConstructor
 @AllArgsConstructor
-public class KnowledgeSection extends BaseEntity {
+public class KnowledgeSection extends BaseEntityForPostgre {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(description = "主键id")
+    private Integer id;
 
     @Schema(description = "知识id")
     private Integer knowledgeId;
@@ -26,5 +30,5 @@ public class KnowledgeSection extends BaseEntity {
     private String cutContent;
 
     @Schema(description = "知识切片向量，1536 维")
-    private List<Double> embedding;
+    private String embedding;
 }
