@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.core.threads.Threads;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +39,7 @@ public class ThreadPoolExecutorConfig {
      */
     private static final int KEEP_ALIVE_SECONDS = 300;
 
+    @Primary
     @Bean(name = "threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
 
