@@ -28,7 +28,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
             SELECT(" embedding <=> " + embeddingStr + " AS distance ");
             FROM("t_knowledge_section");
             WHERE("embedding <=> " + embeddingStr + " < " + similarity);
-            ORDER_BY("embedding <=> " + embeddingStr);
+            ORDER_BY("embedding <=> " + embeddingStr + " DESC ");
             LIMIT(similarityContentNum);
         }};
         return sql.toString();
