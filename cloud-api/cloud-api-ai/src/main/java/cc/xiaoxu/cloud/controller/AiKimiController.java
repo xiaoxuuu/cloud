@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/ai/kimi")
 public class AiKimiController {
 
-    @Resource(name = "threadPoolTaskExecutor")
+    @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     private static final Map<String, SseEmitter> sseMap = new ConcurrentHashMap<>();
@@ -71,7 +71,7 @@ public class AiKimiController {
         return emitter;
     }
 
-    private static void setResponseHeader(HttpServletResponse response) {
+    public static void setResponseHeader(HttpServletResponse response) {
         // 设置响应的字符编码为 UTF-8
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Connection", "keep-alive");
