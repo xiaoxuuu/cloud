@@ -15,11 +15,11 @@ public class Prompt {
             userPrompt = userPrompt.replace(k.getKey(), k.getValue());
         }
         AiChatMessageDTO system = AiChatMessageDTO.builder()
-                .role(AiChatRoleEnum.SYSTEM.name())
+                .role(AiChatRoleEnum.SYSTEM.getCode())
                 .content(systemPrompt)
                 .build();
         AiChatMessageDTO user = AiChatMessageDTO.builder()
-                .role(AiChatRoleEnum.USER.name())
+                .role(AiChatRoleEnum.USER.getCode())
                 .content(userPrompt)
                 .build();
         return List.of(system, user);

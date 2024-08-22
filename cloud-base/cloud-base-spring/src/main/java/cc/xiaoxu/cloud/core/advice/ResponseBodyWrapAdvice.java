@@ -54,6 +54,11 @@ public class ResponseBodyWrapAdvice implements ResponseBodyAdvice<Object> {
                                   @NotNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   @NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response) {
 
+        boolean needWrapper = needWrapper(returnType);
+        if (!needWrapper) {
+            return body;
+        }
+
         boolean bodyIsString = returnType.getParameterType() == String.class;
         R<Object> r;
         Object data;
@@ -65,14 +70,9 @@ public class ResponseBodyWrapAdvice implements ResponseBodyAdvice<Object> {
             r = R.success();
         }
 
-        // 自动包装
-        if (needWrapper(returnType)) {
-            // 未被包裹，手动包裹
-            r.setBody(data);
-            return bodyIsString ? JsonUtils.toString(r) : r;
-        } else {
-            return data;
-        }
+        // 未被包裹，手动包裹
+        r.setBody(data);
+        return bodyIsString ? JsonUtils.toString(r) : r;
     }
 
     private boolean needWrapper(MethodParameter methodParameter) {
