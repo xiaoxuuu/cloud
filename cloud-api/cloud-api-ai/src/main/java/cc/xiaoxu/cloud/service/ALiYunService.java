@@ -35,9 +35,9 @@ public class ALiYunService {
      * @param text 文本
      * @return 向量化结果
      */
-    public String vector(String text) {
+    public List<Double> vector(String text) {
 
-        return String.valueOf(vector(List.of(text)).getFirst().getEmbedding());
+        return vector(List.of(text)).getFirst().getEmbedding();
     }
 
     /**
