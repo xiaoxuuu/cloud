@@ -27,12 +27,6 @@
             <artifactId>cloud-base-database</artifactId>
         </dependency>
 
-        <!-- langchain4j -->
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j</artifactId>
-            <version>0.33.0</version>
-        </dependency>
         <!-- 阿里云百炼 SDK -->
         <dependency>
             <groupId>com.alibaba</groupId>
