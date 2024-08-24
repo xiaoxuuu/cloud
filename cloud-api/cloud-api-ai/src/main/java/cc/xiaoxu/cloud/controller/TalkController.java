@@ -20,10 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
@@ -50,11 +47,27 @@ public class TalkController {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    @Wrap(disabled = true)
     @PostMapping(value = "/ask", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
     public String ask(@Valid @RequestBody AskDTO vo, HttpServletResponse response) {
 
+        ChatInfo chatInfo = getChatInfo(vo, response, null);
+        return aiProcessor.chat(chatInfo).getResult();
+    }
+
+    @Wrap(disabled = true)
+    @GetMapping(value = "/ask/{question}/{similarity}/{similarityContentNum}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation(summary = "提问")
+    public SseEmitter ask(@PathVariable("question") String question, @PathVariable("similarity") Double similarity,
+                          @PathVariable("similarityContentNum") Integer similarityContentNum, HttpServletResponse response) {
+
+        SseEmitter emitter = new SseEmitter();
+        ChatInfo chatInfo = getChatInfo(new AskDTO(question, similarity, similarityContentNum), response, emitter);
+        threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
+        return emitter;
+    }
+
+    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter) {
         // 问题转为向量
         List<Double> vectorList = aLiYunService.vector(vo.getQuestion());
         String embedding = String.valueOf(vectorList);
@@ -68,14 +81,10 @@ public class TalkController {
 
         // 提问
         AiKimiController.setResponseHeader(response);
-        SseEmitter emitter = new SseEmitter();
         List<AiChatMessageDTO> ask = Prompt.Knowledge.ask("超魔杀帝国", vo.getQuestion(), knowledgeList);
 
-        ChatInfo chatInfo = ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
+        return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
                 .apiKey(apiKey)
                 .stream(emitter);
-//        threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
-//        return emitter;
-        return aiProcessor.chat(chatInfo).getResult();
     }
 }
