@@ -14,12 +14,12 @@ import org.springframework.context.annotation.FilterType;
 //@EnableScheduling
 //@EnableCaching
 //@EnableAsync(proxyTargetClass = true)
-public class SingleApplication {
+public class AggregationApplication {
 
     public static void main(String[] args) {
 
         // 获取 Spring Boot 上下文
-        ConfigurableApplicationContext ctx = SpringApplication.run(SingleApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(AggregationApplication.class, args);
         log.error(GetStartInfoUtils.getLog(ctx));
     }
 }
