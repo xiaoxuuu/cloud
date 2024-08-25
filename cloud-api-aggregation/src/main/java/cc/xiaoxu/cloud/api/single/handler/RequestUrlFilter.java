@@ -16,10 +16,7 @@ public class RequestUrlFilter implements Filter {
 
     static {
         REPLACE_SET.add("/authorize");
-        REPLACE_SET.add("/service_portrait");
         REPLACE_SET.add("/service_system");
-        REPLACE_SET.add("/service_file");
-        REPLACE_SET.add("/service_ideology");
     }
 
     private String handle(String uri) {
