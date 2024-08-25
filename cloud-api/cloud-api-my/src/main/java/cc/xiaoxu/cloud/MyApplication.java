@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Slf4j
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = "cc.xiaoxu.cloud")
-@MapperScan(basePackages = {"cc.xiaoxu.cloud.my.**.dao"})
+@MapperScan(basePackages = {"cc.xiaoxu.cloud.**.dao"})
 public class MyApplication {
 
     public static void main(String[] args) {
