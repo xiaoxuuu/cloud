@@ -14,7 +14,7 @@ cloud
 │   ├── cloud-api-demo      // [10001] 已删除丨测试/演示服务
 │   ├── cloud-api-file      // [10002] 文件服务
 │   └── cloud-api-my        // [10003] 自有业务服务
-├── cloud-api-aggregation   // [ 9999] 聚合业务服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
+├── cloud-api-all           // [ 9999] 聚合业务服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
 ├── cloud-base              //         基础能力
 │   ├── cloud-base-database //         mysql
 │   ├── cloud-base-doc      //         文档
