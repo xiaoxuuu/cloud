@@ -9,7 +9,7 @@
         <version>1.0</version>
     </parent>
 
-    <artifactId>cloud-api-aggregation</artifactId>
+    <artifactId>cloud-api-all</artifactId>
 
     <properties>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -21,19 +21,49 @@
         <dependency>
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-api-ai</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>cc.xiaoxu</groupId>
+                    <artifactId>cloud-base-dubbo</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-api-file</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>cc.xiaoxu</groupId>
+                    <artifactId>cloud-base-dubbo</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-api-my</artifactId>
+            <exclusions>
+                <!-- SpringCloud Alibaba Nacos -->
+                <exclusion>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>cc.xiaoxu</groupId>
+                    <artifactId>cloud-base-dubbo</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
+        <!-- 此项配置用于 yaml 文件中以 @@ 的形式引用 pom.xml 内容 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <!-- jar 打包插件 -->
             <plugin>
@@ -73,7 +103,7 @@
                         <!--                        <ports>23333</ports>-->
                         <!-- 容器中的工作目录 -->
                         <workingDirectory>/home/java</workingDirectory>
-                        <mainClass>cc.xiaoxu.cloud.AggregationApplication</mainClass>
+                        <mainClass>cc.xiaoxu.cloud.AllApplication</mainClass>
                         <!-- 指定运行的参数 -->
                         <environment>
                             <!--suppress UnresolvedMavenProperty -->

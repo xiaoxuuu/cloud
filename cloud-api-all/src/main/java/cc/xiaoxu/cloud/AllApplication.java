@@ -12,12 +12,12 @@ import org.springframework.context.annotation.FilterType;
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {SpringBootApplication.class}))
 @SpringBootApplication(scanBasePackages = "cc.xiaoxu.cloud")
 //@EnableScheduling
-public class AggregationApplication {
+public class AllApplication {
 
     public static void main(String[] args) {
 
         // 获取 Spring Boot 上下文
-        ConfigurableApplicationContext ctx = SpringApplication.run(AggregationApplication.class, args);
+        ConfigurableApplicationContext ctx = SpringApplication.run(AllApplication.class, args);
         log.error(GetStartInfoUtils.getLog(ctx));
     }
 }

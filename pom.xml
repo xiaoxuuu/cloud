@@ -13,7 +13,7 @@
     <modules>
         <module>cloud-base</module>
         <module>cloud-api</module>
-        <module>cloud-api-aggregation</module>
+        <module>cloud-api-all</module>
         <module>cloud-gateway</module>
         <module>clond-auth</module>
         <module>cloud-remote</module>
