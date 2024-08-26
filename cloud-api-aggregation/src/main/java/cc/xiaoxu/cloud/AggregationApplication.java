@@ -12,8 +12,6 @@ import org.springframework.context.annotation.FilterType;
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {SpringBootApplication.class}))
 @SpringBootApplication(scanBasePackages = "cc.xiaoxu.cloud")
 //@EnableScheduling
-//@EnableCaching
-//@EnableAsync(proxyTargetClass = true)
 public class AggregationApplication {
 
     public static void main(String[] args) {
