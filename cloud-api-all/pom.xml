@@ -21,12 +21,6 @@
         <dependency>
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-api-ai</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>cc.xiaoxu</groupId>
-                    <artifactId>cloud-base-dubbo</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>cc.xiaoxu</groupId>
@@ -46,10 +40,6 @@
                 <exclusion>
                     <groupId>com.alibaba.cloud</groupId>
                     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>cc.xiaoxu</groupId>
-                    <artifactId>cloud-base-dubbo</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
