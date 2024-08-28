@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -24,6 +25,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
+@Tag(name = "微信 草稿接口")
 @RequestMapping("/wx/draft")
 public class WechatDraftController {
 

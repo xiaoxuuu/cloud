@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @AllArgsConstructor
 @RestController
+@Tag(name = "微信认证接口")
 @RequestMapping("/wx/portal/{appid}")
 public class WechatPortalController {
 

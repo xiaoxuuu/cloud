@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.controller;
 
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
+@Tag(name = "demo 演示 sse 流")
 @RequestMapping("/demo/sse")
 public class DemoSseController {
 

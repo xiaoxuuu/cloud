@@ -5,6 +5,7 @@ import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
+@Tag(name = "ai kimi 对话")
 @RequestMapping("/ai/kimi")
 public class AiKimiController {
 
