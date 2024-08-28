@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 import org.springframework.ui.ModelMap;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+@Tag(name = "demo modelAttribute 演示")
 @RestController("/demo/test")
 @SessionAttributes("myModel")
 public class DemoModelAttributeController {

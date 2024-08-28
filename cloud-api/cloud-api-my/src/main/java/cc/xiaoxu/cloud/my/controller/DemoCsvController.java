@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Tag(name = "demo csv 导出演示")
 @RequestMapping("/demo/csv")
 public class DemoCsvController {
 
