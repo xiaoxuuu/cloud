@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud;
 
 import cc.xiaoxu.cloud.core.utils.GetStartInfoUtils;
+import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,10 +18,8 @@ public class AllApplication {
 
         // 获取 Spring Boot 上下文
         ConfigurableApplicationContext ctx = SpringApplication.run(AllApplication.class, args);
-
-//        WebsiteCheckScheduled websiteCheckScheduled = ctx.getBean(WebsiteCheckScheduled.class);
-//        websiteCheckScheduled.refreshData();
-
+        WebsiteCheckScheduled websiteCheckScheduled = ctx.getBean(WebsiteCheckScheduled.class);
+        websiteCheckScheduled.refreshData();
         log.error(GetStartInfoUtils.getLog(ctx));
     }
 }
