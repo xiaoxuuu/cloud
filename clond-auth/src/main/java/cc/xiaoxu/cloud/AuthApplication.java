@@ -11,7 +11,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.util.TimeZone;
 
 @Slf4j
-@SpringBootApplication(scanBasePackages = {"cc.xiaoxu.cloud"})
+@SpringBootApplication(scanBasePackages = "cc.xiaoxu.cloud")
 @EnableDiscoveryClient
 @EnableDubbo
 public class AuthApplication {
