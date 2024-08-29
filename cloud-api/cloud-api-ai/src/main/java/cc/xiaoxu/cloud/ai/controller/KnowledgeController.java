@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.controller;
+package cc.xiaoxu.cloud.ai.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;

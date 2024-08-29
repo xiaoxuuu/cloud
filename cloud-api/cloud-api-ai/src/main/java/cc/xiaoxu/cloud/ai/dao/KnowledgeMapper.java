@@ -1,6 +1,6 @@
-package cc.xiaoxu.cloud.dao;
+package cc.xiaoxu.cloud.ai.dao;
 
-import cc.xiaoxu.cloud.entity.Knowledge;
+import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

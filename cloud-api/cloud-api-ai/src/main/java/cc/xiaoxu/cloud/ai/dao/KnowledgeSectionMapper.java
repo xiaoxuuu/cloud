@@ -1,8 +1,8 @@
-package cc.xiaoxu.cloud.dao;
+package cc.xiaoxu.cloud.ai.dao;
 
+import cc.xiaoxu.cloud.ai.dao.provider.KnowledgeSectionProvider;
+import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
-import cc.xiaoxu.cloud.dao.provider.KnowledgeSectionProvider;
-import cc.xiaoxu.cloud.entity.KnowledgeSection;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

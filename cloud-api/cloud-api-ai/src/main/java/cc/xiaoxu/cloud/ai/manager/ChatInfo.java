@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.manager;
+package cc.xiaoxu.cloud.ai.manager;
 
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
