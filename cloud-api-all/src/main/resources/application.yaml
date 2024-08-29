@@ -24,9 +24,9 @@ spring:
         namespace: ${spring.profiles.active}
         server-addr: @env.nacos.server@
   datasource:
-    url: jdbc:mysql://@env.api.mysql.host@:@env.api.mysql.port@/d_api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
-    username: @env.api.mysql.username@
-    password: @env.api.mysql.password@
+    url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/d_api?currentSchema=public&useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
+    username: @env.api.db.username@
+    password: @env.api.db.password@
   # 此变量可在 POM.xml 中配置 properties 属性读取
   data:
     redis:

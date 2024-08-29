@@ -38,13 +38,6 @@
             <artifactId>bailian20231229</artifactId>
             <version>1.7.0</version>
         </dependency>
-
-        <!-- langchain4j -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.7.3</version>
-        </dependency>
     </dependencies>
 
     <build>
