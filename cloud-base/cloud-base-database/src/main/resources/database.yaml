@@ -40,8 +40,9 @@ mybatis-plus:
     # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
     call-setters-on-nulls: true
   global-config:
-    #    db-config:
-    # 主键类型
-    #      id-type: assign_id
     # 展示 banner
     banner: false
+    db-config:
+      schema: public
+      # 主键类型
+      #id-type: assign_id
