@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Select;
 public interface NavWebsiteMapper extends BaseMapper<NavWebsite> {
 
     @Select("UPDATE t_nav_website SET visit_num = visit_num + 1 WHERE id = #{id}")
-    void updateNum(@Param("id") String id);
+    void updateNum(@Param("id") Integer id);
 }
