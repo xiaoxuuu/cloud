@@ -42,4 +42,13 @@ public class MybatisPlusConfig {
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.SQLITE));
         return interceptor;
     }
+
+    @Bean
+    @ConditionalOnExpression("#{environment.getProperty('spring.datasource.url').startsWith('jdbc:postgresql')}")
+    public MybatisPlusInterceptor mybatisPlusInterceptorPostgresql() {
+        log.error("使用 postgresql");
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.POSTGRE_SQL));
+        return interceptor;
+    }
 }

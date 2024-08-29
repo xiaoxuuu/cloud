@@ -45,11 +45,12 @@
         <env.image.warehouse.username>?</env.image.warehouse.username>
         <env.image.warehouse.password>?</env.image.warehouse.password>
 
-        <!-- MySQL 鉴权信息 -->
-        <env.api.mysql.host>localhost</env.api.mysql.host>
-        <env.api.mysql.port>3306</env.api.mysql.port>
-        <env.api.mysql.username>root</env.api.mysql.username>
-        <env.api.mysql.password>root</env.api.mysql.password>
+        <!-- db 鉴权信息 -->
+        <env.api.db.type>postgresql</env.api.db.type>
+        <env.api.db.host>localhost</env.api.db.host>
+        <env.api.db.port>3306</env.api.db.port>
+        <env.api.db.username>root</env.api.db.username>
+        <env.api.db.password>root</env.api.db.password>
 
         <!-- redis 鉴权信息 -->
         <env.api.redis.host>localhost</env.api.redis.host>
@@ -100,8 +101,9 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.4.0</springdoc-openapi-starter-webmvc-ui.version>
         <swagger-annotations-jakarta.version>2.2.21</swagger-annotations-jakarta.version>
 
-        <!-- MySQL -->
+        <!-- db -->
         <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
+        <postgresql.version>42.7.3</postgresql.version>
 
         <sa-token.version>1.38.0</sa-token.version>
         <dubbo-spring-boot-starter.version>3.2.14</dubbo-spring-boot-starter.version>
@@ -243,11 +245,17 @@
                 <scope>import</scope>
             </dependency>
 
-            <!--mysql-->
+            <!-- mysql -->
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
+            </dependency>
+            <!-- postgresql -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
             </dependency>
             <!-- mybatis -->
             <dependency>

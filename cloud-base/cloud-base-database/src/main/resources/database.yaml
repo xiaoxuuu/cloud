@@ -1,6 +1,6 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
     # 此处配置文件在各个应用中单独配置
     #    url: ''
     #    username: ''

@@ -4,6 +4,6 @@ logging:
     cc.xiaoxu.cloud: INFO
 spring:
   datasource:
-    url: 'jdbc:mysql://''@env.api.mysql.host@''/d_api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True'
+    url: 'jdbc:''@env.api.db.type@''://''@env.api.db.host@''/d_api?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True'
     username: root
-    password: '@env.api.mysql.password@'
+    password: '@env.api.db.password@'
