@@ -1,11 +1,11 @@
-package cc.xiaoxu.cloud.service;
+package cc.xiaoxu.cloud.ai.service;
 
+import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
+import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
-import cc.xiaoxu.cloud.dao.KnowledgeSectionMapper;
-import cc.xiaoxu.cloud.entity.KnowledgeSection;
 import com.alibaba.dashscope.embeddings.TextEmbeddingResultItem;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;

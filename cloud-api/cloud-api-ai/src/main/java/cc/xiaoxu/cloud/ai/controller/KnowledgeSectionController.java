@@ -1,8 +1,8 @@
-package cc.xiaoxu.cloud.controller;
+package cc.xiaoxu.cloud.ai.controller;
 
+import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
-import cc.xiaoxu.cloud.service.KnowledgeSectionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

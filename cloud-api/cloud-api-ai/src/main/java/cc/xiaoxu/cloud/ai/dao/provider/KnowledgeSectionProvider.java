@@ -1,7 +1,7 @@
-package cc.xiaoxu.cloud.dao.provider;
+package cc.xiaoxu.cloud.ai.dao.provider;
 
+import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.core.dao.BaseProvider;
-import cc.xiaoxu.cloud.entity.KnowledgeSection;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 

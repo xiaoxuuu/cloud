@@ -1,10 +1,10 @@
-package cc.xiaoxu.cloud.manager;
+package cc.xiaoxu.cloud.ai.manager;
 
+import cc.xiaoxu.cloud.ai.manager.ai.ChooseAiUtil;
+import cc.xiaoxu.cloud.ai.service.AiResultLogService;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
-import cc.xiaoxu.cloud.manager.ai.ChooseAiUtil;
-import cc.xiaoxu.cloud.service.AiResultLogService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

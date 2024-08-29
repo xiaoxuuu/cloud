@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.entity;
+package cc.xiaoxu.cloud.ai.entity;
 
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgre;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -12,14 +12,17 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_knowledge")
+@TableName("t_knowledge_section")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Knowledge extends BaseEntityForPostgre {
+public class KnowledgeSection extends BaseEntityForPostgre {
 
-    @Schema(description = "名称")
-    private String name;
+    @Schema(description = "知识id")
+    private Integer knowledgeId;
 
-    @Schema(description = "阿里文件id")
-    private String fileId;
+    @Schema(description = "知识切片内容")
+    private String cutContent;
+
+    @Schema(description = "知识切片向量，1536 维")
+    private String embedding;
 }

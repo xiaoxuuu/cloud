@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.manager.ai;
+package cc.xiaoxu.cloud.ai.manager.ai;
 
 import com.alibaba.fastjson2.JSONObject;
 
