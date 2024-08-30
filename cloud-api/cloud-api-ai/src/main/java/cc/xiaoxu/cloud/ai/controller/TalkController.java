@@ -56,10 +56,10 @@ public class TalkController {
     }
 
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{question}/{similarity}/{similarityContentNum}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
-    public SseEmitter ask(@PathVariable("question") String question, @PathVariable("similarity") Double similarity,
-                          @PathVariable("similarityContentNum") Integer similarityContentNum, HttpServletResponse response) {
+    public SseEmitter ask(@PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
+                          @PathVariable("question") String question, HttpServletResponse response) {
 
         SseEmitter emitter = new SseEmitter();
         ChatInfo chatInfo = getChatInfo(new AskDTO(question, similarity, similarityContentNum), response, emitter);
