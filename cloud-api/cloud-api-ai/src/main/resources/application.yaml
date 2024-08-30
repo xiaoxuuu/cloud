@@ -12,6 +12,10 @@ spring:
     name: ai
   profiles:
     active: dev
+  datasource:
+    url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/d_api?currentSchema=public
+    username: @env.api.db.username@
+    password: @env.api.db.password@
 
 ali:
   bailian:
