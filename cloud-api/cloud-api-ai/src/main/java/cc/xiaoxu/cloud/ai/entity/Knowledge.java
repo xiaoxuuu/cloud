@@ -17,9 +17,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class Knowledge extends BaseEntityForPostgre {
 
+    @Schema(description = "资源类型：文件、数据表、自定义分类")
+    private String type;
+
     @Schema(description = "名称")
     private String name;
 
-    @Schema(description = "阿里文件id")
-    private String fileId;
+    @Schema(description = "资源附加信息")
+    private String additionalInfo;
 }
