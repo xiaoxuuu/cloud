@@ -1,3 +1,9 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
 server:
   # 下面是配置 undertow 作为服务器的参数
   undertow:
