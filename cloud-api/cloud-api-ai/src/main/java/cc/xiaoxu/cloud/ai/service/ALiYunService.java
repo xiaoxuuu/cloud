@@ -37,11 +37,14 @@ public class ALiYunService {
     @Value("${ali.access-key-secret}")
     private String accessKeySecret;
 
+    @Value("${env.api.ali.bailian.workspace.id}")
+    private String workspaceId;
+
     @Value("${env.api.ali.bailian.category.id}")
     private String categoryId;
 
-    @Value("${env.api.ali.bailian.workspace.id}")
-    private String workspaceId;
+    @Value("${env.api.ali.bailian.index.id}")
+    private String indexId;
 
     /**
      * 文本向量化计算
@@ -142,7 +145,7 @@ public class ALiYunService {
         }
     }
 
-    public List<String> readSection(String indexId, String fileId, String workspaceId, Integer pageNum, Integer pageSize) {
+    public List<String> readSection(String fileId, Integer pageNum, Integer pageSize) {
 
         Client client = createClient();
         ListChunksRequest listChunksRequest = new ListChunksRequest()
