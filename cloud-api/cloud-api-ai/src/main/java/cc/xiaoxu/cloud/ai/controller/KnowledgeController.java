@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
+import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,14 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class KnowledgeController {
 
     private final ALiYunService aLiYunService;
+    private final KnowledgeService knowledgeService;
 
     @PostMapping("/addFile")
     @Operation(summary = "新增文件")
-    public boolean addFile(@RequestPart(name = "file") MultipartFile file) {
+    public void addFile(@RequestPart(name = "file") MultipartFile file) {
 
-        String s = aLiYunService.uploadFile(file);
-        log.error(s);
-        return false;
+        String fileId = aLiYunService.uploadFile(file);
+        knowledgeService.addFile(file.getOriginalFilename(), fileId);
     }
 
     @PostMapping("/addTable")
