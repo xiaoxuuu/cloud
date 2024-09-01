@@ -114,7 +114,11 @@ public class ALiYunService {
         RuntimeOptions runtime = new RuntimeOptions();
         Map<String, String> headers = new HashMap<>();
         try {
-            CreateIndexResponse indexWithOptions = client.createIndexWithOptions(workspaceId, createIndexRequest, headers, runtime);
+            CreateIndexResponse response = client.createIndexWithOptions(workspaceId, createIndexRequest, headers, runtime);
+            if (response.getStatusCode() != 200) {
+                String errorMsg = "接口 createIndex 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
             // 处理结果
         } catch (TeaException error) {
             String errorMsg = "接口 createIndex 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -133,7 +137,11 @@ public class ALiYunService {
         RuntimeOptions runtime = new RuntimeOptions();
         Map<String, String> headers = new HashMap<>();
         try {
-            SubmitIndexJobResponse submitIndexJobResponse = client.submitIndexJobWithOptions(workspaceId, submitIndexJobRequest, headers, runtime);
+            SubmitIndexJobResponse response = client.submitIndexJobWithOptions(workspaceId, submitIndexJobRequest, headers, runtime);
+            if (response.getStatusCode() != 200) {
+                String errorMsg = "接口 submitTask 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
             // 处理结果
         } catch (TeaException error) {
             String errorMsg = "接口 submitTask 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -157,9 +165,12 @@ public class ALiYunService {
         RuntimeOptions runtime = new RuntimeOptions();
         Map<String, String> headers = new HashMap<>();
         try {
-            // 复制代码运行请自行打印 API 的返回值
-            ListChunksResponse listChunksResponse = client.listChunksWithOptions(workspaceId, listChunksRequest, headers, runtime);
-            return listChunksResponse.body.getData().nodes.stream().map(ListChunksResponseBody.ListChunksResponseBodyDataNodes::getText).toList();
+            ListChunksResponse response = client.listChunksWithOptions(workspaceId, listChunksRequest, headers, runtime);
+            if (response.getStatusCode() != 200) {
+                String errorMsg = "接口 readSection 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+            return response.body.getData().nodes.stream().map(ListChunksResponseBody.ListChunksResponseBodyDataNodes::getText).toList();
         } catch (TeaException error) {
             String errorMsg = "接口 readSection 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
@@ -198,7 +209,6 @@ public class ALiYunService {
         RuntimeOptions runtime = new RuntimeOptions();
         Map<String, String> headers = new HashMap<>();
         try {
-            // 复制代码运行请自行打印 API 的返回值
             ApplyFileUploadLeaseResponse response = client.applyFileUploadLeaseWithOptions(categoryId, workspaceId, applyFileUploadLeaseRequest, headers, runtime);
             if (response.getStatusCode() != 200) {
                 String errorMsg = "接口 applyFileUploadLease 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
@@ -273,9 +283,12 @@ public class ALiYunService {
         RuntimeOptions runtime = new RuntimeOptions();
         Map<String, String> headers = new HashMap<>();
         try {
-            // 复制代码运行请自行打印 API 的返回值
-            AddFileResponse addFileResponse = client.addFileWithOptions(workspaceId, addFileRequest, headers, runtime);
-            return addFileResponse.getBody().getData();
+            AddFileResponse response = client.addFileWithOptions(workspaceId, addFileRequest, headers, runtime);
+            if (response.getStatusCode() != 200) {
+                String errorMsg = "接口 addFile 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+            return response.getBody().getData();
         } catch (TeaException error) {
             String errorMsg = "接口 addFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
@@ -291,9 +304,12 @@ public class ALiYunService {
         RuntimeOptions runtime = new RuntimeOptions();
         Map<String, String> headers = new HashMap<>();
         try {
-            // 复制代码运行请自行打印 API 的返回值
-            DescribeFileResponse describeFileResponse = client.describeFileWithOptions(workspaceId, fileId, headers, runtime);
-            return describeFileResponse.getBody().getData();
+            DescribeFileResponse response = client.describeFileWithOptions(workspaceId, fileId, headers, runtime);
+            if (response.getStatusCode() != 200) {
+                String errorMsg = "接口 describeFile 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+            return response.getBody().getData();
         } catch (TeaException error) {
             String errorMsg = "接口 describeFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
