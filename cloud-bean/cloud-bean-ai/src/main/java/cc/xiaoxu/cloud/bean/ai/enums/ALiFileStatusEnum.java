@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ALiFileTypeEnum implements EnumInterface<String>, EnumDescInterface {
+public enum ALiFileStatusEnum implements EnumInterface<String>, EnumDescInterface {
 
     INIT("init", "初始化状态，等待调度中。"),
     PARSING("parsing", "解析中"),
