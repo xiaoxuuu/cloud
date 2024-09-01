@@ -39,6 +39,9 @@ ali:
     api-key: @env.api.ali.bailian.api.key@
   access-key-id: @env.api.ali.access.key.id@
   access-key-secret: @env.api.ali.access.key.secret@
+  workspace-id: @env.api.ali.bailian.category.id@
+  category-id: @env.api.ali.bailian.workspace.id@
+  index-id: @env.api.ali.bailian.index.id@
 
 wx:
   mp:

@@ -37,13 +37,13 @@ public class ALiYunService {
     @Value("${ali.access-key-secret}")
     private String accessKeySecret;
 
-    @Value("${env.api.ali.bailian.workspace.id}")
+    @Value("${ali.workspace-id}")
     private String workspaceId;
 
-    @Value("${env.api.ali.bailian.category.id}")
+    @Value("${ali.category-id}")
     private String categoryId;
 
-    @Value("${env.api.ali.bailian.index.id}")
+    @Value("${ali.index-id}")
     private String indexId;
 
     /**
@@ -199,8 +199,12 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             // 复制代码运行请自行打印 API 的返回值
-            ApplyFileUploadLeaseResponse applyFileUploadLeaseResponse = client.applyFileUploadLeaseWithOptions(categoryId, workspaceId, applyFileUploadLeaseRequest, headers, runtime);
-            return applyFileUploadLeaseResponse.getBody().getData();
+            ApplyFileUploadLeaseResponse response = client.applyFileUploadLeaseWithOptions(categoryId, workspaceId, applyFileUploadLeaseRequest, headers, runtime);
+            if (response.getStatusCode() != 200) {
+                String errorMsg = "接口 applyFileUploadLease 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+            return response.getBody().getData();
         } catch (TeaException error) {
             String errorMsg = "接口 applyFileUploadLease 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
@@ -278,6 +282,24 @@ public class ALiYunService {
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "addFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        }
+    }
+
+    public DescribeFileResponseBody.DescribeFileResponseBodyData describeFile(String fileId) {
+        Client client = createClient();
+        RuntimeOptions runtime = new RuntimeOptions();
+        Map<String, String> headers = new HashMap<>();
+        try {
+            // 复制代码运行请自行打印 API 的返回值
+            DescribeFileResponse describeFileResponse = client.describeFileWithOptions(workspaceId, fileId, headers, runtime);
+            return describeFileResponse.getBody().getData();
+        } catch (TeaException error) {
+            String errorMsg = "接口 describeFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            String errorMsg = "describeFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
         }
     }

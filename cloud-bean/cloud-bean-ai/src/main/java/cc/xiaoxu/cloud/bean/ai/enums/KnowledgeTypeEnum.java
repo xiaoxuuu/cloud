@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum KnowledgeTypeEnum implements EnumInterface<String>, EnumDescInterface {
 
-    FILE("file", "系统"),
+    ALi_FILE("ali_file", "文件"),
     TABLE("table", "数据表"),
     CUSTOM("custom", "自定义"),
     ;
