@@ -25,4 +25,7 @@ public class Knowledge extends BaseEntityForPostgre {
 
     @Schema(description = "资源附加信息")
     private String additionalInfo;
+
+    @Schema(description = "资源处理状态")
+    private String status;
 }

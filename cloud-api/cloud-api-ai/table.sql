@@ -4,6 +4,7 @@ CREATE TABLE t_knowledge
     type            VARCHAR(8),
     name            VARCHAR(64),
     additional_info TEXT,
+    status VARCHAR(8),
     state           VARCHAR(1) NOT NULL,
     remark          VARCHAR(16),
     create_time     TIMESTAMP  NOT NULL,
@@ -16,6 +17,7 @@ COMMENT ON COLUMN t_knowledge.id IS '主键';
 COMMENT ON COLUMN t_knowledge.type IS '资源类型：文件、数据表、自定义分类';
 COMMENT ON COLUMN t_knowledge.name IS '名称';
 COMMENT ON COLUMN t_knowledge.additional_info IS '资源附加信息';
+COMMENT ON COLUMN t_knowledge.status IS '文件处理状态';
 COMMENT ON COLUMN t_knowledge.state IS '状态';
 COMMENT ON COLUMN t_knowledge.remark IS '备注';
 COMMENT ON COLUMN t_knowledge.create_time IS '创建时间';
