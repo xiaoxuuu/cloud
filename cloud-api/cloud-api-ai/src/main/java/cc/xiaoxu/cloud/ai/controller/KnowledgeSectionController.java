@@ -23,13 +23,13 @@ public class KnowledgeSectionController {
     private final KnowledgeSectionService knowledgeSectionService;
 
     @PostMapping("/rebuild")
-    @Operation(summary = "重新构建切片")
+    @Operation(summary = "重新构建文件切片")
     public boolean rebuild(@Valid @RequestBody SplitTxtDTO dto) {
         return knowledgeSectionService.rebuild(dto);
     }
 
     @PostMapping("/calc_vector")
-    @Operation(summary = "向量计算")
+    @Operation(summary = "知识库向量计算")
     public boolean calcVector(@Valid @RequestBody IdDTO vo) {
         return knowledgeSectionService.calcVector(vo);
     }
