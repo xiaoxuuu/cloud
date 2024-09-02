@@ -8,6 +8,7 @@ spring:
       - optional:cloud.yaml
       - optional:database.yaml
       - optional:logging.yaml
+      - optional:spring.yaml
   application:
     name: ai
   profiles:

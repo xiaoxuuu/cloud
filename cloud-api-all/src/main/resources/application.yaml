@@ -18,6 +18,7 @@ spring:
       - optional:database.yaml
       - optional:logging.yaml
       - optional:file-server.yaml
+      - optional:spring.yaml
   application:
     name: all
   profiles:
