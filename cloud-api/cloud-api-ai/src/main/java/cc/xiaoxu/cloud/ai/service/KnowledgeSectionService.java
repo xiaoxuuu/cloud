@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
+import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
-import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
@@ -25,16 +25,14 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     private final ALiYunService aLiYunService;
 
-    public boolean rebuild(SplitTxtDTO dto) {
-
-        int knowledgeId = 2;
+    public boolean rebuildSection(Knowledge knowledge) {
 
         boolean hasNext = true;
         int pageNum = 1;
         List<String> readSectionList = new ArrayList<>();
         while (hasNext) {
             // 每次处理 1000 条数据
-            List<String> readSectionListTemp = aLiYunService.readSection(dto.getFiled(), pageNum, 1000);
+            List<String> readSectionListTemp = aLiYunService.readSection(knowledge.getAdditionalInfo(), pageNum, 1000);
             readSectionList.addAll(readSectionListTemp);
             log.info("读取到 {} 条数据", readSectionListTemp.size());
             if (readSectionListTemp.isEmpty()) {
@@ -46,10 +44,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         log.info("读取完成，一共 {} 条数据", readSectionList.size());
         // 移除旧数据
         lambdaUpdate()
-                .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
+                .eq(KnowledgeSection::getKnowledgeId, knowledge.getId())
                 .remove();
         // 数据入库
-        List<KnowledgeSection> knowledgeSectionList = readSectionList.stream().map(k -> buildKnowledgeSection(knowledgeId, k)).toList();
+        List<KnowledgeSection> knowledgeSectionList = readSectionList.stream().map(k -> buildKnowledgeSection(knowledge.getId(), k)).toList();
         saveBatch(knowledgeSectionList, 1000);
         return true;
     }

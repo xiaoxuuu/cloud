@@ -35,7 +35,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         updateFileStatus(knowledge);
     }
 
-    public void updateFileStatus(Knowledge knowledge) {
+    public boolean updateFileStatus(Knowledge knowledge) {
 
         String fileId = knowledge.getAdditionalInfo();
         Integer id = knowledge.getId();
@@ -51,6 +51,8 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                     .set(Knowledge::getStatus, statusEnum.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
+            return statusEnum == ALiFileStatusEnum.PARSE_SUCCESS;
         }
+        return false;
     }
 }

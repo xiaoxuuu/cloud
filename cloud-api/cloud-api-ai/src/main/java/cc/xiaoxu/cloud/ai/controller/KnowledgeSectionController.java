@@ -1,7 +1,8 @@
 package cc.xiaoxu.cloud.ai.controller;
 
+import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
-import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
+import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,12 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/knowledge/section")
 public class KnowledgeSectionController {
 
+    private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
-    @PostMapping("/rebuild")
+    @PostMapping("/rebuild_section")
     @Operation(summary = "重新构建文件切片")
-    public boolean rebuild(@Valid @RequestBody SplitTxtDTO dto) {
-        return knowledgeSectionService.rebuild(dto);
+    public boolean rebuildSection(@Valid @RequestBody IdDTO dto) {
+
+        Knowledge knowledge = knowledgeService.lambdaQuery().eq(Knowledge::getId, dto.getId()).one();
+        return knowledgeSectionService.rebuildSection(knowledge);
     }
 
     @PostMapping("/calc_vector")
