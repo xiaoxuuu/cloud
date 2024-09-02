@@ -123,6 +123,8 @@ public class ALiYunService {
         } catch (TeaException error) {
             String errorMsg = "接口 createIndex 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "createIndex 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -146,6 +148,8 @@ public class ALiYunService {
         } catch (TeaException error) {
             String errorMsg = "接口 submitTask 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "submitTask 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -174,6 +178,8 @@ public class ALiYunService {
         } catch (TeaException error) {
             String errorMsg = "接口 readSection 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "readSection 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -218,6 +224,8 @@ public class ALiYunService {
         } catch (TeaException error) {
             String errorMsg = "接口 applyFileUploadLease 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "applyFileUploadLease 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -292,6 +300,8 @@ public class ALiYunService {
         } catch (TeaException error) {
             String errorMsg = "接口 addFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "addFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
@@ -313,6 +323,8 @@ public class ALiYunService {
         } catch (TeaException error) {
             String errorMsg = "接口 describeFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "describeFile 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
