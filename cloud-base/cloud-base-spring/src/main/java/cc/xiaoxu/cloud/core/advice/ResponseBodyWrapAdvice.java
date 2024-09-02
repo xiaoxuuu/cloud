@@ -49,7 +49,7 @@ public class ResponseBodyWrapAdvice implements ResponseBodyAdvice<Object> {
      * @return 传入的主体或修改过的(可能是新的)实例
      */
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public Object beforeBodyWrite(Object body, @NotNull MethodParameter returnType, @NotNull MediaType selectedContentType,
                                   @NotNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
                                   @NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response) {
@@ -63,8 +63,7 @@ public class ResponseBodyWrapAdvice implements ResponseBodyAdvice<Object> {
         R<Object> r;
         Object data;
         if (body instanceof R) {
-            data = ((R<?>) body).getBody();
-            r = JsonUtils.parse(JsonUtils.toString(body), R.class);
+            return body;
         } else {
             data = body;
             r = R.success();
