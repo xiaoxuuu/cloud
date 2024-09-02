@@ -115,7 +115,7 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             CreateIndexResponse response = client.createIndexWithOptions(workspaceId, createIndexRequest, headers, runtime);
-            if (response.getStatusCode() != 200) {
+            if (!"200".equals(response.getBody().getStatus())) {
                 String errorMsg = "接口 createIndex 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
@@ -138,7 +138,7 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             SubmitIndexJobResponse response = client.submitIndexJobWithOptions(workspaceId, submitIndexJobRequest, headers, runtime);
-            if (response.getStatusCode() != 200) {
+            if (!"200".equals(response.getBody().getStatus())) {
                 String errorMsg = "接口 submitTask 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
@@ -166,7 +166,7 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             ListChunksResponse response = client.listChunksWithOptions(workspaceId, listChunksRequest, headers, runtime);
-            if (response.getStatusCode() != 200) {
+            if (!"200".equals(response.getBody().getStatus())) {
                 String errorMsg = "接口 readSection 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
@@ -210,7 +210,7 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             ApplyFileUploadLeaseResponse response = client.applyFileUploadLeaseWithOptions(categoryId, workspaceId, applyFileUploadLeaseRequest, headers, runtime);
-            if (response.getStatusCode() != 200) {
+            if (!"200".equals(response.getBody().getStatus())) {
                 String errorMsg = "接口 applyFileUploadLease 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
@@ -284,7 +284,7 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             AddFileResponse response = client.addFileWithOptions(workspaceId, addFileRequest, headers, runtime);
-            if (response.getStatusCode() != 200) {
+            if (!"200".equals(response.getBody().getStatus())) {
                 String errorMsg = "接口 addFile 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
@@ -305,7 +305,7 @@ public class ALiYunService {
         Map<String, String> headers = new HashMap<>();
         try {
             DescribeFileResponse response = client.describeFileWithOptions(workspaceId, fileId, headers, runtime);
-            if (response.getStatusCode() != 200) {
+            if (!"200".equals(response.getBody().getStatus())) {
                 String errorMsg = "接口 describeFile 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
