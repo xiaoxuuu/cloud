@@ -18,7 +18,7 @@ public class ALiFileStatusCheckTask {
 
     private final KnowledgeService knowledgeService;
 
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0/30 * * * * ?")
     public void statusCheck() {
 
         List<Knowledge> knowledgeList = knowledgeService.lambdaQuery()

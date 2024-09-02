@@ -8,8 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Slf4j
+@EnableScheduling
 @ComponentScan(excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {SpringBootApplication.class}))
 @SpringBootApplication(scanBasePackages = {"cc.xiaoxu.cloud"})
 public class AllApplication {
