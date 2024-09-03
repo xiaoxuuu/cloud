@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseEntityForPostgre {
+public class BaseEntityForPostgres {
 
     @TableId(value = "id", type = IdType.AUTO)
     @Schema(description = "主键id")
