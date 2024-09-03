@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
+import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
@@ -27,7 +28,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         Knowledge knowledge = new Knowledge();
         knowledge.setType(KnowledgeTypeEnum.ALi_FILE.getCode());
         knowledge.setName(fileName);
-        knowledge.setAdditionalInfo(fileId);
+        knowledge.setThreePartyFileId(fileId);
         knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
         knowledge.setState(StateEnum.ENABLE.getCode());
         knowledge.setCreateTime(new Date());
@@ -37,7 +38,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     public boolean updateFileUploadResult(Knowledge knowledge) {
 
-        String fileId = knowledge.getAdditionalInfo();
+        String fileId = knowledge.getThreePartyFileId();
         Integer id = knowledge.getId();
         DescribeFileResponseBody.DescribeFileResponseBodyData describeFile = aLiYunService.describeFile(fileId);
         String status = describeFile.getStatus();
@@ -47,11 +48,31 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         if (statusSet.contains(statusEnum)) {
             lambdaUpdate()
                     .eq(Knowledge::getId, id)
-                    .eq(Knowledge::getAdditionalInfo, fileId)
+                    .eq(Knowledge::getThreePartyFileId, fileId)
                     .set(Knowledge::getStatus, statusEnum.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
             return statusEnum == ALiFileUploadResultEnum.PARSE_SUCCESS;
+        }
+        return false;
+    }
+
+    public boolean updateFileIndexResult(Knowledge knowledge) {
+
+        String fileId = knowledge.getThreePartyFileId();
+        Integer id = knowledge.getId();
+        String status = aLiYunService.getIndexJobStatus(knowledge.getThreePartyInfo());
+        log.info("文件 {}({}) 当前状态为：{}", fileId, id, status);
+        Set<ALiFileIndexResultEnum> resultSet = Set.of(ALiFileIndexResultEnum.COMPLETED, ALiFileIndexResultEnum.FAILED);
+        ALiFileIndexResultEnum resultEnum = EnumUtils.getByClass(status, ALiFileIndexResultEnum.class);
+        if (resultSet.contains(resultEnum)) {
+            lambdaUpdate()
+                    .eq(Knowledge::getId, id)
+                    .eq(Knowledge::getThreePartyFileId, fileId)
+                    .set(Knowledge::getStatus, resultEnum.getCode())
+                    .set(Knowledge::getModifyTime, new Date())
+                    .update();
+            return resultEnum == ALiFileIndexResultEnum.COMPLETED;
         }
         return false;
     }

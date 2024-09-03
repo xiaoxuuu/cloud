@@ -365,7 +365,7 @@ public class ALiYunService {
     /**
      * 向索引库提交文件分割任务
      */
-    public void submitIndexAddDocumentsJob(String fileId) {
+    public String submitIndexAddDocumentsJob(String fileId) {
 
         Client client = createClient();
         SubmitIndexAddDocumentsJobRequest request = new SubmitIndexAddDocumentsJobRequest()
@@ -378,6 +378,7 @@ public class ALiYunService {
                 String errorMsg = "接口 submitIndexAddDocumentsJob 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
                 throw new CustomException(errorMsg);
             }
+            return response.getBody().getData().getId();
         } catch (TeaException error) {
             String errorMsg = "接口 submitIndexAddDocumentsJob 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
@@ -386,6 +387,34 @@ public class ALiYunService {
         } catch (Exception _error) {
             TeaException error = new TeaException(_error.getMessage(), _error);
             String errorMsg = "submitIndexAddDocumentsJob 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        }
+    }
+
+    /**
+     * <a href="https://api.aliyun.com/api/bailian/2023-12-29/GetIndexJobStatus">查询索引创建状态</a>
+     */
+    public String getIndexJobStatus(String jobId) {
+
+        Client client = createClient();
+        GetIndexJobStatusRequest request = new GetIndexJobStatusRequest()
+                .setJobId(jobId)
+                .setIndexId(indexId);
+        try {
+            GetIndexJobStatusResponse response = client.getIndexJobStatusWithOptions(workspaceId, request, new HashMap<>(), new RuntimeOptions());
+            if (!"200".equals(response.getBody().getStatus())) {
+                String errorMsg = "接口 getIndexJobStatus 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+            return response.getBody().getData().getStatus();
+        } catch (TeaException error) {
+            String errorMsg = "接口 getIndexJobStatus 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            String errorMsg = "getIndexJobStatus 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
             throw new CustomException(errorMsg);
         }
     }

@@ -4,7 +4,9 @@ import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,9 @@ public class ALiFileStatusCheckTask {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
+    /**
+     * 阿里文件上传状态检查
+     */
     @Scheduled(cron = "0/30 * * * * ?")
     public void aLiFileUploadResultCheck() {
 
@@ -35,11 +40,41 @@ public class ALiFileStatusCheckTask {
             if (!succeeded) {
                 continue;
             }
-            // 添加知识库索引
-            aLiYunService.submitIndexAddDocumentsJob(knowledge.getAdditionalInfo());
+            // 执行知识库索引
+            String jobId = aLiYunService.submitIndexAddDocumentsJob(knowledge.getThreePartyFileId());
+            knowledge.setStatus(ALiFileIndexResultEnum.RUNNING.getCode());
+            knowledge.setThreePartyInfo(jobId);
+            knowledgeService.updateById(knowledge);
+        }
+    }
 
+    /**
+     * 阿里文件切片状态检查
+     */
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void aLiFileIndexResultCheck() {
+
+        List<Knowledge> knowledgeList = knowledgeService.lambdaQuery()
+                .in(Knowledge::getStatus, List.of(ALiFileIndexResultEnum.RUNNING.getCode()))
+                .eq(Knowledge::getType, KnowledgeTypeEnum.ALi_FILE.getCode())
+                .isNotNull(Knowledge::getThreePartyInfo)
+                .list();
+        for (Knowledge knowledge : knowledgeList) {
+            boolean succeeded = knowledgeService.updateFileIndexResult(knowledge);
+            if (!succeeded) {
+                continue;
+            }
+
+            knowledge.setStatus(FileStatusEnum.FILE_SECTION_READ.getCode());
+            knowledgeService.updateById(knowledge);
             knowledgeSectionService.rebuildSection(knowledge);
+
+            knowledge.setStatus(FileStatusEnum.VECTOR_CALC.getCode());
+            knowledgeService.updateById(knowledge);
             knowledgeSectionService.calcVector(new IdDTO(String.valueOf(knowledge.getId())));
+
+            knowledge.setStatus(FileStatusEnum.ALL_TASKS_COMPLETED.getCode());
+            knowledgeService.updateById(knowledge);
         }
     }
 }

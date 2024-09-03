@@ -32,7 +32,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         List<String> readSectionList = new ArrayList<>();
         while (hasNext) {
             // 每次处理 1000 条数据
-            List<String> readSectionListTemp = aLiYunService.readSection(knowledge.getAdditionalInfo(), pageNum, 1000);
+            List<String> readSectionListTemp = aLiYunService.readSection(knowledge.getThreePartyFileId(), pageNum, 1000);
             readSectionList.addAll(readSectionListTemp);
             log.info("读取到 {} 条数据", readSectionListTemp.size());
             if (readSectionListTemp.isEmpty()) {
