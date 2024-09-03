@@ -131,4 +131,12 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         save(knowledge);
         return knowledge;
     }
+
+    public void changeStatus(Integer knowledgeId, FileStatusEnum fileStatusEnum) {
+        lambdaUpdate()
+                .eq(Knowledge::getId, knowledgeId)
+                .set(Knowledge::getModifyTime, new Date())
+                .set(Knowledge::getStatus, fileStatusEnum.getCode())
+                .update();
+    }
 }
