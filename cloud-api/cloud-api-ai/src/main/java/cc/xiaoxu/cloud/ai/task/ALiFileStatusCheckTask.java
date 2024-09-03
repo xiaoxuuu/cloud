@@ -67,7 +67,7 @@ public class ALiFileStatusCheckTask {
 
             knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
             knowledgeService.updateById(knowledge);
-            knowledgeSectionService.rebuildSection(knowledge);
+            knowledgeSectionService.readALiSection(knowledge);
 
             knowledge.setStatus(FileStatusEnum.VECTOR_CALC.getCode());
             knowledgeService.updateById(knowledge);

@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.ai.service;
 import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
+import cc.xiaoxu.cloud.ai.manager.CommonManager;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
@@ -24,8 +25,9 @@ import java.util.stream.Collectors;
 public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper, KnowledgeSection> {
 
     private final ALiYunService aLiYunService;
+    private final CommonManager commonManager;
 
-    public boolean rebuildSection(Knowledge knowledge) {
+    public boolean readALiSection(Knowledge knowledge) {
 
         boolean hasNext = true;
         int pageNum = 1;
@@ -41,15 +43,28 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
             pageNum++;
         }
 
-        log.info("读取完成，一共 {} 条数据", readSectionList.size());
+        insertNewData(knowledge.getId(), readSectionList);
+        return true;
+    }
+
+    public boolean readTableSection(Integer knowledgeId, String sql) {
+
+        List<String> dataList = commonManager.getList(sql);
+
+        insertNewData(knowledgeId, dataList);
+        return true;
+    }
+
+    private void insertNewData(Integer knowledgeId, List<String> dataList) {
+
+        log.info("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
         lambdaUpdate()
-                .eq(KnowledgeSection::getKnowledgeId, knowledge.getId())
+                .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
                 .remove();
         // 数据入库
-        List<KnowledgeSection> knowledgeSectionList = readSectionList.stream().map(k -> buildKnowledgeSection(knowledge.getId(), k)).toList();
+        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeId, k)).toList();
         saveBatch(knowledgeSectionList, 1000);
-        return true;
     }
 
     private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content) {

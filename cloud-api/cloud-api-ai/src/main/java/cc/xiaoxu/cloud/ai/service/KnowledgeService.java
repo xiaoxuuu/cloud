@@ -2,8 +2,12 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
+import cc.xiaoxu.cloud.ai.manager.CommonManager;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableEventDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
@@ -11,6 +15,7 @@ import com.aliyun.bailian20231229.models.DescribeFileResponseBody;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,6 +27,8 @@ import java.util.Set;
 public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     private final ALiYunService aLiYunService;
+    private final CommonManager commonManager;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public void addALiFile(String fileName, String fileId) {
 
@@ -81,5 +88,21 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
             return resultEnum == ALiFileIndexResultEnum.COMPLETED;
         }
         return false;
+    }
+
+
+    public void addTable(KnowledgeAddTableDTO dto) {
+
+        Knowledge knowledge = new Knowledge();
+        knowledge.setType(KnowledgeTypeEnum.TABLE.getCode());
+        knowledge.setName(dto.getTableName());
+        knowledge.setThreePartyInfo(dto.getSql());
+        knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
+        knowledge.setState(StateEnum.ENABLE.getCode());
+        knowledge.setCreateTime(new Date());
+        save(knowledge);
+
+        // 使用事件异步处理
+        applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId()));
     }
 }

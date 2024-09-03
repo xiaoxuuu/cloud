@@ -81,7 +81,7 @@ public class TalkController {
 
         // 提问
         AiKimiController.setResponseHeader(response);
-        List<AiChatMessageDTO> ask = Prompt.Knowledge.ask("超魔杀帝国", vo.getQuestion(), knowledgeList);
+        List<AiChatMessageDTO> ask = Prompt.Knowledge.ask("本地知识库", vo.getQuestion(), knowledgeList);
 
         return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
                 .apiKey(apiKey)
