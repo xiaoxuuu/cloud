@@ -29,7 +29,7 @@ public class KnowledgeSectionController {
     public boolean rebuildSection(@Valid @RequestBody IdDTO dto) {
 
         Knowledge knowledge = knowledgeService.lambdaQuery().eq(Knowledge::getId, dto.getId()).one();
-        return knowledgeSectionService.rebuildSection(knowledge);
+        return knowledgeSectionService.readALiSection(knowledge);
     }
 
     @PostMapping("/calc_vector")

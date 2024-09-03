@@ -30,11 +30,11 @@ public class KnowledgeController {
         knowledgeService.addALiFile(file.getOriginalFilename(), fileId);
     }
 
-    // TODO
     @PostMapping("/addTable")
     @Operation(summary = "新增数据表")
-    public boolean addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
-        return false;
+    public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
+
+        knowledgeService.addTable(dto);
     }
 
     // TODO
