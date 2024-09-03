@@ -2,7 +2,7 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.bean.ai.enums.ALiFileStatusEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
@@ -28,22 +28,22 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         knowledge.setType(KnowledgeTypeEnum.ALi_FILE.getCode());
         knowledge.setName(fileName);
         knowledge.setAdditionalInfo(fileId);
-        knowledge.setStatus(ALiFileStatusEnum.INIT.getCode());
+        knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
         knowledge.setState(StateEnum.ENABLE.getCode());
         knowledge.setCreateTime(new Date());
         save(knowledge);
-        updateFileStatus(knowledge);
+        updateFileUploadResult(knowledge);
     }
 
-    public boolean updateFileStatus(Knowledge knowledge) {
+    public boolean updateFileUploadResult(Knowledge knowledge) {
 
         String fileId = knowledge.getAdditionalInfo();
         Integer id = knowledge.getId();
         DescribeFileResponseBody.DescribeFileResponseBodyData describeFile = aLiYunService.describeFile(fileId);
         String status = describeFile.getStatus();
         log.info("文件 {}({}) 当前状态为：{}", fileId, id, status);
-        Set<ALiFileStatusEnum> statusSet = Set.of(ALiFileStatusEnum.PARSE_FAILED, ALiFileStatusEnum.PARSE_SUCCESS);
-        ALiFileStatusEnum statusEnum = EnumUtils.getByClass(status, ALiFileStatusEnum.class);
+        Set<ALiFileUploadResultEnum> statusSet = Set.of(ALiFileUploadResultEnum.PARSE_FAILED, ALiFileUploadResultEnum.PARSE_SUCCESS);
+        ALiFileUploadResultEnum statusEnum = EnumUtils.getByClass(status, ALiFileUploadResultEnum.class);
         if (statusSet.contains(statusEnum)) {
             lambdaUpdate()
                     .eq(Knowledge::getId, id)
@@ -51,7 +51,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                     .set(Knowledge::getStatus, statusEnum.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
-            return statusEnum == ALiFileStatusEnum.PARSE_SUCCESS;
+            return statusEnum == ALiFileUploadResultEnum.PARSE_SUCCESS;
         }
         return false;
     }
