@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,20 +22,22 @@ public class KnowledgeController {
     private final ALiYunService aLiYunService;
     private final KnowledgeService knowledgeService;
 
-    @PostMapping("/addFile")
+    @PostMapping("/addALiFile")
     @Operation(summary = "新增文件")
-    public void addFile(@RequestPart(name = "file") MultipartFile file) {
+    public void addALiFile(@RequestPart(name = "file") MultipartFile file) {
 
         String fileId = aLiYunService.uploadFile(file);
-        knowledgeService.addFile(file.getOriginalFilename(), fileId);
+        knowledgeService.addALiFile(file.getOriginalFilename(), fileId);
     }
 
+    // TODO
     @PostMapping("/addTable")
     @Operation(summary = "新增数据表")
-    public boolean addTable(@Valid @RequestBody SplitTxtDTO dto) {
+    public boolean addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
         return false;
     }
 
+    // TODO
     @PostMapping("/addCustom")
     @Operation(summary = "新增自定义数据")
     public boolean addCustom(@Valid @RequestBody SplitTxtDTO dto) {

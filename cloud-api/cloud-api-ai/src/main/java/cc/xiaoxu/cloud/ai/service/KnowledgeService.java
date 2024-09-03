@@ -23,7 +23,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     private final ALiYunService aLiYunService;
 
-    public void addFile(String fileName, String fileId) {
+    public void addALiFile(String fileName, String fileId) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setType(KnowledgeTypeEnum.ALi_FILE.getCode());
