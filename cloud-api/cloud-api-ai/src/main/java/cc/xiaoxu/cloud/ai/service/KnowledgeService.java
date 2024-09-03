@@ -110,7 +110,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
         Knowledge knowledge = lambdaQuery()
                 .eq(Knowledge::getType, KnowledgeTypeEnum.CUSTOM.getCode())
-                .eq(Knowledge::getName, dto.getContent())
+                .eq(Knowledge::getName, dto.getKnowledgeName())
                 .one();
         if (null == knowledge) {
             knowledge = createCustomData(dto);
