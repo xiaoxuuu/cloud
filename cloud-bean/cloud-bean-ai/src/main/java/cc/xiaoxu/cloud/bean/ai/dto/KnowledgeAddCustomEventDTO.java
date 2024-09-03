@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KnowledgeAddFileDTO {
+public class KnowledgeAddCustomEventDTO {
 
-    @Schema(description = "分类 id")
-    private String categoryId;
+    @Schema(description = "内容")
+    private String content;
 
-    @Schema(description = "工作空间 id")
-    private String workspaceId;
+    @Schema(description = "知识库id")
+    private Integer knowledgeId;
 }

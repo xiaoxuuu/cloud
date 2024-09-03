@@ -2,8 +2,8 @@ package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.SplitTxtDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -37,10 +37,10 @@ public class KnowledgeController {
         knowledgeService.addTable(dto);
     }
 
-    // TODO
     @PostMapping("/addCustom")
     @Operation(summary = "新增自定义数据")
-    public boolean addCustom(@Valid @RequestBody SplitTxtDTO dto) {
-        return false;
+    public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto) {
+
+        knowledgeService.addCustom(dto);
     }
 }
