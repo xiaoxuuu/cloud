@@ -76,7 +76,7 @@ public class TalkController {
         // 取出相似度数据
         List<KnowledgeSectionVO> similarityData = knowledgeSectionService.getBaseMapper().getSimilarityData(embedding, vo.getSimilarity(), vo.getSimilarityContentNum());
         String distanceList = similarityData.stream().map(KnowledgeSectionVO::getDistance).map(String::toString).map(k -> k.substring(0, 5)).collect(Collectors.joining(","));
-        log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越大越好)", similarityData.size(), distanceList);
+        log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
         String knowledgeList = similarityData.stream().map(KnowledgeSectionVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
 
         // 提问
