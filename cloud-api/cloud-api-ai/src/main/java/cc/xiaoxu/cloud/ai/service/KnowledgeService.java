@@ -2,7 +2,8 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.ai.manager.CommonManager;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomEventDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableEventDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
@@ -27,7 +28,6 @@ import java.util.Set;
 public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     private final ALiYunService aLiYunService;
-    private final CommonManager commonManager;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public void addALiFile(String fileName, String fileId) {
@@ -104,5 +104,31 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
         // 使用事件异步处理
         applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId()));
+    }
+
+    public void addCustom(KnowledgeAddCustomDTO dto) {
+
+        Knowledge knowledge = lambdaQuery()
+                .eq(Knowledge::getType, KnowledgeTypeEnum.CUSTOM.getCode())
+                .eq(Knowledge::getName, dto.getContent())
+                .one();
+        if (null == knowledge) {
+            knowledge = createCustomData(dto);
+        }
+
+        // 切片数据
+        applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId()));
+    }
+
+    private Knowledge createCustomData(KnowledgeAddCustomDTO dto) {
+
+        Knowledge knowledge = new Knowledge();
+        knowledge.setType(KnowledgeTypeEnum.CUSTOM.getCode());
+        knowledge.setName(dto.getKnowledgeName());
+        knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
+        knowledge.setState(StateEnum.ENABLE.getCode());
+        knowledge.setCreateTime(new Date());
+        save(knowledge);
+        return knowledge;
     }
 }

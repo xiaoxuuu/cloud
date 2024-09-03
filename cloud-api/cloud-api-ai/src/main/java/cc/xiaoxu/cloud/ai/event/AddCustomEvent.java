@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.ai.event;
 
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableEventDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomEventDTO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,15 +11,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class AddTableEvent {
+public class AddCustomEvent {
 
     private final KnowledgeSectionService knowledgeSectionService;
 
-    @EventListener(classes = {KnowledgeAddTableEventDTO.class})
-    public void onApplicationEvent(KnowledgeAddTableEventDTO dto) {
+    @EventListener(classes = {KnowledgeAddCustomEventDTO.class})
+    public void onApplicationEvent(KnowledgeAddCustomEventDTO dto) {
 
         // 数据查询
-        knowledgeSectionService.readTableSection(dto.getKnowledgeId(), dto.getSql());
+        knowledgeSectionService.readCustomSection(dto.getKnowledgeId(), dto.getContent());
 
         // 切片
         knowledgeSectionService.calcVector(new IdDTO(String.valueOf(dto.getKnowledgeId())));

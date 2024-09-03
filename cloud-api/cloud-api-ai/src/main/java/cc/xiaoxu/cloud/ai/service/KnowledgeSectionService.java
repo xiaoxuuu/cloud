@@ -55,6 +55,13 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return true;
     }
 
+    public boolean readCustomSection(Integer knowledgeId, String content) {
+
+        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content);
+        save(knowledgeSection);
+        return true;
+    }
+
     private void insertNewData(Integer knowledgeId, List<String> dataList) {
 
         log.info("读取完成，一共 {} 条数据", dataList.size());
