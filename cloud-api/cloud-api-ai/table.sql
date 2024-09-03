@@ -1,22 +1,25 @@
+DROP TABLE IF EXISTS "t_knowledge";
 CREATE TABLE t_knowledge
 (
-    id              SERIAL PRIMARY KEY,
-    type            VARCHAR(8),
-    name            VARCHAR(64),
-    additional_info TEXT,
-    status VARCHAR(8),
-    state           VARCHAR(1) NOT NULL,
-    remark          VARCHAR(16),
-    create_time     TIMESTAMP  NOT NULL,
-    create_id       INT,
-    modify_time     TIMESTAMP,
-    modify_id       INT
+    id                  SERIAL PRIMARY KEY,
+    type                VARCHAR(8),
+    name                VARCHAR(64),
+    three_party_file_id VARCHAR(64),
+    three_party_info    TEXT,
+    status              VARCHAR(8),
+    state               VARCHAR(1) NOT NULL,
+    remark              VARCHAR(16),
+    create_time         TIMESTAMP  NOT NULL,
+    create_id           INT,
+    modify_time         TIMESTAMP,
+    modify_id           INT
 );
 COMMENT ON TABLE t_knowledge IS '知识库表';
 COMMENT ON COLUMN t_knowledge.id IS '主键';
 COMMENT ON COLUMN t_knowledge.type IS '资源类型：文件、数据表、自定义分类';
 COMMENT ON COLUMN t_knowledge.name IS '名称';
-COMMENT ON COLUMN t_knowledge.additional_info IS '资源附加信息';
+COMMENT ON COLUMN t_knowledge.three_party_file_id IS '三方平台文件 id';
+COMMENT ON COLUMN t_knowledge.three_party_info IS '三方平台附加信息';
 COMMENT ON COLUMN t_knowledge.status IS '文件处理状态';
 COMMENT ON COLUMN t_knowledge.state IS '状态';
 COMMENT ON COLUMN t_knowledge.remark IS '备注';
@@ -25,6 +28,7 @@ COMMENT ON COLUMN t_knowledge.create_id IS '创建人id';
 COMMENT ON COLUMN t_knowledge.modify_time IS '编辑时间';
 COMMENT ON COLUMN t_knowledge.modify_id IS '编辑人id';
 
+DROP TABLE IF EXISTS "t_knowledge_section";
 CREATE TABLE t_knowledge_section
 (
     id           SERIAL PRIMARY KEY,

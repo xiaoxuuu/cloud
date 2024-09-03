@@ -7,12 +7,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ALiFileUploadResultEnum implements EnumInterface<String>, EnumDescInterface {
+public enum ALiFileIndexResultEnum implements EnumInterface<String>, EnumDescInterface {
 
-    INIT("upload_init", "初始化状态，等待上传中。", false),
-    PARSING("upload_parsing", "上传文件中", false),
-    PARSE_SUCCESS("upload_success", "上传文件完成", true),
-    PARSE_FAILED("upload_failed", "上传文件失败", true),
+    PENDING("index_pending", "等待执行文件索引", true),
+    RUNNING("index_running", "文件索引中", false),
+    COMPLETED("index_completed", "文件索引完成", true),
+    FAILED("index_error", "文件索引失败", true),
     ;
 
     private final String code;
