@@ -333,6 +333,36 @@ public class ALiYunService {
     }
 
     /**
+     * 创建索引库
+     */
+    public void createIndex(String fileName, String fileId) {
+
+        Client client = createClient();
+        CreateIndexRequest createIndexRequest = new CreateIndexRequest()
+                .setName(fileName)
+                .setStructureType("unstructured")
+                .setSourceType("DATA_CENTER_FILE")
+                .setDocumentIds(List.of(fileId))
+                .setSinkType("DEFAULT");
+        try {
+            CreateIndexResponse response = client.createIndexWithOptions(workspaceId, createIndexRequest, Map.of(), new RuntimeOptions());
+            if (!"200".equals(response.getBody().getStatus())) {
+                String errorMsg = "接口 createIndex 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+        } catch (TeaException error) {
+            String errorMsg = "接口 createIndex 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            String errorMsg = "createIndex 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        }
+    }
+
+    /**
      * <b>description</b> :
      * <p>使用AK&amp;SK初始化账号Client</p>
      * @return Client
