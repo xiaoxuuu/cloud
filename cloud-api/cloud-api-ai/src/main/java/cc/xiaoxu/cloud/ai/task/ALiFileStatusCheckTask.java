@@ -51,11 +51,11 @@ public class ALiFileStatusCheckTask {
     /**
      * 阿里文件切片状态检查
      */
-    @Scheduled(cron = "0/30 * * * * ?")
+    @Scheduled(cron = "15/45 * * * * ?")
     public void aLiFileIndexResultCheck() {
 
         List<Knowledge> knowledgeList = knowledgeService.lambdaQuery()
-                .in(Knowledge::getStatus, List.of(ALiFileIndexResultEnum.RUNNING.getCode()))
+                .in(Knowledge::getStatus, List.of(ALiFileIndexResultEnum.PENDING.getCode(), ALiFileIndexResultEnum.RUNNING.getCode()))
                 .eq(Knowledge::getType, KnowledgeTypeEnum.ALi_FILE.getCode())
                 .isNotNull(Knowledge::getThreePartyInfo)
                 .list();
@@ -65,7 +65,7 @@ public class ALiFileStatusCheckTask {
                 continue;
             }
 
-            knowledge.setStatus(FileStatusEnum.FILE_SECTION_READ.getCode());
+            knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
             knowledgeService.updateById(knowledge);
             knowledgeSectionService.rebuildSection(knowledge);
 
@@ -73,7 +73,7 @@ public class ALiFileStatusCheckTask {
             knowledgeService.updateById(knowledge);
             knowledgeSectionService.calcVector(new IdDTO(String.valueOf(knowledge.getId())));
 
-            knowledge.setStatus(FileStatusEnum.ALL_TASKS_COMPLETED.getCode());
+            knowledge.setStatus(FileStatusEnum.ALL_COMPLETED.getCode());
             knowledgeService.updateById(knowledge);
         }
     }
