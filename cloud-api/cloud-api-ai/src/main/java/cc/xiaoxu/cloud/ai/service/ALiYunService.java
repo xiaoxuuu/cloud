@@ -363,6 +363,34 @@ public class ALiYunService {
     }
 
     /**
+     * 向索引库提交文件分割任务
+     */
+    public void submitIndexAddDocumentsJob(String fileId) {
+
+        Client client = createClient();
+        SubmitIndexAddDocumentsJobRequest request = new SubmitIndexAddDocumentsJobRequest()
+                .setIndexId(indexId)
+                .setSourceType("DATA_CENTER_FILE")
+                .setDocumentIds(List.of(fileId));
+        try {
+            SubmitIndexAddDocumentsJobResponse response = client.submitIndexAddDocumentsJobWithOptions(workspaceId, request, new HashMap<>(), new RuntimeOptions());
+            if (!"200".equals(response.getBody().getStatus())) {
+                String errorMsg = "接口 submitIndexAddDocumentsJob 调用失败：" + response.getBody().getStatus() + "[" + response.getBody().getCode() + "]" + "，原因：" + response.getBody().getMessage();
+                throw new CustomException(errorMsg);
+            }
+        } catch (TeaException error) {
+            String errorMsg = "接口 submitIndexAddDocumentsJob 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        } catch (CustomException customException) {
+            throw new CustomException(customException.getMessage());
+        } catch (Exception _error) {
+            TeaException error = new TeaException(_error.getMessage(), _error);
+            String errorMsg = "submitIndexAddDocumentsJob 调用失败：" + error.getMessage() + "，诊断地址：" + error.getData().get("Recommend");
+            throw new CustomException(errorMsg);
+        }
+    }
+
+    /**
      * <b>description</b> :
      * <p>使用AK&amp;SK初始化账号Client</p>
      * @return Client
