@@ -6,7 +6,7 @@ CREATE TABLE t_knowledge
     name                VARCHAR(64),
     three_party_file_id VARCHAR(64),
     three_party_info    TEXT,
-    status              VARCHAR(8),
+    status VARCHAR(16),
     state               VARCHAR(1) NOT NULL,
     remark              VARCHAR(16),
     create_time         TIMESTAMP  NOT NULL,

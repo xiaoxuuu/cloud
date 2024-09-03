@@ -42,10 +42,13 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         Integer id = knowledge.getId();
         DescribeFileResponseBody.DescribeFileResponseBodyData describeFile = aLiYunService.describeFile(fileId);
         String status = describeFile.getStatus();
-        log.info("文件 {}({}) 当前状态为：{}", fileId, id, status);
-        Set<ALiFileUploadResultEnum> statusSet = Set.of(ALiFileUploadResultEnum.PARSE_FAILED, ALiFileUploadResultEnum.PARSE_SUCCESS);
+        log.info("文件上传 {}({}) 当前状态为：{}", fileId, id, status);
+        Set<ALiFileUploadResultEnum> statusSet = Set.of(ALiFileUploadResultEnum.PARSING, ALiFileUploadResultEnum.PARSE_FAILED, ALiFileUploadResultEnum.PARSE_SUCCESS);
         ALiFileUploadResultEnum statusEnum = EnumUtils.getByClass(status, ALiFileUploadResultEnum.class);
         if (statusSet.contains(statusEnum)) {
+            if (ALiFileUploadResultEnum.PARSING == statusEnum) {
+                return false;
+            }
             lambdaUpdate()
                     .eq(Knowledge::getId, id)
                     .eq(Knowledge::getThreePartyFileId, fileId)
@@ -62,10 +65,13 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         String fileId = knowledge.getThreePartyFileId();
         Integer id = knowledge.getId();
         String status = aLiYunService.getIndexJobStatus(knowledge.getThreePartyInfo());
-        log.info("文件 {}({}) 当前状态为：{}", fileId, id, status);
-        Set<ALiFileIndexResultEnum> resultSet = Set.of(ALiFileIndexResultEnum.COMPLETED, ALiFileIndexResultEnum.FAILED);
+        log.info("文件切片 {}({}) 当前状态为：{}", fileId, id, status);
+        Set<ALiFileIndexResultEnum> resultSet = Set.of(ALiFileIndexResultEnum.RUNNING, ALiFileIndexResultEnum.COMPLETED, ALiFileIndexResultEnum.FAILED);
         ALiFileIndexResultEnum resultEnum = EnumUtils.getByClass(status, ALiFileIndexResultEnum.class);
         if (resultSet.contains(resultEnum)) {
+            if (ALiFileIndexResultEnum.RUNNING == resultEnum) {
+                return false;
+            }
             lambdaUpdate()
                     .eq(Knowledge::getId, id)
                     .eq(Knowledge::getThreePartyFileId, fileId)

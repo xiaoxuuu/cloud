@@ -28,7 +28,7 @@ public enum FileStatusEnum implements EnumInterface<String>, EnumDescInterface {
     /**
      * 读取文件切片
      */
-    FILE_SECTION_READ("file_section_read", "读取文件切片中", false),
+    SECTION_READ("section_read", "读取文件切片中", false),
 
     /**
      * 向量计算
@@ -38,7 +38,7 @@ public enum FileStatusEnum implements EnumInterface<String>, EnumDescInterface {
     /**
      * 数据准备就绪
      */
-    ALL_TASKS_COMPLETED("all_tasks_completed", "任务全部结束", true),
+    ALL_COMPLETED("all_completed", "任务全部结束", true),
     ;
 
     private final String code;
