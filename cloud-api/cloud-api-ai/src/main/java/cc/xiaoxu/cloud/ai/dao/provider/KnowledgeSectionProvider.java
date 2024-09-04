@@ -5,12 +5,6 @@ import cc.xiaoxu.cloud.core.dao.BaseProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
-/**
- * 菜单provider
- * </p>
- *
- * @author Matt
- */
 public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
 
     private static final KnowledgeSectionProvider PROVIDER = new KnowledgeSectionProvider();
