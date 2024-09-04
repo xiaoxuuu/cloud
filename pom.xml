@@ -69,6 +69,9 @@
         <env.api.ali.access.key.secret>0</env.api.ali.access.key.secret>
         <!-- 阿里云百炼配置 -->
         <env.api.ali.bailian.api.key>0</env.api.ali.bailian.api.key>
+        <env.api.ali.bailian.workspace.id>0</env.api.ali.bailian.workspace.id>
+        <env.api.ali.bailian.category.id>0</env.api.ali.bailian.category.id>
+        <env.api.ali.bailian.index.id>0</env.api.ali.bailian.index.id>
 
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
