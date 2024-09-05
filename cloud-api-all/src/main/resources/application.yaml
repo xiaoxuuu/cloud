@@ -16,6 +16,7 @@ spring:
     import:
       - optional:cloud.yaml
       - optional:database.yaml
+      - optional:doc.yml
       - optional:logging.yaml
       - optional:file-server.yaml
       - optional:spring.yaml
@@ -56,3 +57,7 @@ wx:
         token: @env.api.wechat.mp.token@
         # 接口配置里的 EncodingAESKey 值
         aesKey: @env.api.wechat.mp.aes.key@
+
+knife4j:
+  basic:
+    password: @env.knife4j.password@

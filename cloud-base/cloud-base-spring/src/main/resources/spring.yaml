@@ -17,25 +17,3 @@ server:
       io: 4
       # 阻塞任务线程池，当执行类似 servlet 请求阻塞操作，undertow 会从这个线程池中取得线程，它的值设置取决于系统的负载
       worker: 20
-
-# springdoc-openapi项目配置
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
-  api-docs:
-    path: /v3/api-docs
-  group-configs:
-    - group: 'default'
-      paths-to-match: '/**'
-      packages-to-scan: cc.xiaoxu
-
-# knife4j 的增强配置，不需要增强可以不配
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
-    enable-footer: false
-    enable-footer-custom: true
-    footer-custom-content: Copyright © 2021-2024 XiaoXu. All Rights Reserved.
