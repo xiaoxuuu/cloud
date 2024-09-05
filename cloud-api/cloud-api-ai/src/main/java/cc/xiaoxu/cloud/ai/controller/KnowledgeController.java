@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Tag(name = "知识库服务")
+@Tag(name = "AI 知识库服务")
 @RequestMapping("/knowledge")
 public class KnowledgeController {
 

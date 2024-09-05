@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@Tag(name = "聊天服务")
+@Tag(name = "AI 知识库聊天服务")
 @RequestMapping("/talk")
 public class TalkController {
 
