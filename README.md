@@ -94,3 +94,4 @@ docker run -itd xxx
 # TODO
 
 - 启动执行任务实现
+- 分布式未完全接入
