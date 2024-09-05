@@ -59,18 +59,31 @@ public class TalkController {
     }
 
     @Parameters({
+            @Parameter(required = true, name = "knowledgeId", description = "选用知识分类，留空则不限制", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarity", description = "相似度，越小越好，越大越不相似", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarityContentNum", description = "引用分段数，取最相似的前 n 条", in = ParameterIn.PATH)
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @Operation(summary = "提问")
-    public SseEmitter ask(@PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
+    @GetMapping(value = "/ask/{knowledgeId}/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation(summary = "提问 - 全参数")
+    public SseEmitter ask(@PathVariable("knowledgeId") String knowledgeId, @PathVariable("similarity") Double similarity,
+                          @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
         SseEmitter emitter = new SseEmitter();
-        ChatInfo chatInfo = getChatInfo(new AskDTO(question, similarity, similarityContentNum), response, emitter);
+        ChatInfo chatInfo = getChatInfo(new AskDTO(question, similarity, similarityContentNum, knowledgeId), response, emitter);
+        threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
+        return emitter;
+    }
+
+    @Wrap(disabled = true)
+    @GetMapping(value = "/ask/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @Operation(summary = "提问 - 简洁参数")
+    public SseEmitter ask(@PathVariable("question") String question, HttpServletResponse response) {
+
+        SseEmitter emitter = new SseEmitter();
+        ChatInfo chatInfo = getChatInfo(new AskDTO(question, 0.7, 10, null), response, emitter);
         threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
         return emitter;
     }
