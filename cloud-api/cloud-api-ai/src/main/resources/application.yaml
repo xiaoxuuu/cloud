@@ -7,6 +7,7 @@ spring:
     import:
       - optional:cloud.yaml
       - optional:database.yaml
+      - optional:doc.yml
       - optional:logging.yaml
       - optional:spring.yaml
   application:
@@ -26,3 +27,7 @@ ali:
   workspace-id: @env.api.ali.bailian.workspace.id@
   category-id: @env.api.ali.bailian.category.id@
   index-id: @env.api.ali.bailian.index.id@
+
+knife4j:
+  basic:
+    password: @env.knife4j.password@

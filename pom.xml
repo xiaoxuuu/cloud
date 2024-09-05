@@ -73,6 +73,8 @@
         <env.api.ali.bailian.category.id>0</env.api.ali.bailian.category.id>
         <env.api.ali.bailian.index.id>0</env.api.ali.bailian.index.id>
 
+        <env.knife4j.password>0</env.knife4j.password>
+
         <!-- JVM 设置 -->
         <env.jvm.xms>-Xms256m</env.jvm.xms>
         <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
@@ -101,8 +103,9 @@
         <fastjson2.version>2.0.46</fastjson2.version>
 
         <!-- 文档 -->
-        <springdoc-openapi-starter-webmvc-ui.version>2.4.0</springdoc-openapi-starter-webmvc-ui.version>
-        <swagger-annotations-jakarta.version>2.2.21</swagger-annotations-jakarta.version>
+        <swagger-annotations-jakarta.version>2.2.23</swagger-annotations-jakarta.version>
+        <knife4j-openapi3-jakarta-spring-boot-starter.version>4.3.0
+        </knife4j-openapi3-jakarta-spring-boot-starter.version>
 
         <!-- db -->
         <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
@@ -280,14 +283,15 @@
 
             <!-- 文档 -->
             <dependency>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-                <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.swagger.core.v3</groupId>
                 <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger-annotations-jakarta.version}</version>
+            </dependency>
+            <!-- knife4j -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j-openapi3-jakarta-spring-boot-starter.version}</version>
             </dependency>
 
             <!-- sa-token -->

@@ -6,6 +6,7 @@ spring:
   config:
     import:
       - optional:cloud.yaml
+      - optional:doc.yml
       - optional:logging.yaml
       - optional:database.yaml
       - optional:redis.yaml
@@ -47,3 +48,7 @@ wx:
         token: @env.api.wechat.mp.token@
         # 接口配置里的 EncodingAESKey 值
         aesKey: @env.api.wechat.mp.aes.key@
+
+knife4j:
+  basic:
+    password: @env.knife4j.password@

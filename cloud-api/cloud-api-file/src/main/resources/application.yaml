@@ -2,6 +2,7 @@ spring:
   config:
     import:
       - optional:cloud.yaml
+      - optional:doc.yml
       - optional:logging.yaml
       - optional:file-server.yaml
   application:
@@ -11,3 +12,7 @@ spring:
 server:
   port: 10002
   forward-headers-strategy: framework
+
+knife4j:
+  basic:
+    password: @env.knife4j.password@
