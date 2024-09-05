@@ -12,6 +12,9 @@ import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -55,6 +58,11 @@ public class TalkController {
         return aiProcessor.chat(chatInfo).getResult();
     }
 
+    @Parameters({
+            @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
+            @Parameter(required = true, name = "similarity", description = "相似度，越小越好，越大越不相似", in = ParameterIn.PATH),
+            @Parameter(required = true, name = "similarityContentNum", description = "引用分段数，取最相似的前 n 条", in = ParameterIn.PATH)
+    })
     @Wrap(disabled = true)
     @GetMapping(value = "/ask/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
