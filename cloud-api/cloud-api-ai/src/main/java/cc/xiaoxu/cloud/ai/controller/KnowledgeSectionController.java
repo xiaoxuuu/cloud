@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Tag(name = "知识库数据服务")
+@Tag(name = "AI 知识库数据服务")
 @RequestMapping("/knowledge/section")
 public class KnowledgeSectionController {
 

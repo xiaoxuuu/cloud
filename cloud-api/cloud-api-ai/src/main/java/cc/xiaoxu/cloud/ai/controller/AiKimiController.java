@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
-@Tag(name = "ai kimi 对话")
+@Tag(name = "AI kimi 对话")
 @RequestMapping("/ai/kimi")
 public class AiKimiController {
 

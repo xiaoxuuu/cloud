@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
-@Tag(name = "demo 演示 sse 流")
+@Tag(name = "AI demo 演示 sse 流")
 @RequestMapping("/demo/sse")
 public class DemoSseController {
 
