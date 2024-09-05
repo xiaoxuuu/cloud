@@ -1,7 +1,9 @@
 package cc.xiaoxu.cloud.ai.dao.provider;
 
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
+import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.core.dao.BaseProvider;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -13,7 +15,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
         return PROVIDER;
     }
 
-    public String getSimilarityData(@Param("embedding") String embedding, @Param("similarity") Double similarity, @Param("similarityContentNum") Integer similarityContentNum) {
+    public String getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO) {
 
         String embeddingStr = "'" + embedding + "'";
 
@@ -21,9 +23,12 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
             SELECT(" * ");
             SELECT(" embedding <=> " + embeddingStr + " AS distance ");
             FROM("t_knowledge_section");
-            WHERE("embedding <=> " + embeddingStr + " < " + similarity);
-            ORDER_BY("embedding <=> " + embeddingStr + " DESC ");
-            LIMIT(similarityContentNum);
+            if (StringUtils.isNotBlank(askDTO.getKnowledgeId())) {
+                WHERE("knowledge_id = " + askDTO.getKnowledgeId());
+            }
+            WHERE("embedding <=> " + embeddingStr + " < " + askDTO.getSimilarity());
+            ORDER_BY("embedding <=> " + embeddingStr + " ASC ");
+            LIMIT(askDTO.getSimilarityContentNum());
         }};
         return sql.toString();
     }
