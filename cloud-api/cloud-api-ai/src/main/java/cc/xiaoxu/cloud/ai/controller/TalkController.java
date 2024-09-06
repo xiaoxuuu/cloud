@@ -10,6 +10,7 @@ import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
+import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -20,12 +21,14 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,12 +53,20 @@ public class TalkController {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
+    private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，建议咨询相关技术支持或参考官方文档进行操作";
+
     @PostMapping(value = "/ask", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
     public String ask(@Valid @RequestBody AskDTO vo, HttpServletResponse response) {
 
-        ChatInfo chatInfo = getChatInfo(vo, response, null);
-        return aiProcessor.chat(chatInfo).getResult();
+        List<KnowledgeSectionVO> similarityData = getKnowledgeSectionDataList(vo);
+
+        if (CollectionUtils.isEmpty(similarityData)) {
+            return DEFAULT_ANSWER;
+        } else {
+            ChatInfo chatInfo = getChatInfo(vo, response, null, similarityData);
+            return aiProcessor.chat(chatInfo).getResult();
+        }
     }
 
     @Parameters({
@@ -71,10 +82,9 @@ public class TalkController {
                           @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
-        SseEmitter emitter = new SseEmitter();
-        ChatInfo chatInfo = getChatInfo(new AskDTO(question, similarity, similarityContentNum, knowledgeId), response, emitter);
-        threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
-        return emitter;
+        AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
+        sendSseEmitter(response, vo, new SseEmitter());
+        return new SseEmitter();
     }
 
     @Wrap(disabled = true)
@@ -82,30 +92,62 @@ public class TalkController {
     @Operation(summary = "提问 - 简洁参数")
     public SseEmitter ask(@PathVariable("question") String question, HttpServletResponse response) {
 
-        SseEmitter emitter = new SseEmitter();
-        ChatInfo chatInfo = getChatInfo(new AskDTO(question, 0.7, 10, null), response, emitter);
-        threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
-        return emitter;
+        AskDTO vo = new AskDTO(question, 0.7, 10, null);
+        sendSseEmitter(response, vo, new SseEmitter());
+        return new SseEmitter();
     }
 
-    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter) {
+    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter) {
+
+        List<KnowledgeSectionVO> similarityData = getKnowledgeSectionDataList(vo);
+
+        if (CollectionUtils.isEmpty(similarityData)) {
+            threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter));
+        } else {
+            ChatInfo chatInfo = getChatInfo(vo, response, emitter, similarityData);
+            threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
+        }
+    }
+
+    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter, List<KnowledgeSectionVO> similarityData) {
+
+        // 无数据
+        String distanceList = similarityData.stream()
+                .map(KnowledgeSectionVO::getDistance)
+                .map(String::toString)
+                .map(k -> k.substring(0, 5))
+                .collect(Collectors.joining(","));
+        log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
+        String knowledgeList = similarityData.stream().map(KnowledgeSectionVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
+
+        // 提问
+        AiKimiController.setResponseHeader(response);
+        List<AiChatMessageDTO> ask = Prompt.Ask.v1("本地知识库", vo.getQuestion(), knowledgeList, DEFAULT_ANSWER);
+
+        return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
+                .apiKey(apiKey)
+                .stream(emitter);
+    }
+
+    private List<KnowledgeSectionVO> getKnowledgeSectionDataList(AskDTO vo) {
+
         // 问题转为向量
         List<Double> vectorList = aLiYunService.vector(vo.getQuestion());
         String embedding = String.valueOf(vectorList);
         log.info("向量计算完成，维度：{}", vectorList.size());
 
         // 取出相似度数据
-        List<KnowledgeSectionVO> similarityData = knowledgeSectionService.getBaseMapper().getSimilarityData(embedding, vo);
-        String distanceList = similarityData.stream().map(KnowledgeSectionVO::getDistance).map(String::toString).map(k -> k.substring(0, 5)).collect(Collectors.joining(","));
-        log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
-        String knowledgeList = similarityData.stream().map(KnowledgeSectionVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
+        return knowledgeSectionService.getBaseMapper().getSimilarityData(embedding, vo);
+    }
 
-        // 提问
-        AiKimiController.setResponseHeader(response);
-        List<AiChatMessageDTO> ask = Prompt.Knowledge.ask("本地知识库", vo.getQuestion(), knowledgeList);
+    private void defaultAnswer(SseEmitter emitter) {
 
-        return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
-                .apiKey(apiKey)
-                .stream(emitter);
+        try {
+            for (char c : DEFAULT_ANSWER.toCharArray()) {
+                emitter.send(SseVO.msg(String.valueOf(c)));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
