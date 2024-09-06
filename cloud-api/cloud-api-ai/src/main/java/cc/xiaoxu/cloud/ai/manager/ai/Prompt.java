@@ -28,19 +28,19 @@ public class Prompt {
     /**
      * 知识库问答
      */
-    public static class Knowledge {
+    public static class Ask {
 
         /**
          * 知识库问答
          */
-        public static List<AiChatMessageDTO> ask(String knowledgeTitle, String question, String knowledgeData) {
+        public static List<AiChatMessageDTO> v1(String knowledgeTitle, String question, String knowledgeData, String defaultAnswer) {
 
-            Map<String, String> map = Map.of("{knowledgeTitle}", knowledgeTitle, "{question}", question, "{knowledgeData}", knowledgeData);
+            Map<String, String> map = Map.of("{knowledgeTitle}", knowledgeTitle, "{question}", question, "{knowledgeData}", knowledgeData, "{defaultAnswer}", defaultAnswer);
             String systemPrompt = """
                     你是个经验丰富的知识总结专家，我将给你一些有关于 {knowledgeTitle} 的知识，然后我会对你提问。请你从知识库中总结答案，并回复
                     要求：
                     - 请使用简洁且专业的语言来回答问题。
-                    - 如果你不知道答案，请回答“没有在知识库中查找到相关信息，建议咨询相关技术支持或参考官方文档进行操作”。
+                    - 如果你不知道答案，请回答“{defaultAnswer}”。
                     - 避免提及你是从已知信息中获得的知识。
                     - 请保证答案与已知信息中描述的一致。
                     - 请使用 Markdown 语法优化答案的格式。
