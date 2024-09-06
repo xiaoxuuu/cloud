@@ -22,6 +22,6 @@ knife4j:
   basic:
     enable: true
     # Basic 认证用户名
-    username: xu
+    username: knife4j
     # Basic 认证密码。引用方自行调整
 #    password: password
