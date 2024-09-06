@@ -24,7 +24,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
             SELECT(" embedding <=> " + embeddingStr + " AS distance ");
             FROM("t_knowledge_section");
             if (StringUtils.isNotBlank(askDTO.getKnowledgeId())) {
-                WHERE("knowledge_id = " + askDTO.getKnowledgeId());
+                WHERE("knowledge_id IN (" + String.join(",", askDTO.getKnowledgeId().split(",")) + " )");
             }
             WHERE("embedding <=> " + embeddingStr + " < " + askDTO.getSimilarity());
             ORDER_BY("embedding <=> " + embeddingStr + " ASC ");
