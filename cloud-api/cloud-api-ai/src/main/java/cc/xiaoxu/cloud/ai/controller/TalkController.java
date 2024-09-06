@@ -28,8 +28,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -62,6 +62,7 @@ public class TalkController {
         List<KnowledgeSectionVO> similarityData = getKnowledgeSectionDataList(vo);
 
         if (CollectionUtils.isEmpty(similarityData)) {
+            log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             return DEFAULT_ANSWER;
         } else {
             ChatInfo chatInfo = getChatInfo(vo, response, null, similarityData);
@@ -83,8 +84,9 @@ public class TalkController {
                           @PathVariable("question") String question, HttpServletResponse response) {
 
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
-        sendSseEmitter(response, vo, new SseEmitter());
-        return new SseEmitter();
+        SseEmitter emitter = new SseEmitter();
+        sendSseEmitter(response, vo, emitter);
+        return emitter;
     }
 
     @Wrap(disabled = true)
@@ -93,8 +95,9 @@ public class TalkController {
     public SseEmitter ask(@PathVariable("question") String question, HttpServletResponse response) {
 
         AskDTO vo = new AskDTO(question, 0.7, 10, null);
-        sendSseEmitter(response, vo, new SseEmitter());
-        return new SseEmitter();
+        SseEmitter emitter = new SseEmitter();
+        sendSseEmitter(response, vo, emitter);
+        return emitter;
     }
 
     private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter) {
@@ -102,6 +105,7 @@ public class TalkController {
         List<KnowledgeSectionVO> similarityData = getKnowledgeSectionDataList(vo);
 
         if (CollectionUtils.isEmpty(similarityData)) {
+            log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter));
         } else {
             ChatInfo chatInfo = getChatInfo(vo, response, emitter, similarityData);
@@ -142,12 +146,18 @@ public class TalkController {
 
     private void defaultAnswer(SseEmitter emitter) {
 
+        Random random = new Random();
         try {
+            emitter.send(SseVO.start());
             for (char c : DEFAULT_ANSWER.toCharArray()) {
-                emitter.send(SseVO.msg(String.valueOf(c)));
+                emitter.send(SseVO.msg(c));
+                Thread.sleep(random.nextInt(20) + 10);
             }
-        } catch (IOException e) {
+            emitter.send(SseVO.end());
+        } catch (Exception e) {
             throw new RuntimeException(e);
+        } finally {
+            emitter.complete();
         }
     }
 }
