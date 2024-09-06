@@ -34,6 +34,17 @@ public class KnowledgeController {
                 .list();
     }
 
+    @PostMapping("/addALiFiles")
+    @Operation(summary = "新增文件")
+    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
+
+        for (MultipartFile file : files) {
+            String fileId = aLiYunService.uploadFile(file);
+            knowledgeService.addALiFile(file.getOriginalFilename(), fileId);
+            Thread.sleep(6000);
+        }
+    }
+
     @PostMapping("/addALiFile")
     @Operation(summary = "新增文件")
     public void addALiFile(@RequestPart(name = "file") MultipartFile file) {
