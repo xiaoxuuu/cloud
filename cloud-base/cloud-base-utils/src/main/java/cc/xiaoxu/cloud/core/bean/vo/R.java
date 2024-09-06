@@ -19,10 +19,10 @@ public class R<T> {
     public static final int FAIL = 500;
 
     @Schema(name = "返回编码", example = "0")
-    public int respCode;
+    public int code;
 
     @Schema(name = "返回消息", example = "操作成功")
-    private String respMsg;
+    private String msg;
 
     @Schema(name = "响应参数 body")
     private T body;
@@ -35,9 +35,9 @@ public class R<T> {
      * @param rEnum 系统内置数据
      */
     public R(REnum rEnum) {
-        this.respMsg = rEnum.getIntroduction();
-        this.respCode = rEnum.getCode();
-        this.success = this.getRespCode() <= 19999;
+        this.msg = rEnum.getIntroduction();
+        this.code = rEnum.getCode();
+        this.success = this.getCode() <= 19999;
     }
 
     /**
@@ -79,7 +79,7 @@ public class R<T> {
     public static <T> R<T> fail(String msg) {
 
         R<T> respVo = new R<>(REnum.CUSTOM);
-        respVo.setRespMsg(msg);
+        respVo.setMsg(msg);
         return respVo;
     }
 
@@ -104,7 +104,7 @@ public class R<T> {
     public static <T> R<T> fail(REnum rEnum, String msg) {
 
         R<T> respVo = new R<>(rEnum);
-        respVo.setRespMsg(msg);
+        respVo.setMsg(msg);
         return respVo;
     }
 
