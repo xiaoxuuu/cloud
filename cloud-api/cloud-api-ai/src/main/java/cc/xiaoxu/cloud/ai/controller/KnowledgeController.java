@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.ai.controller;
 
+import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
@@ -12,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -21,6 +24,15 @@ public class KnowledgeController {
 
     private final ALiYunService aLiYunService;
     private final KnowledgeService knowledgeService;
+
+    @PostMapping("/list")
+    @Operation(summary = "列表查询")
+    public List<Knowledge> list() {
+
+        return knowledgeService.lambdaQuery()
+                .orderByDesc(Knowledge::getId)
+                .list();
+    }
 
     @PostMapping("/addALiFile")
     @Operation(summary = "新增文件")
