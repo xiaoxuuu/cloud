@@ -3,7 +3,10 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
+import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -36,5 +39,12 @@ public class KnowledgeSectionController {
     @Operation(summary = "知识库向量计算")
     public boolean calcVector(@Valid @RequestBody IdDTO vo) {
         return knowledgeSectionService.calcVector(vo);
+    }
+
+    @PostMapping("/page")
+    @Operation(summary = "知识库数据 - 分页")
+    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto) {
+
+        return knowledgeSectionService.pages(dto);
     }
 }
