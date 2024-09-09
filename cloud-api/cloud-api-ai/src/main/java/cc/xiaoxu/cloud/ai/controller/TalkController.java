@@ -9,7 +9,7 @@ import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
-import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
+import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +59,7 @@ public class TalkController {
     @Operation(summary = "提问")
     public String ask(@Valid @RequestBody AskDTO vo, HttpServletResponse response) {
 
-        List<KnowledgeSectionVO> similarityData = getKnowledgeSectionDataList(vo);
+        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo);
 
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
@@ -102,7 +102,7 @@ public class TalkController {
 
     private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter) {
 
-        List<KnowledgeSectionVO> similarityData = getKnowledgeSectionDataList(vo);
+        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo);
 
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
@@ -113,15 +113,15 @@ public class TalkController {
         }
     }
 
-    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter, List<KnowledgeSectionVO> similarityData) {
+    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData) {
 
         String distanceList = similarityData.stream()
-                .map(KnowledgeSectionVO::getDistance)
+                .map(KnowledgeSectionExpandVO::getDistance)
                 .map(String::toString)
                 .map(k -> k.length() < 6 ? k : k.substring(0, 5))
                 .collect(Collectors.joining(","));
         log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
-        String knowledgeList = similarityData.stream().map(KnowledgeSectionVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
+        String knowledgeList = similarityData.stream().map(KnowledgeSectionExpandVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
 
         // 提问
         AiKimiController.setResponseHeader(response);
@@ -132,7 +132,7 @@ public class TalkController {
                 .stream(emitter);
     }
 
-    private List<KnowledgeSectionVO> getKnowledgeSectionDataList(AskDTO vo) {
+    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo) {
 
         // 问题转为向量
         List<Double> vectorList = aLiYunService.vector(vo.getQuestion());

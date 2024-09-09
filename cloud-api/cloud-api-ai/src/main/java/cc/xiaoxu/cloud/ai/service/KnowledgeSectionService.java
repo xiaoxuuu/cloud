@@ -4,10 +4,14 @@ import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
+import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import com.alibaba.dashscope.embeddings.TextEmbeddingResultItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -102,5 +106,13 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
             }
         }
         return true;
+    }
+
+    public Page<KnowledgeSectionVO> pages(PageDTO dto) {
+
+        Page<KnowledgeSection> entityPage = lambdaQuery()
+                .page(PageUtils.getPageCondition(dto));
+
+        return PageUtils.getPage(entityPage, KnowledgeSectionVO.class);
     }
 }

@@ -2,10 +2,7 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomEventDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableEventDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.*;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
@@ -137,6 +134,14 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .eq(Knowledge::getId, knowledgeId)
                 .set(Knowledge::getModifyTime, new Date())
                 .set(Knowledge::getStatus, fileStatusEnum.getCode())
+                .update();
+    }
+
+    public void editState(KnowledgeEditStateDTO dto) {
+
+        lambdaUpdate()
+                .in(Knowledge::getId, dto.getIdList())
+                .set(Knowledge::getState, dto.getState())
                 .update();
     }
 }

@@ -91,6 +91,17 @@ public class PageUtils {
 
     public static <T> Page<T> getPageCondition(PageDTO dto) {
 
-        return new Page<T>().setCurrent(dto.getCurrent()).setSize(dto.getSize()).addOrder(dto.getOrders());
+        Page<T> page = new Page<>();
+        page.setSize(dto.getSize());
+        page.setCurrent(dto.getCurrent());
+        if (dto.getOrders() != null && !dto.getOrders().isEmpty()) {
+            page.addOrder(dto.getOrders());
+        }
+        return page;
+    }
+
+    public static <T> Page<T> getPageCondition(Long size, Long current) {
+
+        return new Page<T>().setCurrent(current).setSize(size);
     }
 }

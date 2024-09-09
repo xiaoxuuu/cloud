@@ -1,12 +1,13 @@
 package cc.xiaoxu.cloud.bean.enums;
 
+import cc.xiaoxu.cloud.core.utils.enums.inter.EnumDescInterface;
 import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum StateEnum implements EnumInterface<String> {
+public enum StateEnum implements EnumInterface<String>, EnumDescInterface {
 
     /**
      * 数据状态
@@ -18,4 +19,9 @@ public enum StateEnum implements EnumInterface<String> {
 
     private final String code;
     private final String introduction;
+
+    @Override
+    public String enhanceApiDesc() {
+        return enhanceApiDesc(name(), introduction);
+    }
 }
