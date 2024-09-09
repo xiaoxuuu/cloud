@@ -15,7 +15,7 @@ import java.util.Date;
 public class BaseVO {
 
     @Schema(description = "主键id")
-    private String id;
+    private Integer id;
 
     /**
      * {@link StateEnum StateEnum}
