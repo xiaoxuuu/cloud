@@ -113,6 +113,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         Page<KnowledgeSection> entityPage = lambdaQuery()
                 .page(PageUtils.getPageCondition(dto));
 
-        return PageUtils.getPage(entityPage, KnowledgeSectionVO.class);
+        Page<KnowledgeSectionVO> page = PageUtils.getPage(entityPage, KnowledgeSectionVO.class);
+        for (KnowledgeSectionVO record : page.getRecords()) {
+            record.setEmbedding(null);
+        }
+        return page;
     }
 }
