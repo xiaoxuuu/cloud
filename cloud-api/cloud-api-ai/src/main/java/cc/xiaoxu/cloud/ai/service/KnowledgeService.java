@@ -39,7 +39,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         knowledge.setName(fileName);
         knowledge.setThreePartyFileId(fileId);
         knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
-        knowledge.setState(StateEnum.ENABLE.getCode());
+        knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
         save(knowledge);
         updateFileUploadResult(knowledge);
@@ -85,6 +85,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                     .eq(Knowledge::getId, id)
                     .eq(Knowledge::getThreePartyFileId, fileId)
                     .set(Knowledge::getStatus, resultEnum.getCode())
+                    .set(Knowledge::getState, StateEnum.ENABLE.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
             return resultEnum == ALiFileIndexResultEnum.COMPLETED;
@@ -100,7 +101,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         knowledge.setName(dto.getTableName());
         knowledge.setThreePartyInfo(dto.getSql());
         knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
-        knowledge.setState(StateEnum.ENABLE.getCode());
+        knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
         save(knowledge);
 
@@ -128,7 +129,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         knowledge.setType(KnowledgeTypeEnum.CUSTOM.getCode());
         knowledge.setName(dto.getKnowledgeName());
         knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
-        knowledge.setState(StateEnum.ENABLE.getCode());
+        knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
         save(knowledge);
         return knowledge;

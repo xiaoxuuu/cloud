@@ -15,7 +15,9 @@ public enum StateEnum implements EnumInterface<String>, EnumDescInterface {
     ENABLE("E", "启用"),
     DELETE("D", "删除"),
     LOCK("L", "禁用"),
-    AUDITING("T", "审核");
+    AUDITING("T", "审核"),
+    PROGRESSING("P", "处理中"),
+    ;
 
     private final String code;
     private final String introduction;
