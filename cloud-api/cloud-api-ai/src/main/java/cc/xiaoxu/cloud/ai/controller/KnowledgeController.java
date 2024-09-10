@@ -7,7 +7,10 @@ import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
+import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -29,6 +32,7 @@ public class KnowledgeController {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
+    @Deprecated
     @PostMapping("/list")
     @Operation(summary = "知识库查询 - 列表")
     public List<Knowledge> list() {
@@ -78,5 +82,12 @@ public class KnowledgeController {
 
         knowledgeService.editState(dto);
         knowledgeSectionService.editState(dto);
+    }
+
+    @PostMapping("/page")
+    @Operation(summary = "知识库 - 分页")
+    public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto) {
+
+        return knowledgeService.pages(dto);
     }
 }
