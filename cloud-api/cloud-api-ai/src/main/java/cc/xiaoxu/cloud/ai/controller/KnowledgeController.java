@@ -6,6 +6,7 @@ import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ public class KnowledgeController {
     public List<Knowledge> list() {
 
         return knowledgeService.lambdaQuery()
+                .ne(Knowledge::getState, StateEnum.DELETE.getCode())
                 .orderByDesc(Knowledge::getId)
                 .list();
     }
