@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ALiFileUploadResultEnum implements EnumInterface<String>, EnumDescInterface {
 
-    INIT("upload_init", "初始化状态，等待上传中。", false),
+    INIT("upload_init", "等待上传", false),
     PARSING("upload_parsing", "上传文件中", false),
     PARSE_SUCCESS("upload_success", "上传文件完成", true),
     PARSE_FAILED("upload_failed", "上传文件失败", true),
