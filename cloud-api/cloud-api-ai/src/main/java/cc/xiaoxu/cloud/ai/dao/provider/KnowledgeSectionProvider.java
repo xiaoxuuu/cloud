@@ -28,7 +28,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
                 WHERE("knowledge_id IN (" + String.join(",", askDTO.getKnowledgeId().split(",")) + " )");
             }
             WHERE("embedding <=> " + embeddingStr + " < " + askDTO.getSimilarity());
-            WHERE("state = " + StateEnum.ENABLE.getCode() + "'");
+            WHERE("state = '" + StateEnum.ENABLE.getCode() + "'");
             ORDER_BY("embedding <=> " + embeddingStr + " ASC ");
             LIMIT(askDTO.getSimilarityContentNum());
         }};
