@@ -78,7 +78,7 @@ public class ALiFileStatusCheckTask {
 
                 knowledge.setStatus(FileStatusEnum.VECTOR_CALC.getCode());
                 knowledgeService.updateById(knowledge);
-                knowledgeSectionService.calcVector(new IdDTO(String.valueOf(knowledge.getId())));
+                knowledgeSectionService.calcVector(new IdDTO(knowledge.getId()));
 
                 knowledge.setStatus(FileStatusEnum.ALL_COMPLETED.getCode());
                 knowledgeService.updateById(knowledge);

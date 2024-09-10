@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class IdDTO {
 
     @Schema(description = "id")
-    private String id;
+    private Integer id;
 }
