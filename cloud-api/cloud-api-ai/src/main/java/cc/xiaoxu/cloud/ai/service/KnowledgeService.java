@@ -11,6 +11,7 @@ import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
+import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import com.aliyun.bailian20231229.models.DescribeFileResponseBody;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -167,5 +169,19 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
             record.setTypeName(EnumUtils.getByClass(record.getType(), KnowledgeTypeEnum.class).getIntroduction());
             record.setStatusName(EnumUtils.getByClass(record.getStatus(), FileStatusEnum.class).getIntroduction());
         }
+    }
+
+    public List<KnowledgeExpandVO> lists() {
+
+        List<Knowledge> knowledgeList = lambdaQuery()
+                .ne(Knowledge::getState, StateEnum.ENABLE.getCode())
+                .ne(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())
+                .orderByDesc(Knowledge::getId)
+                .list();
+
+        List<KnowledgeExpandVO> list = new ArrayList<>();
+        BeanUtils.populateList(knowledgeList, list, KnowledgeExpandVO.class);
+        addExpandInfo(list);
+        return list;
     }
 }

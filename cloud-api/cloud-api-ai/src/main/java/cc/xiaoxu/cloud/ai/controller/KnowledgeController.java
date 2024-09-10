@@ -1,6 +1,5 @@
 package cc.xiaoxu.cloud.ai.controller;
 
-import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
@@ -8,7 +7,6 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
-import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,15 +30,11 @@ public class KnowledgeController {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
-    @Deprecated
     @PostMapping("/list")
     @Operation(summary = "知识库查询 - 列表")
-    public List<Knowledge> list() {
+    public List<KnowledgeExpandVO> list() {
 
-        return knowledgeService.lambdaQuery()
-                .ne(Knowledge::getState, StateEnum.DELETE.getCode())
-                .orderByDesc(Knowledge::getId)
-                .list();
+        return knowledgeService.lists();
     }
 
     @PostMapping("/add_ali_files")
