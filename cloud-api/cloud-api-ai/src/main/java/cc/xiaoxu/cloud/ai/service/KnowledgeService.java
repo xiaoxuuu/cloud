@@ -174,8 +174,8 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public List<KnowledgeExpandVO> lists() {
 
         List<Knowledge> knowledgeList = lambdaQuery()
-                .ne(Knowledge::getState, StateEnum.ENABLE.getCode())
-                .ne(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())
+                .eq(Knowledge::getState, StateEnum.ENABLE.getCode())
+                .eq(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())
                 .orderByDesc(Knowledge::getId)
                 .list();
 
