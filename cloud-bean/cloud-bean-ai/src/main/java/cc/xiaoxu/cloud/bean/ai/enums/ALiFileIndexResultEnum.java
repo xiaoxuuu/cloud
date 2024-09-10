@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ALiFileIndexResultEnum implements EnumInterface<String>, EnumDescInterface {
 
-    PENDING("index_pending", "等待执行文件索引", true),
+    PENDING("index_pending", "等待索引", true),
     RUNNING("index_running", "文件索引中", false),
     COMPLETED("index_completed", "文件索引完成", true),
     FAILED("index_error", "文件索引失败", true),
