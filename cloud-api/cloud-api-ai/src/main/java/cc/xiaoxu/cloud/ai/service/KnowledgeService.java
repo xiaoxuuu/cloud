@@ -7,9 +7,13 @@ import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
+import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import com.aliyun.bailian20231229.models.DescribeFileResponseBody;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +21,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -143,5 +148,23 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .in(Knowledge::getId, dto.getIdList())
                 .set(Knowledge::getState, dto.getState())
                 .update();
+    }
+
+    public Page<KnowledgeExpandVO> pages(PageDTO dto) {
+
+        Page<Knowledge> entityPage = lambdaQuery()
+                .page(PageUtils.getPageCondition(dto));
+
+        Page<KnowledgeExpandVO> page = PageUtils.getPage(entityPage, KnowledgeExpandVO.class);
+        List<KnowledgeExpandVO> list = page.getRecords();
+        addExpandInfo(list);
+        return page;
+    }
+
+    private static void addExpandInfo(List<KnowledgeExpandVO> list) {
+        for (KnowledgeExpandVO record : list) {
+            record.setTypeName(EnumUtils.getByClass(record.getType(), KnowledgeTypeEnum.class).getCode());
+            record.setStatusName(EnumUtils.getByClass(record.getStatus(), FileStatusEnum.class).getCode());
+        }
     }
 }
