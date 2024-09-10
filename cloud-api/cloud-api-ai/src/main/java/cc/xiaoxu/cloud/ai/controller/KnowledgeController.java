@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
+import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
@@ -26,6 +27,7 @@ public class KnowledgeController {
 
     private final ALiYunService aLiYunService;
     private final KnowledgeService knowledgeService;
+    private final KnowledgeSectionService knowledgeSectionService;
 
     @PostMapping("/list")
     @Operation(summary = "知识库查询 - 列表")
@@ -75,5 +77,6 @@ public class KnowledgeController {
     public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto) {
 
         knowledgeService.editState(dto);
+        knowledgeSectionService.editState(dto);
     }
 }

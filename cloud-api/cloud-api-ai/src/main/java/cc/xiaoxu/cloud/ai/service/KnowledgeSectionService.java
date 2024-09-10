@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
@@ -118,5 +119,13 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
             record.setEmbedding(null);
         }
         return page;
+    }
+
+    public void editState(KnowledgeEditStateDTO dto) {
+
+        lambdaUpdate()
+                .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
+                .set(KnowledgeSection::getState, dto.getState())
+                .update();
     }
 }
