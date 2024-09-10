@@ -27,7 +27,7 @@ public class AddTableEvent {
 
         // 切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);
-        knowledgeSectionService.calcVector(new IdDTO(String.valueOf(dto.getKnowledgeId())));
+        knowledgeSectionService.calcVector(new IdDTO(dto.getKnowledgeId()));
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.ALL_COMPLETED);
     }
 }

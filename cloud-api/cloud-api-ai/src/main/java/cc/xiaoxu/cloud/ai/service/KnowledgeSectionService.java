@@ -92,7 +92,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
     public boolean calcVector(IdDTO dto) {
 
         List<KnowledgeSection> list = lambdaQuery()
-                .eq(KnowledgeSection::getKnowledgeId, Integer.parseInt(dto.getId()))
+                .eq(KnowledgeSection::getKnowledgeId, dto.getId())
                 .isNull(KnowledgeSection::getEmbedding)
                 .list();
         List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 25);

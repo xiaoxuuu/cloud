@@ -14,5 +14,5 @@ import java.util.List;
 public class IdsDTO {
 
     @Schema(description = "ids")
-    private List<String> idList;
+    private List<Integer> idList;
 }
