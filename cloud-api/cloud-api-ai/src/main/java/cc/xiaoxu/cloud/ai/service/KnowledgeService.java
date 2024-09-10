@@ -156,7 +156,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public Page<KnowledgeExpandVO> pages(PageDTO dto) {
 
         Page<Knowledge> entityPage = lambdaQuery()
-                .ne(Knowledge::getState, StateEnum.ENABLE.getCode())
+                .ne(Knowledge::getState, StateEnum.DELETE.getCode())
                 .page(PageUtils.getPageCondition(dto));
 
         Page<KnowledgeExpandVO> page = PageUtils.getPage(entityPage, KnowledgeExpandVO.class);
