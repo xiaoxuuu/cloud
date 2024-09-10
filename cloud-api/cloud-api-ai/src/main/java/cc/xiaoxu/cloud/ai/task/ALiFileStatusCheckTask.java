@@ -9,6 +9,7 @@ import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,7 @@ public class ALiFileStatusCheckTask {
                 knowledgeService.updateById(knowledge);
                 knowledgeSectionService.calcVector(new IdDTO(knowledge.getId()));
 
+                knowledge.setState(StateEnum.ENABLE.getCode());
                 knowledge.setStatus(FileStatusEnum.ALL_COMPLETED.getCode());
                 knowledgeService.updateById(knowledge);
             }
