@@ -53,7 +53,7 @@ public class TalkController {
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-    private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，建议咨询相关技术支持或参考官方文档进行操作";
+    private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
     @PostMapping(value = "/ask", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
