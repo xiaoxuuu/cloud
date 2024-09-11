@@ -34,6 +34,10 @@ public class SseVO<T> {
         return new SseVO<>(Type.NAME, t);
     }
 
+    public static <T> SseVO<T> paramMap(T t) {
+        return new SseVO<>(Type.PARAM_MAP, t);
+    }
+
     public static <T> SseVO<T> msg(T t) {
         return new SseVO<>(Type.MSG, t);
     }
@@ -49,6 +53,7 @@ public class SseVO<T> {
         START("START", "会话开始"),
         ID("ID", "标记本次对话id"),
         NAME("NAME", "本次对话名称"),
+        PARAM_MAP("PARAM_MAP", "参数 MAP"),
         MSG("MSG", "会话内容"),
         END("END", "会话结束"),
         ;
