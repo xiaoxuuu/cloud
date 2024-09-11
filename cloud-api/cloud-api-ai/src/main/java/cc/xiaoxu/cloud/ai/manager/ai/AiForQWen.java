@@ -92,7 +92,6 @@ public class AiForQWen {
             List<Message> messages = aiChatMessageDto.stream().map(k -> (Message) Message.builder().role(k.getRole()).content(k.getContent()).build()).toList();
             GenerationParam param = buildGenerationParam(messages, model, apiKey);
 
-            emitter.send(SseVO.start());
             // 处理回调
             String fullContent = streamCallWithCallback(gen, param, emitter);
             resultDTO.setResult(fullContent);

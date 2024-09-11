@@ -26,6 +26,10 @@
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-database</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-redis</artifactId>
+        </dependency>
 
         <!-- 阿里云百炼 SDK -->
         <dependency>

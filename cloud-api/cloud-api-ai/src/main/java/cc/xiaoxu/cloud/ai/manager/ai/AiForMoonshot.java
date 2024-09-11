@@ -130,7 +130,6 @@ public class AiForMoonshot {
             String line;
             StringBuilder stringBuilder = new StringBuilder();
             if (200 == statusCode) {
-                emitter.send(SseVO.start());
                 while ((line = reader.readLine()) != null) {
                     if ("data: [DONE]".equals(line)) {
                         break;
