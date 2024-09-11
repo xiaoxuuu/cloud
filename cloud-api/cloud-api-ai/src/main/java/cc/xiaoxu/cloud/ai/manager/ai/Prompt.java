@@ -53,5 +53,30 @@ public class Prompt {
                     """;
             return build(systemPrompt, userPrompt, map);
         }
+
+        /**
+         * 知识库问答
+         */
+        public static List<AiChatMessageDTO> v2(String knowledgeTitle, String question, String knowledgeData, String defaultAnswer) {
+
+            Map<String, String> map = Map.of("{knowledgeTitle}", knowledgeTitle, "{question}", question,
+                    "{knowledgeData}", knowledgeData, "{defaultAnswer}", defaultAnswer);
+            String systemPrompt = """
+                    你是个经验丰富的知识总结专家，我将给你一些有关于 {knowledgeTitle} 的知识列表，然后我会对你提问。请你从知识列表中总结答案，并回复
+                    要求：
+                    - 请使用简洁且专业的语言来回答问题。
+                    - 如果知识列表不包含问题的答案，请回答“{defaultAnswer}”。
+                    - 避免提及不属于知识列表中的知识。
+                    - 请保证答案与知识列表中描述的一致。
+                    - 请使用 Markdown 语法优化答案的格式。
+                    - 知识列表中的图片、链接地址和脚本语言请直接返回。
+                    - 请使用与问题相同的语言来回答。
+                    """;
+            String userPrompt = """
+                    问题：{question}
+                    知识列表：{knowledgeData}
+                    """;
+            return build(systemPrompt, userPrompt, map);
+        }
     }
 }
