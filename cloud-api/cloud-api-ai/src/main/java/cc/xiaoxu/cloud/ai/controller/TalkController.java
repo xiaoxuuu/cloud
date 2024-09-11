@@ -12,6 +12,7 @@ import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import cc.xiaoxu.cloud.core.cache.CacheService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -28,7 +29,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -52,6 +55,9 @@ public class TalkController {
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    @Resource
+    private CacheService cacheService;
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
@@ -100,6 +106,9 @@ public class TalkController {
         return emitter;
     }
 
+    private Integer count = 100;
+    private String countKey = "AI:COUNT";
+
     private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter) {
 
         List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo);
@@ -108,6 +117,18 @@ public class TalkController {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter));
         } else {
+            // 回答问题后扣减次数
+            Integer todayCount = cacheService.getCacheObject(countKey);
+            if (null == todayCount) {
+                todayCount = 0;
+            }
+            log.warn("当前使用次数：{}，总次数：{}", todayCount, count);
+            if (todayCount >= count) {
+                threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter, "没有可使用次数了哦"));
+                return;
+            }
+            todayCount++;
+            cacheService.setCacheObject(countKey, todayCount);
             ChatInfo chatInfo = getChatInfo(vo, response, emitter, similarityData);
             threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
         }
@@ -120,12 +141,21 @@ public class TalkController {
                 .map(String::toString)
                 .map(k -> k.length() < 6 ? k : k.substring(0, 5))
                 .collect(Collectors.joining(","));
+        try {
+            emitter.send(SseVO.start());
+            for (KnowledgeSectionExpandVO similarityDatum : similarityData) {
+                similarityDatum.setEmbedding(null);
+                emitter.send(SseVO.paramMap(Map.of("USE_DATA", similarityDatum)));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
         String knowledgeList = similarityData.stream().map(KnowledgeSectionExpandVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
 
         // 提问
         AiKimiController.setResponseHeader(response);
-        List<AiChatMessageDTO> ask = Prompt.Ask.v1("本地知识库", vo.getQuestion(), knowledgeList, DEFAULT_ANSWER);
+        List<AiChatMessageDTO> ask = Prompt.Ask.v2("本地知识库", vo.getQuestion(), knowledgeList, DEFAULT_ANSWER);
 
         return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
                 .apiKey(apiKey)
@@ -144,11 +174,15 @@ public class TalkController {
     }
 
     private void defaultAnswer(SseEmitter emitter) {
+        defaultAnswer(emitter, DEFAULT_ANSWER);
+    }
+
+    private void defaultAnswer(SseEmitter emitter, String answer) {
 
         Random random = new Random();
         try {
             emitter.send(SseVO.start());
-            for (char c : DEFAULT_ANSWER.toCharArray()) {
+            for (char c : answer.toCharArray()) {
                 emitter.send(SseVO.msg(c));
                 Thread.sleep(random.nextInt(20) + 10);
             }
