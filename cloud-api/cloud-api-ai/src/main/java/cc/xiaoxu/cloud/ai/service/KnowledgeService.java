@@ -168,7 +168,11 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     private static void addExpandInfo(List<KnowledgeExpandVO> list) {
         for (KnowledgeExpandVO record : list) {
             record.setTypeName(EnumUtils.getByClass(record.getType(), KnowledgeTypeEnum.class).getIntroduction());
-            record.setStatusName(EnumUtils.getByClass(record.getStatus(), FileStatusEnum.class).getIntroduction());
+            if (EnumUtils.getByClass(record.getState(), StateEnum.class) == StateEnum.PROGRESSING) {
+                record.setStatusName(EnumUtils.getByClass(record.getStatus(), FileStatusEnum.class).getIntroduction());
+            } else {
+                record.setStatusName(EnumUtils.getByClass(record.getState(), StateEnum.class).getIntroduction());
+            }
         }
     }
 
