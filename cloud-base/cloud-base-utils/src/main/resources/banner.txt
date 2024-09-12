@@ -4,6 +4,6 @@ ${AnsiColor.BLUE}┏┓    •
   ┛       ┛
 ${AnsiColor.BRIGHT_RED}${AnsiStyle.BOLD}Spring Boot Version: ${spring-boot.version}
 Application Name: ${spring.application.name}(${app.version})
-Port: ${server.port}
+Port: ${server.port}, Profile: ${spring.profiles.active}
 Package Time: ${time.package:Not Configured}
 Start Time: ${time.start:Not Configured}${AnsiStyle.NORMAL}
