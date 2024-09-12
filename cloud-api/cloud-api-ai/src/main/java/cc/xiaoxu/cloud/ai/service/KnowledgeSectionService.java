@@ -48,26 +48,26 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
             pageNum++;
         }
 
-        insertNewData(knowledge.getId(), readSectionList);
+        insertNewData(knowledge.getId(), readSectionList, knowledge.getTenant());
         return true;
     }
 
-    public boolean readTableSection(Integer knowledgeId, String sql) {
+    public boolean readTableSection(Integer knowledgeId, String sql, String tenant) {
 
         List<String> dataList = commonManager.getList(sql);
 
-        insertNewData(knowledgeId, dataList);
+        insertNewData(knowledgeId, dataList, tenant);
         return true;
     }
 
-    public boolean readCustomSection(Integer knowledgeId, String content) {
+    public boolean readCustomSection(Integer knowledgeId, String content, String tenant) {
 
-        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content);
+        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content, tenant);
         save(knowledgeSection);
         return true;
     }
 
-    private void insertNewData(Integer knowledgeId, List<String> dataList) {
+    private void insertNewData(Integer knowledgeId, List<String> dataList, String tenant) {
 
         log.info("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
@@ -75,13 +75,14 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
                 .remove();
         // 数据入库
-        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeId, k)).toList();
+        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeId, k, tenant)).toList();
         saveBatch(knowledgeSectionList, 1000);
     }
 
-    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content) {
+    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, String tenant) {
 
         KnowledgeSection knowledgeSection = new KnowledgeSection();
+        knowledgeSection.setTenant(tenant);
         knowledgeSection.setKnowledgeId(knowledgeId);
         knowledgeSection.setCutContent(content);
         knowledgeSection.setState(StateEnum.ENABLE.getCode());
