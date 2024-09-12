@@ -19,5 +19,5 @@ public interface KnowledgeSectionMapper extends BaseMapper<KnowledgeSection> {
     void updateEmbedding(@Param("embedding") String embedding, @Param("id") Integer id);
 
     @SelectProvider(type = KnowledgeSectionProvider.class, method = "getSimilarityData")
-    List<KnowledgeSectionExpandVO> getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO);
+    List<KnowledgeSectionExpandVO> getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO, @Param("tenant") String tenant);
 }

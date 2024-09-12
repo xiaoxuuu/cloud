@@ -16,7 +16,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
         return PROVIDER;
     }
 
-    public String getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO) {
+    public String getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO, @Param("tenant") String tenant) {
 
         String embeddingStr = "'" + embedding + "'";
 
@@ -29,6 +29,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
             }
             WHERE("embedding <=> " + embeddingStr + " < " + askDTO.getSimilarity());
             WHERE("state = '" + StateEnum.ENABLE.getCode() + "'");
+            WHERE("tenant = '" + tenant + "'");
             ORDER_BY("embedding <=> " + embeddingStr + " ASC ");
             LIMIT(askDTO.getSimilarityContentNum());
         }};

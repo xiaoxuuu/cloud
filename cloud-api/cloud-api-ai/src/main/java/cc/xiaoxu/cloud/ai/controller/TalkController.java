@@ -61,11 +61,12 @@ public class TalkController {
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
-    @PostMapping(value = "/ask", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/ask/{tenant}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
-    public String ask(@Valid @RequestBody AskDTO vo, HttpServletResponse response) {
+    public String ask(@Valid @RequestBody AskDTO vo, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
-        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo);
+        TenantController.checkTenantThrow(tenant);
+        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant);
 
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
@@ -83,42 +84,44 @@ public class TalkController {
             @Parameter(required = true, name = "similarityContentNum", description = "引用分段数，取最相似的前 n 条", in = ParameterIn.PATH)
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{knowledgeId}/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{tenant}/{knowledgeId}/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 全参数")
     public SseEmitter ask(@PathVariable("knowledgeId") String knowledgeId, @PathVariable("similarity") Double similarity,
                           @PathVariable("similarityContentNum") Integer similarityContentNum,
-                          @PathVariable("question") String question, HttpServletResponse response) {
+                          @PathVariable("question") String question, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
+        TenantController.checkTenantThrow(tenant);
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
-        sendSseEmitter(response, vo, emitter);
+        sendSseEmitter(response, vo, emitter, tenant);
         return emitter;
     }
 
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{tenant}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 简洁参数")
-    public SseEmitter ask(@PathVariable("question") String question, HttpServletResponse response) {
+    public SseEmitter ask(@PathVariable("question") String question, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
+        TenantController.checkTenantThrow(tenant);
         AskDTO vo = new AskDTO(question, 0.7, 10, null);
         SseEmitter emitter = new SseEmitter();
-        sendSseEmitter(response, vo, emitter);
+        sendSseEmitter(response, vo, emitter, tenant);
         return emitter;
     }
 
     private Integer count = 100;
-    private String countKey = "AI:COUNT";
+    private String countKey = "AI:COUNT:";
 
-    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter) {
+    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter, String tenant) {
 
-        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo);
+        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant);
 
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter));
         } else {
             // 回答问题后扣减次数
-            Integer todayCount = cacheService.getCacheObject(countKey);
+            Integer todayCount = cacheService.getCacheObject(countKey + tenant);
             if (null == todayCount) {
                 todayCount = 0;
             }
@@ -128,7 +131,7 @@ public class TalkController {
                 return;
             }
             todayCount++;
-            cacheService.setCacheObject(countKey, todayCount);
+            cacheService.setCacheObject(countKey + tenant, todayCount);
             ChatInfo chatInfo = getChatInfo(vo, response, emitter, similarityData);
             threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
         }
@@ -151,7 +154,9 @@ public class TalkController {
             throw new RuntimeException(e);
         }
         log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
-        String knowledgeList = similarityData.stream().map(KnowledgeSectionExpandVO::getCutContent).collect(Collectors.joining(System.lineSeparator()));
+        String knowledgeList = similarityData.stream()
+                .map(KnowledgeSectionExpandVO::getCutContent)
+                .collect(Collectors.joining(System.lineSeparator()));
 
         // 提问
         AiKimiController.setResponseHeader(response);
@@ -162,7 +167,7 @@ public class TalkController {
                 .stream(emitter);
     }
 
-    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo) {
+    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String tenant) {
 
         // 问题转为向量
         List<Double> vectorList = aLiYunService.vector(vo.getQuestion());
@@ -170,7 +175,8 @@ public class TalkController {
         log.info("向量计算完成，维度：{}", vectorList.size());
 
         // 取出相似度数据
-        return knowledgeSectionService.getBaseMapper().getSimilarityData(embedding, vo);
+        return knowledgeSectionService.getBaseMapper()
+                .getSimilarityData(embedding, vo, tenant);
     }
 
     private void defaultAnswer(SseEmitter emitter) {

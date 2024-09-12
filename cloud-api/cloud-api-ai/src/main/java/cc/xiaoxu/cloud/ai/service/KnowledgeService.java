@@ -34,9 +34,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     private final ALiYunService aLiYunService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void addALiFile(String fileName, String fileId) {
+    public void addALiFile(String fileName, String fileId, String tenant) {
 
         Knowledge knowledge = new Knowledge();
+        knowledge.setTenant(tenant);
         knowledge.setType(KnowledgeTypeEnum.ALi_FILE.getCode());
         knowledge.setName(fileName);
         knowledge.setThreePartyFileId(fileId);
@@ -96,9 +97,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     }
 
 
-    public void addTable(KnowledgeAddTableDTO dto) {
+    public void addTable(KnowledgeAddTableDTO dto, String tenant) {
 
         Knowledge knowledge = new Knowledge();
+        knowledge.setTenant(tenant);
         knowledge.setType(KnowledgeTypeEnum.TABLE.getCode());
         knowledge.setName(dto.getTableName());
         knowledge.setThreePartyInfo(dto.getSql());
@@ -111,23 +113,25 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId()));
     }
 
-    public void addCustom(KnowledgeAddCustomDTO dto) {
+    public void addCustom(KnowledgeAddCustomDTO dto, String tenant) {
 
         Knowledge knowledge = lambdaQuery()
+                .eq(Knowledge::getTenant, tenant)
                 .eq(Knowledge::getType, KnowledgeTypeEnum.CUSTOM.getCode())
                 .eq(Knowledge::getName, dto.getKnowledgeName())
                 .one();
         if (null == knowledge) {
-            knowledge = createCustomData(dto);
+            knowledge = createCustomData(dto, tenant);
         }
 
         // 切片数据
         applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId()));
     }
 
-    private Knowledge createCustomData(KnowledgeAddCustomDTO dto) {
+    private Knowledge createCustomData(KnowledgeAddCustomDTO dto, String tenant) {
 
         Knowledge knowledge = new Knowledge();
+        knowledge.setTenant(tenant);
         knowledge.setType(KnowledgeTypeEnum.CUSTOM.getCode());
         knowledge.setName(dto.getKnowledgeName());
         knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
@@ -145,17 +149,19 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .update();
     }
 
-    public void editState(KnowledgeEditStateDTO dto) {
+    public void editState(KnowledgeEditStateDTO dto, String tenant) {
 
         lambdaUpdate()
+                .eq(Knowledge::getTenant, tenant)
                 .in(Knowledge::getId, dto.getIdList())
                 .set(Knowledge::getState, dto.getState())
                 .update();
     }
 
-    public Page<KnowledgeExpandVO> pages(PageDTO dto) {
+    public Page<KnowledgeExpandVO> pages(PageDTO dto, String tenant) {
 
         Page<Knowledge> entityPage = lambdaQuery()
+                .eq(Knowledge::getTenant, tenant)
                 .ne(Knowledge::getState, StateEnum.DELETE.getCode())
                 .page(PageUtils.getPageCondition(dto));
 
@@ -176,9 +182,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         }
     }
 
-    public List<KnowledgeExpandVO> lists() {
+    public List<KnowledgeExpandVO> lists(String tenant) {
 
         List<Knowledge> knowledgeList = lambdaQuery()
+                .eq(Knowledge::getTenant, tenant)
                 .eq(Knowledge::getState, StateEnum.ENABLE.getCode())
                 .eq(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())
                 .orderByDesc(Knowledge::getId)

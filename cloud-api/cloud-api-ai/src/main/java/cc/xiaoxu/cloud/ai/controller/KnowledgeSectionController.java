@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -41,10 +38,11 @@ public class KnowledgeSectionController {
         return knowledgeSectionService.calcVector(vo);
     }
 
-    @PostMapping("/page")
+    @PostMapping("/page/{tenant}")
     @Operation(summary = "知识库数据 - 分页")
-    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto) {
+    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
 
-        return knowledgeSectionService.pages(dto);
+        TenantController.checkTenantThrow(tenant);
+        return knowledgeSectionService.pages(dto, tenant);
     }
 }
