@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
@@ -23,6 +24,7 @@ public class KnowledgeSectionController {
 
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
+    private final TenantService tenantService;
 
     @PostMapping("/rebuild_section")
     @Operation(summary = "重新构建文件切片")
@@ -42,7 +44,7 @@ public class KnowledgeSectionController {
     @Operation(summary = "知识库数据 - 分页")
     public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
 
-        TenantController.checkTenantThrow(tenant);
+        tenantService.checkTenantThrow(tenant);
         return knowledgeSectionService.pages(dto, tenant);
     }
 }
