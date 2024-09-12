@@ -110,7 +110,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         save(knowledge);
 
         // 使用事件异步处理
-        applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId()));
+        applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId(), tenant));
     }
 
     public void addCustom(KnowledgeAddCustomDTO dto, String tenant) {
@@ -125,7 +125,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         }
 
         // 切片数据
-        applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId()));
+        applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId(), tenant));
     }
 
     private Knowledge createCustomData(KnowledgeAddCustomDTO dto, String tenant) {
