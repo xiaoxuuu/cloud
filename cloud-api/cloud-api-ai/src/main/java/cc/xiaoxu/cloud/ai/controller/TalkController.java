@@ -5,6 +5,7 @@ import cc.xiaoxu.cloud.ai.manager.ChatInfo;
 import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
+import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
@@ -59,13 +60,16 @@ public class TalkController {
     @Resource
     private CacheService cacheService;
 
+    @Resource
+    private TenantService tenantService;
+
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
     @PostMapping(value = "/ask/{tenant}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
     public String ask(@Valid @RequestBody AskDTO vo, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
-        TenantController.checkTenantThrow(tenant);
+        tenantService.checkTenantThrow(tenant);
         List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant);
 
         if (CollectionUtils.isEmpty(similarityData)) {
@@ -90,7 +94,7 @@ public class TalkController {
                           @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("question") String question, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
-        TenantController.checkTenantThrow(tenant);
+        tenantService.checkTenantThrow(tenant);
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
         sendSseEmitter(response, vo, emitter, tenant);
@@ -102,7 +106,7 @@ public class TalkController {
     @Operation(summary = "提问 - 简洁参数")
     public SseEmitter ask(@PathVariable("question") String question, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
-        TenantController.checkTenantThrow(tenant);
+        tenantService.checkTenantThrow(tenant);
         AskDTO vo = new AskDTO(question, 0.7, 10, null);
         SseEmitter emitter = new SseEmitter();
         sendSseEmitter(response, vo, emitter, tenant);
