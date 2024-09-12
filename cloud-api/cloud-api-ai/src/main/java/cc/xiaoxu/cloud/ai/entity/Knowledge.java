@@ -20,6 +20,9 @@ public class Knowledge extends BaseEntityForPostgres {
     @Schema(description = "资源类型：文件、数据表、自定义分类")
     private String type;
 
+    @Schema(description = "租户")
+    private String tenant;
+
     @Schema(description = "名称")
     private String name;
 

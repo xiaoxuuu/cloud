@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS "t_knowledge";
 CREATE TABLE t_knowledge
 (
     id                  SERIAL PRIMARY KEY,
+    tenant VARCHAR(8),
     type                VARCHAR(8),
     name                VARCHAR(64),
     three_party_file_id VARCHAR(64),
@@ -16,6 +17,7 @@ CREATE TABLE t_knowledge
 );
 COMMENT ON TABLE t_knowledge IS '知识库表';
 COMMENT ON COLUMN t_knowledge.id IS '主键';
+COMMENT ON COLUMN t_knowledge.tenant IS '租户';
 COMMENT ON COLUMN t_knowledge.type IS '资源类型：文件、数据表、自定义分类';
 COMMENT ON COLUMN t_knowledge.name IS '名称';
 COMMENT ON COLUMN t_knowledge.three_party_file_id IS '三方平台文件 id';
@@ -33,6 +35,7 @@ CREATE TABLE t_knowledge_section
 (
     id           SERIAL PRIMARY KEY,
     knowledge_id INT        NOT NULL,
+    tenant VARCHAR(8),
     cut_content  TEXT,
     embedding    vector(1536),
     state        VARCHAR(1) NOT NULL,
@@ -45,6 +48,7 @@ CREATE TABLE t_knowledge_section
 COMMENT ON TABLE t_knowledge_section IS '知识库数据切片';
 COMMENT ON COLUMN t_knowledge_section.id IS '主键';
 COMMENT ON COLUMN t_knowledge_section.knowledge_id IS '知识id';
+COMMENT ON COLUMN t_knowledge_section.tenant IS '租户';
 COMMENT ON COLUMN t_knowledge_section.cut_content IS '知识切片内容';
 COMMENT ON COLUMN t_knowledge_section.embedding IS '知识切片向量，1536 维';
 COMMENT ON COLUMN t_knowledge_section.state IS '状态';

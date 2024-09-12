@@ -109,9 +109,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return true;
     }
 
-    public Page<KnowledgeSectionVO> pages(PageDTO dto) {
+    public Page<KnowledgeSectionVO> pages(PageDTO dto, String tenant) {
 
         Page<KnowledgeSection> entityPage = lambdaQuery()
+                .eq(KnowledgeSection::getTenant, tenant)
                 .page(PageUtils.getPageCondition(dto));
 
         Page<KnowledgeSectionVO> page = PageUtils.getPage(entityPage, KnowledgeSectionVO.class);
@@ -121,9 +122,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return page;
     }
 
-    public void editState(KnowledgeEditStateDTO dto) {
+    public void editState(KnowledgeEditStateDTO dto, String tenant) {
 
         lambdaUpdate()
+                .eq(KnowledgeSection::getTenant, tenant)
                 .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
                 .set(KnowledgeSection::getState, dto.getState())
                 .update();

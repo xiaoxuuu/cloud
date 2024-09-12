@@ -30,58 +30,65 @@ public class KnowledgeController {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
-    @PostMapping("/list")
+    @PostMapping("/list/{tenant}")
     @Operation(summary = "知识库查询 - 列表")
-    public List<KnowledgeExpandVO> list() {
+    public List<KnowledgeExpandVO> list(@PathVariable("tenant") String tenant) {
 
-        return knowledgeService.lists();
+        TenantController.checkTenantThrow(tenant);
+        return knowledgeService.lists(tenant);
     }
 
-    @PostMapping("/add_ali_files")
+    @PostMapping("/add_ali_files/{tenant}")
     @Operation(summary = "新增知识库 - 文件批量")
-    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
+    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
 
+        TenantController.checkTenantThrow(tenant);
         for (MultipartFile file : files) {
             String fileId = aLiYunService.uploadFile(file);
-            knowledgeService.addALiFile(file.getOriginalFilename(), fileId);
+            knowledgeService.addALiFile(file.getOriginalFilename(), fileId, tenant);
             Thread.sleep(6000);
         }
     }
 
-    @PostMapping("/add_ali_file")
+    @PostMapping("/add_ali_file/{tenant}")
     @Operation(summary = "新增知识库 - 文件")
-    public void addALiFile(@RequestPart(name = "file") MultipartFile file) {
+    public void addALiFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("tenant") String tenant) {
 
+        TenantController.checkTenantThrow(tenant);
         String fileId = aLiYunService.uploadFile(file);
-        knowledgeService.addALiFile(file.getOriginalFilename(), fileId);
+        knowledgeService.addALiFile(file.getOriginalFilename(), fileId, tenant);
     }
 
-    @PostMapping("/add_table")
+    @PostMapping("/add_table/{tenant}")
     @Operation(summary = "新增知识库 - 数据表")
-    public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
+    public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto, @PathVariable("tenant") String tenant) {
 
-        knowledgeService.addTable(dto);
+        TenantController.checkTenantThrow(tenant);
+        knowledgeService.addTable(dto, tenant);
     }
 
-    @PostMapping("/add_custom")
+    @PostMapping("/add_custom/{tenant}")
     @Operation(summary = "新增知识库 - 自定义数据")
-    public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto) {
+    public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto, @PathVariable("tenant") String tenant) {
 
-        knowledgeService.addCustom(dto);
+        TenantController.checkTenantThrow(tenant);
+        knowledgeService.addCustom(dto, tenant);
     }
 
-    @PostMapping("/edit_state")
+    @PostMapping("/edit_state/{tenant}")
     @Operation(summary = "删除知识库")
-    public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto) {
+    public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto, @PathVariable("tenant") String tenant) {
 
-        knowledgeService.editState(dto);
-        knowledgeSectionService.editState(dto);
+        TenantController.checkTenantThrow(tenant);
+        knowledgeService.editState(dto, tenant);
+        knowledgeSectionService.editState(dto, tenant);
     }
 
-    @PostMapping("/page")
+    @PostMapping("/page/{tenant}")
     @Operation(summary = "知识库 - 分页")
-    public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto) {
+    public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
 
-        return knowledgeService.pages(dto);
+        TenantController.checkTenantThrow(tenant);
+        return knowledgeService.pages(dto, tenant);
     }
 }
