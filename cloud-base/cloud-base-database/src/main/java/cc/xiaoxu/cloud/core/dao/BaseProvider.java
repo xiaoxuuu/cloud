@@ -149,15 +149,6 @@ public class BaseProvider<T> {
         sql.WHERE(getTableSuffix() + "." + condition);
     }
 
-    public static List<OrderItem> defaultSort() {
-        List<OrderItem> orderList = new ArrayList<>();
-        OrderItem orderItem = new OrderItem();
-        orderItem.setAsc(false);
-        orderItem.setColumn("id");
-        orderList.add(orderItem);
-        return orderList;
-    }
-
     public void sort(List<OrderItem> orderList, List<BaseProvider<? extends BaseEntity>> baseProviderList, SQL sql) {
         Map<String, BaseProvider<? extends BaseEntity>> map = new HashMap<>();
         for (int i = baseProviderList.size() - 1; i >= 0; i--) {
@@ -167,7 +158,7 @@ public class BaseProvider<T> {
             }
         }
         if (CollectionUtils.isEmpty(orderList)) {
-            orderList = defaultSort();
+            orderList = ProviderUtils.getDefaultSort();
         }
         for (OrderItem orderItem : orderList) {
             String column = orderItem.getColumn();
