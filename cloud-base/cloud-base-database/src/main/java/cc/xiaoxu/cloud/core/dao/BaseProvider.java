@@ -168,4 +168,15 @@ public class BaseProvider<T> {
             sql.ORDER_BY(column + ProviderUtils.asc(orderItem.isAsc()));
         }
     }
+
+    public void like(String column, String data, SQL sql) {
+        like(true, column, data, sql);
+    }
+
+    public void like(boolean use, String column, String data, SQL sql) {
+        if (!use) {
+            return;
+        }
+        sql.WHERE(getTablePrefix() + "." + column + " LIKE '%" + data + "%'");
+    }
 }
