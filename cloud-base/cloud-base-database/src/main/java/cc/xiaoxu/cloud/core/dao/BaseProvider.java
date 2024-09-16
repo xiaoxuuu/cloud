@@ -12,6 +12,7 @@ import org.apache.ibatis.jdbc.SQL;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BaseProvider<T> {
 
@@ -190,5 +191,22 @@ public class BaseProvider<T> {
             return;
         }
         sql.WHERE(getTablePrefix() + "." + column + " = '" + data + "'");
+    }
+
+
+    public void in(String column, List<?> dataList, SQL sql) {
+        in(true, getTablePrefix(), column, dataList, sql);
+    }
+
+    public void in(boolean use, String column, List<?> dataList, SQL sql) {
+        in(use, getTablePrefix(), column, dataList, sql);
+    }
+
+    public void in(boolean use, String table, String column, List<?> dataList, SQL sql) {
+        if (!use) {
+            return;
+        }
+        String data = dataList.stream().map(k -> "'" + k + "'").collect(Collectors.joining(","));
+        sql.WHERE(table + "." + column + " IN(" + data + ") ");
     }
 }
