@@ -179,4 +179,16 @@ public class BaseProvider<T> {
         }
         sql.WHERE(getTablePrefix() + "." + column + " LIKE '%" + data + "%'");
     }
+
+
+    public void eq(String column, String data, SQL sql) {
+        eq(true, column, data, sql);
+    }
+
+    public void eq(boolean use, String column, String data, SQL sql) {
+        if (!use) {
+            return;
+        }
+        sql.WHERE(getTablePrefix() + "." + column + " = '" + data + "'");
+    }
 }
