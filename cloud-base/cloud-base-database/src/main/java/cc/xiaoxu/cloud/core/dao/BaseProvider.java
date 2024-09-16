@@ -15,7 +15,7 @@ import java.util.*;
 
 public class BaseProvider<T> {
 
-    private static final String TABLE_SUFFIX = "suffix_";
+    private static final String TABLE_PREFIX = "suffix_";
 
     private final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(getClass(), BaseProvider.class);
 
@@ -36,9 +36,9 @@ public class BaseProvider<T> {
         return annotation.value();
     }
 
-    public String getTableSuffix() {
+    public String getTablePrefix() {
 
-        return TABLE_SUFFIX + getTableName();
+        return TABLE_PREFIX + getTableName();
     }
 
     public Map<String, String> getFieldMap() {
@@ -122,13 +122,13 @@ public class BaseProvider<T> {
             if (excludeFieldSet.contains(entry.getValue())) {
                 continue;
             }
-            sql.SELECT(baseProvider.getTableSuffix() + ".`" + entry.getValue() + "` AS `" + entry.getKey() + "`");
+            sql.SELECT(baseProvider.getTablePrefix() + ".`" + entry.getValue() + "` AS `" + entry.getKey() + "`");
         }
     }
 
     public void from(SQL sql) {
 
-        sql.FROM(getTableName() + " " + getTableSuffix());
+        sql.FROM(getTableName() + " " + getTablePrefix());
     }
 
     /**
@@ -141,12 +141,12 @@ public class BaseProvider<T> {
     public <M> void join(SQL sql, BaseProvider<M> baseProvider, Set<String> excludeFieldSet, String sourceColumnUnderline, String targetColumnUnderline) {
 
         select(sql, excludeFieldSet, baseProvider);
-        sql.LEFT_OUTER_JOIN(baseProvider.getTableName() + " " + baseProvider.getTableSuffix() + " ON " + baseProvider.getTableSuffix() + "." + targetColumnUnderline + " = " + getTableSuffix() + "." + sourceColumnUnderline);
+        sql.LEFT_OUTER_JOIN(baseProvider.getTableName() + " " + baseProvider.getTablePrefix() + " ON " + baseProvider.getTablePrefix() + "." + targetColumnUnderline + " = " + getTablePrefix() + "." + sourceColumnUnderline);
     }
 
     public void where(SQL sql, String condition) {
 
-        sql.WHERE(getTableSuffix() + "." + condition);
+        sql.WHERE(getTablePrefix() + "." + condition);
     }
 
     public void sort(List<OrderItem> orderList, List<BaseProvider<? extends BaseEntity>> baseProviderList, SQL sql) {
