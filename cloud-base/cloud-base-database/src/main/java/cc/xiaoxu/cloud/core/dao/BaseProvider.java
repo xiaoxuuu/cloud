@@ -15,7 +15,7 @@ import java.util.*;
 
 public class BaseProvider<T> {
 
-    private static final String TABLE_PREFIX = "suffix_";
+    private static final String TABLE_PREFIX = "prefix_";
 
     private final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(getClass(), BaseProvider.class);
 
