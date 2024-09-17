@@ -217,5 +217,12 @@ public class BaseProvider<T> {
         sql.WHERE(table + "." + column + " >= '" + data + "'");
     }
 
+    public void lessThan(boolean use, String column, String data, String table, SQL sql) {
+        if (!use) {
+            return;
+        }
+        sql.WHERE(table + "." + column + " <= '" + data + "'");
+    }
+
 
 }
