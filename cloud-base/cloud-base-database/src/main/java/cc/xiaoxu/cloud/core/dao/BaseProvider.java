@@ -209,4 +209,13 @@ public class BaseProvider<T> {
         String data = dataList.stream().map(k -> "'" + k + "'").collect(Collectors.joining(","));
         sql.WHERE(table + "." + column + " IN(" + data + ") ");
     }
+
+    public void moreThan(boolean use, String column, String data, String table, SQL sql) {
+        if (!use) {
+            return;
+        }
+        sql.WHERE(table + "." + column + " >= '" + data + "'");
+    }
+
+
 }
