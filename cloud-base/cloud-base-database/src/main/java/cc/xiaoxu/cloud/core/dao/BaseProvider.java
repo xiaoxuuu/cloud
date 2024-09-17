@@ -6,9 +6,13 @@ import cc.xiaoxu.cloud.core.utils.text.ChartUtils;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.jdbc.SQL;
+import org.apache.ibatis.reflection.property.PropertyNamer;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -224,5 +228,12 @@ public class BaseProvider<T> {
         sql.WHERE(table + "." + column + " <= '" + data + "'");
     }
 
+    public void test(SFunction<T, ?> column) {
+        System.out.println(getColumnCache(column));
+    }
 
+    public String getColumnCache(SFunction<T, ?> column) {
+        LambdaMeta meta = LambdaUtils.extract(column);
+        return PropertyNamer.methodToProperty(meta.getImplMethodName());
+    }
 }
