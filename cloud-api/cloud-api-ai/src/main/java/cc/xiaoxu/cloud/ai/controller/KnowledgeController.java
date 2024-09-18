@@ -8,7 +8,7 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
-import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.bean.dto.PageDTO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
