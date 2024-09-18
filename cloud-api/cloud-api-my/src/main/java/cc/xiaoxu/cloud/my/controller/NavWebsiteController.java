@@ -31,6 +31,14 @@ public class NavWebsiteController {
         return navWebsiteService.search(vo);
     }
 
+    @Operation(summary = "分页", description = "分页查询")
+    @PostMapping("/page")
+    public @ResponseBody
+    List<NavWebsiteShowVO> page(@RequestBody NavWebsiteSearchVO vo) {
+
+        return navWebsiteService.search(vo);
+    }
+
     @Operation(summary = "添加访问次数", description = "添加访问次数")
     @PostMapping("/add-visit-num")
     public @ResponseBody

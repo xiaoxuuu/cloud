@@ -1,9 +1,10 @@
 package cc.xiaoxu.cloud.core.utils;
 
-import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.stream.Collectors;
  * @since 2024/3/20 09:30
  */
 public class PageUtils {
-
 
     /**
      * 禁止实例化
@@ -95,7 +95,7 @@ public class PageUtils {
         page.setSize(dto.getSize());
         page.setCurrent(dto.getCurrent());
         if (dto.getOrders() != null && !dto.getOrders().isEmpty()) {
-            page.addOrder(dto.getOrders());
+            page.addOrder(dto.getOrders().stream().map(k -> k.isAsc() ? OrderItem.asc(k.getColumn()) : OrderItem.desc(k.getColumn())).toList());
         }
         return page;
     }

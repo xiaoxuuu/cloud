@@ -1,6 +1,5 @@
-package cc.xiaoxu.cloud.core.bean.dto;
+package cc.xiaoxu.cloud.bean.dto;
 
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.ToString;
@@ -21,5 +20,5 @@ public class PageDTO {
      * 排序 传入排序字段以及正序倒序
      */
     @Schema(title = "排序")
-    private List<OrderItem> orders;
+    private List<OrderItemDTO> orders;
 }

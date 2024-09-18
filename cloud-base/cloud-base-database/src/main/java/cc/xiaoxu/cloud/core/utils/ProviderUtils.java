@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.core.utils;
 
-import cc.xiaoxu.cloud.core.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.bean.dto.OrderItemDTO;
+import cc.xiaoxu.cloud.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.core.dao.BaseProvider;
 import cc.xiaoxu.cloud.core.utils.text.ChartUtils;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -151,11 +152,11 @@ public class ProviderUtils {
     public static void appendDefaultSort(PageDTO dto) {
 
         if (CollectionUtils.isEmpty(dto.getOrders())) {
-            dto.setOrders(getDefaultSort());
+            dto.setOrders(OrderItemDTO.defaultSort());
         } else {
             if (dto.getOrders().size() == 1) {
                 if (StringUtils.isEmpty(dto.getOrders().get(0).getColumn())) {
-                    dto.setOrders(getDefaultSort());
+                    dto.setOrders(OrderItemDTO.defaultSort());
                 }
             }
         }
