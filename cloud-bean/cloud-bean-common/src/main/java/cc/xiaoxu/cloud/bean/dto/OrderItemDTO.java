@@ -20,7 +20,7 @@ public class OrderItemDTO {
     @Schema(description = "是否正序排列，默认 true")
     private boolean asc = true;
 
-    public static List<OrderItemDTO> defaultSort() {
+    public static List<OrderItemDTO> getDefaultSort() {
         return List.of(new OrderItemDTO("id", false));
     }
 }

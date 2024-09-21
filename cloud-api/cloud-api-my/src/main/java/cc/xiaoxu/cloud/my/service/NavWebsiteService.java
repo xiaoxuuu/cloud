@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.service;
 
+import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
@@ -9,6 +10,7 @@ import cc.xiaoxu.cloud.my.dao.NavWebsiteMapper;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.Setter;
@@ -156,5 +158,11 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
             }
         }
         this.baseMapper.updateNum(Integer.parseInt(vo.getId()));
+    }
+
+    public Page<NavWebsiteShowVO> pages(NavWebsitePageDTO dto) {
+
+        Page<NavWebsite> entityPage = getBaseMapper().pages(dto, new Page<>(dto.getCurrent(), dto.getSize()));
+        return null;
     }
 }

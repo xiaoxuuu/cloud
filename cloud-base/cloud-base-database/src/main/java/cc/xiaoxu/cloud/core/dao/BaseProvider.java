@@ -1,11 +1,11 @@
 package cc.xiaoxu.cloud.core.dao;
 
+import cc.xiaoxu.cloud.bean.dto.OrderItemDTO;
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import cc.xiaoxu.cloud.core.utils.ProviderUtils;
 import cc.xiaoxu.cloud.core.utils.text.ChartUtils;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
@@ -154,7 +154,7 @@ public class BaseProvider<T> {
         sql.WHERE(getTablePrefix() + "." + condition);
     }
 
-    public void sort(List<OrderItem> orderList, List<BaseProvider<? extends BaseEntity>> baseProviderList, SQL sql) {
+    public void sort(List<OrderItemDTO> orderList, List<BaseProvider<? extends BaseEntity>> baseProviderList, SQL sql) {
         Map<String, BaseProvider<? extends BaseEntity>> map = new HashMap<>();
         for (int i = baseProviderList.size() - 1; i >= 0; i--) {
             BaseProvider<? extends BaseEntity> baseProvider = baseProviderList.get(i);
@@ -163,9 +163,9 @@ public class BaseProvider<T> {
             }
         }
         if (CollectionUtils.isEmpty(orderList)) {
-            orderList = ProviderUtils.getDefaultSort();
+            orderList = OrderItemDTO.getDefaultSort();
         }
-        for (OrderItem orderItem : orderList) {
+        for (OrderItemDTO orderItem : orderList) {
             String column = orderItem.getColumn();
             if (!map.containsKey(column)) {
                 continue;
@@ -185,6 +185,9 @@ public class BaseProvider<T> {
         sql.WHERE(getTablePrefix() + "." + column + " LIKE '%" + data + "%'");
     }
 
+    public void isNotNull(String table, String column, SQL sql) {
+        sql.WHERE(table + "." + column + " IS NOT NULL ");
+    }
 
     public void eq(String column, String data, SQL sql) {
         eq(true, column, data, sql);

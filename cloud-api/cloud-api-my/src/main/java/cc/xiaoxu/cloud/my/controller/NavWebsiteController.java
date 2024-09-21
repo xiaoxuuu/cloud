@@ -1,10 +1,12 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -34,9 +36,9 @@ public class NavWebsiteController {
     @Operation(summary = "分页", description = "分页查询")
     @PostMapping("/page")
     public @ResponseBody
-    List<NavWebsiteShowVO> page(@RequestBody NavWebsiteSearchVO vo) {
+    Page<NavWebsiteShowVO> page(@RequestBody NavWebsitePageDTO dto) {
 
-        return navWebsiteService.search(vo);
+        return navWebsiteService.pages(dto);
     }
 
     @Operation(summary = "添加访问次数", description = "添加访问次数")
