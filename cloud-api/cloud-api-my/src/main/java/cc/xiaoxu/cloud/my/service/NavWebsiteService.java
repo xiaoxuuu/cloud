@@ -6,6 +6,7 @@ import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.my.dao.NavWebsiteMapper;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
@@ -163,6 +164,6 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     public Page<NavWebsiteShowVO> pages(NavWebsitePageDTO dto) {
 
         Page<NavWebsite> entityPage = getBaseMapper().pages(dto, new Page<>(dto.getCurrent(), dto.getSize()));
-        return null;
+        return PageUtils.getPage(entityPage, this::tran);
     }
 }
