@@ -152,11 +152,11 @@ public class ProviderUtils {
     public static void appendDefaultSort(PageDTO dto) {
 
         if (CollectionUtils.isEmpty(dto.getOrders())) {
-            dto.setOrders(OrderItemDTO.defaultSort());
+            dto.setOrders(OrderItemDTO.getDefaultSort());
         } else {
             if (dto.getOrders().size() == 1) {
                 if (StringUtils.isEmpty(dto.getOrders().get(0).getColumn())) {
-                    dto.setOrders(OrderItemDTO.defaultSort());
+                    dto.setOrders(OrderItemDTO.getDefaultSort());
                 }
             }
         }
