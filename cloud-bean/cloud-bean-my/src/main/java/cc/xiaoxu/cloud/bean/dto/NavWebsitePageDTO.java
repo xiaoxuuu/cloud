@@ -17,10 +17,10 @@ public class NavWebsitePageDTO extends PageDTO {
     @Schema(description = "关键字")
     private String keyword;
 
-    @Schema(description = "标签（暂未实现）")
+    @Schema(description = "标签")
     private List<String> labelList;
 
-    @Schema(description = "类型（暂未实现）")
+    @Schema(description = "类型")
     private String type;
 
     @Schema(description = "访问次数")

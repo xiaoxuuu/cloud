@@ -45,10 +45,8 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                 // 关键字
                 .filter(k -> {
                     if (StringUtils.isNotBlank(vo.getKeyword())) {
-                        return containsValue(k.getShortName(), vo.getKeyword()) ||
-                                containsValue(k.getWebsiteName(), vo.getKeyword()) ||
-                                containsValue(k.getUrl(), vo.getKeyword()) ||
-                                containsValue(k.getDescription(), vo.getKeyword());
+                        return containsValue(k.getShortName(), vo.getKeyword()) || containsValue(k.getWebsiteName(), vo.getKeyword()) ||
+                                containsValue(k.getUrl(), vo.getKeyword()) || containsValue(k.getDescription(), vo.getKeyword());
                     }
                     return true;
                 })

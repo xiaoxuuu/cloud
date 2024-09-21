@@ -29,12 +29,17 @@ public class NavWebsiteProvider extends BaseProvider<NavWebsite> {
         test(NavWebsite::getWebsiteName);
 
         // 关键字
-        like(StringUtils.isNotEmpty(dto.getKeyword()), "website_name", dto.getKeyword(), sql);
+        sql.OR().WHERE(getTablePrefix() + "." + "short_name" + " LIKE '%" + dto.getKeyword() + "%'");
+        sql.OR().WHERE(getTablePrefix() + "." + "website_name" + " LIKE '%" + dto.getKeyword() + "%'");
+        sql.OR().WHERE(getTablePrefix() + "." + "url" + " LIKE '%" + dto.getKeyword() + "%'");
+        sql.OR().WHERE(getTablePrefix() + "." + "description" + " LIKE '%" + dto.getKeyword() + "%'");
         // 时间
         moreThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), "last_available_time", dto.getLastAvailableTimeStart(), getTablePrefix(), sql);
         lessThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), "last_available_time", dto.getLastAvailableTimeEnd(), getTablePrefix(), sql);
         // 类型
-        eq(StringUtils.isNotEmpty(dto.getType()), "type", dto.getType(), sql);
+        like(StringUtils.isNotEmpty(dto.getType()), "type", dto.getType(), sql);
+        // 访问次数
+        eq(StringUtils.isNotEmpty(dto.getVisitNum()), "visit_num", dto.getVisitNum(), sql);
         // 标签
         in(CollectionUtils.isNotEmpty(dto.getLabelList()), "label", dto.getLabelList(), sql);
 
