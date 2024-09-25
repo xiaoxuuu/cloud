@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.my.dao;
 import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
 import cc.xiaoxu.cloud.core.dao.BaseProvider;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
+import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,27 +27,25 @@ public class NavWebsiteProvider extends BaseProvider<NavWebsite> {
         select(sql);
         from(sql);
 
-        test(NavWebsite::getWebsiteName);
-
         // 关键字
         sql.OR().WHERE(getTablePrefix() + "." + "short_name" + " LIKE '%" + dto.getKeyword() + "%'");
         sql.OR().WHERE(getTablePrefix() + "." + "website_name" + " LIKE '%" + dto.getKeyword() + "%'");
         sql.OR().WHERE(getTablePrefix() + "." + "url" + " LIKE '%" + dto.getKeyword() + "%'");
         sql.OR().WHERE(getTablePrefix() + "." + "description" + " LIKE '%" + dto.getKeyword() + "%'");
         // 时间
-        moreThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), "last_available_time", dto.getLastAvailableTimeStart(), getTablePrefix(), sql);
-        lessThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), "last_available_time", dto.getLastAvailableTimeEnd(), getTablePrefix(), sql);
+        moreThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeStart(), getTablePrefix(), sql);
+        lessThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeEnd(), getTablePrefix(), sql);
         // 类型
-        like(StringUtils.isNotEmpty(dto.getType()), "type", dto.getType(), sql);
+        like(StringUtils.isNotEmpty(dto.getType()), NavWebsite::getType, dto.getType(), sql);
         // 访问次数
-        eq(StringUtils.isNotEmpty(dto.getVisitNum()), "visit_num", dto.getVisitNum(), sql);
+        eq(StringUtils.isNotEmpty(dto.getVisitNum()), NavWebsite::getVisitNum, dto.getVisitNum(), sql);
         // 标签
-        in(CollectionUtils.isNotEmpty(dto.getLabelList()), "label", dto.getLabelList(), sql);
+        in(CollectionUtils.isNotEmpty(dto.getLabelList()), NavWebsite::getLabel, dto.getLabelList(), sql);
 
         // 图标是否存在
         if (null != dto.getHaveIcon()) {
             join(sql, NavWebsiteIconProvider.get(), Set.of(), "icon_id", "id");
-            isNotNull(NavWebsiteIconProvider.get().getTablePrefix(), "status", sql);
+            NavWebsiteIconProvider.get().isNotNull(NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId, sql);
         }
 
         // 排序

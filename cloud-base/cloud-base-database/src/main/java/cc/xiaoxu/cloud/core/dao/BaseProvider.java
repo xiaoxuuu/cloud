@@ -174,69 +174,70 @@ public class BaseProvider<T> {
         }
     }
 
-    public void like(String column, String data, SQL sql) {
+    public void like(SFunction<T, ?> column, String data, SQL sql) {
         like(true, column, data, sql);
     }
 
-    public void like(boolean use, String column, String data, SQL sql) {
+    public void like(boolean use, SFunction<T, ?> column, String data, SQL sql) {
         if (!use) {
             return;
         }
-        sql.WHERE(getTablePrefix() + "." + column + " LIKE '%" + data + "%'");
+        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " LIKE '%" + data + "%'");
     }
 
-    public void isNotNull(String table, String column, SQL sql) {
-        sql.WHERE(table + "." + column + " IS NOT NULL ");
+    public void isNotNull(String table, SFunction<T, ?> column, SQL sql) {
+        sql.WHERE(table + "." + getColumn(column) + " IS NOT NULL ");
     }
 
-    public void eq(String column, String data, SQL sql) {
+    public void eq(SFunction<T, ?> column, String data, SQL sql) {
         eq(true, column, data, sql);
     }
 
-    public void eq(boolean use, String column, String data, SQL sql) {
+    public void eq(boolean use, SFunction<T, ?> column, String data, SQL sql) {
         if (!use) {
             return;
         }
-        sql.WHERE(getTablePrefix() + "." + column + " = '" + data + "'");
+        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " = '" + data + "'");
     }
 
 
-    public void in(String column, List<?> dataList, SQL sql) {
+    public void in(SFunction<T, ?> column, List<?> dataList, SQL sql) {
         in(true, getTablePrefix(), column, dataList, sql);
     }
 
-    public void in(boolean use, String column, List<?> dataList, SQL sql) {
+    public void in(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
         in(use, getTablePrefix(), column, dataList, sql);
     }
 
-    public void in(boolean use, String table, String column, List<?> dataList, SQL sql) {
+    public void in(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
         if (!use) {
             return;
         }
         String data = dataList.stream().map(k -> "'" + k + "'").collect(Collectors.joining(","));
-        sql.WHERE(table + "." + column + " IN(" + data + ") ");
+        sql.WHERE(table + "." + getColumn(column) + " IN(" + data + ") ");
     }
 
-    public void moreThan(boolean use, String column, String data, String table, SQL sql) {
+    public void moreThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
         if (!use) {
             return;
         }
-        sql.WHERE(table + "." + column + " >= '" + data + "'");
+        sql.WHERE(table + "." + getColumn(column) + " >= '" + data + "'");
     }
 
-    public void lessThan(boolean use, String column, String data, String table, SQL sql) {
+    public void lessThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
         if (!use) {
             return;
         }
-        sql.WHERE(table + "." + column + " <= '" + data + "'");
+        sql.WHERE(table + "." + getColumn(column) + " <= '" + data + "'");
     }
 
     public void test(SFunction<T, ?> column) {
-        System.out.println(getColumnCache(column));
+        System.out.println(getColumn(column));
     }
 
-    public String getColumnCache(SFunction<T, ?> column) {
+    public String getColumn(SFunction<T, ?> column) {
         LambdaMeta meta = LambdaUtils.extract(column);
-        return PropertyNamer.methodToProperty(meta.getImplMethodName());
+        String columnGet = PropertyNamer.methodToProperty(meta.getImplMethodName());
+        return ChartUtils.camelToUnderline(columnGet.replace("get", ""), 1);
     }
 }
