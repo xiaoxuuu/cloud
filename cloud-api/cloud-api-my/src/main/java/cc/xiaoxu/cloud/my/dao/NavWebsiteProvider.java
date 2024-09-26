@@ -28,10 +28,10 @@ public class NavWebsiteProvider extends BaseProvider<NavWebsite> {
         from(sql);
 
         // 关键字
-        sql.OR().WHERE(getTablePrefix() + "." + "short_name" + " LIKE '%" + dto.getKeyword() + "%'");
-        sql.OR().WHERE(getTablePrefix() + "." + "website_name" + " LIKE '%" + dto.getKeyword() + "%'");
-        sql.OR().WHERE(getTablePrefix() + "." + "url" + " LIKE '%" + dto.getKeyword() + "%'");
-        sql.OR().WHERE(getTablePrefix() + "." + "description" + " LIKE '%" + dto.getKeyword() + "%'");
+        or(sql, getTablePrefix() + "." + "short_name" + " LIKE '%" + dto.getKeyword() + "%'",
+                getTablePrefix() + "." + "website_name" + " LIKE '%" + dto.getKeyword() + "%'",
+                getTablePrefix() + "." + "url" + " LIKE '%" + dto.getKeyword() + "%'",
+                getTablePrefix() + "." + "description" + " LIKE '%" + dto.getKeyword() + "%'");
         // 时间
         moreThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeStart(), getTablePrefix(), sql);
         lessThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeEnd(), getTablePrefix(), sql);
