@@ -2,6 +2,8 @@ package cc.xiaoxu.cloud.core.dao;
 
 import cc.xiaoxu.cloud.bean.dto.OrderItemDTO;
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
+import cc.xiaoxu.cloud.core.handler.SqlConcatFactory;
+import cc.xiaoxu.cloud.core.handler.SqlConcatHandler;
 import cc.xiaoxu.cloud.core.utils.ProviderUtils;
 import cc.xiaoxu.cloud.core.utils.text.ChartUtils;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.LambdaMeta;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
@@ -26,7 +29,13 @@ public class BaseProvider<T> {
 
     private static final BaseProvider<?> provider = new BaseProvider<>();
 
+    private static final SqlConcatHandler<?> concat = SqlConcatFactory.get();
+
     public static BaseProvider<?> get() {
+        return provider;
+    }
+
+    public BaseProvider<?> getInstance() {
         return provider;
     }
 
@@ -127,7 +136,8 @@ public class BaseProvider<T> {
             if (excludeFieldSet.contains(entry.getValue())) {
                 continue;
             }
-            sql.SELECT(baseProvider.getTablePrefix() + ".`" + entry.getValue() + "` AS `" + entry.getKey() + "`");
+            concat.select(sql, baseProvider, entry.getValue(), entry.getKey());
+//            sql.SELECT(baseProvider.getTablePrefix() + ".`" + entry.getValue() + "` AS `" + entry.getKey() + "`");
         }
     }
 
@@ -231,13 +241,18 @@ public class BaseProvider<T> {
         sql.WHERE(table + "." + getColumn(column) + " <= '" + data + "'");
     }
 
-    public void test(SFunction<T, ?> column) {
-        System.out.println(getColumn(column));
-    }
-
     public String getColumn(SFunction<T, ?> column) {
         LambdaMeta meta = LambdaUtils.extract(column);
         String columnGet = PropertyNamer.methodToProperty(meta.getImplMethodName());
         return ChartUtils.camelToUnderline(columnGet.replace("get", ""), 1);
+    }
+
+    /**
+     * 将若干条件使用 OR 连接并加括号包裹
+     */
+    public void or(SQL sql, String... condition) {
+
+        String concat = Arrays.stream(condition).filter(StringUtils::isNotEmpty).collect(Collectors.joining(" OR "));
+        sql.WHERE("(" + concat + ")");
     }
 }
