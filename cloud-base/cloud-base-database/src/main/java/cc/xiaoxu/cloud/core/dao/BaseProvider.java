@@ -203,8 +203,15 @@ public class BaseProvider<T> {
         sql.WHERE(table + "." + getColumn(column) + " IS NULL ");
     }
 
-    public void eq(SFunction<T, ?> column, String data, SQL sql) {
-        eq(true, column, data, sql);
+    public void ne(SFunction<T, ?> column, String data, SQL sql) {
+        ne(true, column, data, sql);
+    }
+
+    public void ne(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+        if (!use) {
+            return;
+        }
+        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " != '" + data + "'");
     }
 
     public void eq(boolean use, SFunction<T, ?> column, String data, SQL sql) {
@@ -213,7 +220,6 @@ public class BaseProvider<T> {
         }
         sql.WHERE(getTablePrefix() + "." + getColumn(column) + " = '" + data + "'");
     }
-
 
     public void in(SFunction<T, ?> column, List<?> dataList, SQL sql) {
         in(true, getTablePrefix(), column, dataList, sql);
