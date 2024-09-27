@@ -45,7 +45,11 @@ public class NavWebsiteProvider extends BaseProvider<NavWebsite> {
         // 图标是否存在
         if (null != dto.getHaveIcon()) {
             join(sql, NavWebsiteIconProvider.get(), Set.of(), "icon_id", "id");
-            NavWebsiteIconProvider.get().isNotNull(NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId, sql);
+            if (dto.getHaveIcon()) {
+                NavWebsiteIconProvider.get().isNotNull(NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId, sql);
+            } else {
+                NavWebsiteIconProvider.get().isNull(NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId, sql);
+            }
         }
 
         // 排序
