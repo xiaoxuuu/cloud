@@ -184,6 +184,17 @@ public class BaseProvider<T> {
         }
     }
 
+    public void notLike(SFunction<T, ?> column, String data, SQL sql) {
+        notLike(true, column, data, sql);
+    }
+
+    public void notLike(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+        if (!use) {
+            return;
+        }
+        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " NOT LIKE '%" + data + "%'");
+    }
+
     public void like(SFunction<T, ?> column, String data, SQL sql) {
         like(true, column, data, sql);
     }
