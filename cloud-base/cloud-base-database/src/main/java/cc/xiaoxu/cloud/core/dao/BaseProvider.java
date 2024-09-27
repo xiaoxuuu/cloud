@@ -199,6 +199,10 @@ public class BaseProvider<T> {
         sql.WHERE(table + "." + getColumn(column) + " IS NOT NULL ");
     }
 
+    public void isNull(String table, SFunction<T, ?> column, SQL sql) {
+        sql.WHERE(table + "." + getColumn(column) + " IS NULL ");
+    }
+
     public void eq(SFunction<T, ?> column, String data, SQL sql) {
         eq(true, column, data, sql);
     }
