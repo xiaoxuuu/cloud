@@ -236,11 +236,17 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public void eq(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String eq(SFunction<T, ?> column, String data, SQL sql) {
+        return eq(true, column, data, sql);
+    }
+
+    public String eq(boolean use, SFunction<T, ?> column, String data, SQL sql) {
         if (!use) {
-            return;
+            return "";
         }
-        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " = '" + data + "'");
+        String conditions = getTablePrefix() + "." + getColumn(column) + " = '" + data + "'";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public void in(SFunction<T, ?> column, List<?> dataList, SQL sql) {
