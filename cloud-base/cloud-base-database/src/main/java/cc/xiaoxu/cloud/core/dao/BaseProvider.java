@@ -211,12 +211,16 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public void isNotNull(String table, SFunction<T, ?> column, SQL sql) {
-        sql.WHERE(table + "." + getColumn(column) + " IS NOT NULL ");
+    public String isNotNull(String table, SFunction<T, ?> column, SQL sql) {
+        String conditions = table + "." + getColumn(column) + " IS NOT NULL ";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
-    public void isNull(String table, SFunction<T, ?> column, SQL sql) {
-        sql.WHERE(table + "." + getColumn(column) + " IS NULL ");
+    public String isNull(String table, SFunction<T, ?> column, SQL sql) {
+        String conditions = table + "." + getColumn(column) + " IS NULL ";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public void ne(SFunction<T, ?> column, String data, SQL sql) {
