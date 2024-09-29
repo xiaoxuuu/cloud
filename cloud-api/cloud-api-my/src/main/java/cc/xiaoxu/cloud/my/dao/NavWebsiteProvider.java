@@ -29,32 +29,32 @@ public class NavWebsiteProvider extends BaseProvider<NavWebsite> {
 
         // 关键字
         or(sql,
-                like(NavWebsite::getShortName, dto.getKeyword(), null),
-                like(NavWebsite::getWebsiteName, dto.getKeyword(), null),
-                like(NavWebsite::getUrl, dto.getKeyword(), null),
-                like(NavWebsite::getDescription, dto.getKeyword(), null));
+                like(null, NavWebsite::getShortName, dto.getKeyword()),
+                like(null, NavWebsite::getWebsiteName, dto.getKeyword()),
+                like(null, NavWebsite::getUrl, dto.getKeyword()),
+                like(null, NavWebsite::getDescription, dto.getKeyword()));
         // 时间
-        moreThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeStart(), getTablePrefix(), sql);
-        lessThan(StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeEnd(), getTablePrefix(), sql);
+        moreThan(sql, StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeStart(), getTablePrefix());
+        lessThan(sql, StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeEnd(), getTablePrefix());
         // 类型
-        like(StringUtils.isNotEmpty(dto.getType()), NavWebsite::getType, dto.getType(), sql);
+        like(sql, StringUtils.isNotEmpty(dto.getType()), NavWebsite::getType, dto.getType());
         // 访问次数
-        eq(StringUtils.isNotEmpty(dto.getVisitNum()), NavWebsite::getVisitNum, dto.getVisitNum(), sql);
+        eq(sql, StringUtils.isNotEmpty(dto.getVisitNum()), NavWebsite::getVisitNum, dto.getVisitNum());
         // 标签
-        in(CollectionUtils.isNotEmpty(dto.getLabelList()), NavWebsite::getLabel, dto.getLabelList(), sql);
+        in(sql, CollectionUtils.isNotEmpty(dto.getLabelList()), NavWebsite::getLabel, dto.getLabelList());
 
         // 图标是否存在
         if (null != dto.getHaveIcon()) {
             join(sql, NavWebsiteIconProvider.get(), Set.of(), "icon_id", "id");
             if (dto.getHaveIcon()) {
-                NavWebsiteIconProvider.get().isNotNull(NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId, sql);
+                NavWebsiteIconProvider.get().isNotNull(sql, NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId);
             } else {
-                NavWebsiteIconProvider.get().isNull(NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId, sql);
+                NavWebsiteIconProvider.get().isNull(sql, NavWebsiteIconProvider.get().getTablePrefix(), NavWebsiteIcon::getId);
             }
         }
 
         // 排序
-        sort(dto.getOrders(), List.of(this), sql);
+        sort(sql, dto.getOrders(), List.of(this));
         return sql.toString();
     }
 }
