@@ -267,20 +267,22 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public void notIn(SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        notIn(true, getTablePrefix(), column, dataList, sql);
+    public String notIn(SFunction<T, ?> column, List<?> dataList, SQL sql) {
+        return notIn(true, getTablePrefix(), column, dataList, sql);
     }
 
-    public void notIn(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        notIn(use, getTablePrefix(), column, dataList, sql);
+    public String notIn(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
+        return notIn(use, getTablePrefix(), column, dataList, sql);
     }
 
-    public void notIn(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
+    public String notIn(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
         if (!use) {
-            return;
+            return "";
         }
         String data = dataList.stream().map(k -> "'" + k + "'").collect(Collectors.joining(","));
-        sql.WHERE(table + "." + getColumn(column) + " NOT IN(" + data + ") ");
+        String conditions = table + "." + getColumn(column) + " NOT IN(" + data + ") ";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public void moreThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
