@@ -249,20 +249,22 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public void in(SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        in(true, getTablePrefix(), column, dataList, sql);
+    public String in(SFunction<T, ?> column, List<?> dataList, SQL sql) {
+        return in(true, getTablePrefix(), column, dataList, sql);
     }
 
-    public void in(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        in(use, getTablePrefix(), column, dataList, sql);
+    public String in(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
+        return in(use, getTablePrefix(), column, dataList, sql);
     }
 
-    public void in(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
+    public String in(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
         if (!use) {
-            return;
+            return "";
         }
         String data = dataList.stream().map(k -> "'" + k + "'").collect(Collectors.joining(","));
-        sql.WHERE(table + "." + getColumn(column) + " IN(" + data + ") ");
+        String conditions = table + "." + getColumn(column) + " IN(" + data + ") ";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public void notIn(SFunction<T, ?> column, List<?> dataList, SQL sql) {
