@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.bean.dto.OrderItemDTO;
 import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import cc.xiaoxu.cloud.core.handler.SqlConcatFactory;
 import cc.xiaoxu.cloud.core.handler.SqlConcatHandler;
+import cc.xiaoxu.cloud.core.utils.ConditionUtils;
 import cc.xiaoxu.cloud.core.utils.ProviderUtils;
 import cc.xiaoxu.cloud.core.utils.text.ChartUtils;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -195,15 +196,17 @@ public class BaseProvider<T> {
         sql.WHERE(getTablePrefix() + "." + getColumn(column) + " NOT LIKE '%" + data + "%'");
     }
 
-    public void like(SFunction<T, ?> column, String data, SQL sql) {
-        like(true, column, data, sql);
+    public String like(SFunction<T, ?> column, String data, SQL sql) {
+        return like(true, column, data, sql);
     }
 
-    public void like(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String like(boolean use, SFunction<T, ?> column, String data, SQL sql) {
         if (!use) {
-            return;
+            return null;
         }
-        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " LIKE '%" + data + "%'");
+        String conditions = getTablePrefix() + "." + getColumn(column) + " LIKE '%" + data + "%'";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public void isNotNull(String table, SFunction<T, ?> column, SQL sql) {
