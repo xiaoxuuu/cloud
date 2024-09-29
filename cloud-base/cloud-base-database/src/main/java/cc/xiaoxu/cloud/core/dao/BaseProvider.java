@@ -185,15 +185,17 @@ public class BaseProvider<T> {
         }
     }
 
-    public void notLike(SFunction<T, ?> column, String data, SQL sql) {
-        notLike(true, column, data, sql);
+    public String notLike(SFunction<T, ?> column, String data, SQL sql) {
+        return notLike(true, column, data, sql);
     }
 
-    public void notLike(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String notLike(boolean use, SFunction<T, ?> column, String data, SQL sql) {
         if (!use) {
-            return;
+            return "";
         }
-        sql.WHERE(getTablePrefix() + "." + getColumn(column) + " NOT LIKE '%" + data + "%'");
+        String conditions = getTablePrefix() + "." + getColumn(column) + " NOT LIKE '%" + data + "%'";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public String like(SFunction<T, ?> column, String data, SQL sql) {
