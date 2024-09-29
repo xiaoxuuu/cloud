@@ -165,7 +165,7 @@ public class BaseProvider<T> {
         sql.WHERE(getTablePrefix() + "." + condition);
     }
 
-    public void sort(List<OrderItemDTO> orderList, List<BaseProvider<? extends BaseEntity>> baseProviderList, SQL sql) {
+    public void sort(SQL sql, List<OrderItemDTO> orderList, List<BaseProvider<? extends BaseEntity>> baseProviderList) {
         Map<String, BaseProvider<? extends BaseEntity>> map = new HashMap<>();
         for (int i = baseProviderList.size() - 1; i >= 0; i--) {
             BaseProvider<? extends BaseEntity> baseProvider = baseProviderList.get(i);
@@ -185,11 +185,11 @@ public class BaseProvider<T> {
         }
     }
 
-    public String notLike(SFunction<T, ?> column, String data, SQL sql) {
-        return notLike(true, column, data, sql);
+    public String notLike(SQL sql, SFunction<T, ?> column, String data) {
+        return notLike(sql, true, column, data);
     }
 
-    public String notLike(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String notLike(SQL sql, boolean use, SFunction<T, ?> column, String data) {
         if (!use) {
             return "";
         }
@@ -198,11 +198,11 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String like(SFunction<T, ?> column, String data, SQL sql) {
-        return like(true, column, data, sql);
+    public String like(SQL sql, SFunction<T, ?> column, String data) {
+        return like(sql, true, column, data);
     }
 
-    public String like(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String like(SQL sql, boolean use, SFunction<T, ?> column, String data) {
         if (!use) {
             return "";
         }
@@ -211,23 +211,23 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String isNotNull(String table, SFunction<T, ?> column, SQL sql) {
+    public String isNotNull(SQL sql, String table, SFunction<T, ?> column) {
         String conditions = table + "." + getColumn(column) + " IS NOT NULL ";
         ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
         return conditions;
     }
 
-    public String isNull(String table, SFunction<T, ?> column, SQL sql) {
+    public String isNull(SQL sql, String table, SFunction<T, ?> column) {
         String conditions = table + "." + getColumn(column) + " IS NULL ";
         ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
         return conditions;
     }
 
-    public String ne(SFunction<T, ?> column, String data, SQL sql) {
-        return ne(true, column, data, sql);
+    public String ne(SQL sql, SFunction<T, ?> column, String data) {
+        return ne(sql, true, column, data);
     }
 
-    public String ne(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String ne(SQL sql, boolean use, SFunction<T, ?> column, String data) {
         if (!use) {
             return "";
         }
@@ -236,11 +236,11 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String eq(SFunction<T, ?> column, String data, SQL sql) {
-        return eq(true, column, data, sql);
+    public String eq(SQL sql, SFunction<T, ?> column, String data) {
+        return eq(sql, true, column, data);
     }
 
-    public String eq(boolean use, SFunction<T, ?> column, String data, SQL sql) {
+    public String eq(SQL sql, boolean use, SFunction<T, ?> column, String data) {
         if (!use) {
             return "";
         }
@@ -249,15 +249,15 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String in(SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        return in(true, getTablePrefix(), column, dataList, sql);
+    public String in(SQL sql, SFunction<T, ?> column, List<?> dataList) {
+        return in(sql, true, getTablePrefix(), column, dataList);
     }
 
-    public String in(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        return in(use, getTablePrefix(), column, dataList, sql);
+    public String in(SQL sql, boolean use, SFunction<T, ?> column, List<?> dataList) {
+        return in(sql, use, getTablePrefix(), column, dataList);
     }
 
-    public String in(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
+    public String in(SQL sql, boolean use, String table, SFunction<T, ?> column, List<?> dataList) {
         if (!use) {
             return "";
         }
@@ -267,15 +267,15 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String notIn(SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        return notIn(true, getTablePrefix(), column, dataList, sql);
+    public String notIn(SQL sql, SFunction<T, ?> column, List<?> dataList) {
+        return notIn(sql, true, getTablePrefix(), column, dataList);
     }
 
-    public String notIn(boolean use, SFunction<T, ?> column, List<?> dataList, SQL sql) {
-        return notIn(use, getTablePrefix(), column, dataList, sql);
+    public String notIn(SQL sql, boolean use, SFunction<T, ?> column, List<?> dataList) {
+        return notIn(sql, use, getTablePrefix(), column, dataList);
     }
 
-    public String notIn(boolean use, String table, SFunction<T, ?> column, List<?> dataList, SQL sql) {
+    public String notIn(SQL sql, boolean use, String table, SFunction<T, ?> column, List<?> dataList) {
         if (!use) {
             return "";
         }
@@ -285,7 +285,7 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String moreThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
+    public String moreThan(SQL sql, boolean use, SFunction<T, ?> column, String data, String table) {
         if (!use) {
             return "";
         }
@@ -294,7 +294,7 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public String lessThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
+    public String lessThan(SQL sql, boolean use, SFunction<T, ?> column, String data, String table) {
         if (!use) {
             return "";
         }
