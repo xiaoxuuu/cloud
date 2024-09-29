@@ -285,18 +285,22 @@ public class BaseProvider<T> {
         return conditions;
     }
 
-    public void moreThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
+    public String moreThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
         if (!use) {
-            return;
+            return "";
         }
-        sql.WHERE(table + "." + getColumn(column) + " >= '" + data + "'");
+        String conditions = table + "." + getColumn(column) + " >= '" + data + "'";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
-    public void lessThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
+    public String lessThan(boolean use, SFunction<T, ?> column, String data, String table, SQL sql) {
         if (!use) {
-            return;
+            return "";
         }
-        sql.WHERE(table + "." + getColumn(column) + " <= '" + data + "'");
+        String conditions = table + "." + getColumn(column) + " <= '" + data + "'";
+        ConditionUtils.of(sql, Objects::nonNull).handle(k -> sql.WHERE(conditions));
+        return conditions;
     }
 
     public String getColumn(SFunction<T, ?> column) {
