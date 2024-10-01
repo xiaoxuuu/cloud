@@ -24,8 +24,14 @@ import java.util.stream.Collectors;
 
 public class BaseProvider<T> {
 
+    /**
+     * 别名
+     */
     private static final String TABLE_PREFIX = "prefix_";
 
+    /**
+     * 实例
+     */
     private final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(getClass(), BaseProvider.class);
 
     private static final BaseProvider<?> provider = new BaseProvider<>();
@@ -45,17 +51,29 @@ public class BaseProvider<T> {
         return (Class<T>) this.typeArguments[0];
     }
 
+    /**
+     * 获取表名
+     * @return 表名
+     */
     public String getTableName() {
 
         TableName annotation = currentModelClass().getAnnotation(TableName.class);
         return annotation.value();
     }
 
+    /**
+     * 获取别名
+     * @return 别名
+     */
     public String getTablePrefix() {
 
         return TABLE_PREFIX + getTableName();
     }
 
+    /**
+     * 获取打了 @TableField 注解的字段
+     * @return k: 字段名，v:
+     */
     public Map<String, String> getFieldMap() {
 
         Class<?> tClass = currentModelClass();
@@ -118,6 +136,12 @@ public class BaseProvider<T> {
         select(sql, Set.of());
     }
 
+    /**
+     * select
+     *
+     * @param sql               需要附加的 sql
+     * @param excludeFieldSet   需要排除的字段
+     */
     public void select(SQL sql, Set<String> excludeFieldSet) {
 
         select(sql, excludeFieldSet, this);
@@ -138,7 +162,6 @@ public class BaseProvider<T> {
                 continue;
             }
             concat.select(sql, baseProvider, entry.getValue(), entry.getKey());
-//            sql.SELECT(baseProvider.getTablePrefix() + ".`" + entry.getValue() + "` AS `" + entry.getKey() + "`");
         }
     }
 
