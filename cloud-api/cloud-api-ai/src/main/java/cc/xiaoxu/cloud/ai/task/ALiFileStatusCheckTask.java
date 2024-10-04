@@ -40,18 +40,30 @@ public class ALiFileStatusCheckTask {
         List<List<Knowledge>> lists = ListUtils.splitList(knowledgeList, 5);
         for (List<Knowledge> list : lists) {
             for (Knowledge knowledge : list) {
-                boolean succeeded = knowledgeService.updateFileUploadResult(knowledge);
-                if (!succeeded) {
-                    continue;
-                }
-                // 执行知识库索引
-                String jobId = aLiYunService.submitIndexAddDocumentsJob(knowledge.getThreePartyFileId());
-                knowledge.setStatus(ALiFileIndexResultEnum.RUNNING.getCode());
-                knowledge.setThreePartyInfo(jobId);
-                knowledgeService.updateById(knowledge);
+                handleOne(knowledge);
             }
             Thread.sleep(1500);
         }
+    }
+
+    public void handleOne(String knowledgeId) {
+
+        Knowledge knowledge = knowledgeService.lambdaQuery()
+                .eq(Knowledge::getId, knowledgeId)
+                .one();
+        handleOne(knowledge);
+    }
+
+    private void handleOne(Knowledge knowledge) {
+        boolean succeeded = knowledgeService.updateFileUploadResult(knowledge);
+        if (!succeeded) {
+            return;
+        }
+        // 执行知识库索引
+        String jobId = aLiYunService.submitIndexAddDocumentsJob(knowledge.getThreePartyFileId());
+        knowledge.setStatus(ALiFileIndexResultEnum.RUNNING.getCode());
+        knowledge.setThreePartyInfo(jobId);
+        knowledgeService.updateById(knowledge);
     }
 
     /**
