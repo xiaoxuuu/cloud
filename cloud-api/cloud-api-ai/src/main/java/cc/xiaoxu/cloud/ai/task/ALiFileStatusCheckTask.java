@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.ai.task;
 
+import cc.xiaoxu.cloud.ai.constants.RedisListenerConstants;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.ALiYunService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
@@ -10,6 +11,7 @@ import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.cache.CacheService;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -26,17 +29,14 @@ public class ALiFileStatusCheckTask {
     private final ALiYunService aLiYunService;
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
+    private final CacheService cacheService;
 
     /**
      * 阿里文件上传状态检查
      */
-    @Scheduled(cron = "0/30 * * * * ?")
     public void aLiFileUploadResultCheck() throws InterruptedException {
 
-        List<Knowledge> knowledgeList = knowledgeService.lambdaQuery()
-                .in(Knowledge::getStatus, List.of(ALiFileUploadResultEnum.INIT.getCode(), ALiFileUploadResultEnum.PARSING.getCode()))
-                .eq(Knowledge::getType, KnowledgeTypeEnum.ALi_FILE.getCode())
-                .list();
+        List<Knowledge> knowledgeList = getNeedProcessKnowledgeDataList();
         List<List<Knowledge>> lists = ListUtils.splitList(knowledgeList, 5);
         for (List<Knowledge> list : lists) {
             for (Knowledge knowledge : list) {
@@ -44,6 +44,18 @@ public class ALiFileStatusCheckTask {
             }
             Thread.sleep(1500);
         }
+        List<Knowledge> existsData = getNeedProcessKnowledgeDataList();
+        for (Knowledge knowledge : existsData) {
+            // 启动发送定时任务
+            cacheService.setCacheObject(RedisListenerConstants.FILE_UPLOAD_RESULT_HANDLE + knowledge.getId(), null, 20L, TimeUnit.SECONDS);
+        }
+    }
+
+    private List<Knowledge> getNeedProcessKnowledgeDataList() {
+        return knowledgeService.lambdaQuery()
+                .in(Knowledge::getStatus, List.of(ALiFileUploadResultEnum.INIT.getCode(), ALiFileUploadResultEnum.PARSING.getCode()))
+                .eq(Knowledge::getType, KnowledgeTypeEnum.ALi_FILE.getCode())
+                .list();
     }
 
     public void handleOne(String knowledgeId) {
