@@ -46,7 +46,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
 
         // 文件上传结果
         if (expireKey.startsWith(RedisListenerConstants.FILE_UPLOAD_RESULT_HANDLE)) {
-            aLiFileStatusCheckTask.handleOne(expireKey.replace(RedisListenerConstants.FILE_UPLOAD_RESULT_HANDLE, ""));
+            aLiFileStatusCheckTask.aLiFileUploadResultCheck(expireKey.replace(RedisListenerConstants.FILE_UPLOAD_RESULT_HANDLE, ""));
         }
     }
 }

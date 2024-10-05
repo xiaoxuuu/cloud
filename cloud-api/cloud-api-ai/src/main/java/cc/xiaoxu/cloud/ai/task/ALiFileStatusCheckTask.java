@@ -40,7 +40,7 @@ public class ALiFileStatusCheckTask {
         List<List<Knowledge>> lists = ListUtils.splitList(knowledgeList, 5);
         for (List<Knowledge> list : lists) {
             for (Knowledge knowledge : list) {
-                handleOne(knowledge);
+                aLiFileUploadResultCheck(knowledge);
             }
             Thread.sleep(1500);
         }
@@ -58,15 +58,15 @@ public class ALiFileStatusCheckTask {
                 .list();
     }
 
-    public void handleOne(String knowledgeId) {
+    public void aLiFileUploadResultCheck(String knowledgeId) {
 
         Knowledge knowledge = knowledgeService.lambdaQuery()
                 .eq(Knowledge::getId, knowledgeId)
                 .one();
-        handleOne(knowledge);
+        aLiFileUploadResultCheck(knowledge);
     }
 
-    private void handleOne(Knowledge knowledge) {
+    private void aLiFileUploadResultCheck(Knowledge knowledge) {
         boolean succeeded = knowledgeService.updateFileUploadResult(knowledge);
         if (!succeeded) {
             return;
