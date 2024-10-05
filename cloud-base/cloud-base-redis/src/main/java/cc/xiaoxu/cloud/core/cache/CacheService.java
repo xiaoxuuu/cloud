@@ -22,6 +22,14 @@ public interface CacheService {
      */
     <T> void setCacheObject(final String key, final T value, final Long timeout, final TimeUnit timeUnit);
 
+    default <T> void setCacheObject(final String key, final T value, final Long timeout, final TimeUnit timeUnit, boolean checkExists) {
+
+        if (checkExists && containsKey(key)) {
+            return;
+        }
+        setCacheObject(key, value, timeout, timeUnit);
+    }
+
     /**
      * 获得缓存的基本对象。
      *
