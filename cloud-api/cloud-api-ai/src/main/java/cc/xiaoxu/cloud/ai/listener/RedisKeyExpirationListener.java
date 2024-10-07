@@ -42,11 +42,17 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
         // 数据检查
         switch (expireKey) {
             case RedisListenerConstants.FILE_UPLOAD_RESULT_CHECK -> aLiFileStatusCheckTask.aLiFileUploadResultCheck();
+            case RedisListenerConstants.FILE_INDEX_RESULT_CHECK -> aLiFileStatusCheckTask.aLiFileIndexResultCheck();
         }
 
         // 文件上传结果
         if (expireKey.startsWith(RedisListenerConstants.FILE_UPLOAD_RESULT_HANDLE)) {
             aLiFileStatusCheckTask.aLiFileUploadResultCheck(expireKey.replace(RedisListenerConstants.FILE_UPLOAD_RESULT_HANDLE, ""));
+        }
+
+        // 文件切片结果
+        if (expireKey.startsWith(RedisListenerConstants.FILE_INDEX_RESULT_HANDLE)) {
+            aLiFileStatusCheckTask.aLiFileIndexResultCheck(expireKey.replace(RedisListenerConstants.FILE_INDEX_RESULT_HANDLE, ""));
         }
     }
 }

@@ -21,4 +21,14 @@ public interface RedisListenerConstants {
      * 文件上传检查 - 定时
      */
     String FILE_UPLOAD_RESULT_HANDLE = PREFIX + "FILE_UPLOAD_RESULT_HANDLE:";
+
+    /**
+     * 文件切片检查 - 每日
+     */
+    String FILE_INDEX_RESULT_CHECK = PREFIX + "FILE_INDEX_RESULT_CHECK";
+
+    /**
+     * 文件切片检查 - 定时
+     */
+    String FILE_INDEX_RESULT_HANDLE = PREFIX + "FILE_INDEX_RESULT_HANDLE:";
 }
