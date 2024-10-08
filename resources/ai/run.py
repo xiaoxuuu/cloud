@@ -12,7 +12,6 @@ app = Flask(__name__)
 
 print("Loading model...")
 model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
-model = AutoModel.from_pretrained(model_path, trust_remote_code=True)
 
 
 @app.route('/embeddings', methods=['POST'])
