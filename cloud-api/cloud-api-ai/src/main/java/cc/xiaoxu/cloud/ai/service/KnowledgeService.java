@@ -31,28 +31,28 @@ import java.util.Set;
 @AllArgsConstructor
 public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
-    private final ALiYunService aLiYunService;
+    private final ALiYunApiService aLiYunApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void addALiFile(String fileName, String fileId, String tenant) {
+    public Knowledge addALiFile(String fileName, String fileId, String tenant) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setTenant(tenant);
-        knowledge.setType(KnowledgeTypeEnum.ALi_FILE.getCode());
+        knowledge.setType(KnowledgeTypeEnum.FILE_ALI.getCode());
         knowledge.setName(fileName);
         knowledge.setThreePartyFileId(fileId);
         knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
         knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
         save(knowledge);
-        updateFileUploadResult(knowledge);
+        return knowledge;
     }
 
-    public boolean updateFileUploadResult(Knowledge knowledge) {
+    public boolean updateALiFileUploadResult(Knowledge knowledge) {
 
         String fileId = knowledge.getThreePartyFileId();
         Integer id = knowledge.getId();
-        DescribeFileResponseBody.DescribeFileResponseBodyData describeFile = aLiYunService.describeFile(fileId);
+        DescribeFileResponseBody.DescribeFileResponseBodyData describeFile = aLiYunApiService.describeFile(fileId);
         String status = describeFile.getStatus();
         log.info("文件上传 {}({}) 当前状态为：{}", fileId, id, status);
         Set<ALiFileUploadResultEnum> statusSet = Set.of(ALiFileUploadResultEnum.PARSING, ALiFileUploadResultEnum.PARSE_FAILED, ALiFileUploadResultEnum.PARSE_SUCCESS);
@@ -76,7 +76,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
         String fileId = knowledge.getThreePartyFileId();
         Integer id = knowledge.getId();
-        String status = aLiYunService.getIndexJobStatus(knowledge.getThreePartyInfo());
+        String status = aLiYunApiService.getIndexJobStatus(knowledge.getThreePartyInfo());
         log.info("文件切片 {}({}) 当前状态为：{}", fileId, id, status);
         Set<ALiFileIndexResultEnum> resultSet = Set.of(ALiFileIndexResultEnum.RUNNING, ALiFileIndexResultEnum.COMPLETED, ALiFileIndexResultEnum.FAILED);
         ALiFileIndexResultEnum resultEnum = EnumUtils.getByClass(status, ALiFileIndexResultEnum.class);

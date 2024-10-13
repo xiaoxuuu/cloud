@@ -1,14 +1,17 @@
 package cc.xiaoxu.cloud.ai.controller;
 
-import cc.xiaoxu.cloud.ai.service.ALiYunService;
+import cc.xiaoxu.cloud.ai.entity.Knowledge;
+import cc.xiaoxu.cloud.ai.service.ALiYunApiService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
+import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
 import cc.xiaoxu.cloud.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +30,7 @@ import java.util.List;
 @RequestMapping("/knowledge")
 public class KnowledgeController {
 
-    private final ALiYunService aLiYunService;
+    private final ALiYunApiService aLiYunApiService;
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
     private final TenantService tenantService;
@@ -40,25 +43,34 @@ public class KnowledgeController {
         return knowledgeService.lists(tenant);
     }
 
-    @PostMapping("/add_ali_files/{tenant}")
+    @PostMapping("/add_files/{type}/{tenant}")
     @Operation(summary = "新增知识库 - 文件批量")
-    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
+    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("type") String type,
+                            @PathVariable("tenant") String tenant) throws InterruptedException {
 
         tenantService.checkTenantThrow(tenant);
         for (MultipartFile file : files) {
-            String fileId = aLiYunService.uploadFile(file);
-            knowledgeService.addALiFile(file.getOriginalFilename(), fileId, tenant);
+            addALiFile(file, type, tenant);
             Thread.sleep(6000);
         }
     }
 
-    @PostMapping("/add_ali_file/{tenant}")
+    @PostMapping("/add_file/{type}/{tenant}")
     @Operation(summary = "新增知识库 - 文件")
-    public void addALiFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("tenant") String tenant) {
+    public void addALiFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
 
         tenantService.checkTenantThrow(tenant);
-        String fileId = aLiYunService.uploadFile(file);
-        knowledgeService.addALiFile(file.getOriginalFilename(), fileId, tenant);
+        if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_ALI) {
+            // 阿里
+            String fileId = aLiYunApiService.uploadFile(file);
+            Knowledge knowledge = knowledgeService.addALiFile(file.getOriginalFilename(), fileId, tenant);
+            knowledgeService.updateALiFileUploadResult(knowledge);
+        }
+        if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
+            // TODO 本地
+            String fileId = aLiYunApiService.uploadFile(file);
+            // 本地文件处理
+        }
     }
 
     @PostMapping("/add_table/{tenant}")

@@ -26,7 +26,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class ALiYunService {
+public class ALiYunApiService {
 
     @Value("${ali.bailian.api-key}")
     private String apiKey;

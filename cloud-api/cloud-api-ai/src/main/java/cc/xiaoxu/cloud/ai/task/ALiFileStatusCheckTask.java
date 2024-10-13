@@ -2,7 +2,7 @@ package cc.xiaoxu.cloud.ai.task;
 
 import cc.xiaoxu.cloud.ai.constants.RedisListenerConstants;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.ai.service.ALiYunService;
+import cc.xiaoxu.cloud.ai.service.ALiYunApiService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 public class ALiFileStatusCheckTask {
 
-    private final ALiYunService aLiYunService;
+    private final ALiYunApiService aLiYunApiService;
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
     private final CacheService cacheService;
@@ -53,7 +53,7 @@ public class ALiFileStatusCheckTask {
     private List<Knowledge> getNeedProcessKnowledgeDataList() {
         return knowledgeService.lambdaQuery()
                 .in(Knowledge::getStatus, List.of(ALiFileUploadResultEnum.INIT.getCode(), ALiFileUploadResultEnum.PARSING.getCode()))
-                .eq(Knowledge::getType, KnowledgeTypeEnum.ALi_FILE.getCode())
+                .eq(Knowledge::getType, KnowledgeTypeEnum.FILE_ALI.getCode())
                 .list();
     }
 
@@ -66,12 +66,12 @@ public class ALiFileStatusCheckTask {
     }
 
     private void aLiFileUploadResultCheck(Knowledge knowledge) {
-        boolean succeeded = knowledgeService.updateFileUploadResult(knowledge);
+        boolean succeeded = knowledgeService.updateALiFileUploadResult(knowledge);
         if (!succeeded) {
             return;
         }
         // 执行知识库索引
-        String jobId = aLiYunService.submitIndexAddDocumentsJob(knowledge.getThreePartyFileId());
+        String jobId = aLiYunApiService.submitIndexAddDocumentsJob(knowledge.getThreePartyFileId());
         knowledge.setStatus(ALiFileIndexResultEnum.RUNNING.getCode());
         knowledge.setThreePartyInfo(jobId);
         knowledgeService.updateById(knowledge);
@@ -122,7 +122,7 @@ public class ALiFileStatusCheckTask {
     private List<Knowledge> getFileIndexProcessList() {
         return knowledgeService.lambdaQuery()
                 .notIn(Knowledge::getStatus, List.of(ALiFileIndexResultEnum.COMPLETED.getCode(), ALiFileIndexResultEnum.FAILED.getCode()))
-                .eq(Knowledge::getType, KnowledgeTypeEnum.ALi_FILE.getCode())
+                .eq(Knowledge::getType, KnowledgeTypeEnum.FILE_ALI.getCode())
                 .isNotNull(Knowledge::getThreePartyInfo)
                 .list();
     }

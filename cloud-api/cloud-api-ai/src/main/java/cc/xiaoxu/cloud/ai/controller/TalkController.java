@@ -3,7 +3,7 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.manager.AiProcessor;
 import cc.xiaoxu.cloud.ai.manager.ChatInfo;
 import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
-import cc.xiaoxu.cloud.ai.service.ALiYunService;
+import cc.xiaoxu.cloud.ai.service.ALiYunApiService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
@@ -49,7 +49,7 @@ public class TalkController {
     private KnowledgeSectionService knowledgeSectionService;
 
     @Resource
-    private ALiYunService aLiYunService;
+    private ALiYunApiService aLiYunApiService;
 
     @Resource
     private AiProcessor aiProcessor;
@@ -174,7 +174,7 @@ public class TalkController {
     private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String tenant) {
 
         // 问题转为向量
-        List<Double> vectorList = aLiYunService.vector(vo.getQuestion());
+        List<Double> vectorList = aLiYunApiService.vector(vo.getQuestion());
         String embedding = String.valueOf(vectorList);
         log.info("向量计算完成，维度：{}", vectorList.size());
 
