@@ -66,7 +66,7 @@ public class ALiFileStatusCheckTask {
     }
 
     private void aLiFileUploadResultCheck(Knowledge knowledge) {
-        boolean succeeded = knowledgeService.updateALiFileUploadResult(knowledge);
+        boolean succeeded = knowledgeService.getALiFileUploadResult(knowledge);
         if (!succeeded) {
             return;
         }

@@ -63,8 +63,8 @@ public class KnowledgeController {
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_ALI) {
             // 阿里
             String fileId = aLiYunApiService.uploadFile(file);
-            Knowledge knowledge = knowledgeService.addALiFile(file.getOriginalFilename(), fileId, tenant);
-            knowledgeService.updateALiFileUploadResult(knowledge);
+            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), fileId, tenant);
+            knowledgeService.getALiFileUploadResult(knowledge);
         }
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
             // TODO 本地
