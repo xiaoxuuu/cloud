@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper, KnowledgeSection> {
 
-    private final ALiYunService aLiYunService;
+    private final ALiYunApiService aLiYunApiService;
     private final CommonManager commonManager;
 
     public boolean readALiSection(Knowledge knowledge) {
@@ -39,7 +39,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         List<String> readSectionList = new ArrayList<>();
         while (hasNext) {
             // 每次处理 1000 条数据
-            List<String> readSectionListTemp = aLiYunService.readSection(knowledge.getThreePartyFileId(), pageNum, 1000);
+            List<String> readSectionListTemp = aLiYunApiService.readSection(knowledge.getThreePartyFileId(), pageNum, 1000);
             readSectionList.addAll(readSectionListTemp);
             log.info("读取到 {} 条数据", readSectionListTemp.size());
             if (readSectionListTemp.isEmpty()) {
@@ -99,7 +99,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 25);
         for (List<KnowledgeSection> knowledgeSections : lists) {
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
-            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunService.vector(cutList);
+            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
             Map<Integer, List<Double>> map = embeddingResultItemList.stream().collect(Collectors.toMap(TextEmbeddingResultItem::getTextIndex, TextEmbeddingResultItem::getEmbedding));
             for (int i = 0; i < knowledgeSections.size(); i++) {
                 if (map.containsKey(i)) {
