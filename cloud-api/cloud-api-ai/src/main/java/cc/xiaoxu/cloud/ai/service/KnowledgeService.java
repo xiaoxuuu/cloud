@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
+import cc.xiaoxu.cloud.ai.task.ALiFileStatusCheckTask;
 import cc.xiaoxu.cloud.bean.ai.dto.*;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
@@ -34,7 +35,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     private final ALiYunApiService aLiYunApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public Knowledge addALiFile(String fileName, String fileId, String tenant) {
+    public Knowledge addKnowledge(String fileName, String fileId, String tenant) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setTenant(tenant);
@@ -48,7 +49,11 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         return knowledge;
     }
 
-    public boolean updateALiFileUploadResult(Knowledge knowledge) {
+    /**
+     * <p>获取阿里云文件上传状态</p>
+     * <p>定时任务位置：{@link ALiFileStatusCheckTask#aLiFileUploadResultCheck() ALiFileStatusCheckTask.aLiFileUploadResultCheck}</p>
+     */
+    public boolean getALiFileUploadResult(Knowledge knowledge) {
 
         String fileId = knowledge.getThreePartyFileId();
         Integer id = knowledge.getId();
