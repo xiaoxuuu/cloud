@@ -1,10 +1,7 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.ai.service.ALiYunApiService;
-import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
-import cc.xiaoxu.cloud.ai.service.KnowledgeService;
-import cc.xiaoxu.cloud.ai.service.TenantService;
+import cc.xiaoxu.cloud.ai.service.*;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
@@ -21,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -34,6 +32,7 @@ public class KnowledgeController {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
     private final TenantService tenantService;
+    private final LocalApiService localApiService;
 
     @PostMapping("/list/{tenant}")
     @Operation(summary = "知识库查询 - 列表")
@@ -63,13 +62,25 @@ public class KnowledgeController {
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_ALI) {
             // 阿里
             String fileId = aLiYunApiService.uploadFile(file);
-            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), fileId, tenant);
+            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), fileId, tenant, KnowledgeTypeEnum.FILE_ALI);
             knowledgeService.getALiFileUploadResult(knowledge);
         }
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
-            // TODO 本地
-            String fileId = aLiYunApiService.uploadFile(file);
+            // 本地文件上传
+            String filePath = localApiService.uploadFile(file);
+
+            // TODO 启动线程处理
+
+            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, tenant, KnowledgeTypeEnum.FILE_LOCAL);
             // 本地文件处理
+            knowledgeService.lambdaUpdate()
+                    .eq(Knowledge::getId, knowledge.getId())
+                    .eq(Knowledge::getThreePartyFileId, knowledge.getThreePartyFileId())
+                    .set(Knowledge::getStatus, "upload_success")
+                    .set(Knowledge::getModifyTime, new Date())
+                    .update();
+            // TODO 本地文件切片
+            // TODO 本地文件向量化
         }
     }
 

@@ -2,3 +2,7 @@
 logging:
   level:
     cc.xiaoxu.cloud: WARN
+
+api:
+  file:
+    location: /home/files/
