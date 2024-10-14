@@ -35,11 +35,11 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     private final ALiYunApiService aLiYunApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public Knowledge addKnowledge(String fileName, String fileId, String tenant) {
+    public Knowledge addKnowledge(String fileName, String fileId, String tenant, KnowledgeTypeEnum knowledgeTypeEnum) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setTenant(tenant);
-        knowledge.setType(KnowledgeTypeEnum.FILE_ALI.getCode());
+        knowledge.setType(knowledgeTypeEnum.getCode());
         knowledge.setName(fileName);
         knowledge.setThreePartyFileId(fileId);
         knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
