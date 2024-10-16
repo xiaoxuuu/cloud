@@ -13,12 +13,10 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Service
@@ -34,22 +32,11 @@ public class AddLocalFileEvent {
         // 文件读取
         Knowledge knowledge = knowledgeService.getById(dto.getKnowledgeId());
         // 读取指定位置文件
-        String filePath = knowledge.getThreePartyFileId();
-
-        // 指定文件路径
-        Path path = Paths.get(filePath);
-
-        try {
-            // 读取文件内容为字符串列表
-            List<String> fileContent = Files.readAllLines(path);
-            // 打印文件内容
-            fileContent.forEach(System.out::println);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String content = read(knowledge.getThreePartyFileId());
 
         // TODO 本地文件切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
+        //
 
         // TODO 本地文件向量化
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);
@@ -64,14 +51,17 @@ public class AddLocalFileEvent {
 
     private static String read(String filePath) {
 
-        // 指定文件路径
-        Path path = Paths.get(filePath);
-
         StringBuilder fileContent = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        try (FileInputStream fis = new FileInputStream(filePath);
+             // 指定 GBK 编码
+//             InputStreamReader isr = new InputStreamReader(fis, "GBK");
+             InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+             // 使用 BufferedReader 逐行读取
+             BufferedReader br = new BufferedReader(isr)) {
+
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 // 追加每行内容和换行符
                 fileContent.append(line).append(System.lineSeparator());
             }
@@ -79,11 +69,5 @@ public class AddLocalFileEvent {
             e.printStackTrace();
         }
         return fileContent.toString();
-    }
-
-    public static void main(String[] args) {
-        String s = "/Volumes/HDD/03_Book/《超魔杀帝国(超级魔法帝国)》（校对版全本）作者：小分队长.txt";
-        String read = read(s);
-        System.out.println(read);
     }
 }
