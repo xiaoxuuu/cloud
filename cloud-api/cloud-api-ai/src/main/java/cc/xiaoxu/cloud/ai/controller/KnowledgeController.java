@@ -3,8 +3,10 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.*;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
+import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
 import cc.xiaoxu.cloud.bean.dto.PageDTO;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +36,7 @@ public class KnowledgeController {
     private final KnowledgeSectionService knowledgeSectionService;
     private final TenantService tenantService;
     private final LocalApiService localApiService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @PostMapping("/list/{tenant}")
     @Operation(summary = "知识库查询 - 列表")
@@ -68,19 +72,17 @@ public class KnowledgeController {
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
             // 本地文件上传
             String filePath = localApiService.uploadFile(file);
-
-            // TODO 启动线程处理
-
             Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, tenant, KnowledgeTypeEnum.FILE_LOCAL);
-            // 本地文件处理
+
+            // 异步处理
+            applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), tenant));
+
             knowledgeService.lambdaUpdate()
                     .eq(Knowledge::getId, knowledge.getId())
                     .eq(Knowledge::getThreePartyFileId, knowledge.getThreePartyFileId())
-                    .set(Knowledge::getStatus, "upload_success")
+                    .set(Knowledge::getStatus, FileStatusEnum.UPLOAD_PARSE_SUCCESS.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
-            // TODO 本地文件切片
-            // TODO 本地文件向量化
         }
     }
 
