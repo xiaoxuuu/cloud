@@ -19,6 +19,6 @@ public class KnowledgeSectionVO extends BaseVO {
     @Schema(description = "知识切片内容")
     private String cutContent;
 
-    @Schema(description = "知识切片向量，1536 维")
+    @Schema(description = "知识切片向量，1024 维")
     private String embedding;
 }
