@@ -48,7 +48,7 @@ COMMENT ON COLUMN t_knowledge_section.id IS '主键';
 COMMENT ON COLUMN t_knowledge_section.knowledge_id IS '知识id';
 COMMENT ON COLUMN t_knowledge_section.tenant IS '租户';
 COMMENT ON COLUMN t_knowledge_section.cut_content IS '知识切片内容';
-COMMENT ON COLUMN t_knowledge_section.embedding IS '知识切片向量，1536 维';
+COMMENT ON COLUMN t_knowledge_section.embedding IS '知识切片向量，1024 维';
 COMMENT ON COLUMN t_knowledge_section.state IS '状态';
 COMMENT ON COLUMN t_knowledge_section.remark IS '备注';
 COMMENT ON COLUMN t_knowledge_section.create_time IS '创建时间';
