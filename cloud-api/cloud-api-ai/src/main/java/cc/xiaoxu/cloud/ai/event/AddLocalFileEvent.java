@@ -7,8 +7,12 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.OkHttpUtils;
+import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Response;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -26,6 +32,10 @@ public class AddLocalFileEvent {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
+    private static final String splitBody = """
+            "text": %s
+            """;
+
     @EventListener(classes = {KnowledgeAddLocalFileEventDTO.class})
     public void onApplicationEvent(KnowledgeAddLocalFileEventDTO dto) {
 
@@ -34,9 +44,21 @@ public class AddLocalFileEvent {
         // 读取指定位置文件
         String content = read(knowledge.getThreePartyFileId());
 
-        // TODO 本地文件切片
+        // 本地文件切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
-        //
+        // 发起请求
+        List<String> textList = new ArrayList<>();
+        try (Response response = OkHttpUtils.builder()
+                .url("http://192.168.5.111:55555/split")
+                .body(splitBody.formatted(content))
+                .post(true)
+                .syncResponse()) {
+            String resultData = response.body().string();
+            textList = JsonUtils.parseArray(resultData, String.class);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+        // 数据入库
 
         // TODO 本地文件向量化
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);

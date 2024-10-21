@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS "t_knowledge";
 CREATE TABLE t_knowledge
 (
     id                  SERIAL PRIMARY KEY,
@@ -30,14 +29,13 @@ COMMENT ON COLUMN t_knowledge.create_id IS '创建人id';
 COMMENT ON COLUMN t_knowledge.modify_time IS '编辑时间';
 COMMENT ON COLUMN t_knowledge.modify_id IS '编辑人id';
 
-DROP TABLE IF EXISTS "t_knowledge_section";
 CREATE TABLE t_knowledge_section
 (
     id           SERIAL PRIMARY KEY,
     knowledge_id INT        NOT NULL,
     tenant VARCHAR(8),
     cut_content  TEXT,
-    embedding    vector(1536),
+    embedding vector(1024),
     state        VARCHAR(1) NOT NULL,
     remark       VARCHAR(16),
     create_time  TIMESTAMP  NOT NULL,
