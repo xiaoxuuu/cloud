@@ -64,7 +64,8 @@ public class ALiYunApiService {
     public List<TextEmbeddingResultItem> vector(List<String> textList) {
         TextEmbeddingParam param = TextEmbeddingParam
                 .builder()
-                .model(TextEmbedding.Models.TEXT_EMBEDDING_V2)
+                .model("text-embedding-v3")
+                .parameter("dimensions", "1024")
                 .apiKey(apiKey)
                 .texts(textList).build();
         TextEmbedding textEmbedding = new TextEmbedding();
