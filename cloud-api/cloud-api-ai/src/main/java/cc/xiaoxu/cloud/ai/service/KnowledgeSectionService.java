@@ -9,13 +9,16 @@ import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.OkHttpUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
+import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
-import com.alibaba.dashscope.embeddings.TextEmbeddingResultItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Response;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -99,8 +102,11 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 25);
         for (List<KnowledgeSection> knowledgeSections : lists) {
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
-            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
-            Map<Integer, List<Double>> map = embeddingResultItemList.stream().collect(Collectors.toMap(TextEmbeddingResultItem::getTextIndex, TextEmbeddingResultItem::getEmbedding));
+            // 阿里向量化
+//            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
+//            Map<Integer, List<Double>> map = embeddingResultItemList.stream().collect(Collectors.toMap(TextEmbeddingResultItem::getTextIndex, TextEmbeddingResultItem::getEmbedding));
+            // 本地
+            Map<Integer, List<Double>> map = localVector(cutList);
             for (int i = 0; i < knowledgeSections.size(); i++) {
                 if (map.containsKey(i)) {
                     getBaseMapper().updateEmbedding(String.valueOf(map.get(i)), knowledgeSections.get(i).getId());
@@ -108,6 +114,31 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
             }
         }
         return true;
+    }
+
+    private static final String splitBody = """
+            {
+                "texts": %s
+            }
+            """;
+
+    private Map<Integer, List<Double>> localVector(List<String> contentList) {
+
+        List<VectorDTO> vectorList;
+        try (Response response = OkHttpUtils.builder()
+                .url("http://192.168.5.111:55555/embeddings")
+                .body(splitBody.formatted(JsonUtils.toString(contentList)))
+                .post(true)
+                .syncResponse()) {
+            String resultData = response.body().string();
+            vectorList = JsonUtils.parseArray(resultData, VectorDTO.class);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage());
+        }
+        return vectorList.stream().collect(Collectors.toMap(VectorDTO::index, VectorDTO::embedding));
+    }
+
+    public record VectorDTO(Integer index, List<Double> embedding) {
     }
 
     public Page<KnowledgeSectionVO> pages(PageDTO dto, String tenant) {
