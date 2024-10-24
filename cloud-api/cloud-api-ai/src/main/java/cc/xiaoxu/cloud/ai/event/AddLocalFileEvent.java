@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -47,7 +46,7 @@ public class AddLocalFileEvent {
         // 本地文件切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
         // 发起请求
-        List<String> textList = new ArrayList<>();
+        List<String> textList;
         try (Response response = OkHttpUtils.builder()
                 .url("http://192.168.5.111:55555/split")
                 .body(splitBody.formatted(content))
@@ -59,6 +58,7 @@ public class AddLocalFileEvent {
             throw new CustomException(e.getMessage());
         }
         // 数据入库
+        knowledgeSectionService.insertNewData(dto.getKnowledgeId(), textList, dto.getTenant());
 
         // TODO 本地文件向量化
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);

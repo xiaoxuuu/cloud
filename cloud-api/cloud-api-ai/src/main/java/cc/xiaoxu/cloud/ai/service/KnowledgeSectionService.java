@@ -67,7 +67,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return true;
     }
 
-    private void insertNewData(Integer knowledgeId, List<String> dataList, String tenant) {
+    public void insertNewData(Integer knowledgeId, List<String> dataList, String tenant) {
 
         log.info("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
