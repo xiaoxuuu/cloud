@@ -32,7 +32,11 @@ public class AddLocalFileEvent {
     private final KnowledgeSectionService knowledgeSectionService;
 
     private static final String splitBody = """
-            "text": %s
+            {
+                "text": %s,
+                "chunk_size": 100,
+                "chunk_overlap": 0
+            }
             """;
 
     @EventListener(classes = {KnowledgeAddLocalFileEventDTO.class})
