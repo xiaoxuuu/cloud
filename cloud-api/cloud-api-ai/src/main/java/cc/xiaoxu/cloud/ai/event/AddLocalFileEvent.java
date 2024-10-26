@@ -64,7 +64,7 @@ public class AddLocalFileEvent {
         // 数据入库
         knowledgeSectionService.insertNewData(dto.getKnowledgeId(), textList, dto.getTenant());
 
-        // TODO 本地文件向量化
+        // 本地文件向量化
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);
         knowledgeSectionService.calcVector(new IdDTO(dto.getKnowledgeId()));
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.ALL_COMPLETED);
