@@ -74,15 +74,15 @@ public class KnowledgeController {
             String filePath = localApiService.uploadFile(file);
             Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, tenant, KnowledgeTypeEnum.FILE_LOCAL);
 
-            // 异步处理
-            applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), tenant));
-
             knowledgeService.lambdaUpdate()
                     .eq(Knowledge::getId, knowledge.getId())
                     .eq(Knowledge::getThreePartyFileId, knowledge.getThreePartyFileId())
                     .set(Knowledge::getStatus, FileStatusEnum.UPLOAD_PARSE_SUCCESS.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
+
+            // 异步处理
+            applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), tenant));
         }
     }
 
