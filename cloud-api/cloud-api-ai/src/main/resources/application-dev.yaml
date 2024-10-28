@@ -3,6 +3,12 @@ logging:
   level:
     cc.xiaoxu.cloud: DEBUG
 
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.5.111:5432/postgres?currentSchema=public
+    username: postgres
+    password: root
+
 api:
   file:
     location: /Users/x/Documents/02_code/_my/cloud/files/
