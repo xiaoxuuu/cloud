@@ -3,7 +3,6 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.manager.AiProcessor;
 import cc.xiaoxu.cloud.ai.manager.ChatInfo;
 import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
-import cc.xiaoxu.cloud.ai.service.ALiYunApiService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.ai.utils.LocalAiUtil;
@@ -48,9 +47,6 @@ public class TalkController {
 
     @Resource
     private KnowledgeSectionService knowledgeSectionService;
-
-    @Resource
-    private ALiYunApiService aLiYunApiService;
 
     @Resource
     private AiProcessor aiProcessor;
