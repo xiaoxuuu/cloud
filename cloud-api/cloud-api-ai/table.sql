@@ -2,9 +2,9 @@ CREATE TABLE t_knowledge
 (
     id                  SERIAL PRIMARY KEY,
     tenant VARCHAR(8),
-    type                VARCHAR(8),
-    name                VARCHAR(64),
-    three_party_file_id VARCHAR(64),
+    type                VARCHAR(32),
+    name                VARCHAR(255),
+    three_party_file_id TEXT,
     three_party_info    TEXT,
     status VARCHAR(16),
     state               VARCHAR(1) NOT NULL,
