@@ -33,7 +33,7 @@ CREATE TABLE t_knowledge_section
 (
     id           SERIAL PRIMARY KEY,
     knowledge_id INT        NOT NULL,
-    tenant VARCHAR(8),
+    tenant    VARCHAR(8),
     cut_content  TEXT,
     embedding vector(1024),
     state        VARCHAR(1) NOT NULL,
