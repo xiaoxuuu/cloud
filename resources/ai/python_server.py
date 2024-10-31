@@ -19,8 +19,9 @@ def get_embeddings():
     # 获取 JSON 请求中的文本数据
     data = request.get_json()
     texts = data['texts']
+    truncate_dim = data['truncate_dim']
     # 为每个文本生成嵌入向量
-    embeddings = model.encode(texts, task="text-matching", truncate_dim=32)
+    embeddings = model.encode(texts, task="text-matching", truncate_dim=truncate_dim)
     demo = []
     for i, text in enumerate(texts):
         demo.append({"index": i, "text": texts[i], "embedding": embeddings[i].tolist()})
