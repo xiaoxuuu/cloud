@@ -13,7 +13,8 @@ public class LocalAiUtil {
     public static final String URL = "http://192.168.5.111:55555";
     private static final String SPLIT_BODY = """
             {
-                "texts": %s
+                "texts": "%s",
+                "truncate_dim": 1024
             }
             """;
 
