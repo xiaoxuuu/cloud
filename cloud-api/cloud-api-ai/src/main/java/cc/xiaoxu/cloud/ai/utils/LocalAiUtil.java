@@ -10,10 +10,10 @@ import java.util.List;
 
 public class LocalAiUtil {
 
-    public static final String URL = "http://192.168.5.111:55555";
+    public static final String URL = "http://192.168.5.54:55555";
     private static final String SPLIT_BODY = """
             {
-                "texts": "%s",
+                "texts": %s,
                 "truncate_dim": 1024
             }
             """;
@@ -21,9 +21,10 @@ public class LocalAiUtil {
     public static List<LocalVectorDTO> localVector(List<String> contentList) {
 
         List<LocalVectorDTO> vectorList;
+        String formatted = SPLIT_BODY.formatted(JsonUtils.toString(contentList));
         try (Response response = OkHttpUtils.builder()
                 .url(URL + "/embeddings")
-                .body(SPLIT_BODY.formatted(JsonUtils.toString(contentList)))
+                .body(formatted)
                 .post(true)
                 .syncResponse()) {
             String resultData = response.body().string();
