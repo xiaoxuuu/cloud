@@ -46,21 +46,40 @@ public class KnowledgeController {
         return knowledgeService.lists(tenant);
     }
 
-    @PostMapping("/add_files/{type}/{tenant}")
-    @Operation(summary = "新增知识库 - 文件批量")
-    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("type") String type,
-                            @PathVariable("tenant") String tenant) throws InterruptedException {
+    @Deprecated
+    @PostMapping("/add_ali_files/{tenant}")
+    @Operation(summary = "新增知识库 - 文件批量 - 阿里")
+    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
 
         tenantService.checkTenantThrow(tenant);
         for (MultipartFile file : files) {
-            addALiFile(file, type, tenant);
+            addFile(file, KnowledgeTypeEnum.FILE_ALI.getCode(), tenant);
             Thread.sleep(6000);
         }
     }
 
+    @PostMapping("/add_files/{tenant}")
+    @Operation(summary = "新增知识库 - 文件批量 - 本地")
+    public void addLocalFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
+
+        tenantService.checkTenantThrow(tenant);
+        for (MultipartFile file : files) {
+            addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
+            Thread.sleep(6000);
+        }
+    }
+
+    @PostMapping("/add_file/{tenant}")
+    @Operation(summary = "新增知识库 - 文件批量 - 本地")
+    public void addLocalFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("tenant") String tenant) {
+
+        tenantService.checkTenantThrow(tenant);
+        addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
+    }
+
     @PostMapping("/add_file/{type}/{tenant}")
     @Operation(summary = "新增知识库 - 文件")
-    public void addALiFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
+    public void addFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
 
         tenantService.checkTenantThrow(tenant);
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_ALI) {
