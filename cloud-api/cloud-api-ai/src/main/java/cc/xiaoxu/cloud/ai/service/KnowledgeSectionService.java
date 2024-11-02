@@ -98,7 +98,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .isNull(KnowledgeSection::getEmbedding)
                 .list();
         List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 25);
-        for (List<KnowledgeSection> knowledgeSections : lists) {
+        lists.parallelStream().forEach(knowledgeSections -> {
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
             // 阿里向量化
 //            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
@@ -111,7 +111,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                     getBaseMapper().updateEmbedding(String.valueOf(map.get(i)), knowledgeSections.get(i).getId());
                 }
             }
-        }
+        });
         return true;
     }
 
