@@ -3,16 +3,13 @@ package cc.xiaoxu.cloud.ai.event;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.ai.utils.LocalAiUtil;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.core.exception.CustomException;
-import cc.xiaoxu.cloud.core.utils.OkHttpUtils;
-import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Response;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -31,14 +28,6 @@ public class AddLocalFileEvent {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
-    private static final String splitBody = """
-            {
-                "text": "%s",
-                "chunk_size": 768,
-                "chunk_overlap": 0
-            }
-            """;
-
     @EventListener(classes = {KnowledgeAddLocalFileEventDTO.class})
     public void onApplicationEvent(KnowledgeAddLocalFileEventDTO dto) {
 
@@ -51,17 +40,7 @@ public class AddLocalFileEvent {
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
         // 发起请求
         List<String> textList;
-        String formatted = splitBody.formatted(content.replace(System.lineSeparator(), ""));
-        try (Response response = OkHttpUtils.builder()
-                .url("http://192.168.5.54:55555/split")
-                .body(formatted)
-                .post(true)
-                .syncResponse()) {
-            String resultData = response.body().string();
-            textList = JsonUtils.parseArray(resultData, String.class);
-        } catch (Exception e) {
-            throw new CustomException(e.getMessage());
-        }
+        textList = LocalAiUtil.split(content);
         // 数据入库
         knowledgeSectionService.insertNewData(dto.getKnowledgeId(), textList, dto.getTenant());
 
