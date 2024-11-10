@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils;
+package cc.xiaoxu.cloud.ai.utils;
 
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import okhttp3.*;
