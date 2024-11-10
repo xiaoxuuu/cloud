@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud.ai.utils;
 
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
-import cc.xiaoxu.cloud.core.utils.OkHttpUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import okhttp3.Response;
 
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class LocalAiUtil {
 
-    public static final String URL = "http://192.168.5.20:55555";
+    public static final String URL = "http://192.168.5.111:55555";
     private static final String vector_BODY = """
             {
                 "texts": %s,

@@ -97,8 +97,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .eq(KnowledgeSection::getKnowledgeId, dto.getId())
                 .isNull(KnowledgeSection::getEmbedding)
                 .list();
-        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 25);
+        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 10);
         lists.parallelStream().forEach(knowledgeSections -> {
+            String collect = knowledgeSections.stream().map(KnowledgeSection::getId).map(String::valueOf).collect(Collectors.joining(","));
+            log.info("处理文本：{}", collect);
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
             // 阿里向量化
 //            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
