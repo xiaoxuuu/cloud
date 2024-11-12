@@ -2,7 +2,9 @@ package cc.xiaoxu.cloud.ai.manager.ai;
 
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatRoleEnum;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,19 +12,28 @@ public class Prompt {
 
     public static List<AiChatMessageDTO> build(String systemPrompt, String userPrompt, Map<String, String> map) {
 
+        systemPrompt = null == systemPrompt ? "" : systemPrompt;
+        userPrompt = null == userPrompt ? "" : userPrompt;
         for (Map.Entry<String, String> k : map.entrySet()) {
             systemPrompt = systemPrompt.replace(k.getKey(), k.getValue());
             userPrompt = userPrompt.replace(k.getKey(), k.getValue());
         }
-        AiChatMessageDTO system = AiChatMessageDTO.builder()
-                .role(AiChatRoleEnum.SYSTEM.getCode())
-                .content(systemPrompt)
-                .build();
-        AiChatMessageDTO user = AiChatMessageDTO.builder()
-                .role(AiChatRoleEnum.USER.getCode())
-                .content(userPrompt)
-                .build();
-        return List.of(system, user);
+        List<AiChatMessageDTO> list = new ArrayList<>();
+        if (StringUtils.isNotBlank(systemPrompt)) {
+            AiChatMessageDTO system = AiChatMessageDTO.builder()
+                    .role(AiChatRoleEnum.SYSTEM.getCode())
+                    .content(systemPrompt)
+                    .build();
+            list.add(system);
+        }
+        if (StringUtils.isNotBlank(userPrompt)) {
+            AiChatMessageDTO user = AiChatMessageDTO.builder()
+                    .role(AiChatRoleEnum.USER.getCode())
+                    .content(userPrompt)
+                    .build();
+            list.add(user);
+        }
+        return list;
     }
 
     /**
@@ -75,6 +86,45 @@ public class Prompt {
             String userPrompt = """
                     问题：{question}
                     知识列表：{knowledgeData}
+                    """;
+            return build(systemPrompt, userPrompt, map);
+        }
+    }
+
+
+    /**
+     * 测试
+     */
+    public static class Test {
+
+        /**
+         * 测试
+         */
+        public static List<AiChatMessageDTO> simple(String question) {
+
+            Map<String, String> map = Map.of("{question}", question);
+            String systemPrompt = "";
+            String userPrompt = """
+                    {question}
+                    """;
+            return build(systemPrompt, userPrompt, map);
+        }
+
+        /**
+         * 测试
+         */
+        public static List<AiChatMessageDTO> v1(String question) {
+
+            Map<String, String> map = Map.of("{question}", question);
+            String systemPrompt = """
+                    你是个经验丰富的专家，我将对你提问。请你回复
+                    要求：
+                    - 请使用简洁且专业的语言来回答问题。
+                    - 请使用 Markdown 语法优化答案的格式。
+                    - 请使用与问题相同的语言来回答。
+                    """;
+            String userPrompt = """
+                    {question}
                     """;
             return build(systemPrompt, userPrompt, map);
         }
