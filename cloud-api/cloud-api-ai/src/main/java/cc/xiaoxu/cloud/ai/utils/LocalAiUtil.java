@@ -9,7 +9,7 @@ import java.util.List;
 
 public class LocalAiUtil {
 
-    public static final String URL = "http://192.168.5.111:55555";
+    public static final String URL = "http://172.17.0.1:50004";
     private static final String vector_BODY = """
             {
                 "texts": %s,
