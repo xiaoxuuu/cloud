@@ -18,6 +18,9 @@ public enum AiChatModelEnum implements EnumInterface<String>, EnumDescInterface 
     Q_WEN_7B_CHAT("qwen1.5-7b-chat", "千问 7B", AiTypeEnum.Q_WEN),
     Q_WEN_LONG_CHAT("qwen-long", "千问 LONG", AiTypeEnum.Q_WEN),
 
+    // 本地
+    LOCAL("qwen", "本地 千问 32B", AiTypeEnum.Q_WEN),
+
     // 测试
     TEST("test", "", AiTypeEnum.TEST),
     CUSTOM("custom", "", AiTypeEnum.TEST),
