@@ -3,6 +3,10 @@ logging:
   level:
     cc.xiaoxu.cloud: WARN
 
+spring:
+  datasource:
+    url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/postgres?currentSchema=public
+
 api:
   file:
     location: /home/files/
