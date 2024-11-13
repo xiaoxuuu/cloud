@@ -79,6 +79,7 @@ public class TalkController {
     }
 
     @Parameters({
+            @Parameter(required = true, name = "tenant", description = "租户", in = ParameterIn.PATH),
             @Parameter(required = true, name = "knowledgeId", description = "选用知识分类，留空则不限制", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarity", description = "相似度，越小越好，越大越不相似", in = ParameterIn.PATH),
@@ -87,9 +88,9 @@ public class TalkController {
     @Wrap(disabled = true)
     @GetMapping(value = "/ask/{tenant}/{knowledgeId}/{similarity}/{similarityContentNum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 全参数")
-    public SseEmitter ask(@PathVariable("knowledgeId") String knowledgeId, @PathVariable("similarity") Double similarity,
-                          @PathVariable("similarityContentNum") Integer similarityContentNum,
-                          @PathVariable("question") String question, @PathVariable("tenant") String tenant, HttpServletResponse response) {
+    public SseEmitter ask(@PathVariable("tenant") String tenant, @PathVariable("knowledgeId") String knowledgeId,
+                          @PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
+                          @PathVariable("question") String question, HttpServletResponse response) {
 
         tenantService.checkTenantThrow(tenant);
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
@@ -98,16 +99,16 @@ public class TalkController {
         return emitter;
     }
 
+    @Parameters({
+            @Parameter(required = true, name = "tenant", description = "租户", in = ParameterIn.PATH),
+            @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
+    })
     @Wrap(disabled = true)
     @GetMapping(value = "/ask/{tenant}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 简洁参数")
-    public SseEmitter ask(@PathVariable("question") String question, @PathVariable("tenant") String tenant, HttpServletResponse response) {
+    public SseEmitter ask(@PathVariable("tenant") String tenant, @PathVariable("question") String question, HttpServletResponse response) {
 
-        tenantService.checkTenantThrow(tenant);
-        AskDTO vo = new AskDTO(question, 0.7, 10, null);
-        SseEmitter emitter = new SseEmitter();
-        sendSseEmitter(response, vo, emitter, tenant);
-        return emitter;
+        return ask(tenant, null, 0.7, 10, question, response);
     }
 
     private Integer count = 100;
@@ -145,15 +146,18 @@ public class TalkController {
                 .map(String::toString)
                 .map(k -> k.length() < 6 ? k : k.substring(0, 5))
                 .collect(Collectors.joining(","));
-        try {
-            emitter.send(SseVO.start());
-            for (KnowledgeSectionExpandVO similarityDatum : similarityData) {
-                similarityDatum.setEmbedding(null);
-                emitter.send(SseVO.paramMap(Map.of("USE_DATA", similarityDatum)));
+        if (null != emitter) {
+            try {
+                emitter.send(SseVO.start());
+                for (KnowledgeSectionExpandVO similarityDatum : similarityData) {
+                    similarityDatum.setEmbedding(null);
+                    emitter.send(SseVO.paramMap(Map.of("USE_DATA", similarityDatum)));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+
         log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
         String knowledgeList = similarityData.stream()
                 .map(KnowledgeSectionExpandVO::getCutContent)
