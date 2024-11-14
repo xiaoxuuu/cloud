@@ -4,7 +4,6 @@ import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
-import cc.xiaoxu.cloud.ai.utils.LocalAiUtil;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
@@ -32,6 +31,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     private final ALiYunApiService aLiYunApiService;
     private final CommonManager commonManager;
+    private final LocalApiService localApiService;
 
     public boolean readALiSection(Knowledge knowledge) {
 
@@ -106,7 +106,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 //            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
 //            Map<Integer, List<Double>> map = embeddingResultItemList.stream().collect(Collectors.toMap(TextEmbeddingResultItem::getTextIndex, TextEmbeddingResultItem::getEmbedding));
             // 本地
-            List<LocalVectorDTO> vectorList = LocalAiUtil.localVector(cutList);
+            List<LocalVectorDTO> vectorList = localApiService.localVector(cutList);
             Map<Integer, List<Double>> map = vectorList.stream().collect(Collectors.toMap(LocalVectorDTO::getIndex, LocalVectorDTO::getEmbedding));
             for (int i = 0; i < knowledgeSections.size(); i++) {
                 if (map.containsKey(i)) {

@@ -3,7 +3,7 @@ package cc.xiaoxu.cloud.ai.event;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
-import cc.xiaoxu.cloud.ai.utils.LocalAiUtil;
+import cc.xiaoxu.cloud.ai.service.LocalApiService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
@@ -27,6 +27,7 @@ public class AddLocalFileEvent {
 
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
+    private final LocalApiService localApiService;
 
     @EventListener(classes = {KnowledgeAddLocalFileEventDTO.class})
     public void onApplicationEvent(KnowledgeAddLocalFileEventDTO dto) {
@@ -40,7 +41,7 @@ public class AddLocalFileEvent {
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
         // 发起请求
         List<String> textList;
-        textList = LocalAiUtil.split(content);
+        textList = localApiService.split(content);
         // 数据入库
         knowledgeSectionService.insertNewData(dto.getKnowledgeId(), textList, dto.getTenant());
 
