@@ -10,3 +10,5 @@ spring:
 api:
   file:
     location: /home/files/
+  model:
+    url: http://172.17.0.1:50004
