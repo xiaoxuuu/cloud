@@ -4,8 +4,8 @@ import cc.xiaoxu.cloud.ai.manager.AiProcessor;
 import cc.xiaoxu.cloud.ai.manager.ChatInfo;
 import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
+import cc.xiaoxu.cloud.ai.service.LocalApiService;
 import cc.xiaoxu.cloud.ai.service.TenantService;
-import cc.xiaoxu.cloud.ai.utils.LocalAiUtil;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
@@ -14,6 +14,7 @@ import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import cc.xiaoxu.cloud.core.cache.CacheService;
+import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -60,14 +61,21 @@ public class TalkController {
     @Resource
     private TenantService tenantService;
 
+    @Resource
+    private LocalApiService localApiService;
+
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
     @PostMapping(value = "/ask/{tenant}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问")
     public String ask(@Valid @RequestBody AskDTO vo, @PathVariable("tenant") String tenant, HttpServletResponse response) {
 
+        StopWatchUtil sw = new StopWatchUtil("知识库提问");
+        sw.start("校验用户");
         tenantService.checkTenantThrow(tenant);
-        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant);
+
+        sw.start("获取知识数据");
+        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant, sw);
 
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
@@ -92,10 +100,14 @@ public class TalkController {
                           @PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
+        StopWatchUtil sw = new StopWatchUtil("知识库提问");
+        sw.start("校验用户");
         tenantService.checkTenantThrow(tenant);
+        sw.start("构建必备类");
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
-        sendSseEmitter(response, vo, emitter, tenant);
+        sw.start("校验用户");
+        sendSseEmitter(response, vo, emitter, tenant, sw);
         return emitter;
     }
 
@@ -114,15 +126,19 @@ public class TalkController {
     private Integer count = 100;
     private String countKey = "AI:COUNT:";
 
-    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter, String tenant) {
+    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw) {
 
-        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant);
+        sw.start("获取知识数据");
+        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant, sw);
+
+        sw.print(log::info);
 
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter));
         } else {
             // 回答问题后扣减次数
+            sw.start("调用问题回答");
             Integer todayCount = cacheService.getCacheObject(countKey + tenant);
             if (null == todayCount) {
                 todayCount = 0;
@@ -172,14 +188,16 @@ public class TalkController {
                 .stream(emitter);
     }
 
-    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String tenant) {
+    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String tenant, StopWatchUtil sw) {
 
+        sw.start("问题转向量");
         // 问题转为向量
-        List<Double> vectorList = LocalAiUtil.vector(vo.getQuestion());
+        List<Double> vectorList = localApiService.vector(vo.getQuestion());
         String embedding = String.valueOf(vectorList);
         log.info("向量计算完成，维度：{}", vectorList.size());
 
         // 取出相似度数据
+        sw.start("问题相似文本查询");
         return knowledgeSectionService.getBaseMapper()
                 .getSimilarityData(embedding, vo, tenant);
     }
