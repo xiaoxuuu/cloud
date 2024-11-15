@@ -1,7 +1,7 @@
 # 日志输出配置
 logging:
   level:
-    cc.xiaoxu.cloud: WARN
+    cc.xiaoxu.cloud: INFO
 
 spring:
   datasource:
