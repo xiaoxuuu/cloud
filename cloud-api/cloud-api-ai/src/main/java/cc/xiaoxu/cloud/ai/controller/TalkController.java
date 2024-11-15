@@ -100,7 +100,7 @@ public class TalkController {
                           @PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
-        StopWatchUtil sw = new StopWatchUtil("知识库提问");
+        StopWatchUtil sw = new StopWatchUtil("知识库提问", log::info, true);
         sw.start("校验用户");
         tenantService.checkTenantThrow(tenant);
         sw.start("构建必备类");
