@@ -30,8 +30,7 @@ public class LocalApiService {
 
     private static final String vector_BODY = """
             {
-                "texts": %s,
-                "truncate_dim": 1024
+                "input": %s
             }
             """;
 
@@ -48,16 +47,20 @@ public class LocalApiService {
         List<LocalVectorDTO> vectorList;
         String formatted = vector_BODY.formatted(JsonUtils.toString(contentList));
         try (Response response = OkHttpUtils.builder()
-                .url(URL + "/embeddings")
+                .url("http://172.168.1.216:8004/v1/embeddings")
                 .body(formatted)
                 .post(true)
                 .syncResponse()) {
             String resultData = response.body().string();
-            vectorList = JsonUtils.parseArray(resultData, LocalVectorDTO.class);
+            RespData respData = JsonUtils.parse(resultData, RespData.class);
+            vectorList = respData.data();
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
         return vectorList;
+    }
+
+    public record RespData(String object, String model, List<LocalVectorDTO> data) {
     }
 
     public List<Double> vector(String text) {
