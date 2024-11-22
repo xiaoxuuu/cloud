@@ -12,7 +12,9 @@ app = Flask(__name__)
 
 print("Loading model...")
 model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
-
+# 将模型移动到 GPU 上
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 
 @app.route('/embeddings', methods=['POST'])
 def get_embeddings():
