@@ -65,5 +65,5 @@ def split_text_api():
 
 if __name__ == '__main__':
     print("Loading server...")
-    app.run(port=55555, host='0.0.0.0')
+    app.run(port=50004, host='0.0.0.0')
     print("Done")
