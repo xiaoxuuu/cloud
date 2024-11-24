@@ -1,7 +1,7 @@
 spring:
   data:
     redis:
-      password: X4!A@iq#HM
+      password: X1
       database: 0
       cluster:
         nodes:
@@ -12,6 +12,6 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.5.111:4848
-        namespace: 1a2f3024-1c2f-4479-860b-f46acf08c597
+        namespace: 1a2f2024-1c23-4474-860b-f46ac108c597
         username: nacos
-        password: zwcb3axb
+        password: zwc1
