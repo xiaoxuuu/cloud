@@ -61,3 +61,9 @@ wx:
 knife4j:
   basic:
     password: @env.knife4j.password@
+
+api:
+  file:
+    location: /home/files/
+  model:
+    url: http://172.17.0.1:50004
