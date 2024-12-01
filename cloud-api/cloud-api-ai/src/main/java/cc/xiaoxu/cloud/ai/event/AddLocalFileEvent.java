@@ -34,8 +34,10 @@ public class AddLocalFileEvent {
 
         // 文件读取
         Knowledge knowledge = knowledgeService.getById(dto.getKnowledgeId());
+        log.debug("读取文件：{}", knowledge.getName());
         // 读取指定位置文件
         String content = read(knowledge.getThreePartyFileId());
+        log.debug("读取文件长度：{}", content.length());
 
         // 本地文件切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);

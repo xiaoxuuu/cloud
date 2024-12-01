@@ -38,10 +38,11 @@ public class LocalApiService {
     private static final String splitBody = """
             {
                 "text": "%s",
-                "chunk_size": 768,
+                "chunk_size": %s,
                 "chunk_overlap": 0
             }
             """;
+    private static final String chunk_size = "768";
 
     public List<LocalVectorDTO> localVector(List<String> contentList) {
 
@@ -67,8 +68,11 @@ public class LocalApiService {
 
 
     public List<String> split(String content) {
+        log.debug("文件切片");
         List<String> textList;
-        String formatted = splitBody.formatted(content.replace(System.lineSeparator(), ""));
+        String replaceContent = content.replace(System.lineSeparator(), "");
+        log.debug("单个切片大小：{}，实际切片长度：{}", chunk_size, replaceContent.length());
+        String formatted = splitBody.formatted(replaceContent, chunk_size);
         try (Response response = OkHttpUtils.builder()
                 .url(URL + "/split")
                 .body(formatted)
@@ -79,6 +83,7 @@ public class LocalApiService {
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
+        log.debug("文件切片数量：{}", textList.size());
         return textList;
     }
 
