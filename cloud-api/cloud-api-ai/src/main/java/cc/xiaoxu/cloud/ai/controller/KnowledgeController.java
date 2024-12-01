@@ -84,13 +84,16 @@ public class KnowledgeController {
         tenantService.checkTenantThrow(tenant);
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_ALI) {
             // 阿里
+            log.debug("阿里文件上传：{}", file.getOriginalFilename());
             String fileId = aLiYunApiService.uploadFile(file);
             Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), fileId, tenant, KnowledgeTypeEnum.FILE_ALI);
             knowledgeService.getALiFileUploadResult(knowledge);
         }
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
             // 本地文件上传
+            log.debug("本地文件上传：{}", file.getOriginalFilename());
             String filePath = localApiService.uploadFile(file);
+            log.debug("文件上传结束：{}", filePath);
             Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, tenant, KnowledgeTypeEnum.FILE_LOCAL);
 
             knowledgeService.lambdaUpdate()
@@ -99,7 +102,7 @@ public class KnowledgeController {
                     .set(Knowledge::getStatus, FileStatusEnum.UPLOAD_PARSE_SUCCESS.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
-
+            log.debug("文件上传数据更新完成：{}", knowledge.getName());
             // 异步处理
             applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), tenant));
         }

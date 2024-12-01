@@ -70,7 +70,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     public void insertNewData(Integer knowledgeId, List<String> dataList, String tenant) {
 
-        log.info("读取完成，一共 {} 条数据", dataList.size());
+        log.debug("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
         lambdaUpdate()
                 .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
@@ -97,23 +97,21 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .eq(KnowledgeSection::getKnowledgeId, dto.getId())
                 .isNull(KnowledgeSection::getEmbedding)
                 .list();
-        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 10);
-        lists.parallelStream().forEach(knowledgeSections -> {
-            String collect = knowledgeSections.stream().map(KnowledgeSection::getId).map(String::valueOf).collect(Collectors.joining(","));
-            log.info("处理文本：{}", collect);
+        int size = list.size();
+        log.debug("文本切片：{} 片", size);
+        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 5);
+        for (List<KnowledgeSection> knowledgeSections : lists) {
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
-            // 阿里向量化
-//            List<TextEmbeddingResultItem> embeddingResultItemList = aLiYunApiService.vector(cutList);
-//            Map<Integer, List<Double>> map = embeddingResultItemList.stream().collect(Collectors.toMap(TextEmbeddingResultItem::getTextIndex, TextEmbeddingResultItem::getEmbedding));
-            // 本地
             List<LocalVectorDTO> vectorList = localApiService.localVector(cutList);
             Map<Integer, List<Double>> map = vectorList.stream().collect(Collectors.toMap(LocalVectorDTO::getIndex, LocalVectorDTO::getEmbedding));
             for (int i = 0; i < knowledgeSections.size(); i++) {
                 if (map.containsKey(i)) {
                     getBaseMapper().updateEmbedding(String.valueOf(map.get(i)), knowledgeSections.get(i).getId());
+                    size--;
                 }
             }
-        });
+            log.debug("文本切片剩余：{} 片", size);
+        }
         return true;
     }
 
