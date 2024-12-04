@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.ai.utils.OkHttpUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import com.alibaba.fastjson2.JSONException;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -55,6 +57,9 @@ public class LocalApiService {
                 .syncResponse()) {
             String resultData = response.body().string();
             vectorList = JsonUtils.parseArray(resultData, LocalVectorDTO.class);
+        } catch (JSONException e) {
+            log.error("JSON解析异常：{}", e.getMessage());
+            return new ArrayList<>();
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
