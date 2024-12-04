@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -97,22 +98,38 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .eq(KnowledgeSection::getKnowledgeId, dto.getId())
                 .isNull(KnowledgeSection::getEmbedding)
                 .list();
-        int size = list.size();
+        int success = calcVector(list, 10);
+        // 补偿
+        if (success != list.size()) {
+            List<KnowledgeSection> relist = lambdaQuery()
+                    .eq(KnowledgeSection::getKnowledgeId, dto.getId())
+                    .isNull(KnowledgeSection::getEmbedding)
+                    .list();
+            log.debug("文本切片补偿：{} 片", relist.size());
+            int i = calcVector(relist, 1);
+            log.debug("文本切片补偿完成：{} 片，剩余 {} 片", i, relist.size() - i);
+        }
+        return true;
+    }
+
+    public int calcVector(List<KnowledgeSection> list, int batchSize) {
+
+        AtomicInteger size = new AtomicInteger(list.size());
         log.debug("文本切片：{} 片", size);
-        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, 5);
-        for (List<KnowledgeSection> knowledgeSections : lists) {
+        List<List<KnowledgeSection>> lists = ListUtils.splitList(list, batchSize);
+        lists.parallelStream().forEach(knowledgeSections -> {
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
             List<LocalVectorDTO> vectorList = localApiService.localVector(cutList);
             Map<Integer, List<Double>> map = vectorList.stream().collect(Collectors.toMap(LocalVectorDTO::getIndex, LocalVectorDTO::getEmbedding));
             for (int i = 0; i < knowledgeSections.size(); i++) {
                 if (map.containsKey(i)) {
                     getBaseMapper().updateEmbedding(String.valueOf(map.get(i)), knowledgeSections.get(i).getId());
-                    size--;
+                    size.getAndDecrement();
                 }
             }
-            log.debug("文本切片剩余：{} 片", size);
-        }
-        return true;
+        });
+        log.debug("文本切片完成：{} 片，剩余：{} 片", list.size() - size.get(), size);
+        return list.size() - size.get();
     }
 
     public Page<KnowledgeSectionVO> pages(PageDTO dto, String tenant) {
