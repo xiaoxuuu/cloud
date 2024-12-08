@@ -53,8 +53,9 @@ public class AddLocalFileEvent {
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.ALL_COMPLETED);
 
         knowledgeService.lambdaUpdate()
+                .set(Knowledge::getState, StateEnum.ENABLE.getCode())
                 .eq(Knowledge::getId, dto.getKnowledgeId())
-                .eq(Knowledge::getState, StateEnum.ENABLE.getCode())
+                .eq(Knowledge::getState, StateEnum.PROGRESSING.getCode())
                 .update();
     }
 
