@@ -3,18 +3,57 @@ import os
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
 from flask import Flask, request, jsonify
-from transformers import AutoModel
+from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
 import re
 from typing import List
 from chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
+import torch
 
 app = Flask(__name__)
 
-print("Loading model...")
-model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
-# 将模型移动到 GPU 上
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+
+print("Loading chat model...")
+tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True)
+# model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", device_map="auto", trust_remote_code=True, bf16=True).eval()
+chat_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True).eval()
+# 将模型移动到 GPU 上
+chat_model.to(device)
+
+
+print("Loading embedding model...")
+embedding_model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
+# 将模型移动到 GPU 上
+embedding_model.to(device)
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    data = request.json
+    messages = data.get('messages', [])
+
+    # 将 messages 转换为模型所需的输入格式
+    prompt = ""
+    for message in messages:
+        role = message.get('role', '')
+        content = message.get('content', '')
+        prompt += f"{role}: {content}\n"
+
+    # 生成响应
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
+    outputs = chat_model.generate(**inputs, max_length=512)
+    response_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+    # 返回与 OpenAI 一致的响应格式
+    return jsonify({
+        "choices": [{
+            "message": {
+                "role": "assistant",
+                "content": response_text
+            }
+        }]
+    })
+
 
 @app.route('/embeddings', methods=['POST'])
 def get_embeddings():
@@ -23,7 +62,7 @@ def get_embeddings():
     texts = data['texts']
     truncate_dim = data['truncate_dim']
     # 为每个文本生成嵌入向量
-    embeddings = model.encode(texts, task="text-matching", truncate_dim=truncate_dim)
+    embeddings = embedding_model.encode(texts, task="text-matching", truncate_dim=truncate_dim)
     demo = []
     for i, text in enumerate(texts):
         demo.append({"index": i, "text": texts[i], "embedding": embeddings[i].tolist()})
