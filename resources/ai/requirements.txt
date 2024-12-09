@@ -4,4 +4,7 @@ transformers==4.46.3
 langchain-core==0.2.43
 langchain-text-splitters==0.2.4
 typing_extensions==4.12.2
-torch==2.5.1
+torch==2.4.1
+tiktoken==0.8.0
+tensorflow==2.18.0
+transformers_stream_generator==0.0.5
