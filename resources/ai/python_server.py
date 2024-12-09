@@ -1,30 +1,38 @@
-# hugging face 镜像
 import os
-os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
-
+import logging
 from flask import Flask, request, jsonify
 from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
-import re
-from typing import List
 from chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
 import torch
 
+# 设置 Hugging Face 镜像
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
+
+# 初始化 Flask 应用
 app = Flask(__name__)
 
+# 配置日志
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# 设备选择
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-print("Loading chat model...")
-tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True)
-# model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", device_map="auto", trust_remote_code=True, bf16=True).eval()
-chat_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True).eval()
-# 将模型移动到 GPU 上
-chat_model.to(device)
+def load_models():
+    """加载并初始化模型"""
+    logger.info("Loading chat model...")
+    tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True)
+    chat_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True).eval()
+    chat_model.to(device)
 
+    logger.info("Loading embedding model...")
+    embedding_model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
+    embedding_model.to(device)
 
-print("Loading embedding model...")
-embedding_model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
-# 将模型移动到 GPU 上
-embedding_model.to(device)
+    return tokenizer, chat_model, embedding_model
+
+# 加载模型
+tokenizer, chat_model, embedding_model = load_models()
 
 
 @app.route('/chat', methods=['POST'])
