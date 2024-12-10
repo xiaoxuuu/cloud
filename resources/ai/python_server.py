@@ -64,6 +64,26 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/embeddings', methods=['POST'])
+def get_embeddings():
+    """处理文本嵌入请求"""
+    try:
+        data = request.get_json()
+        texts = data.get('texts', [])
+        truncate_dim = data.get('truncate_dim', 512)
+
+        # 为每个文本生成嵌入向量
+        embeddings = embedding_model.encode(texts, task="text-matching", truncate_dim=truncate_dim)
+
+        # 返回嵌入向量
+        return jsonify([{"index": i, "text": text, "embedding": embedding.tolist()}
+                        for i, (text, embedding) in enumerate(zip(texts, embeddings))])
+    except Exception as e:
+        logger.error(f"Error in embeddings endpoint: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 if __name__ == '__main__':
     logger.info("Starting server...")
