@@ -47,31 +47,71 @@ class SplitTextRequest(BaseModel):
     chunk_size: int = 100
     chunk_overlap: int = 0
 
-@app.post("/v1/completions")
-async def chat(request: ChatRequest):
-    """处理聊天请求"""
-    try:
-        messages = request.messages
+class CompletionRequest(BaseModel):
+    prompt: str
+    max_tokens: int = 512
+    temperature: float = 1.0
+    top_p: float = 1.0
+    n: int = 1
+    stop: list = None
+    stream: bool = False
 
-        # 将 messages 转换为模型所需的输入格式
-        prompt = "\n".join([f"{msg.get('role', '')}: {msg.get('content', '')}" for msg in messages])
+@app.post("/v1/completions")
+async def completions(request: CompletionRequest):
+    """处理 OpenAI 兼容的 completions 请求"""
+    try:
+        prompt = request.prompt
+        max_tokens = request.max_tokens
+        temperature = request.temperature
+        top_p = request.top_p
+        n = request.n
+        stop = request.stop
+        stream = request.stream
+
+        # 如果 stream 为 True，需要支持流式响应（此处暂不支持流式）
+        if stream:
+            raise HTTPException(status_code=501, detail="Streaming is not supported yet.")
 
         # 生成响应
         inputs = tokenizer(prompt, return_tensors="pt").to(device)
-        outputs = chat_model.generate(**inputs, max_length=512)
-        response_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+        outputs = chat_model.generate(
+            **inputs,
+            max_length=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            num_return_sequences=n,
+            do_sample=True,
+            eos_token_id=tokenizer.eos_token_id,
+            pad_token_id=tokenizer.pad_token_id,
+            early_stopping=True
+        )
+
+        # 解码生成的文本
+        completions = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
 
         # 返回与 OpenAI 一致的响应格式
         return {
-            "choices": [{
-                "message": {
-                    "role": "assistant",
-                    "content": response_text
+            "id": "cmpl-1234567890",  # 模拟 OpenAI 的 ID
+            "object": "text_completion",
+            "created": int(torch.tensor(0).item()),  # 模拟时间戳
+            "model": "Qwen/Qwen-1_8B-Chat",
+            "choices": [
+                {
+                    "text": completion,
+                    "index": i,
+                    "logprobs": None,
+                    "finish_reason": "length" if len(completion) >= max_tokens else "stop"
                 }
-            }]
+                for i, completion in enumerate(completions)
+            ],
+            "usage": {
+                "prompt_tokens": len(tokenizer.encode(prompt)),
+                "completion_tokens": sum(len(tokenizer.encode(completion)) for completion in completions),
+                "total_tokens": len(tokenizer.encode(prompt)) + sum(len(tokenizer.encode(completion)) for completion in completions)
+            }
         }
     except Exception as e:
-        logger.error(f"Error in chat endpoint: {e}")
+        logger.error(f"Error in completions endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/embeddings")
