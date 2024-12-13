@@ -1,10 +1,13 @@
 import os
 import logging
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
+from threading import Thread
 from chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
 import torch
+import time
 
 # 设置 Hugging Face 镜像
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
@@ -40,6 +43,7 @@ tokenizer, chat_model, embedding_model = load_models()
 
 class ChatRequest(BaseModel):
     messages: list
+    stream: bool = False
 
 class EmbeddingsRequest(BaseModel):
     texts: list
@@ -57,6 +61,7 @@ async def completions(request: ChatRequest):
     # 返回参数按照 openai api 格式
     try:
         messages = request.messages
+        stream = request.stream
         
         # 使用 apply_chat_template 将消息转换为模型可以理解的格式 ([3](https://qwen.readthedocs.io/zh-cn/latest/inference/chat.html))
         text = tokenizer.apply_chat_template(
@@ -77,22 +82,45 @@ async def completions(request: ChatRequest):
 
         response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
-        # 按照 openai api 格式返回
-        return {
-            "choices": [{
-                "index": 0,
-                "message": {
-                    "role": "assistant",
-                    "content": response,
-                },
-                "finish_reason": "stop"
-            }],
-            "usage": {
-                "prompt_tokens": len(model_inputs.input_ids[0]),
-                "completion_tokens": len(generated_ids[0]),
-                "total_tokens": len(model_inputs.input_ids[0]) + len(generated_ids[0])
+        if stream:
+            # 流式返回
+            async def generate_stream():
+                streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+                generation_kwargs = dict(
+                    input_ids=model_inputs.input_ids,
+                    max_new_tokens=512,
+                    streamer=streamer
+                )
+                thread = Thread(target=chat_model.generate, kwargs=generation_kwargs)
+                thread.start()
+                
+                start_time = int(time.time())
+                first_token = True
+                for output in streamer:
+                    yield f"data: {{\"id\": \"cmpl-\", \"object\": \"chat.completion.chunk\", \"created\": {start_time}, \"model\": \"{chat_model_name}\", \"choices\": [{{\"index\": 0, \"delta\": {{\"role\": \"assistant\", \"content\": \"\" if first_token else output}}, \"finish_reason\": None}}]}}\n\n"
+                    first_token = False
+                
+                # 结束标记
+                yield f"data: {{\"id\": \"cmpl-\", \"object\": \"chat.completion.chunk\", \"created\": {start_time}, \"model\": \"{chat_model_name}\", \"choices\": [{{\"index\": 0, \"delta\": {{}}, \"finish_reason\": \"stop\", \"usage\": {{\"prompt_tokens\": {len(model_inputs.input_ids[0])}, \"completion_tokens\": 0, \"total_tokens\": 0}}}}]}}\n\n"
+                yield "data: [DONE]\n\n"
+
+            return StreamingResponse(generate_stream(), media_type="application/json")
+        else:
+            return {
+                "choices": [{
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": response,
+                    },
+                    "finish_reason": "stop"
+                }],
+                "usage": {
+                    "prompt_tokens": len(model_inputs.input_ids[0]),
+                    "completion_tokens": len(generated_ids[0]),
+                    "total_tokens": len(model_inputs.input_ids[0]) + len(generated_ids[0])
+                }
             }
-        }
     except Exception as e:
         logger.error(f"Error in completions endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
