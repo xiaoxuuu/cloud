@@ -18,14 +18,15 @@ logger = logging.getLogger(__name__)
 
 # 设备选择
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+chat_model_name = "Qwen/Qwen-1_8B-Chat"
 
 def load_models():
     """加载并初始化模型"""
     logger.info("Loading chat model...")
-    tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(chat_model_name, trust_remote_code=True)
     # 设置 chat_template
     tokenizer.chat_template = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
-    chat_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True).eval()
+    chat_model = AutoModelForCausalLM.from_pretrained(chat_model_name, trust_remote_code=True).eval()
     chat_model.to(device)
 
     logger.info("Loading embedding model...")
