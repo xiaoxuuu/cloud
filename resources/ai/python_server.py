@@ -23,6 +23,8 @@ def load_models():
     """加载并初始化模型"""
     logger.info("Loading chat model...")
     tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True)
+    # 设置 chat_template
+    tokenizer.chat_template = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
     chat_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-1_8B-Chat", trust_remote_code=True).eval()
     chat_model.to(device)
 
@@ -40,79 +42,60 @@ class ChatRequest(BaseModel):
 
 class EmbeddingsRequest(BaseModel):
     texts: list
-    truncate_dim: int = 512
+    truncate_dim: int = 768
 
 class SplitTextRequest(BaseModel):
     text: str
     chunk_size: int = 100
     chunk_overlap: int = 0
 
-class CompletionRequest(BaseModel):
-    prompt: str
-    max_tokens: int = 512
-    temperature: float = 1.0
-    top_p: float = 1.0
-    n: int = 1
-    stop: list = None
-    stream: bool = False
-
 @app.post("/v1/completions")
-async def completions(request: CompletionRequest):
-    """处理 OpenAI 兼容的 completions 请求"""
+async def completions(request: ChatRequest):
+    # 请求参数支持 messages 参数，接收提问
+    # 请求参数支持 stream 参数，控制是否以流式返回数据
+    # 返回参数按照 openai api 格式
     try:
-        prompt = request.prompt
-        max_tokens = request.max_tokens
-        temperature = request.temperature
-        top_p = request.top_p
-        n = request.n
-        stop = request.stop
-        stream = request.stream
-
-        # 如果 stream 为 True，需要支持流式响应（此处暂不支持流式）
-        if stream:
-            raise HTTPException(status_code=501, detail="Streaming is not supported yet.")
-
-        # 生成响应
-        inputs = tokenizer(prompt, return_tensors="pt").to(device)
-        outputs = chat_model.generate(
-            **inputs,
-            max_length=max_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            num_return_sequences=n,
-            do_sample=True,
-            eos_token_id=tokenizer.eos_token_id,
-            pad_token_id=tokenizer.pad_token_id,
-            early_stopping=True
+        messages = request.messages
+        
+        # 使用 apply_chat_template 将消息转换为模型可以理解的格式 ([3](https://qwen.readthedocs.io/zh-cn/latest/inference/chat.html))
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
         )
+        model_inputs = tokenizer([text], return_tensors="pt").to(device)
 
-        # 解码生成的文本
-        completions = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
+        # 使用 generate 方法进行问答 ([3](https://qwen.readthedocs.io/zh-cn/latest/inference/chat.html))
+        generated_ids = chat_model.generate(
+            **model_inputs,
+            max_new_tokens=512,
+        )
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+        ]
 
-        # 返回与 OpenAI 一致的响应格式
+        response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
+        # 按照 openai api 格式返回
         return {
-            "id": "cmpl-1234567890",  # 模拟 OpenAI 的 ID
-            "object": "text_completion",
-            "created": int(torch.tensor(0).item()),  # 模拟时间戳
-            "model": "Qwen/Qwen-1_8B-Chat",
-            "choices": [
-                {
-                    "text": completion,
-                    "index": i,
-                    "logprobs": None,
-                    "finish_reason": "length" if len(completion) >= max_tokens else "stop"
-                }
-                for i, completion in enumerate(completions)
-            ],
+            "choices": [{
+                "index": 0,
+                "message": {
+                    "role": "assistant",
+                    "content": response,
+                },
+                "finish_reason": "stop"
+            }],
             "usage": {
-                "prompt_tokens": len(tokenizer.encode(prompt)),
-                "completion_tokens": sum(len(tokenizer.encode(completion)) for completion in completions),
-                "total_tokens": len(tokenizer.encode(prompt)) + sum(len(tokenizer.encode(completion)) for completion in completions)
+                "prompt_tokens": len(model_inputs.input_ids[0]),
+                "completion_tokens": len(generated_ids[0]),
+                "total_tokens": len(model_inputs.input_ids[0]) + len(generated_ids[0])
             }
         }
     except Exception as e:
         logger.error(f"Error in completions endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/embeddings")
 async def get_embeddings(request: EmbeddingsRequest):
