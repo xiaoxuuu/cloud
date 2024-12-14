@@ -95,10 +95,10 @@ async def completions(request: ChatRequest):
                 thread.start()
 
                 for output in streamer:
-                    yield output
+                    yield f"data: {output}\n\n"
 
                 # 结束标记
-                #yield "data: [DONE]"
+                yield "data: [DONE]\n\n"
 
             return StreamingResponse(generate_stream(), media_type="text/event-stream")
         else:
