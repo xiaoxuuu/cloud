@@ -7,9 +7,8 @@ from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer, TextIte
 from threading import Thread
 from chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
 import torch
-import time
 
-# 设置 Hugging Face 镜像
+# 设置 Hugging Face 镜像（可选）
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
 # 初始化 FastAPI 应用
@@ -21,7 +20,10 @@ logger = logging.getLogger(__name__)
 
 # 设备选择
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# 模型名称
 chat_model_name = "Qwen/Qwen-1_8B-Chat"
+embedding_model_name = "jinaai/jina-embeddings-v3"
 
 def load_models():
     """加载并初始化模型"""
@@ -29,12 +31,10 @@ def load_models():
     tokenizer = AutoTokenizer.from_pretrained(chat_model_name, trust_remote_code=True)
     # 设置 chat_template
     tokenizer.chat_template = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
-    chat_model = AutoModelForCausalLM.from_pretrained(chat_model_name, trust_remote_code=True).eval()
-    chat_model.to(device)
+    chat_model = AutoModelForCausalLM.from_pretrained(chat_model_name, trust_remote_code=True).to(device).eval()
 
     logger.info("Loading embedding model...")
-    embedding_model = AutoModel.from_pretrained("jinaai/jina-embeddings-v3", trust_remote_code=True)
-    embedding_model.to(device)
+    embedding_model = AutoModel.from_pretrained(embedding_model_name, trust_remote_code=True).to(device)
 
     return tokenizer, chat_model, embedding_model
 
@@ -56,31 +56,18 @@ class SplitTextRequest(BaseModel):
 
 @app.post("/v1/completions")
 async def completions(request: ChatRequest):
-    # 请求参数支持 messages 参数，接收提问
-    # 请求参数支持 stream 参数，控制是否以流式返回数据
-    # 返回参数按照 openai api 格式
+    """处理对话请求"""
     try:
         messages = request.messages
         stream = request.stream
-        
-        # 使用 apply_chat_template 将消息转换为模型可以理解的格式 ([3](https://qwen.readthedocs.io/zh-cn/latest/inference/chat.html))
+
+        # 使用 apply_chat_template 将消息转换为模型可以理解的格式
         text = tokenizer.apply_chat_template(
             messages,
             tokenize=False,
             add_generation_prompt=True,
         )
         model_inputs = tokenizer([text], return_tensors="pt").to(device)
-
-        # 使用 generate 方法进行问答 ([3](https://qwen.readthedocs.io/zh-cn/latest/inference/chat.html))
-        generated_ids = chat_model.generate(
-            **model_inputs,
-            max_new_tokens=512,
-        )
-        generated_ids = [
-            output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
-        ]
-
-        response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
         if stream:
             # 流式返回
@@ -95,13 +82,24 @@ async def completions(request: ChatRequest):
                 thread.start()
 
                 for output in streamer:
-                    yield f"data: {output}\n\n"
+                    yield f"data: {output}"
 
                 # 结束标记
-                yield "data: [DONE]\n\n"
+                yield "data: [DONE]"
 
             return StreamingResponse(generate_stream(), media_type="text/event-stream")
         else:
+            # 非流式返回
+            generated_ids = chat_model.generate(
+                **model_inputs,
+                max_new_tokens=512,
+            )
+            generated_ids = [
+                output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
+            ]
+
+            response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+
             return {
                 "choices": [{
                     "index": 0,
@@ -112,15 +110,14 @@ async def completions(request: ChatRequest):
                     "finish_reason": "stop"
                 }],
                 "usage": {
-                    "prompt_tokens": len(model_inputs.input_ids[0]),
-                    "completion_tokens": len(generated_ids[0]),
-                    "total_tokens": len(model_inputs.input_ids[0]) + len(generated_ids[0])
+                    "prompt_tokens": model_inputs.input_ids.shape[1],
+                    "completion_tokens": generated_ids[0].shape[0],
+                    "total_tokens": model_inputs.input_ids.shape[1] + generated_ids[0].shape[0]
                 }
             }
     except Exception as e:
         logger.error(f"Error in completions endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-
 
 @app.post("/embeddings")
 async def get_embeddings(request: EmbeddingsRequest):
@@ -156,7 +153,6 @@ async def split_text_api(request: SplitTextRequest):
         )
         split_results = text_splitter.split_text(text)
 
-        # 返回结果
         return split_results
     except Exception as e:
         logger.error(f"Error in split endpoint: {e}")
