@@ -93,18 +93,14 @@ async def completions(request: ChatRequest):
                 )
                 thread = Thread(target=chat_model.generate, kwargs=generation_kwargs)
                 thread.start()
-                
-                start_time = int(time.time())
-                first_token = True
-                for output in streamer:
-                    yield f"data: {{\"id\": \"cmpl-\", \"object\": \"chat.completion.chunk\", \"created\": {start_time}, \"model\": \"{chat_model_name}\", \"choices\": [{{\"index\": 0, \"delta\": {{\"role\": \"assistant\", \"content\": \"\" if first_token else output}}, \"finish_reason\": None}}]}}\n\n"
-                    first_token = False
-                
-                # 结束标记
-                yield f"data: {{\"id\": \"cmpl-\", \"object\": \"chat.completion.chunk\", \"created\": {start_time}, \"model\": \"{chat_model_name}\", \"choices\": [{{\"index\": 0, \"delta\": {{}}, \"finish_reason\": \"stop\", \"usage\": {{\"prompt_tokens\": {len(model_inputs.input_ids[0])}, \"completion_tokens\": 0, \"total_tokens\": 0}}}}]}}\n\n"
-                yield "data: [DONE]\n\n"
 
-            return StreamingResponse(generate_stream(), media_type="application/json")
+                for output in streamer:
+                    yield output
+
+                # 结束标记
+                #yield "data: [DONE]"
+
+            return StreamingResponse(generate_stream(), media_type="text/event-stream")
         else:
             return {
                 "choices": [{
