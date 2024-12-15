@@ -11,33 +11,37 @@ import torch
 # 设置 Hugging Face 镜像（可选）
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
+# 配置日志
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.info("System load...")
+
 # 初始化 FastAPI 应用
 app = FastAPI()
-
-# 配置日志
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger.info("FastAPI loaded.")
 
 # 设备选择
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+logger.info("Device selected.")
 
 # 模型名称
-chat_model_name = "Qwen/Qwen-1_8B-Chat"
-embedding_model_name = "jinaai/jina-embeddings-v3"
+chat_model_path = "/home/app/transformers_modules/Qwen/Qwen2.5-32B-Instruct-AWQ"
+embedding_model_path = "/home/app/transformers_modules/jinaai/jina-embeddings-v3"
 
 def load_models():
     """加载并初始化模型"""
     logger.info("Loading chat model...")
-    tokenizer = AutoTokenizer.from_pretrained(chat_model_name, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(chat_model_path, local_files_only=True, trust_remote_code=True)
     # 设置 chat_template
     tokenizer.chat_template = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
-    chat_model = AutoModelForCausalLM.from_pretrained(chat_model_name, trust_remote_code=True).to(device).eval()
+    chat_model = AutoModelForCausalLM.from_pretrained(chat_model_path, local_files_only=True, trust_remote_code=True).to(device).eval()
 
     logger.info("Loading embedding model...")
-    embedding_model = AutoModel.from_pretrained(embedding_model_name, trust_remote_code=True).to(device)
+    embedding_model = AutoModel.from_pretrained(embedding_model_path, local_files_only=True, trust_remote_code=True).to(device)
 
     return tokenizer, chat_model, embedding_model
 
+logger.info("Model loaded.")
 # 加载模型
 tokenizer, chat_model, embedding_model = load_models()
 
@@ -76,16 +80,18 @@ async def completions(request: ChatRequest):
                 generation_kwargs = dict(
                     input_ids=model_inputs.input_ids,
                     max_new_tokens=512,
-                    streamer=streamer
+                    streamer=streamer,
+                    pad_token_id=tokenizer.pad_token_id,
+                    eos_token_id=tokenizer.eos_token_id,
                 )
                 thread = Thread(target=chat_model.generate, kwargs=generation_kwargs)
                 thread.start()
 
                 for output in streamer:
-                    yield f"data: {output}"
+                    yield f"data: {output}\n\n"
 
                 # 结束标记
-                yield "data: [DONE]"
+                yield "data: [DONE]\n\n"
 
             return StreamingResponse(generate_stream(), media_type="text/event-stream")
         else:
@@ -93,6 +99,8 @@ async def completions(request: ChatRequest):
             generated_ids = chat_model.generate(
                 **model_inputs,
                 max_new_tokens=512,
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id,
             )
             generated_ids = [
                 output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
@@ -162,4 +170,4 @@ if __name__ == '__main__':
     import uvicorn
     logger.info("Starting server...")
     uvicorn.run(app, host="0.0.0.0", port=50004)
-    logger.info("Server started.")
+    logger.info("Server shutdown.")
