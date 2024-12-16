@@ -58,7 +58,7 @@ class SplitTextRequest(BaseModel):
     chunk_size: int = 100
     chunk_overlap: int = 0
 
-@app.post("/v1/completions")
+@app.post("/v1/chat/completions")
 async def completions(request: ChatRequest):
     """处理对话请求"""
     try:
