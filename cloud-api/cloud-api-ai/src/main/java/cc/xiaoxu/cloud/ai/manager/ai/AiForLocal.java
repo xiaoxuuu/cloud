@@ -31,7 +31,7 @@ public class AiForLocal {
 
     private static final String HEADER_PREFIX = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
-    private static final String CHAT_COMPLETION_URL = "http://172.168.1.216:8000/v1/chat/completions";
+    private static final String CHAT_COMPLETION_URL = "http://172.168.1.78:50004/v1/chat/completions";
     private static final String REQUEST_BODY = """
             {
                  "model": "%s",
@@ -138,7 +138,7 @@ public class AiForLocal {
             StringBuilder stringBuilder = new StringBuilder();
             if (200 == statusCode) {
                 while ((line = reader.readLine()) != null) {
-                    if ("data: [DONE]".equals(line)) {
+                    if ("data: [DONE]".equals(line.trim())) {
                         break;
                     }
                     String data;

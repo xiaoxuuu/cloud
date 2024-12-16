@@ -183,7 +183,7 @@ public class TalkController {
         AiKimiController.setResponseHeader(response);
         List<AiChatMessageDTO> ask = Prompt.Ask.v2("本地知识库", vo.getQuestion(), knowledgeList, DEFAULT_ANSWER);
 
-        return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.Q_WEN_72B_CHAT)
+        return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, AiChatModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ)
                 .apiKey(apiKey)
                 .stream(emitter);
     }
