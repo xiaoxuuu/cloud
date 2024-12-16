@@ -20,6 +20,7 @@ public enum AiChatModelEnum implements EnumInterface<String>, EnumDescInterface 
 
     // 本地
     LOCAL("qwen", "本地 千问 32B", AiTypeEnum.Q_WEN),
+    LOCAL_QWEN2_5_32B_INSTRUCT_AWQ("Qwen2.5-32B-Instruct-AWQ", "本地 千问2.5 32B", AiTypeEnum.Q_WEN),
 
     // 测试
     TEST("test", "", AiTypeEnum.TEST),

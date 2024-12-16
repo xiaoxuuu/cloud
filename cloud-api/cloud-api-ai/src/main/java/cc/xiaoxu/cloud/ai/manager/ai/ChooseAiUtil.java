@@ -23,14 +23,14 @@ public class ChooseAiUtil {
             case TEST, CUSTOM -> AiForTest.test(dtoList);
             case Q_WEN_72B_CHAT, Q_WEN_MAX, Q_WEN_7B_CHAT, Q_WEN_LONG_CHAT ->
                     AiForQWen.chat(dtoList, key, model, emitter);
-            case LOCAL -> AiForLocal.chat(dtoList, key, model, emitter);
+            case LOCAL, LOCAL_QWEN2_5_32B_INSTRUCT_AWQ -> AiForLocal.chat(dtoList, key, model, emitter);
             default -> throw new CustomException("暂不支持的类型：" + model.getCode());
         };
     }
 
     public static void main(String[] args) throws IOException {
         Response object = OkHttpUtils.builder()
-                .url("http://172.168.1.216:8000/v1/chat/completions")
+                .url("http://172.168.1.216:50004/v1/chat/completions")
                 .body("{ \"model\": \"qwen\", \"message\": [ { \"role\": \"user\", \"content\": \"你是谁\"  } ] , \"stream\": false }")
                 .post(true)
                 .syncResponse();
