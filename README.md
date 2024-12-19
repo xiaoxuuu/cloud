@@ -80,6 +80,7 @@ System.out.println(CatchUtils.of(() -> 1 + 1).t(99).last(() -> System.err.printl
 ```shell
 # 打包及推送镜像命令
 mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -T 12 -P tencent
+mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -T 12 -P ai_local
 ```
 
 # 发布
