@@ -11,7 +11,6 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -27,11 +26,11 @@ import java.util.concurrent.TimeUnit;
  * 通用模型调用
  */
 @Slf4j
-public class AiForLocal {
+public class AiForLocalQwen {
 
     private static final String HEADER_PREFIX = "Bearer ";
     private static final String HEADER_AUTHORIZATION = "Authorization";
-    private static final String CHAT_COMPLETION_URL = "http://172.168.1.216:8000/v1/chat/completions";
+    private static final String CHAT_COMPLETION_URL = "http://172.168.1.78:50004/v1/chat/completions";
     private static final String REQUEST_BODY = """
             {
                  "model": "%s",
@@ -144,7 +143,7 @@ public class AiForLocal {
                     String data;
                     try {
                         data = getData(line);
-                    } catch (KimiFinishException e) {
+                    } catch (FinishException e) {
                         resultDTO.setToken(Integer.parseInt(e.getMessage()));
                         break;
                     }
@@ -206,49 +205,12 @@ public class AiForLocal {
         if (StringUtils.isBlank(line)) {
             return null;
         }
-        String data = line.replaceFirst("data: ", "");
-        KimiResult kimiResult = JSON.parseObject(data, KimiResult.class);
-        if (null == kimiResult) {
-            return null;
-        }
-        if (CollectionUtils.isEmpty(kimiResult.choices)) {
-            return null;
-        }
-        Choice choice = kimiResult.choices.get(0);
-        if ("stop".equals(choice.finishReason)) {
-            if (null == choice.usage) {
-                return null;
-            }
-            if (null == choice.usage.totalTokens) {
-                return null;
-            }
-            throw new KimiFinishException("" + choice.usage.totalTokens);
-        }
-
-        if (null == choice.delta) {
-            return null;
-        }
-        return choice.delta.content;
+        return line.replaceFirst("data: ", "");
     }
 
-    private record KimiResult(String id, String object, int created, String model, List<Choice> choices) {
-    }
+    private static class FinishException extends RuntimeException {
 
-    private record Choice(Integer index, Delta delta, @JSONField(name = "finish_reason") String finishReason,
-                          Usage usage) {
-    }
-
-    private record Delta(String role, String content) {
-    }
-
-    private record Usage(@JSONField(name = "prompt_tokens") Integer promptTokens,
-                         @JSONField(name = "completion_tokens") Integer completionTokens,
-                         @JSONField(name = "total_tokens") Integer totalTokens) {
-    }
-
-    private static class KimiFinishException extends RuntimeException {
-
-        public KimiFinishException(String message) {
+        public FinishException(String message) {
             super(message);
         }
     }
