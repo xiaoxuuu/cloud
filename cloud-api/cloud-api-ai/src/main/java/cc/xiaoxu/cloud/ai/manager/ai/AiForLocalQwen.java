@@ -137,7 +137,7 @@ public class AiForLocalQwen {
             StringBuilder stringBuilder = new StringBuilder();
             if (200 == statusCode) {
                 while ((line = reader.readLine()) != null) {
-                    if ("data: [DONE]".equals(line)) {
+                    if ("data: [DONE]".equals(line.trim())) {
                         break;
                     }
                     String data;
