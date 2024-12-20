@@ -7,6 +7,7 @@ from transformers import AutoModel, AutoModelForCausalLM, AutoTokenizer, TextIte
 from threading import Thread
 from chinese_recursive_text_splitter import ChineseRecursiveTextSplitter
 import torch
+import asyncio
 
 # 设置 Hugging Face 镜像（可选）
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
@@ -87,11 +88,20 @@ async def completions(request: ChatRequest):
                 thread = Thread(target=chat_model.generate, kwargs=generation_kwargs)
                 thread.start()
 
-                for output in streamer:
-                    yield f"data: {output}\n\n"
-
-                # 结束标记
-                yield "data: [DONE]\n\n"
+                try:
+                    for output in streamer:
+                        yield f"data: {output}\n\n"
+                        if thread.is_alive():
+                            await asyncio.sleep(0.01)  # 增加一个小的延迟
+                        else:
+                            break
+                except asyncio.CancelledError:
+                    logger.warning("Stream interrupted by client, stopping generation.")
+                    # 可以选择在这里执行一些清理操作，例如停止模型的生成过程
+                    # 注意：直接停止模型的生成可能需要模型或生成库提供特定的支持
+                finally:
+                    # 结束标记
+                    yield "data: [DONE]\n\n"
 
             return StreamingResponse(generate_stream(), media_type="text/event-stream")
         else:
@@ -126,6 +136,7 @@ async def completions(request: ChatRequest):
     except Exception as e:
         logger.error(f"Error in completions endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/embeddings")
 async def get_embeddings(request: EmbeddingsRequest):
