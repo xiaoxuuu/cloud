@@ -15,7 +15,7 @@ os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-logger.info("System load...")
+logger.info("System loading...")
 
 # 初始化 FastAPI 应用
 app = FastAPI()
@@ -23,7 +23,7 @@ logger.info("FastAPI loaded.")
 
 # 设备选择
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-logger.info("Device selected.")
+logger.info(f"Device selected: {device}")
 
 # 模型名称
 chat_model_path = "/home/app/transformers_modules/Qwen/Qwen2.5-32B-Instruct-AWQ"
@@ -87,14 +87,12 @@ async def completions(request: ChatRequest):
                 )
                 thread = Thread(target=chat_model.generate, kwargs=generation_kwargs)
                 thread.start()
+                logger.info("Connect.")
 
                 try:
                     for output in streamer:
                         yield f"data: {output}\n\n"
-                        if thread.is_alive():
-                            await asyncio.sleep(0.01)  # 增加一个小的延迟
-                        else:
-                            break
+                        logger.info(f"{output}")
                 except asyncio.CancelledError:
                     logger.warning("Stream interrupted by client, stopping generation.")
                     # 可以选择在这里执行一些清理操作，例如停止模型的生成过程
