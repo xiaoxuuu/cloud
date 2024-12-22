@@ -76,7 +76,7 @@ async def completions(request: ChatRequest):
 
         if stream:
             # 流式返回
-            async def generate_stream():
+            def generate_stream():
                 streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
                 generation_kwargs = dict(
                     input_ids=model_inputs.input_ids,
@@ -85,18 +85,19 @@ async def completions(request: ChatRequest):
                     pad_token_id=tokenizer.pad_token_id,
                     eos_token_id=tokenizer.eos_token_id,
                 )
+
+                # 创建一个线程来运行生成过程
                 thread = Thread(target=chat_model.generate, kwargs=generation_kwargs)
                 thread.start()
+
                 logger.info("Connect.")
 
                 try:
                     for output in streamer:
                         yield f"data: {output}\n\n"
                         logger.info(f"{output}")
-                except asyncio.CancelledError:
-                    logger.warning("Stream interrupted by client, stopping generation.")
-                    # 可以选择在这里执行一些清理操作，例如停止模型的生成过程
-                    # 注意：直接停止模型的生成可能需要模型或生成库提供特定的支持
+                except Exception as e:
+                    logger.warning(f"Stream interrupted by client: {e}")
                 finally:
                     # 结束标记
                     yield "data: [DONE]\n\n"
