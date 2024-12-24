@@ -149,7 +149,6 @@ public class AiForLocal {
                         break;
                     }
                     if (StringUtils.isNotBlank(data)) {
-                        System.out.println(data);
                         emitter.send(SseVO.msg(data));
                         stringBuilder.append(data);
                     }

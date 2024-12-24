@@ -128,7 +128,6 @@ public class AiKimiController {
                 }
                 if (StringUtils.isNotBlank(data)) {
                     emitter.send(SseVO.msg(data));
-                    System.out.print(data);
                 }
             }
             reader.close();
