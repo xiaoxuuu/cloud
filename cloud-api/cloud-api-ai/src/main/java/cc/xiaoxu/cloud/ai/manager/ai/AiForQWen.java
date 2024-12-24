@@ -117,7 +117,6 @@ public class AiForQWen {
                 String content = message.getOutput().getChoices().get(0).getMessage().getContent();
                 try {
                     emitter.send(SseVO.msg(content));
-                    System.out.print(content);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
