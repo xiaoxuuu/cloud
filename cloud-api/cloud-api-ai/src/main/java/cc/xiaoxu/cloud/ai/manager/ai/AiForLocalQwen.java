@@ -11,6 +11,7 @@ import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -137,13 +138,13 @@ public class AiForLocalQwen {
             StringBuilder stringBuilder = new StringBuilder();
             if (200 == statusCode) {
                 while ((line = reader.readLine()) != null) {
-                    if ("data: [DONE]".equals(line.trim())) {
+                    if ("data: [DONE]".equals(line)) {
                         break;
                     }
                     String data;
                     try {
                         data = getData(line);
-                    } catch (FinishException e) {
+                    } catch (KimiFinishException e) {
                         resultDTO.setToken(Integer.parseInt(e.getMessage()));
                         break;
                     }
@@ -204,12 +205,49 @@ public class AiForLocalQwen {
         if (StringUtils.isBlank(line)) {
             return null;
         }
-        return line.replaceFirst("data: ", "");
+        String data = line.replaceFirst("data: ", "");
+        KimiResult kimiResult = JSON.parseObject(data, KimiResult.class);
+        if (null == kimiResult) {
+            return null;
+        }
+        if (CollectionUtils.isEmpty(kimiResult.choices)) {
+            return null;
+        }
+        Choice choice = kimiResult.choices.get(0);
+        if ("stop".equals(choice.finishReason)) {
+            if (null == choice.usage) {
+                return null;
+            }
+            if (null == choice.usage.totalTokens) {
+                return null;
+            }
+            throw new KimiFinishException("" + choice.usage.totalTokens);
+        }
+
+        if (null == choice.delta) {
+            return null;
+        }
+        return choice.delta.content;
     }
 
-    private static class FinishException extends RuntimeException {
+    private record KimiResult(String id, String object, int created, String model, List<Choice> choices) {
+    }
 
-        public FinishException(String message) {
+    private record Choice(Integer index, Delta delta, @JSONField(name = "finish_reason") String finishReason,
+                          Usage usage) {
+    }
+
+    private record Delta(String role, String content) {
+    }
+
+    private record Usage(@JSONField(name = "prompt_tokens") Integer promptTokens,
+                         @JSONField(name = "completion_tokens") Integer completionTokens,
+                         @JSONField(name = "total_tokens") Integer totalTokens) {
+    }
+
+    private static class KimiFinishException extends RuntimeException {
+
+        public KimiFinishException(String message) {
             super(message);
         }
     }

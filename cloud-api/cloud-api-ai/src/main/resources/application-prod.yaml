@@ -11,7 +11,7 @@ api:
   file:
     location: /home/files/
   model:
-    url: http://172.17.0.1:50004
+    url: http://172.17.0.1:50005
 
 # knife4j 的增强配置，不需要增强可以不配
 knife4j:
