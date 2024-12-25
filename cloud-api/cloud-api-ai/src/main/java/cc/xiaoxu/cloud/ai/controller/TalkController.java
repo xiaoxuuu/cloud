@@ -110,7 +110,7 @@ public class TalkController {
                           @PathVariable("modelTypeEnum") String modelTypeEnum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
-        StopWatchUtil sw = new StopWatchUtil("知识库提问", log::info, true);
+        StopWatchUtil sw = new StopWatchUtil("知识库提问");
         sw.start("校验用户");
         tenantService.checkTenantThrow(tenant);
         sw.start("构建必备类");
@@ -141,11 +141,12 @@ public class TalkController {
         sw.start("获取知识数据");
         List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant, sw);
 
-        sw.print(log::info);
-
         if (CollectionUtils.isEmpty(similarityData)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
-            threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter));
+            threadPoolTaskExecutor.execute(() -> {
+                defaultAnswer(emitter);
+                sw.print(log::info);
+            });
         } else {
             // 回答问题后扣减次数
             sw.start("调用问题回答");
@@ -161,7 +162,10 @@ public class TalkController {
             todayCount++;
             cacheService.setCacheObject(countKey + tenant, todayCount);
             ChatInfo chatInfo = getChatInfo(vo, response, emitter, similarityData, modelTypeEnum);
-            threadPoolTaskExecutor.execute(() -> aiProcessor.chat(chatInfo));
+            threadPoolTaskExecutor.execute(() -> {
+                aiProcessor.chat(chatInfo);
+                sw.print(log::info);
+            });
         }
     }
 
