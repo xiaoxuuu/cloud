@@ -71,7 +71,7 @@ public class TalkController {
     @Operation(summary = "获取模型")
     public List<AiChatModelEnum> getModel() {
 
-        return List.of(AiChatModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, AiChatModelEnum.LOCAL, AiChatModelEnum.MOONSHOT_V1_128K, AiChatModelEnum.Q_WEN_7B_CHAT, AiChatModelEnum.Q_WEN_72B_CHAT);
+        return List.of(AiChatModelEnum.LOCAL_QWEN2_5_14B_INSTRUCT_AWQ, AiChatModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, AiChatModelEnum.LOCAL, AiChatModelEnum.MOONSHOT_V1_128K, AiChatModelEnum.Q_WEN_7B_CHAT, AiChatModelEnum.Q_WEN_72B_CHAT);
     }
 
     @PostMapping(value = "/ask/{tenant}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
