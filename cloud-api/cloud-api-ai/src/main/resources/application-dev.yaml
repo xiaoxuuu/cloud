@@ -14,7 +14,7 @@ api:
   file:
     location: /Users/x/Documents/02_code/_my/cloud/files/
   model:
-    url: http://172.168.1.78:50005
+    url: http://127.0.0.1:50005
 
 knife4j:
   basic:
