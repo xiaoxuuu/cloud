@@ -1,11 +1,15 @@
 package cc.xiaoxu.cloud.ai.controller;
 
+import cc.xiaoxu.cloud.ai.manager.Assistant;
 import cc.xiaoxu.cloud.ai.manager.ai.ChooseAiUtil;
 import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
 import cc.xiaoxu.cloud.ai.utils.OkHttpUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.service.AiServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -41,5 +45,21 @@ public class TestController {
 
         AiChatResultDTO aiChatResultDTOStream = ChooseAiUtil.getAiChatResultDTO(Prompt.Test.simple("你是谁"), "123", AiChatModelEnum.LOCAL, new SseEmitter());
         log.error("v3: " + JsonUtils.toString(aiChatResultDTOStream));
+    }
+
+    @SneakyThrows
+    @GetMapping(value = "/langchain")
+    @Operation(summary = "langchain")
+    public String langchain() {
+
+        ChatLanguageModel model = OpenAiChatModel.builder()
+                .baseUrl("https://api.moonshot.cn/v1")
+                .apiKey("")
+                .modelName("moonshot-v1-8k")
+                .build();
+
+        Assistant assistant = AiServices.create(Assistant.class, model);
+
+        return assistant.chat("你是谁");
     }
 }
