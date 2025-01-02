@@ -8,11 +8,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AiTypeEnum implements EnumInterface<Integer> {
 
-    TEST(0, "测试"),
-    KIMI(1, "KIMI"),
-    Q_WEN(2, "通义千问"),
+    TEST(0, "测试", ""),
+    KIMI(1, "KIMI", "https://api.moonshot.cn/v1"),
+    Q_WEN(2, "通义千问", ""),
     ;
 
     private final Integer code;
     private final String introduction;
+    private final String url;
 }
