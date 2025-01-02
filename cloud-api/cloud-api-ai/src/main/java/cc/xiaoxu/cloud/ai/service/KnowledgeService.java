@@ -2,9 +2,7 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.ai.task.ALiFileStatusCheckTask;
 import cc.xiaoxu.cloud.bean.ai.dto.*;
-import cc.xiaoxu.cloud.bean.ai.enums.ALiFileIndexResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
@@ -14,7 +12,6 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
-import com.aliyun.bailian20231229.models.DescribeFileResponseBody;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -25,14 +22,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
-    private final ALiYunApiService aLiYunApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     public Knowledge addKnowledge(String fileName, String fileId, String tenant, KnowledgeTypeEnum knowledgeTypeEnum) {
@@ -48,59 +43,6 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         save(knowledge);
         return knowledge;
     }
-
-    /**
-     * <p>获取阿里云文件上传状态</p>
-     * <p>定时任务位置：{@link ALiFileStatusCheckTask#aLiFileUploadResultCheck() ALiFileStatusCheckTask.aLiFileUploadResultCheck}</p>
-     */
-    public boolean getALiFileUploadResult(Knowledge knowledge) {
-
-        String fileId = knowledge.getThreePartyFileId();
-        Integer id = knowledge.getId();
-        DescribeFileResponseBody.DescribeFileResponseBodyData describeFile = aLiYunApiService.describeFile(fileId);
-        String status = describeFile.getStatus();
-        log.info("文件上传 {}({}) 当前状态为：{}", fileId, id, status);
-        Set<ALiFileUploadResultEnum> statusSet = Set.of(ALiFileUploadResultEnum.PARSING, ALiFileUploadResultEnum.PARSE_FAILED, ALiFileUploadResultEnum.PARSE_SUCCESS);
-        ALiFileUploadResultEnum statusEnum = EnumUtils.getByClass(status, ALiFileUploadResultEnum.class);
-        if (statusSet.contains(statusEnum)) {
-            if (ALiFileUploadResultEnum.PARSING == statusEnum) {
-                return false;
-            }
-            lambdaUpdate()
-                    .eq(Knowledge::getId, id)
-                    .eq(Knowledge::getThreePartyFileId, fileId)
-                    .set(Knowledge::getStatus, statusEnum.getCode())
-                    .set(Knowledge::getModifyTime, new Date())
-                    .update();
-            return statusEnum == ALiFileUploadResultEnum.PARSE_SUCCESS;
-        }
-        return false;
-    }
-
-    public boolean updateFileIndexResult(Knowledge knowledge) {
-
-        String fileId = knowledge.getThreePartyFileId();
-        Integer id = knowledge.getId();
-        String status = aLiYunApiService.getIndexJobStatus(knowledge.getThreePartyInfo());
-        log.info("文件切片 {}({}) 当前状态为：{}", fileId, id, status);
-        Set<ALiFileIndexResultEnum> resultSet = Set.of(ALiFileIndexResultEnum.RUNNING, ALiFileIndexResultEnum.COMPLETED, ALiFileIndexResultEnum.FAILED);
-        ALiFileIndexResultEnum resultEnum = EnumUtils.getByClass(status, ALiFileIndexResultEnum.class);
-        if (resultSet.contains(resultEnum)) {
-            if (ALiFileIndexResultEnum.RUNNING == resultEnum) {
-                return false;
-            }
-            lambdaUpdate()
-                    .eq(Knowledge::getId, id)
-                    .eq(Knowledge::getThreePartyFileId, fileId)
-                    .set(Knowledge::getStatus, resultEnum.getCode())
-                    .set(Knowledge::getState, StateEnum.ENABLE.getCode())
-                    .set(Knowledge::getModifyTime, new Date())
-                    .update();
-            return resultEnum == ALiFileIndexResultEnum.COMPLETED;
-        }
-        return false;
-    }
-
 
     public void addTable(KnowledgeAddTableDTO dto, String tenant) {
 

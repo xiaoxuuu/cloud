@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
+import cc.xiaoxu.cloud.ai.utils.FileUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
@@ -18,7 +19,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,27 +30,21 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper, KnowledgeSection> {
 
-    private final ALiYunApiService aLiYunApiService;
     private final CommonManager commonManager;
     private final LocalApiService localApiService;
 
-    public boolean readALiSection(Knowledge knowledge) {
+    public boolean rebuildSection(Knowledge knowledge) {
 
-        boolean hasNext = true;
-        int pageNum = 1;
-        List<String> readSectionList = new ArrayList<>();
-        while (hasNext) {
-            // 每次处理 1000 条数据
-            List<String> readSectionListTemp = aLiYunApiService.readSection(knowledge.getThreePartyFileId(), pageNum, 1000);
-            readSectionList.addAll(readSectionListTemp);
-            log.info("读取到 {} 条数据", readSectionListTemp.size());
-            if (readSectionListTemp.isEmpty()) {
-                hasNext = false;
-            }
-            pageNum++;
-        }
+        log.debug("读取文件：{}", knowledge.getName());
+        // 读取指定位置文件
+        String content = FileUtils.read(knowledge.getThreePartyFileId());
+        log.debug("读取文件长度：{}", content.length());
 
-        insertNewData(knowledge.getId(), readSectionList, knowledge.getTenant());
+        // 发起请求
+        List<String> textList;
+        textList = localApiService.split(content);
+        // 数据入库
+        insertNewData(knowledge.getId(), textList, knowledge.getTenant());
         return true;
     }
 
