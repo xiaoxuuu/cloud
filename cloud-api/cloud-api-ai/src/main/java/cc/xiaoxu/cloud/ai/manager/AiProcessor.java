@@ -23,7 +23,6 @@ public class AiProcessor {
 
     public AiChatResultDTO chat(ChatInfo chatInfo) {
 
-        handleSensitiveWords(chatInfo.getChatMessageList());
         return chat(chatInfo.getChatMessageList(),
                 chatInfo.getTalkTypeEnum().getIntroduction(),
                 chatInfo.getModelTypeEnum(),
@@ -50,6 +49,7 @@ public class AiProcessor {
 
         // 调用
         long l = System.currentTimeMillis();
+        //
         AiChatResultDTO chat = ChooseAiUtil.getAiChatResultDTO(chatMessageList, apiKey, model, sseEmitter);
         chat.setSummaryDuration((int) (System.currentTimeMillis() - l));
         aiResultLogService.saveLog(chatMessageList, talkType, model, chat, l, remark);
@@ -72,12 +72,5 @@ public class AiProcessor {
             return chat;
         }
         return chatNext;
-    }
-
-    private static void handleSensitiveWords(List<AiChatMessageDTO> chatMessageList) {
-
-//        for (AiChatMessageDTO dto : chatMessageList) {
-//            dto.setContent(SensitiveWordsUtil.replaceSensitiveWords(dto.getContent()));
-//        }
     }
 }
