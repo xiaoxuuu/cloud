@@ -1,7 +1,10 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
-import cc.xiaoxu.cloud.ai.service.*;
+import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
+import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.ai.service.LocalApiService;
+import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
@@ -31,7 +34,6 @@ import java.util.List;
 @RequestMapping("/knowledge")
 public class KnowledgeController {
 
-    private final ALiYunApiService aLiYunApiService;
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
     private final TenantService tenantService;
@@ -44,18 +46,6 @@ public class KnowledgeController {
 
         tenantService.checkTenantThrow(tenant);
         return knowledgeService.lists(tenant);
-    }
-
-    @Deprecated
-    @PostMapping("/add_ali_files/{tenant}")
-    @Operation(summary = "新增知识库 - 文件批量 - 阿里")
-    public void addALiFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
-
-        tenantService.checkTenantThrow(tenant);
-        for (MultipartFile file : files) {
-            addFile(file, KnowledgeTypeEnum.FILE_ALI.getCode(), tenant);
-            Thread.sleep(6000);
-        }
     }
 
     @PostMapping("/add_files/{tenant}")
@@ -82,13 +72,6 @@ public class KnowledgeController {
     public void addFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
 
         tenantService.checkTenantThrow(tenant);
-        if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_ALI) {
-            // 阿里
-            log.debug("阿里文件上传：{}", file.getOriginalFilename());
-            String fileId = aLiYunApiService.uploadFile(file);
-            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), fileId, tenant, KnowledgeTypeEnum.FILE_ALI);
-            knowledgeService.getALiFileUploadResult(knowledge);
-        }
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
             // 本地文件上传
             log.debug("本地文件上传：{}", file.getOriginalFilename());

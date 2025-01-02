@@ -21,8 +21,6 @@ public class ChooseAiUtil {
         return switch (model) {
             case MOONSHOT_V1_128K -> AiForMoonshot.chat(dtoList, key, model, emitter);
             case TEST, CUSTOM -> AiForTest.test(dtoList);
-            case Q_WEN_72B_CHAT, Q_WEN_MAX, Q_WEN_7B_CHAT, Q_WEN_LONG_CHAT ->
-                    AiForQWen.chat(dtoList, key, model, emitter);
             case LOCAL -> AiForLocal.chat(dtoList, key, model, emitter);
             case LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, LOCAL_QWEN2_5_14B_INSTRUCT_AWQ ->
                     AiForLocalQwen.chat(dtoList, key, model, emitter);
