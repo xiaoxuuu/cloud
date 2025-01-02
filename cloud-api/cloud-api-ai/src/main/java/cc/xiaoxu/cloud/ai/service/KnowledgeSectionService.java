@@ -37,14 +37,14 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
         log.debug("读取文件：{}", knowledge.getName());
         // 读取指定位置文件
-        String content = FileUtils.read(knowledge.getThreePartyFileId());
+        String content = FileUtils.read(knowledge.getFileId());
         log.debug("读取文件长度：{}", content.length());
 
         // 发起请求
         List<String> textList;
         textList = localApiService.split(content);
         // 数据入库
-        insertNewData(knowledge.getId(), textList, knowledge.getTenant());
+        insertNewData(knowledge.getId(), textList, knowledge.getUserId());
         return true;
     }
 
@@ -78,7 +78,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
     private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, String tenant) {
 
         KnowledgeSection knowledgeSection = new KnowledgeSection();
-        knowledgeSection.setTenant(tenant);
+        knowledgeSection.setUserId(tenant);
         knowledgeSection.setKnowledgeId(knowledgeId);
         knowledgeSection.setCutContent(content);
         knowledgeSection.setState(StateEnum.ENABLE.getCode());
@@ -129,7 +129,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
     public Page<KnowledgeSectionVO> pages(PageDTO dto, String tenant) {
 
         Page<KnowledgeSection> entityPage = lambdaQuery()
-                .eq(KnowledgeSection::getTenant, tenant)
+                .eq(KnowledgeSection::getUserId, tenant)
                 .page(PageUtils.getPageCondition(dto));
 
         Page<KnowledgeSectionVO> page = PageUtils.getPage(entityPage, KnowledgeSectionVO.class);
@@ -142,7 +142,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
     public void editState(KnowledgeEditStateDTO dto, String tenant) {
 
         lambdaUpdate()
-                .eq(KnowledgeSection::getTenant, tenant)
+                .eq(KnowledgeSection::getUserId, tenant)
                 .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
                 .set(KnowledgeSection::getState, dto.getState())
                 .update();

@@ -81,7 +81,7 @@ public class KnowledgeController {
 
             knowledgeService.lambdaUpdate()
                     .eq(Knowledge::getId, knowledge.getId())
-                    .eq(Knowledge::getThreePartyFileId, knowledge.getThreePartyFileId())
+                    .eq(Knowledge::getFileId, knowledge.getFileId())
                     .set(Knowledge::getStatus, FileStatusEnum.UPLOAD_PARSE_SUCCESS.getCode())
                     .set(Knowledge::getModifyTime, new Date())
                     .update();
