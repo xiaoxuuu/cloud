@@ -33,10 +33,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public Knowledge addKnowledge(String fileName, String fileId, String tenant, KnowledgeTypeEnum knowledgeTypeEnum) {
 
         Knowledge knowledge = new Knowledge();
-        knowledge.setTenant(tenant);
+        knowledge.setUserId(tenant);
         knowledge.setType(knowledgeTypeEnum.getCode());
         knowledge.setName(fileName);
-        knowledge.setThreePartyFileId(fileId);
+        knowledge.setFileId(fileId);
         knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
         knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
@@ -47,10 +47,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public void addTable(KnowledgeAddTableDTO dto, String tenant) {
 
         Knowledge knowledge = new Knowledge();
-        knowledge.setTenant(tenant);
+        knowledge.setUserId(tenant);
         knowledge.setType(KnowledgeTypeEnum.TABLE.getCode());
         knowledge.setName(dto.getTableName());
-        knowledge.setThreePartyInfo(dto.getSql());
+        knowledge.setFileInfo(dto.getSql());
         knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
         knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
@@ -63,7 +63,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public void addCustom(KnowledgeAddCustomDTO dto, String tenant) {
 
         Knowledge knowledge = lambdaQuery()
-                .eq(Knowledge::getTenant, tenant)
+                .eq(Knowledge::getUserId, tenant)
                 .eq(Knowledge::getType, KnowledgeTypeEnum.CUSTOM.getCode())
                 .eq(Knowledge::getName, dto.getKnowledgeName())
                 .one();
@@ -78,7 +78,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     private Knowledge createCustomData(KnowledgeAddCustomDTO dto, String tenant) {
 
         Knowledge knowledge = new Knowledge();
-        knowledge.setTenant(tenant);
+        knowledge.setUserId(tenant);
         knowledge.setType(KnowledgeTypeEnum.CUSTOM.getCode());
         knowledge.setName(dto.getKnowledgeName());
         knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
@@ -99,7 +99,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public void editState(KnowledgeEditStateDTO dto, String tenant) {
 
         lambdaUpdate()
-                .eq(Knowledge::getTenant, tenant)
+                .eq(Knowledge::getUserId, tenant)
                 .in(Knowledge::getId, dto.getIdList())
                 .set(Knowledge::getState, dto.getState())
                 .update();
@@ -108,7 +108,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public Page<KnowledgeExpandVO> pages(PageDTO dto, String tenant) {
 
         Page<Knowledge> entityPage = lambdaQuery()
-                .eq(Knowledge::getTenant, tenant)
+                .eq(Knowledge::getUserId, tenant)
                 .ne(Knowledge::getState, StateEnum.DELETE.getCode())
                 .page(PageUtils.getPageCondition(dto));
 
@@ -132,7 +132,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public List<KnowledgeExpandVO> lists(String tenant) {
 
         List<Knowledge> knowledgeList = lambdaQuery()
-                .eq(Knowledge::getTenant, tenant)
+                .eq(Knowledge::getUserId, tenant)
                 .eq(Knowledge::getState, StateEnum.ENABLE.getCode())
                 .eq(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())
                 .orderByDesc(Knowledge::getId)

@@ -17,20 +17,20 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class Knowledge extends BaseEntityForPostgres {
 
-    @Schema(description = "资源类型：文件、数据表、自定义分类")
-    private String type;
-
     @Schema(description = "租户")
-    private String tenant;
+    private String userId;
+
+    @Schema(description = "资源类型：文件、数据表等")
+    private String type;
 
     @Schema(description = "名称")
     private String name;
 
-    @Schema(description = "三方平台文件 id")
-    private String threePartyFileId;
+    @Schema(description = "文件 id")
+    private String fileId;
 
-    @Schema(description = "三方平台附加信息")
-    private String threePartyInfo;
+    @Schema(description = "文件信息")
+    private String fileInfo;
 
     @Schema(description = "资源处理状态")
     private String status;

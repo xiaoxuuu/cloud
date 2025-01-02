@@ -20,8 +20,8 @@ public class KnowledgeSection extends BaseEntityForPostgres {
     @Schema(description = "知识id")
     private Integer knowledgeId;
 
-    @Schema(description = "租户")
-    private String tenant;
+    @Schema(description = "用户id")
+    private String userId;
 
     @Schema(description = "知识切片内容")
     private String cutContent;
