@@ -12,26 +12,14 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_knowledge")
+@TableName("t_conversation")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Knowledge extends BaseEntityForPostgres {
-
-    @Schema(description = "用户id")
-    private String userId;
-
-    @Schema(description = "资源类型：文件、数据表等")
-    private String type;
+public class Conversation extends BaseEntityForPostgres {
 
     @Schema(description = "名称")
     private String name;
 
-    @Schema(description = "文件 id")
-    private String fileId;
-
-    @Schema(description = "文件信息")
-    private String fileInfo;
-
-    @Schema(description = "资源处理状态")
-    private String status;
+    @Schema(description = "用户id")
+    private String userId;
 }
