@@ -28,7 +28,7 @@ public class TestController {
     public SseEmitter check() {
 
         SseEmitter emitter = new SseEmitter();
-        AiChatResultDTO aiChatResultDTOStream = ChooseAiUtil.getAiChatResultDTO(Prompt.Test.simple("你是谁"), "sk-K2eEeGAxnHqaSmNjHpPOAKfD6PbJRfOOB8y9qZkmj1Pshksw", AiModelEnum.MOONSHOT_V1_128K, null);
+        AiChatResultDTO aiChatResultDTOStream = ChooseAiUtil.getAiChatResultDTO(Prompt.Test.simple("你是谁"), "", AiModelEnum.MOONSHOT_V1_128K, null);
         log.error("res: " + JsonUtils.toString(aiChatResultDTOStream));
         return emitter;
     }
