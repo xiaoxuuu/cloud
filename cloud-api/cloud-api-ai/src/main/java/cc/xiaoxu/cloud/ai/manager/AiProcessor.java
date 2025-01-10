@@ -4,7 +4,7 @@ import cc.xiaoxu.cloud.ai.manager.ai.ChooseAiUtil;
 import cc.xiaoxu.cloud.ai.service.AiResultLogService;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -39,7 +39,7 @@ public class AiProcessor {
      * @param surplus         剩余次数
      * @return 调用结果
      */
-    private AiChatResultDTO chat(List<AiChatMessageDTO> chatMessageList, String talkType, AiChatModelEnum model,
+    private AiChatResultDTO chat(List<AiChatMessageDTO> chatMessageList, String talkType, AiModelEnum model,
                                  String apiKey, Integer surplus, SseEmitter sseEmitter, String remark) {
 
         surplus--;
@@ -49,7 +49,6 @@ public class AiProcessor {
 
         // 调用
         long l = System.currentTimeMillis();
-        //
         AiChatResultDTO chat = ChooseAiUtil.getAiChatResultDTO(chatMessageList, apiKey, model, sseEmitter);
         chat.setSummaryDuration((int) (System.currentTimeMillis() - l));
         aiResultLogService.saveLog(chatMessageList, talkType, model, chat, l, remark);

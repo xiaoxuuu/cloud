@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.ai.manager;
 
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
 import lombok.Data;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,7 +12,7 @@ import java.util.List;
 public class ChatInfo {
 
     private List<AiChatMessageDTO> chatMessageList;
-    private AiChatModelEnum modelTypeEnum;
+    private AiModelEnum modelTypeEnum;
     private AiTalkTypeEnum talkTypeEnum;
     private String apiKey;
     private Integer retryTime;
@@ -22,7 +22,7 @@ public class ChatInfo {
     private ChatInfo() {
     }
 
-    public static ChatInfo of(List<AiChatMessageDTO> chatMessageList, AiTalkTypeEnum talkTypeEnum, AiChatModelEnum modelTypeEnum) {
+    public static ChatInfo of(List<AiChatMessageDTO> chatMessageList, AiTalkTypeEnum talkTypeEnum, AiModelEnum modelTypeEnum) {
         ChatInfo chatInfo = new ChatInfo();
         chatInfo.setChatMessageList(chatMessageList);
         chatInfo.setModelTypeEnum(modelTypeEnum);

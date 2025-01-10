@@ -3,7 +3,7 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.manager.ai.ChooseAiUtil;
 import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +28,7 @@ public class TestController {
     public SseEmitter check() {
 
         SseEmitter emitter = new SseEmitter();
-        AiChatResultDTO aiChatResultDTOStream = ChooseAiUtil.getAiChatResultDTO(Prompt.Test.simple("你是谁"), "sk-K2eEeGAxnHqaSmNjHpPOAKfD6PbJRfOOB8y9qZkmj1Pshksw", AiChatModelEnum.MOONSHOT_V1_128K, null);
+        AiChatResultDTO aiChatResultDTOStream = ChooseAiUtil.getAiChatResultDTO(Prompt.Test.simple("你是谁"), "sk-K2eEeGAxnHqaSmNjHpPOAKfD6PbJRfOOB8y9qZkmj1Pshksw", AiModelEnum.MOONSHOT_V1_128K, null);
         log.error("res: " + JsonUtils.toString(aiChatResultDTOStream));
         return emitter;
     }

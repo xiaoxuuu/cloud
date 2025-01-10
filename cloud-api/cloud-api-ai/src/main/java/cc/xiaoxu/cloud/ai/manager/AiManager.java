@@ -1,6 +1,5 @@
-package cc.xiaoxu.cloud.ai.manager.ai;
+package cc.xiaoxu.cloud.ai.manager;
 
-import cc.xiaoxu.cloud.ai.manager.Assistant;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
@@ -13,9 +12,11 @@ import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.TokenStream;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -25,27 +26,36 @@ import java.util.List;
  * 通用模型调用
  */
 @Slf4j
-public class AiForLangchain {
+@Component
+@AllArgsConstructor
+public class AiManager {
 
-    protected static AiChatResultDTO chat(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiModelEnum model, SseEmitter sseEmitter) {
+    private final PersistentChatMemoryStore persistentChatMemoryStore;
+
+    protected AiChatResultDTO chat(List<AiChatMessageDTO> aiChatMessageDto, String userId, String apiKey, AiModelEnum aiModel, SseEmitter sseEmitter) {
+
+        ChatMemory chatMemory = MessageWindowChatMemory.builder()
+                .id(userId)
+                .maxMessages(10)
+                .chatMemoryStore(persistentChatMemoryStore)
+                .build();
+
         if (null == sseEmitter) {
-            return chatNotStream(aiChatMessageDto, apiKey, model);
+            return chatNotStream(aiChatMessageDto, chatMemory, userId, apiKey, aiModel);
         }
-        return chatStream(aiChatMessageDto, apiKey, model, sseEmitter);
+        return chatStream(aiChatMessageDto, chatMemory, userId, apiKey, aiModel, sseEmitter);
     }
 
     /**
      * 聊天
      */
     @SneakyThrows
-    private static AiChatResultDTO chatNotStream(@NonNull List<AiChatMessageDTO> aiChatMessageDTOList, String apiKey, @NonNull AiModelEnum modelEnum) {
-
-        ChatMemory chatMemory = MessageWindowChatMemory.withMaxMessages(10);
+    private AiChatResultDTO chatNotStream(@NonNull List<AiChatMessageDTO> aiChatMessageDTOList, ChatMemory chatMemory, String userId, String apiKey, @NonNull AiModelEnum aiModel) {
 
         ChatLanguageModel model = OpenAiChatModel.builder()
-                .baseUrl(modelEnum.getType().getUrl())
+                .baseUrl(aiModel.getType().getUrl())
                 .apiKey(apiKey)
-                .modelName(modelEnum.getCode())
+                .modelName(aiModel.getCode())
                 .build();
 
         Assistant assistant = AiServices.builder(Assistant.class)
@@ -53,8 +63,7 @@ public class AiForLangchain {
                 .chatMemory(chatMemory)
                 .build();
 
-        String res2 = assistant.chat("你是谁");
-        String res = assistant.chat("我刚刚问的什么");
+        String res = assistant.chat("你是谁");
 
         AiChatResultDTO aiChatResultDTO = new AiChatResultDTO();
         aiChatResultDTO.setResult(res);
@@ -63,7 +72,7 @@ public class AiForLangchain {
         return aiChatResultDTO;
     }
 
-    private static AiChatResultDTO chatStream(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiModelEnum modelEnum, SseEmitter emitter) {
+    private AiChatResultDTO chatStream(List<AiChatMessageDTO> aiChatMessageDto, ChatMemory chatMemory, String userId, String apiKey, AiModelEnum modelEnum, SseEmitter emitter) {
 
         StreamingChatLanguageModel model = OpenAiStreamingChatModel.builder()
                 .baseUrl(modelEnum.getType().getUrl())
@@ -71,11 +80,15 @@ public class AiForLangchain {
                 .modelName(modelEnum.getCode())
                 .build();
 
-        Assistant assistant = AiServices.create(Assistant.class, model);
+        Assistant assistant = AiServices.builder(Assistant.class)
+                .streamingChatLanguageModel(model)
+                .chatMemory(chatMemory)
+                .build();
 
         TokenStream tokenStream = assistant.chatStream("你是谁");
 
         AiChatResultDTO resultDTO = new AiChatResultDTO();
+        resultDTO.setResult("stream...");
         resultDTO.setStatusCode(200);
         tokenStream.onPartialResponse(k -> {
                     // 回答中
