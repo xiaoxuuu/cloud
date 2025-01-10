@@ -2,7 +2,7 @@ package cc.xiaoxu.cloud.ai.manager.ai;
 
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
@@ -40,7 +40,7 @@ public class AiForMoonshot {
             }
             """;
 
-    protected static AiChatResultDTO chat(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiChatModelEnum model, SseEmitter sseEmitter) {
+    protected static AiChatResultDTO chat(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiModelEnum model, SseEmitter sseEmitter) {
         if (null == sseEmitter) {
             return chatNotStream(aiChatMessageDto, apiKey, model);
         }
@@ -55,7 +55,7 @@ public class AiForMoonshot {
      * @return json
      */
     @SneakyThrows
-    private static AiChatResultDTO chatNotStream(@NonNull List<AiChatMessageDTO> aiChatMessageDTOList, String apiKey, @NonNull AiChatModelEnum model) {
+    private static AiChatResultDTO chatNotStream(@NonNull List<AiChatMessageDTO> aiChatMessageDTOList, String apiKey, @NonNull AiModelEnum model) {
 
         String requestBody = String.format(REQUEST_BODY, model.getCode(), JSON.toJSONString(aiChatMessageDTOList), false);
         Request okhttpRequest = new Request.Builder()
@@ -117,7 +117,7 @@ public class AiForMoonshot {
         return error.getString("message");
     }
 
-    private static AiChatResultDTO chatStream(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiChatModelEnum model, SseEmitter emitter) {
+    private static AiChatResultDTO chatStream(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiModelEnum model, SseEmitter emitter) {
 
         AiChatResultDTO resultDTO = new AiChatResultDTO();
         try {
@@ -177,7 +177,7 @@ public class AiForMoonshot {
         return resultDTO;
     }
 
-    private static @NotNull HttpURLConnection getHttpURLConnection(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiChatModelEnum model) throws IOException {
+    private static @NotNull HttpURLConnection getHttpURLConnection(List<AiChatMessageDTO> aiChatMessageDto, String apiKey, AiModelEnum model) throws IOException {
         URL url = URI.create(CHAT_COMPLETION_URL).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");

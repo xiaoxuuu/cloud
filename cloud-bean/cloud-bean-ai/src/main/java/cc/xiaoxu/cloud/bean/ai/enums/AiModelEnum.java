@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum AiChatModelEnum implements EnumInterface<String>, EnumDescInterface {
+public enum AiModelEnum implements EnumInterface<String>, EnumDescInterface {
 
     // KIMI
     MOONSHOT_V1_128K("moonshot-v1-128k", "KIMI 128K", AiTypeEnum.KIMI),

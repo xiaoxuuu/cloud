@@ -8,7 +8,7 @@ import cc.xiaoxu.cloud.ai.service.LocalApiService;
 import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiChatModelEnum;
+import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
@@ -69,9 +69,9 @@ public class TalkController {
 
     @PostMapping(value = "/get_model")
     @Operation(summary = "获取模型")
-    public List<AiChatModelEnum> getModel() {
+    public List<AiModelEnum> getModel() {
 
-        return List.of(AiChatModelEnum.LOCAL_QWEN2_5_14B_INSTRUCT_AWQ, AiChatModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, AiChatModelEnum.LOCAL, AiChatModelEnum.MOONSHOT_V1_128K);
+        return List.of(AiModelEnum.LOCAL_QWEN2_5_14B_INSTRUCT_AWQ, AiModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, AiModelEnum.LOCAL, AiModelEnum.MOONSHOT_V1_128K);
     }
 
     @PostMapping(value = "/ask/{tenant}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -89,7 +89,7 @@ public class TalkController {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             return DEFAULT_ANSWER;
         } else {
-            ChatInfo chatInfo = getChatInfo(vo, response, null, similarityData, AiChatModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ);
+            ChatInfo chatInfo = getChatInfo(vo, response, null, similarityData, AiModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ);
             return aiProcessor.chat(chatInfo).getResult();
         }
     }
@@ -117,7 +117,7 @@ public class TalkController {
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
         sw.start("校验用户");
-        sendSseEmitter(response, vo, emitter, tenant, sw, EnumUtils.getByClass(modelTypeEnum, AiChatModelEnum.class));
+        sendSseEmitter(response, vo, emitter, tenant, sw, EnumUtils.getByClass(modelTypeEnum, AiModelEnum.class));
         return emitter;
     }
 
@@ -136,7 +136,7 @@ public class TalkController {
     private Integer count = 100;
     private String countKey = "AI:COUNT:";
 
-    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw, AiChatModelEnum modelTypeEnum) {
+    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
 
         sw.start("获取知识数据");
         List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant, sw);
@@ -169,7 +169,7 @@ public class TalkController {
         }
     }
 
-    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData, AiChatModelEnum modelTypeEnum) {
+    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData, AiModelEnum modelTypeEnum) {
 
         String distanceList = similarityData.stream()
                 .map(KnowledgeSectionExpandVO::getDistance)
