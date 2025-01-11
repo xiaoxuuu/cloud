@@ -1,9 +1,8 @@
 package cc.xiaoxu.cloud.ai.manager;
 
-import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
-import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -14,13 +13,11 @@ import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.TokenStream;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 通用模型调用
@@ -30,88 +27,81 @@ import java.util.List;
 @AllArgsConstructor
 public class AiManager {
 
+    // TODO 聊天历史持久化
     private final PersistentChatMemoryStore persistentChatMemoryStore;
 
-    protected AiChatResultDTO chat(List<AiChatMessageDTO> aiChatMessageDto, String userId, String apiKey, AiModelEnum aiModel, SseEmitter sseEmitter) {
+    public void knowledge(String question, String knowledgeData, Integer conversationId, String apiKey, AiModelEnum modelEnum, SseEmitter emitter) {
 
+        // TODO 聊天历史持久化
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .id(userId)
+//                .id(conversationId)
                 .maxMessages(10)
-                .chatMemoryStore(persistentChatMemoryStore)
+//                .chatMemoryStore(persistentChatMemoryStore)
                 .build();
 
-        if (null == sseEmitter) {
-            return chatNotStream(aiChatMessageDto, chatMemory, userId, apiKey, aiModel);
-        }
-        return chatStream(aiChatMessageDto, chatMemory, userId, apiKey, aiModel, sseEmitter);
-    }
-
-    /**
-     * 聊天
-     */
-    @SneakyThrows
-    private AiChatResultDTO chatNotStream(@NonNull List<AiChatMessageDTO> aiChatMessageDTOList, ChatMemory chatMemory, String userId, String apiKey, @NonNull AiModelEnum aiModel) {
-
-        ChatLanguageModel model = OpenAiChatModel.builder()
-                .baseUrl(aiModel.getType().getUrl())
-                .apiKey(apiKey)
-                .modelName(aiModel.getCode())
-                .build();
-
-        Assistant assistant = AiServices.builder(Assistant.class)
-                .chatLanguageModel(model)
-                .chatMemory(chatMemory)
-                .build();
-
-        String res = assistant.chat("你是谁");
-
-        AiChatResultDTO aiChatResultDTO = new AiChatResultDTO();
-        aiChatResultDTO.setResult(res);
-        aiChatResultDTO.setToken(0);
-        aiChatResultDTO.setStatusCode(200);
-        return aiChatResultDTO;
-    }
-
-    private AiChatResultDTO chatStream(List<AiChatMessageDTO> aiChatMessageDto, ChatMemory chatMemory, String userId, String apiKey, AiModelEnum modelEnum, SseEmitter emitter) {
-
+        // TODO 缓存 model，一个 modelEnum 只加载一次
         StreamingChatLanguageModel model = OpenAiStreamingChatModel.builder()
                 .baseUrl(modelEnum.getType().getUrl())
                 .apiKey(apiKey)
                 .modelName(modelEnum.getCode())
+                .logRequests(true)
+                .logResponses(true)
                 .build();
 
-        Assistant assistant = AiServices.builder(Assistant.class)
+        KnowledgeAssistant knowledgeAssistant = AiServices.builder(KnowledgeAssistant.class)
                 .streamingChatLanguageModel(model)
                 .chatMemory(chatMemory)
                 .build();
 
-        TokenStream tokenStream = assistant.chatStream("你是谁");
+        TokenStream tokenStream = knowledgeAssistant.knowledge(question, knowledgeData);
+        chat(emitter, tokenStream);
+    }
 
-        AiChatResultDTO resultDTO = new AiChatResultDTO();
-        resultDTO.setResult("stream...");
-        resultDTO.setStatusCode(200);
+    private void chat(SseEmitter emitter, TokenStream tokenStream) {
         tokenStream.onPartialResponse(k -> {
                     // 回答中
                     try {
-                        emitter.send(k);
+//                        emitter.send(k);
+                        emitter.send(SseVO.msg(k));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 })
                 .onCompleteResponse(k -> {
                     // 回答结束
-                    resultDTO.setResult(k.aiMessage().text());
-                    resultDTO.setToken(k.tokenUsage().totalTokenCount());
                     emitter.complete();
-                    System.out.println(JsonUtils.toString(resultDTO));
                 })
                 .onError(e -> {
+                    // TODO 保存错误日志
                     e.printStackTrace();
-                    resultDTO.setToken(0);
-                    resultDTO.setStatusCode(400);
-                    resultDTO.setErrorMsg(e.getMessage());
                 })
                 .start();
-        return resultDTO;
+    }
+
+    /**
+     * 聊天
+     */
+    public AiChatResultDTO chat(String question, String apiKey, @NonNull AiModelEnum aiModel) {
+
+        ChatLanguageModel model = OpenAiChatModel.builder()
+                .baseUrl(aiModel.getType().getUrl())
+                .apiKey(apiKey)
+                .modelName(aiModel.getCode())
+                .logRequests(true)
+                .logResponses(true)
+                .build();
+
+        KnowledgeAssistant knowledgeAssistant = AiServices.builder(KnowledgeAssistant.class)
+                .chatLanguageModel(model)
+//                .chatMemory(chatMemory)
+                .build();
+
+        String res = knowledgeAssistant.chat(question);
+
+        AiChatResultDTO aiChatResultDTO = new AiChatResultDTO();
+        aiChatResultDTO.setResult(res);
+        aiChatResultDTO.setToken(0);
+        aiChatResultDTO.setStatusCode(200);
+        return aiChatResultDTO;
     }
 }
