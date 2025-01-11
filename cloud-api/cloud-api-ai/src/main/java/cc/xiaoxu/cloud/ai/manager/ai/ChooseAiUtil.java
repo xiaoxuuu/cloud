@@ -15,7 +15,7 @@ public class ChooseAiUtil {
                                                      AiModelEnum model, SseEmitter emitter) {
 
         return switch (model) {
-            case MOONSHOT_V1_128K -> AiForLangchain.chat(dtoList, key, model, emitter);
+            case MOONSHOT_V1_128K -> AiForMoonshot.chat(dtoList, key, model, emitter);
             case TEST, CUSTOM -> AiForTest.test(dtoList);
             case LOCAL -> AiForLocal.chat(dtoList, key, model, emitter);
             case LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, LOCAL_QWEN2_5_14B_INSTRUCT_AWQ ->
