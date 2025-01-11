@@ -1,15 +1,11 @@
 package cc.xiaoxu.cloud.ai.controller;
 
-import cc.xiaoxu.cloud.ai.manager.AiProcessor;
-import cc.xiaoxu.cloud.ai.manager.ChatInfo;
-import cc.xiaoxu.cloud.ai.manager.ai.Prompt;
+import cc.xiaoxu.cloud.ai.manager.AiManager;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.LocalApiService;
 import cc.xiaoxu.cloud.ai.service.TenantService;
-import cc.xiaoxu.cloud.bean.ai.dto.AiChatMessageDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
-import cc.xiaoxu.cloud.bean.ai.enums.AiTalkTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
@@ -23,10 +19,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.bind.annotation.*;
@@ -44,14 +38,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/talk")
 public class TalkController {
 
-    @Value("${ali.bailian.api-key}")
-    private String apiKey;
-
     @Resource
     private KnowledgeSectionService knowledgeSectionService;
-
-    @Resource
-    private AiProcessor aiProcessor;
 
     @Resource
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
@@ -65,6 +53,9 @@ public class TalkController {
     @Resource
     private LocalApiService localApiService;
 
+    @Resource
+    private AiManager aiManager;
+
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
     @PostMapping(value = "/get_model")
@@ -72,26 +63,6 @@ public class TalkController {
     public List<AiModelEnum> getModel() {
 
         return List.of(AiModelEnum.LOCAL_QWEN2_5_14B_INSTRUCT_AWQ, AiModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, AiModelEnum.LOCAL, AiModelEnum.MOONSHOT_V1_128K);
-    }
-
-    @PostMapping(value = "/ask/{tenant}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @Operation(summary = "提问")
-    public String ask(@Valid @RequestBody AskDTO vo, @PathVariable("tenant") String tenant, HttpServletResponse response) {
-
-        StopWatchUtil sw = new StopWatchUtil("知识库提问");
-        sw.start("校验用户");
-        tenantService.checkTenantThrow(tenant);
-
-        sw.start("获取知识数据");
-        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant, sw);
-
-        if (CollectionUtils.isEmpty(similarityData)) {
-            log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
-            return DEFAULT_ANSWER;
-        } else {
-            ChatInfo chatInfo = getChatInfo(vo, response, null, similarityData, AiModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ);
-            return aiProcessor.chat(chatInfo).getResult();
-        }
     }
 
     @Parameters({
@@ -110,6 +81,8 @@ public class TalkController {
                           @PathVariable("modelTypeEnum") String modelTypeEnum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
+        AiKimiController.setResponseHeader(response);
+
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
         sw.start("校验用户");
         tenantService.checkTenantThrow(tenant);
@@ -117,7 +90,9 @@ public class TalkController {
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
         sw.start("校验用户");
-        sendSseEmitter(response, vo, emitter, tenant, sw, EnumUtils.getByClass(modelTypeEnum, AiModelEnum.class));
+
+        // 提问
+        sendSseEmitter(vo, emitter, tenant, sw, EnumUtils.getByClass(modelTypeEnum, AiModelEnum.class));
         return emitter;
     }
 
@@ -136,12 +111,12 @@ public class TalkController {
     private Integer count = 100;
     private String countKey = "AI:COUNT:";
 
-    private void sendSseEmitter(HttpServletResponse response, AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
+    private void sendSseEmitter(AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
 
         sw.start("获取知识数据");
-        List<KnowledgeSectionExpandVO> similarityData = getKnowledgeSectionDataList(vo, tenant, sw);
+        List<KnowledgeSectionExpandVO> similarityDataList = getKnowledgeSectionDataList(vo, tenant, sw);
 
-        if (CollectionUtils.isEmpty(similarityData)) {
+        if (CollectionUtils.isEmpty(similarityDataList)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
             threadPoolTaskExecutor.execute(() -> {
                 defaultAnswer(emitter);
@@ -161,15 +136,13 @@ public class TalkController {
             }
             todayCount++;
             cacheService.setCacheObject(countKey + tenant, todayCount);
-            ChatInfo chatInfo = getChatInfo(vo, response, emitter, similarityData, modelTypeEnum);
-            threadPoolTaskExecutor.execute(() -> {
-                aiProcessor.chat(chatInfo);
-                sw.print(log::info);
-            });
+
+            String similarityData = getSimilarityData(emitter, similarityDataList);
+            aiManager.knowledge(vo.getQuestion(), similarityData, 1, "sk-", modelTypeEnum, emitter);
         }
     }
 
-    private ChatInfo getChatInfo(AskDTO vo, HttpServletResponse response, SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData, AiModelEnum modelTypeEnum) {
+    private String getSimilarityData(SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData) {
 
         String distanceList = similarityData.stream()
                 .map(KnowledgeSectionExpandVO::getDistance)
@@ -189,18 +162,9 @@ public class TalkController {
         }
 
         log.info("相似文本获取成功：{} 条，相似度依次为：[{}] (越小越好)", similarityData.size(), distanceList);
-        String knowledgeList = similarityData.stream()
+        return similarityData.stream()
                 .map(KnowledgeSectionExpandVO::getCutContent)
                 .collect(Collectors.joining(System.lineSeparator()));
-
-        // 提问
-        AiKimiController.setResponseHeader(response);
-        List<AiChatMessageDTO> ask = Prompt.Ask.v2("本地知识库", vo.getQuestion(), knowledgeList, DEFAULT_ANSWER);
-
-        return ChatInfo.of(ask, AiTalkTypeEnum.KNOWLEDGE, modelTypeEnum)
-                .apiKey(apiKey)
-                .retryTime(0)
-                .stream(emitter);
     }
 
     private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String tenant, StopWatchUtil sw) {
