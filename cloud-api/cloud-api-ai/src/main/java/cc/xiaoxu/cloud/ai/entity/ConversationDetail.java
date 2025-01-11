@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.ai.entity;
 
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +19,11 @@ import java.util.Date;
 @TableName("t_conversation_detail")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConversationDetail extends BaseEntityForPostgres {
+public class ConversationDetail {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    @Schema(description = "主键id")
+    private Integer id;
 
     @Schema(description = "所属对话id")
     private Integer conversationId;
