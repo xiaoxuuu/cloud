@@ -11,7 +11,7 @@ public enum AiChatRoleEnum implements EnumInterface<String>, EnumDescInterface {
 
     SYSTEM("system", "系统"),
     USER("user", "用户"),
-    ASSISTANT("assistant", "ai"),
+    AI("ai", "ai"),
     ;
 
     private final String code;
