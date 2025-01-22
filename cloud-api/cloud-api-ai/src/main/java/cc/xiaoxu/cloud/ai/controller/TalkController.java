@@ -41,19 +41,19 @@ public class TalkController {
     }
 
     @Parameters({
-            @Parameter(required = true, name = "tenant", description = "租户", in = ParameterIn.PATH),
+            @Parameter(required = true, name = "userId", description = "用户", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{tenant}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{userId}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 简洁参数")
-    public SseEmitter ask(@PathVariable("tenant") String tenant, @PathVariable("question") String question, HttpServletResponse response) {
+    public SseEmitter ask(@PathVariable("userId") String userId, @PathVariable("question") String question, HttpServletResponse response) {
 
-        return ask(tenant, null, 0.7, 10, "LOCAL_QWEN2_5_32B_INSTRUCT_AWQ", question, response);
+        return ask(userId, null, 0.7, 10, "LOCAL_QWEN2_5_32B_INSTRUCT_AWQ", question, response);
     }
 
     @Parameters({
-            @Parameter(required = true, name = "tenant", description = "租户", in = ParameterIn.PATH),
+            @Parameter(required = true, name = "userId", description = "用户", in = ParameterIn.PATH),
             @Parameter(required = true, name = "knowledgeId", description = "选用知识分类，留空则不限制", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarity", description = "相似度，越小越好，越大越不相似", in = ParameterIn.PATH),
@@ -61,25 +61,24 @@ public class TalkController {
             @Parameter(required = true, name = "similarityContentNum", description = "引用分段数，取最相似的前 n 条", in = ParameterIn.PATH)
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{tenant}/{knowledgeId}/{similarity}/{similarityContentNum}/{modelTypeEnum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{userId}/{knowledgeId}/{similarity}/{similarityContentNum}/{modelTypeEnum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 全参数")
-    public SseEmitter ask(@PathVariable("tenant") String tenant, @PathVariable("knowledgeId") String knowledgeId,
+    public SseEmitter ask(@PathVariable("userId") String userId, @PathVariable("knowledgeId") String knowledgeId,
                           @PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("modelTypeEnum") String modelTypeEnum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
-        AiKimiController.setResponseHeader(response);
+        // TODO 校验用户
 
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
-        sw.start("校验用户");
-        tenantService.checkTenantThrow(tenant);
+
         sw.start("构建必备类");
+        AiKimiController.setResponseHeader(response);
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
-        sw.start("校验用户");
 
         // 提问
-        talkManager.talk(vo, emitter, tenant, sw, EnumUtils.getByClass(modelTypeEnum, AiModelEnum.class));
+        talkManager.talk(vo, emitter, userId, sw, EnumUtils.getByClass(modelTypeEnum, AiModelEnum.class));
         return emitter;
     }
 }
