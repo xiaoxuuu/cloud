@@ -34,9 +34,9 @@ public class AiManager {
 
         // TODO 聊天历史持久化
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
-//                .id(conversationId)
+                .id(conversationId)
                 .maxMessages(10)
-//                .chatMemoryStore(persistentChatMemoryStore)
+                .chatMemoryStore(persistentChatMemoryStore)
                 .build();
 
         // TODO 缓存 model，一个 modelEnum 只加载一次
@@ -93,7 +93,7 @@ public class AiManager {
 
         KnowledgeAssistant knowledgeAssistant = AiServices.builder(KnowledgeAssistant.class)
                 .chatLanguageModel(model)
-//                .chatMemory(chatMemory)
+                .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .build();
 
         String res = knowledgeAssistant.chat(question);
