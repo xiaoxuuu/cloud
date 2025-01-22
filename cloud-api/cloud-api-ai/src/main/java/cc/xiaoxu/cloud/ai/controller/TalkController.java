@@ -108,9 +108,6 @@ public class TalkController {
         return ask(tenant, null, 0.7, 10, "LOCAL_QWEN2_5_32B_INSTRUCT_AWQ", question, response);
     }
 
-    private Integer count = 100;
-    private String countKey = "AI:COUNT:";
-
     private void sendSseEmitter(AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
 
         sw.start("获取知识数据");
@@ -125,17 +122,6 @@ public class TalkController {
         } else {
             // 回答问题后扣减次数
             sw.start("调用问题回答");
-            Integer todayCount = cacheService.getCacheObject(countKey + tenant);
-            if (null == todayCount) {
-                todayCount = 0;
-            }
-            log.warn("当前使用次数：{}，总次数：{}", todayCount, count);
-            if (todayCount >= count) {
-                threadPoolTaskExecutor.execute(() -> defaultAnswer(emitter, "没有可使用次数了哦"));
-                return;
-            }
-            todayCount++;
-            cacheService.setCacheObject(countKey + tenant, todayCount);
 
             String similarityData = getSimilarityData(emitter, similarityDataList);
             aiManager.knowledge(vo.getQuestion(), similarityData, 1, "sk-", modelTypeEnum, emitter);
