@@ -4,7 +4,6 @@ import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.ai.service.LocalApiService;
-import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
@@ -36,7 +35,6 @@ public class KnowledgeController {
 
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
-    private final TenantService tenantService;
     private final LocalApiService localApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -44,7 +42,6 @@ public class KnowledgeController {
     @Operation(summary = "知识库查询 - 列表")
     public List<KnowledgeExpandVO> list(@PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         return knowledgeService.lists(tenant);
     }
 
@@ -52,7 +49,6 @@ public class KnowledgeController {
     @Operation(summary = "新增知识库 - 文件批量 - 本地")
     public void addLocalFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
 
-        tenantService.checkTenantThrow(tenant);
         for (MultipartFile file : files) {
             addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
             Thread.sleep(6000);
@@ -63,7 +59,6 @@ public class KnowledgeController {
     @Operation(summary = "新增知识库 - 文件批量 - 本地")
     public void addLocalFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
     }
 
@@ -71,7 +66,6 @@ public class KnowledgeController {
     @Operation(summary = "新增知识库 - 文件")
     public void addFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
             // 本地文件上传
             log.debug("本地文件上传：{}", file.getOriginalFilename());
@@ -95,7 +89,6 @@ public class KnowledgeController {
     @Operation(summary = "新增知识库 - 数据表")
     public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto, @PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         knowledgeService.addTable(dto, tenant);
     }
 
@@ -103,7 +96,6 @@ public class KnowledgeController {
     @Operation(summary = "新增知识库 - 自定义数据")
     public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto, @PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         knowledgeService.addCustom(dto, tenant);
     }
 
@@ -111,7 +103,6 @@ public class KnowledgeController {
     @Operation(summary = "删除知识库")
     public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto, @PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         knowledgeService.editState(dto, tenant);
         knowledgeSectionService.editState(dto, tenant);
     }
@@ -120,7 +111,6 @@ public class KnowledgeController {
     @Operation(summary = "知识库 - 分页")
     public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
 
-        tenantService.checkTenantThrow(tenant);
         return knowledgeService.pages(dto, tenant);
     }
 }
