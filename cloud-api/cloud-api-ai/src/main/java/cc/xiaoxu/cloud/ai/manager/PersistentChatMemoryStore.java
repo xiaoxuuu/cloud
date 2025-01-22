@@ -1,8 +1,11 @@
 package cc.xiaoxu.cloud.ai.manager;
 
+import cc.xiaoxu.cloud.ai.entity.Conversation;
 import cc.xiaoxu.cloud.ai.service.ConversationDetailService;
+import cc.xiaoxu.cloud.ai.service.ConversationService;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatRoleEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.ConversationDetailVO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
@@ -16,6 +19,9 @@ import java.util.List;
 
 @Component
 public class PersistentChatMemoryStore implements ChatMemoryStore {
+
+    @Resource
+    private ConversationService conversationService;
 
     @Resource
     private ConversationDetailService conversationDetailService;
@@ -42,5 +48,9 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
     @Override
     public void deleteMessages(Object memoryId) {
 
+        conversationService.lambdaUpdate()
+                .set(Conversation::getState, StateEnum.DELETE.getCode())
+                .eq(Conversation::getId, memoryId)
+                .update();
     }
 }
