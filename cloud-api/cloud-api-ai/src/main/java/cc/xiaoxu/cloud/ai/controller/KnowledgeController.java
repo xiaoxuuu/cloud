@@ -38,14 +38,14 @@ public class KnowledgeController {
     private final LocalApiService localApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @PostMapping("/list/{tenant}")
+    @PostMapping("/list")
     @Operation(summary = "知识库查询 - 列表")
     public List<KnowledgeExpandVO> list(@PathVariable("tenant") String tenant) {
 
         return knowledgeService.lists(tenant);
     }
 
-    @PostMapping("/add_files/{tenant}")
+    @PostMapping("/add_files")
     @Operation(summary = "新增知识库 - 文件批量 - 本地")
     public void addLocalFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
 
@@ -55,14 +55,14 @@ public class KnowledgeController {
         }
     }
 
-    @PostMapping("/add_file/{tenant}")
+    @PostMapping("/add_file")
     @Operation(summary = "新增知识库 - 文件批量 - 本地")
     public void addLocalFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("tenant") String tenant) {
 
         addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
     }
 
-    @PostMapping("/add_file/{type}/{tenant}")
+    @PostMapping("/add_file/{type}")
     @Operation(summary = "新增知识库 - 文件")
     public void addFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
 
@@ -85,21 +85,21 @@ public class KnowledgeController {
         }
     }
 
-    @PostMapping("/add_table/{tenant}")
+    @PostMapping("/add_table")
     @Operation(summary = "新增知识库 - 数据表")
     public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto, @PathVariable("tenant") String tenant) {
 
         knowledgeService.addTable(dto, tenant);
     }
 
-    @PostMapping("/add_custom/{tenant}")
+    @PostMapping("/add_custom")
     @Operation(summary = "新增知识库 - 自定义数据")
     public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto, @PathVariable("tenant") String tenant) {
 
         knowledgeService.addCustom(dto, tenant);
     }
 
-    @PostMapping("/edit_state/{tenant}")
+    @PostMapping("/edit_state")
     @Operation(summary = "删除知识库")
     public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto, @PathVariable("tenant") String tenant) {
 
@@ -107,7 +107,7 @@ public class KnowledgeController {
         knowledgeSectionService.editState(dto, tenant);
     }
 
-    @PostMapping("/page/{tenant}")
+    @PostMapping("/page")
     @Operation(summary = "知识库 - 分页")
     public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
 
