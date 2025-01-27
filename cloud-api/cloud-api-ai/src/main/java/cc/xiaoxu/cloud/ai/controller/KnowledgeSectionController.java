@@ -40,8 +40,8 @@ public class KnowledgeSectionController {
 
     @PostMapping("/page")
     @Operation(summary = "知识库数据 - 分页")
-    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
+    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("userId") String userId) {
 
-        return knowledgeSectionService.pages(dto, tenant);
+        return knowledgeSectionService.pages(dto, userId);
     }
 }

@@ -40,38 +40,38 @@ public class KnowledgeController {
 
     @PostMapping("/list")
     @Operation(summary = "知识库查询 - 列表")
-    public List<KnowledgeExpandVO> list(@PathVariable("tenant") String tenant) {
+    public List<KnowledgeExpandVO> list(@PathVariable("userId") String userId) {
 
-        return knowledgeService.lists(tenant);
+        return knowledgeService.lists(userId);
     }
 
     @PostMapping("/add_files")
     @Operation(summary = "新增知识库 - 文件批量 - 本地")
-    public void addLocalFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("tenant") String tenant) throws InterruptedException {
+    public void addLocalFiles(@RequestPart(name = "file") MultipartFile[] files, @PathVariable("userId") String userId) throws InterruptedException {
 
         for (MultipartFile file : files) {
-            addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
+            addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), userId);
             Thread.sleep(6000);
         }
     }
 
     @PostMapping("/add_file")
     @Operation(summary = "新增知识库 - 文件批量 - 本地")
-    public void addLocalFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("tenant") String tenant) {
+    public void addLocalFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("userId") String userId) {
 
-        addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), tenant);
+        addFile(file, KnowledgeTypeEnum.FILE_LOCAL.getCode(), userId);
     }
 
     @PostMapping("/add_file/{type}")
     @Operation(summary = "新增知识库 - 文件")
-    public void addFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("tenant") String tenant) {
+    public void addFile(@RequestPart(name = "file") MultipartFile file, @PathVariable("type") String type, @PathVariable("userId") String userId) {
 
         if (EnumUtils.getByClass(type, KnowledgeTypeEnum.class) == KnowledgeTypeEnum.FILE_LOCAL) {
             // 本地文件上传
             log.debug("本地文件上传：{}", file.getOriginalFilename());
             String filePath = localApiService.uploadFile(file);
             log.debug("文件上传结束：{}", filePath);
-            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, tenant, KnowledgeTypeEnum.FILE_LOCAL);
+            Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, userId, KnowledgeTypeEnum.FILE_LOCAL);
 
             knowledgeService.lambdaUpdate()
                     .eq(Knowledge::getId, knowledge.getId())
@@ -81,36 +81,36 @@ public class KnowledgeController {
                     .update();
             log.debug("文件上传数据更新完成：{}", knowledge.getName());
             // 异步处理
-            applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), tenant));
+            applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), userId));
         }
     }
 
     @PostMapping("/add_table")
     @Operation(summary = "新增知识库 - 数据表")
-    public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto, @PathVariable("tenant") String tenant) {
+    public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto, @PathVariable("userId") String userId) {
 
-        knowledgeService.addTable(dto, tenant);
+        knowledgeService.addTable(dto, userId);
     }
 
     @PostMapping("/add_custom")
     @Operation(summary = "新增知识库 - 自定义数据")
-    public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto, @PathVariable("tenant") String tenant) {
+    public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto, @PathVariable("userId") String userId) {
 
-        knowledgeService.addCustom(dto, tenant);
+        knowledgeService.addCustom(dto, userId);
     }
 
     @PostMapping("/edit_state")
     @Operation(summary = "删除知识库")
-    public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto, @PathVariable("tenant") String tenant) {
+    public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto, @PathVariable("userId") String userId) {
 
-        knowledgeService.editState(dto, tenant);
-        knowledgeSectionService.editState(dto, tenant);
+        knowledgeService.editState(dto, userId);
+        knowledgeSectionService.editState(dto, userId);
     }
 
     @PostMapping("/page")
     @Operation(summary = "知识库 - 分页")
-    public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("tenant") String tenant) {
+    public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("userId") String userId) {
 
-        return knowledgeService.pages(dto, tenant);
+        return knowledgeService.pages(dto, userId);
     }
 }

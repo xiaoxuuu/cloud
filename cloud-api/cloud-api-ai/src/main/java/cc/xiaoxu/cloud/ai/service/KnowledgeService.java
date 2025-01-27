@@ -30,10 +30,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public Knowledge addKnowledge(String fileName, String fileId, String tenant, KnowledgeTypeEnum knowledgeTypeEnum) {
+    public Knowledge addKnowledge(String fileName, String fileId, String userId, KnowledgeTypeEnum knowledgeTypeEnum) {
 
         Knowledge knowledge = new Knowledge();
-        knowledge.setUserId(tenant);
+        knowledge.setUserId(userId);
         knowledge.setType(knowledgeTypeEnum.getCode());
         knowledge.setName(fileName);
         knowledge.setFileId(fileId);
@@ -44,10 +44,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         return knowledge;
     }
 
-    public void addTable(KnowledgeAddTableDTO dto, String tenant) {
+    public void addTable(KnowledgeAddTableDTO dto, String userId) {
 
         Knowledge knowledge = new Knowledge();
-        knowledge.setUserId(tenant);
+        knowledge.setUserId(userId);
         knowledge.setType(KnowledgeTypeEnum.TABLE.getCode());
         knowledge.setName(dto.getTableName());
         knowledge.setFileInfo(dto.getSql());
@@ -57,28 +57,28 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         save(knowledge);
 
         // 使用事件异步处理
-        applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId(), tenant));
+        applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId(), userId));
     }
 
-    public void addCustom(KnowledgeAddCustomDTO dto, String tenant) {
+    public void addCustom(KnowledgeAddCustomDTO dto, String userId) {
 
         Knowledge knowledge = lambdaQuery()
-                .eq(Knowledge::getUserId, tenant)
+                .eq(Knowledge::getUserId, userId)
                 .eq(Knowledge::getType, KnowledgeTypeEnum.CUSTOM.getCode())
                 .eq(Knowledge::getName, dto.getKnowledgeName())
                 .one();
         if (null == knowledge) {
-            knowledge = createCustomData(dto, tenant);
+            knowledge = createCustomData(dto, userId);
         }
 
         // 切片数据
-        applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId(), tenant));
+        applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId(), userId));
     }
 
-    private Knowledge createCustomData(KnowledgeAddCustomDTO dto, String tenant) {
+    private Knowledge createCustomData(KnowledgeAddCustomDTO dto, String userId) {
 
         Knowledge knowledge = new Knowledge();
-        knowledge.setUserId(tenant);
+        knowledge.setUserId(userId);
         knowledge.setType(KnowledgeTypeEnum.CUSTOM.getCode());
         knowledge.setName(dto.getKnowledgeName());
         knowledge.setStatus(FileStatusEnum.SECTION_READ.getCode());
@@ -96,19 +96,19 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .update();
     }
 
-    public void editState(KnowledgeEditStateDTO dto, String tenant) {
+    public void editState(KnowledgeEditStateDTO dto, String userId) {
 
         lambdaUpdate()
-                .eq(Knowledge::getUserId, tenant)
+                .eq(Knowledge::getUserId, userId)
                 .in(Knowledge::getId, dto.getIdList())
                 .set(Knowledge::getState, dto.getState())
                 .update();
     }
 
-    public Page<KnowledgeExpandVO> pages(PageDTO dto, String tenant) {
+    public Page<KnowledgeExpandVO> pages(PageDTO dto, String userId) {
 
         Page<Knowledge> entityPage = lambdaQuery()
-                .eq(Knowledge::getUserId, tenant)
+                .eq(Knowledge::getUserId, userId)
                 .ne(Knowledge::getState, StateEnum.DELETE.getCode())
                 .page(PageUtils.getPageCondition(dto));
 
@@ -129,10 +129,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         }
     }
 
-    public List<KnowledgeExpandVO> lists(String tenant) {
+    public List<KnowledgeExpandVO> lists(String userId) {
 
         List<Knowledge> knowledgeList = lambdaQuery()
-                .eq(Knowledge::getUserId, tenant)
+                .eq(Knowledge::getUserId, userId)
                 .eq(Knowledge::getState, StateEnum.ENABLE.getCode())
                 .eq(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())
                 .orderByDesc(Knowledge::getId)

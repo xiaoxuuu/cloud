@@ -41,7 +41,7 @@ public class AddLocalFileEvent {
         List<String> textList;
         textList = localApiService.split(content);
         // 数据入库
-        knowledgeSectionService.insertNewData(dto.getKnowledgeId(), textList, dto.getTenant());
+        knowledgeSectionService.insertNewData(dto.getKnowledgeId(), textList, dto.getUserId());
 
         // 本地文件向量化
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);

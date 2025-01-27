@@ -38,10 +38,10 @@ public class TalkManager {
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
-    public void talk(AskDTO vo, SseEmitter emitter, String tenant, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
+    public void talk(AskDTO vo, SseEmitter emitter, String userId, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
 
         sw.start("获取知识数据");
-        List<KnowledgeSectionExpandVO> similarityDataList = getKnowledgeSectionDataList(vo, tenant, sw);
+        List<KnowledgeSectionExpandVO> similarityDataList = getKnowledgeSectionDataList(vo, userId, sw);
 
         if (CollectionUtils.isEmpty(similarityDataList)) {
             log.info("未匹配到相似度数据，使用默认回答：{}", DEFAULT_ANSWER);
@@ -83,7 +83,7 @@ public class TalkManager {
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 
-    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String tenant, StopWatchUtil sw) {
+    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String userId, StopWatchUtil sw) {
 
         sw.start("问题转向量");
         // 问题转为向量
@@ -94,7 +94,7 @@ public class TalkManager {
         // 取出相似度数据
         sw.start("问题相似文本查询");
         return knowledgeSectionService.getBaseMapper()
-                .getSimilarityData(embedding, vo, tenant);
+                .getSimilarityData(embedding, vo, userId);
     }
 
     private void defaultAnswer(SseEmitter emitter) {

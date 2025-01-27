@@ -16,6 +16,6 @@ public class KnowledgeAddCustomEventDTO {
     @Schema(description = "知识库id")
     private Integer knowledgeId;
 
-    @Schema(description = "租户")
-    private String tenant;
+    @Schema(description = "用户")
+    private String userId;
 }

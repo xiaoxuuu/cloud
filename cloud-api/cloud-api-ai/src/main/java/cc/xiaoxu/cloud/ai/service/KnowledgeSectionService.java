@@ -48,22 +48,22 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return true;
     }
 
-    public boolean readTableSection(Integer knowledgeId, String sql, String tenant) {
+    public boolean readTableSection(Integer knowledgeId, String sql, String userId) {
 
         List<String> dataList = commonManager.getList(sql);
 
-        insertNewData(knowledgeId, dataList, tenant);
+        insertNewData(knowledgeId, dataList, userId);
         return true;
     }
 
-    public boolean readCustomSection(Integer knowledgeId, String content, String tenant) {
+    public boolean readCustomSection(Integer knowledgeId, String content, String userId) {
 
-        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content, tenant);
+        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content, userId);
         save(knowledgeSection);
         return true;
     }
 
-    public void insertNewData(Integer knowledgeId, List<String> dataList, String tenant) {
+    public void insertNewData(Integer knowledgeId, List<String> dataList, String userId) {
 
         log.debug("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
@@ -71,14 +71,14 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
                 .remove();
         // 数据入库
-        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeId, k, tenant)).toList();
+        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeId, k, userId)).toList();
         saveBatch(knowledgeSectionList, 1000);
     }
 
-    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, String tenant) {
+    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, String userId) {
 
         KnowledgeSection knowledgeSection = new KnowledgeSection();
-        knowledgeSection.setUserId(tenant);
+        knowledgeSection.setUserId(userId);
         knowledgeSection.setKnowledgeId(knowledgeId);
         knowledgeSection.setCutContent(content);
         knowledgeSection.setState(StateEnum.ENABLE.getCode());
@@ -126,10 +126,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return list.size() - size.get();
     }
 
-    public Page<KnowledgeSectionVO> pages(PageDTO dto, String tenant) {
+    public Page<KnowledgeSectionVO> pages(PageDTO dto, String userId) {
 
         Page<KnowledgeSection> entityPage = lambdaQuery()
-                .eq(KnowledgeSection::getUserId, tenant)
+                .eq(KnowledgeSection::getUserId, userId)
                 .page(PageUtils.getPageCondition(dto));
 
         Page<KnowledgeSectionVO> page = PageUtils.getPage(entityPage, KnowledgeSectionVO.class);
@@ -139,10 +139,10 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return page;
     }
 
-    public void editState(KnowledgeEditStateDTO dto, String tenant) {
+    public void editState(KnowledgeEditStateDTO dto, String userId) {
 
         lambdaUpdate()
-                .eq(KnowledgeSection::getUserId, tenant)
+                .eq(KnowledgeSection::getUserId, userId)
                 .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
                 .set(KnowledgeSection::getState, dto.getState())
                 .update();
