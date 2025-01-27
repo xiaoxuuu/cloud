@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.manager.TalkManager;
-import cc.xiaoxu.cloud.ai.service.TenantService;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
@@ -26,9 +25,6 @@ import java.util.List;
 @Tag(name = "AI 知识库聊天服务")
 @RequestMapping("/talk")
 public class TalkController {
-
-    @Resource
-    private TenantService tenantService;
 
     @Resource
     private TalkManager talkManager;
