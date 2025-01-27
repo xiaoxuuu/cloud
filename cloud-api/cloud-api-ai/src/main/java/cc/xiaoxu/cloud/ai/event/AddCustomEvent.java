@@ -25,7 +25,7 @@ public class AddCustomEvent {
 
         // 数据查询
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
-        knowledgeSectionService.readCustomSection(dto.getKnowledgeId(), dto.getContent(), dto.getTenant());
+        knowledgeSectionService.readCustomSection(dto.getKnowledgeId(), dto.getContent(), dto.getUserId());
 
         // 切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);
