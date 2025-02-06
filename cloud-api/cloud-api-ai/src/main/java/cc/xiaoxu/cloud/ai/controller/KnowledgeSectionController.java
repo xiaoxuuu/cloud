@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
+import cc.xiaoxu.cloud.ai.utils.UserUtils;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PageDTO;
@@ -12,7 +13,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -40,8 +44,8 @@ public class KnowledgeSectionController {
 
     @PostMapping("/page")
     @Operation(summary = "知识库数据 - 分页")
-    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto, @PathVariable("userId") String userId) {
+    public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto) {
 
-        return knowledgeSectionService.pages(dto, userId);
+        return knowledgeSectionService.pages(dto, UserUtils.getUserId());
     }
 }

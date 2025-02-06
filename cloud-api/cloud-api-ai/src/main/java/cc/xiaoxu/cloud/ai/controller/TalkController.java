@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.manager.TalkManager;
+import cc.xiaoxu.cloud.ai.utils.UserUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
@@ -37,19 +38,17 @@ public class TalkController {
     }
 
     @Parameters({
-            @Parameter(required = true, name = "userId", description = "用户", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{userId}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 简洁参数")
-    public SseEmitter ask(@PathVariable("userId") String userId, @PathVariable("question") String question, HttpServletResponse response) {
+    public SseEmitter ask(@PathVariable("question") String question, HttpServletResponse response) {
 
-        return ask(userId, null, 0.7, 10, "LOCAL_QWEN2_5_32B_INSTRUCT_AWQ", question, response);
+        return ask(null, 0.7, 10, "LOCAL_QWEN2_5_32B_INSTRUCT_AWQ", question, response);
     }
 
     @Parameters({
-            @Parameter(required = true, name = "userId", description = "用户", in = ParameterIn.PATH),
             @Parameter(required = true, name = "knowledgeId", description = "选用知识分类，留空则不限制", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarity", description = "相似度，越小越好，越大越不相似", in = ParameterIn.PATH),
@@ -57,14 +56,15 @@ public class TalkController {
             @Parameter(required = true, name = "similarityContentNum", description = "引用分段数，取最相似的前 n 条", in = ParameterIn.PATH)
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{userId}/{knowledgeId}/{similarity}/{similarityContentNum}/{modelTypeEnum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{knowledgeId}/{similarity}/{similarityContentNum}/{modelTypeEnum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 全参数")
-    public SseEmitter ask(@PathVariable("userId") String userId, @PathVariable("knowledgeId") String knowledgeId,
+    public SseEmitter ask(@PathVariable("knowledgeId") String knowledgeId,
                           @PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
                           @PathVariable("modelTypeEnum") String modelTypeEnum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
         // TODO 校验用户
+        String userId = UserUtils.getUserId();
 
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
 
