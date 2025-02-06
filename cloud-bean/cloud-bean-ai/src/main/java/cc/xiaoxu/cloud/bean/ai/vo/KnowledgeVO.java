@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "知识")
 public class KnowledgeVO extends BaseVO {
 
     @Schema(description = "资源类型：文件、数据表、自定义分类")
