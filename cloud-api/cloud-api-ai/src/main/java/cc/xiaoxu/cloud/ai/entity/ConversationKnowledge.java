@@ -26,6 +26,6 @@ public class ConversationKnowledge {
     @Schema(description = "名称")
     private Integer conversationId;
 
-    @Schema(description = "用户id")
-    private Integer knowledgeId;
+    @Schema(description = "知识库id")
+    private Integer knowledgeBaseId;
 }
