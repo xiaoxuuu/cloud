@@ -16,10 +16,11 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -29,13 +30,6 @@ public class TalkController {
 
     @Resource
     private TalkManager talkManager;
-
-    @PostMapping(value = "/get_model")
-    @Operation(summary = "获取模型")
-    public List<AiModelEnum> getModel() {
-
-        return List.of(AiModelEnum.LOCAL_QWEN2_5_14B_INSTRUCT_AWQ, AiModelEnum.LOCAL_QWEN2_5_32B_INSTRUCT_AWQ, AiModelEnum.LOCAL, AiModelEnum.MOONSHOT_V1_128K);
-    }
 
     @Parameters({
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
@@ -63,7 +57,6 @@ public class TalkController {
                           @PathVariable("modelTypeEnum") String modelTypeEnum,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
-        // TODO 校验用户
         String userId = UserUtils.getUserId();
 
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
