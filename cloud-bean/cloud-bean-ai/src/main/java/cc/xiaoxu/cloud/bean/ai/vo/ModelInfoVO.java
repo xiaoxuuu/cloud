@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "模型配置")
 public class ModelInfoVO {
 
     @Schema(description = "模型公司")

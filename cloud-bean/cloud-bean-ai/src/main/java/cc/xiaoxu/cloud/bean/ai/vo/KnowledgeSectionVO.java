@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "知识切片")
 public class KnowledgeSectionVO extends BaseVO {
 
     @Schema(description = "知识id")
