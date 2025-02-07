@@ -3,10 +3,8 @@ package cc.xiaoxu.cloud.ai.controller;
 import cc.xiaoxu.cloud.ai.manager.TalkManager;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
-import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -39,22 +37,22 @@ public class TalkController {
     @Operation(summary = "提问 - 简洁参数")
     public SseEmitter ask(@PathVariable("question") String question, HttpServletResponse response) {
 
-        return ask(null, 0.7, 10, "LOCAL_QWEN2_5_32B_INSTRUCT_AWQ", question, response);
+        return ask(null, 0.7, 10, "1", question, response);
     }
 
     @Parameters({
             @Parameter(required = true, name = "knowledgeId", description = "选用知识分类，留空则不限制", in = ParameterIn.PATH),
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarity", description = "相似度，越小越好，越大越不相似", in = ParameterIn.PATH),
-            @Parameter(required = true, name = "modelTypeEnum", description = "选择的模型", in = ParameterIn.PATH),
+            @Parameter(required = true, name = "modelInfoId", description = "选择的模型", in = ParameterIn.PATH),
             @Parameter(required = true, name = "similarityContentNum", description = "引用分段数，取最相似的前 n 条", in = ParameterIn.PATH)
     })
     @Wrap(disabled = true)
-    @GetMapping(value = "/ask/{knowledgeId}/{similarity}/{similarityContentNum}/{modelTypeEnum}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/ask/{knowledgeId}/{similarity}/{similarityContentNum}/{modelInfoId}/{question}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "提问 - 全参数")
     public SseEmitter ask(@PathVariable("knowledgeId") String knowledgeId,
                           @PathVariable("similarity") Double similarity, @PathVariable("similarityContentNum") Integer similarityContentNum,
-                          @PathVariable("modelTypeEnum") String modelTypeEnum,
+                          @PathVariable("modelInfoId") String modelInfoId,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
         String userId = UserUtils.getUserId();
@@ -67,7 +65,8 @@ public class TalkController {
         SseEmitter emitter = new SseEmitter();
 
         // 提问
-        talkManager.talk(vo, emitter, userId, sw, EnumUtils.getByClass(modelTypeEnum, AiModelEnum.class));
+        // TODO 传入模型信息
+        talkManager.talk(vo, emitter, userId, sw, null);
         return emitter;
     }
 }

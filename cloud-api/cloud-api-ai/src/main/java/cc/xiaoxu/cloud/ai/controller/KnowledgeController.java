@@ -29,7 +29,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Tag(name = "AI 知识库服务")
+@Tag(name = "知识")
 @RequestMapping("/knowledge")
 public class KnowledgeController {
 
@@ -39,14 +39,14 @@ public class KnowledgeController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @PostMapping("/list")
-    @Operation(summary = "知识库查询 - 列表")
+    @Operation(summary = "列表")
     public List<KnowledgeExpandVO> list() {
 
         return knowledgeService.lists(UserUtils.getUserId());
     }
 
     @PostMapping("/add_files")
-    @Operation(summary = "新增知识库 - 文件批量 - 本地")
+    @Operation(summary = "新增知识 - 文件批量 - 本地")
     public void addFiles(@RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
 
         for (MultipartFile file : files) {
@@ -56,7 +56,7 @@ public class KnowledgeController {
     }
 
     @PostMapping("/add_file")
-    @Operation(summary = "新增知识库 - 文件批量 - 本地")
+    @Operation(summary = "新增知识 - 文件批量 - 本地")
     public void addFile(@RequestPart(name = "file") MultipartFile file) {
 
         // 本地文件上传
@@ -77,21 +77,21 @@ public class KnowledgeController {
     }
 
     @PostMapping("/add_table")
-    @Operation(summary = "新增知识库 - 数据表")
+    @Operation(summary = "新增知识 - 数据表")
     public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
 
         knowledgeService.addTable(dto, UserUtils.getUserId());
     }
 
     @PostMapping("/add_custom")
-    @Operation(summary = "新增知识库 - 自定义数据")
+    @Operation(summary = "新增知识 - 自定义数据")
     public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto) {
 
         knowledgeService.addCustom(dto, UserUtils.getUserId());
     }
 
     @PostMapping("/edit_state")
-    @Operation(summary = "删除知识库")
+    @Operation(summary = "删除知识")
     public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto) {
 
         knowledgeService.editState(dto, UserUtils.getUserId());
@@ -99,7 +99,7 @@ public class KnowledgeController {
     }
 
     @PostMapping("/page")
-    @Operation(summary = "知识库 - 分页")
+    @Operation(summary = "知识 - 分页")
     public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto) {
 
         return knowledgeService.pages(dto, UserUtils.getUserId());
