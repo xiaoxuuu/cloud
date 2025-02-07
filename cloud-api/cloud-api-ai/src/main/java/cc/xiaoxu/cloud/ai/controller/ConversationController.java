@@ -22,12 +22,17 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Slf4j
 @RestController
-@Tag(name = "AI 知识库聊天服务")
-@RequestMapping("/talk")
-public class TalkController {
+@Tag(name = "对话")
+@RequestMapping("/conversation")
+public class ConversationController {
 
     @Resource
     private TalkManager talkManager;
+
+    // TODO 修改 新增会话
+    // TODO 会话列表查询
+    // TODO 会话历史记录查询
+    // TODO 删除会话
 
     @Parameters({
             @Parameter(required = true, name = "question", description = "问题", in = ParameterIn.PATH),
