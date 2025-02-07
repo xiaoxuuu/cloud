@@ -114,9 +114,6 @@ CREATE TABLE "t_knowledge_base"
     "id"          SERIAL PRIMARY KEY,
     "user_id"     INT        NOT NULL,
     "name"        VARCHAR(255),
-    "file_id"     text,
-    "file_info"   text,
-    "status"      VARCHAR(16),
     "state"       VARCHAR(1) NOT NULL,
     "remark"      VARCHAR(16),
     "create_time" TIMESTAMP  NOT NULL,
@@ -127,9 +124,6 @@ CREATE TABLE "t_knowledge_base"
 COMMENT ON COLUMN "t_knowledge_base"."id" IS '主键';
 COMMENT ON COLUMN "t_knowledge_base"."user_id" IS '用户id';
 COMMENT ON COLUMN "t_knowledge_base"."name" IS '知识库名称';
-COMMENT ON COLUMN "t_knowledge_base"."file_id" IS '文件 id';
-COMMENT ON COLUMN "t_knowledge_base"."file_info" IS '文件信息';
-COMMENT ON COLUMN "t_knowledge_base"."status" IS '文件处理状态';
 COMMENT ON COLUMN "t_knowledge_base"."state" IS '状态';
 COMMENT ON COLUMN "t_knowledge_base"."remark" IS '备注';
 COMMENT ON COLUMN "t_knowledge_base"."create_time" IS '创建时间';
