@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Tag(name = "AI 知识库数据服务")
+@Tag(name = "知识数据")
 @RequestMapping("/knowledge/section")
 public class KnowledgeSectionController {
 
@@ -37,13 +37,13 @@ public class KnowledgeSectionController {
     }
 
     @PostMapping("/calc_vector")
-    @Operation(summary = "知识库向量计算")
+    @Operation(summary = "知识向量计算")
     public boolean calcVector(@Valid @RequestBody IdDTO vo) {
         return knowledgeSectionService.calcVector(vo);
     }
 
     @PostMapping("/page")
-    @Operation(summary = "知识库数据 - 分页")
+    @Operation(summary = "知识数据 - 分页")
     public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto) {
 
         return knowledgeSectionService.pages(dto, UserUtils.getUserId());
