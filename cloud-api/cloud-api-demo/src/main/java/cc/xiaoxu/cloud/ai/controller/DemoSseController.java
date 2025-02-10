@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.ai.controller;
 
-import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
+import cc.xiaoxu.cloud.ai.bean.SseVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;

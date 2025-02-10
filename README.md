@@ -11,7 +11,7 @@ cloud
 ├── cloud-auth              // [10000] 认证服务
 ├── cloud-api               // [10___] 业务模块
 │   ├── cloud-api-ai        // [10004] AI 服务
-│   ├── cloud-api-demo      // [10001] 已删除丨测试/演示服务
+│   ├── cloud-api-demo      // [10001] 测试/演示服务
 │   ├── cloud-api-file      // [10002] 文件服务
 │   └── cloud-api-my        // [10003] 自有业务服务
 ├── cloud-api-all           // [ 9999] 聚合业务服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
