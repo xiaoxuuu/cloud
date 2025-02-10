@@ -65,7 +65,7 @@ public class ConversationController {
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
 
         sw.start("构建必备类");
-        AiKimiController.setResponseHeader(response);
+        setResponseHeader(response);
         AskDTO vo = new AskDTO(question, similarity, similarityContentNum, knowledgeId);
         SseEmitter emitter = new SseEmitter();
 
@@ -73,5 +73,12 @@ public class ConversationController {
         // TODO 传入模型信息
         talkManager.talk(vo, emitter, userId, sw, null);
         return emitter;
+    }
+
+    public static void setResponseHeader(HttpServletResponse response) {
+        // 设置响应的字符编码为 UTF-8
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Connection", "keep-alive");
+        response.setHeader("X-Accel-Buffering", "no");
     }
 }
