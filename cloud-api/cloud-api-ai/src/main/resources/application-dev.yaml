@@ -11,7 +11,7 @@ spring:
   data:
     redis:
       host: 192.168.5.111
-      port: 6379
+      port: 26379
       password: D!J?OMca
       database: @env.api.redis.database@
 api:
