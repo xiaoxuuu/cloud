@@ -167,7 +167,8 @@ CREATE TABLE "t_model_info"
     "model"        VARCHAR(64),
     "introduction" VARCHAR(255),
     "url"          VARCHAR(255),
-    "sort"         int2
+    "sort"    int2,
+    "api_key" VARCHAR(255)
 );
 COMMENT ON COLUMN "t_model_info"."id" IS '模型主键';
 COMMENT ON COLUMN "t_model_info"."company" IS '模型公司';
@@ -176,4 +177,5 @@ COMMENT ON COLUMN "t_model_info"."model" IS '模型类型';
 COMMENT ON COLUMN "t_model_info"."introduction" IS '简介';
 COMMENT ON COLUMN "t_model_info"."url" IS 'api url';
 COMMENT ON COLUMN "t_model_info"."sort" IS '排序';
+COMMENT ON COLUMN "t_model_info"."api_key" IS 'API KEY';
 COMMENT ON TABLE "t_model_info" IS '模型配置';
