@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.ai.manager;
 
+import cc.xiaoxu.cloud.ai.entity.ModelInfo;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
@@ -12,7 +12,6 @@ import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.TokenStream;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -30,20 +29,20 @@ public class AiManager {
     // TODO 聊天历史持久化
     private final PersistentChatMemoryStore persistentChatMemoryStore;
 
-    public void knowledge(String question, String knowledgeData, Integer conversationId, String apiKey, AiModelEnum modelEnum, SseEmitter emitter) {
+    public void knowledge(String question, String knowledgeData, Integer conversationId, ModelInfo modelInfo, SseEmitter emitter) {
 
         // TODO 聊天历史持久化
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .id(conversationId)
+//                .id(conversationId)
                 .maxMessages(10)
-                .chatMemoryStore(persistentChatMemoryStore)
+//                .chatMemoryStore(persistentChatMemoryStore)
                 .build();
 
         // TODO 缓存 model，一个 modelEnum 只加载一次
         StreamingChatLanguageModel model = OpenAiStreamingChatModel.builder()
-                .baseUrl(modelEnum.getType().getUrl())
-                .apiKey(apiKey)
-                .modelName(modelEnum.getCode())
+                .baseUrl(modelInfo.getUrl())
+                .apiKey(modelInfo.getApiKey())
+                .modelName(modelInfo.getModel())
                 .logRequests(true)
                 .logResponses(true)
                 .build();
@@ -81,12 +80,12 @@ public class AiManager {
     /**
      * 聊天
      */
-    public AiChatResultDTO chat(String question, String apiKey, @NonNull AiModelEnum aiModel) {
+    public AiChatResultDTO chat(String question, ModelInfo modelInfo) {
 
         ChatLanguageModel model = OpenAiChatModel.builder()
-                .baseUrl(aiModel.getType().getUrl())
-                .apiKey(apiKey)
-                .modelName(aiModel.getCode())
+                .baseUrl(modelInfo.getUrl())
+                .apiKey(modelInfo.getApiKey())
+                .modelName(modelInfo.getName())
                 .logRequests(true)
                 .logResponses(true)
                 .build();

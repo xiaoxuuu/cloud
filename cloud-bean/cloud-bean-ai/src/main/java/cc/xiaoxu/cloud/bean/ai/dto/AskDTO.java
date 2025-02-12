@@ -19,6 +19,6 @@ public class AskDTO {
     @Schema(description = "引用分段数，取最相似的前 n 条", example = "5")
     private Integer similarityContentNum;
 
-    @Schema(description = "选用知识分类，留空则不限制")
-    private String knowledgeId;
+    @Schema(description = "选用知识库，留空则不限制")
+    private Integer knowledgeBaseId;
 }

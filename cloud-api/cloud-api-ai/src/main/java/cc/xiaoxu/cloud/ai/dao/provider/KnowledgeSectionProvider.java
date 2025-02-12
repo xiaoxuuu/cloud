@@ -4,7 +4,6 @@ import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.dao.BaseProvider;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -24,8 +23,10 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
             SELECT(" * ");
             SELECT(" embedding <=> " + embeddingStr + " AS distance ");
             FROM("t_knowledge_section");
-            if (StringUtils.isNotBlank(askDTO.getKnowledgeId())) {
-                WHERE("knowledge_id IN (" + String.join(",", askDTO.getKnowledgeId().split(",")) + " )");
+            if (null != askDTO.getKnowledgeBaseId()) {
+                WHERE("knowledge_base_id = " + askDTO.getKnowledgeBaseId());
+            } else {
+                WHERE("1 = 0");
             }
             WHERE("embedding <=> " + embeddingStr + " < " + askDTO.getSimilarity());
             WHERE("state = '" + StateEnum.ENABLE.getCode() + "'");

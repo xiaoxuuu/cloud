@@ -25,7 +25,7 @@ public class AddTableEvent {
 
         // 数据查询
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.SECTION_READ);
-        knowledgeSectionService.readTableSection(dto.getKnowledgeId(), dto.getSql(), dto.getUserId());
+        knowledgeSectionService.readTableSection(dto.getKnowledgeBaseId(), dto.getKnowledgeId(), dto.getSql(), dto.getUserId());
 
         // 切片
         knowledgeService.changeStatus(dto.getKnowledgeId(), FileStatusEnum.VECTOR_CALC);

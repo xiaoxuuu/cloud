@@ -17,6 +17,9 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class KnowledgeSection extends BaseEntityForPostgres {
 
+    @Schema(description = "知识库id")
+    private Integer knowledgeBaseId;
+
     @Schema(description = "知识id")
     private Integer knowledgeId;
 

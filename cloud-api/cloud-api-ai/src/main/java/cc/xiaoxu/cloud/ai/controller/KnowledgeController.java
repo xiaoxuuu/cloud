@@ -71,7 +71,7 @@ public class KnowledgeController {
                 .update();
         log.debug("文件上传数据更新完成：{}", knowledge.getName());
         // 异步处理
-        applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), UserUtils.getUserId()));
+        applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getKnowledgeBaseId(), knowledge.getId(), UserUtils.getUserId()));
     }
 
     @Deprecated
