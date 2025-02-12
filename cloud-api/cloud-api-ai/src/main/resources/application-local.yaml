@@ -16,7 +16,7 @@ spring:
       database: @env.api.redis.database@
 api:
   file:
-    location: /home/files/
+    location: /Users/x/Documents/02_code/_my/cloud/files/
   model:
     url: http://192.168.5.111:50005
 
