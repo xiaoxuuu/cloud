@@ -24,7 +24,6 @@ public class ModelInfoController {
 
     private final ModelInfoService modelInfoService;
 
-    // TODO 向量模型配置
     @PostMapping(value = "/list")
     @Operation(summary = "模型列表")
     public List<ModelInfoVO> list() {
