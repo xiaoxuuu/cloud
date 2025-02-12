@@ -17,5 +17,7 @@ public class AiApplication {
         // 获取 Spring Boot 上下文
         ConfigurableApplicationContext ctx = SpringApplication.run(AiApplication.class, args);
         log.error(GetStartInfoUtils.getLog(ctx));
+
+        // TODO 启动后执行未完成队列任务
     }
 }

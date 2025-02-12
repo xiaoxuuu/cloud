@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.manager.AiManager;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
-import cc.xiaoxu.cloud.bean.ai.enums.AiModelEnum;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +26,7 @@ public class TestController {
     @Operation(summary = "check")
     public String check() {
 
-        AiChatResultDTO aiChatResultDTOStream = aiManager.chat("你是谁", "", AiModelEnum.MOONSHOT_V1_128K);
+        AiChatResultDTO aiChatResultDTOStream = aiManager.chat("你是谁", null);
         log.error("res: " + JsonUtils.toString(aiChatResultDTOStream));
         return aiChatResultDTOStream.getResult();
     }

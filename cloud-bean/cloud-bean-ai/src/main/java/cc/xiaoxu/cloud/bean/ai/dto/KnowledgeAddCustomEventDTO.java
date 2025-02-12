@@ -14,6 +14,9 @@ public class KnowledgeAddCustomEventDTO {
     private String content;
 
     @Schema(description = "知识库id")
+    private Integer knowledgeBaseId;
+
+    @Schema(description = "知识id")
     private Integer knowledgeId;
 
     @Schema(description = "用户")

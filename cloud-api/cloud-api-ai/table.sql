@@ -126,6 +126,7 @@ COMMENT ON TABLE "t_knowledge_base" IS '知识库';
 CREATE TABLE t_knowledge_section
 (
     id           SERIAL PRIMARY KEY,
+    knowledge_base_id INT NOT NULL,
     knowledge_id INT        NOT NULL,
     user_id   VARCHAR(8),
     cut_content  TEXT,
@@ -139,6 +140,7 @@ CREATE TABLE t_knowledge_section
 );
 COMMENT ON TABLE t_knowledge_section IS '知识库数据切片';
 COMMENT ON COLUMN t_knowledge_section.id IS '主键';
+COMMENT ON COLUMN "t_knowledge_section"."knowledge_base_id" IS '知识库id';
 COMMENT ON COLUMN t_knowledge_section.knowledge_id IS '知识id';
 COMMENT ON COLUMN t_knowledge_section.user_id IS '用户id';
 COMMENT ON COLUMN t_knowledge_section.cut_content IS '知识切片内容';

@@ -5,13 +5,16 @@ import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
 import cc.xiaoxu.cloud.ai.utils.FileUtils;
+import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
+import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
+import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -44,26 +47,26 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         List<String> textList;
         textList = localApiService.split(content);
         // 数据入库
-        insertNewData(knowledge.getId(), textList, knowledge.getUserId());
+        insertNewData(knowledge.getKnowledgeBaseId(), knowledge.getId(), textList, knowledge.getUserId());
         return true;
     }
 
-    public boolean readTableSection(Integer knowledgeId, String sql, Integer userId) {
+    public boolean readTableSection(Integer knowledgeBaseId, Integer knowledgeId, String sql, Integer userId) {
 
         List<String> dataList = commonManager.getList(sql);
 
-        insertNewData(knowledgeId, dataList, userId);
+        insertNewData(knowledgeBaseId, knowledgeId, dataList, userId);
         return true;
     }
 
-    public boolean readCustomSection(Integer knowledgeId, String content, Integer userId) {
+    public boolean readCustomSection(Integer knowledgeBaseId, Integer knowledgeId, String content, Integer userId) {
 
-        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content, userId);
+        KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeBaseId, knowledgeId, content, userId);
         save(knowledgeSection);
         return true;
     }
 
-    public void insertNewData(Integer knowledgeId, List<String> dataList, Integer userId) {
+    public void insertNewData(Integer knowledgeBaseId, Integer knowledgeId, List<String> dataList, Integer userId) {
 
         log.debug("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
@@ -71,14 +74,15 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .eq(KnowledgeSection::getKnowledgeId, knowledgeId)
                 .remove();
         // 数据入库
-        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeId, k, userId)).toList();
+        List<KnowledgeSection> knowledgeSectionList = dataList.stream().map(k -> buildKnowledgeSection(knowledgeBaseId, knowledgeId, k, userId)).toList();
         saveBatch(knowledgeSectionList, 1000);
     }
 
-    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, Integer userId) {
+    private KnowledgeSection buildKnowledgeSection(Integer knowledgeBaseId, Integer knowledgeId, String content, Integer userId) {
 
         KnowledgeSection knowledgeSection = new KnowledgeSection();
         knowledgeSection.setUserId(userId);
+        knowledgeSection.setKnowledgeBaseId(knowledgeBaseId);
         knowledgeSection.setKnowledgeId(knowledgeId);
         knowledgeSection.setCutContent(content);
         knowledgeSection.setState(StateEnum.ENABLE.getCode());
@@ -146,5 +150,18 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
                 .set(KnowledgeSection::getState, dto.getState())
                 .update();
+    }
+
+    public List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, Integer userId, StopWatchUtil sw) {
+
+        sw.start("问题转向量");
+        // 问题转为向量
+        List<Double> vectorList = localApiService.vector(vo.getQuestion());
+        String embedding = String.valueOf(vectorList);
+        log.info("向量计算完成，维度：{}", vectorList.size());
+
+        // 取出相似度数据
+        sw.start("问题相似文本查询");
+        return getBaseMapper().getSimilarityData(embedding, vo, userId);
     }
 }
