@@ -1,18 +1,17 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
+import cc.xiaoxu.cloud.ai.entity.KnowledgeBase;
+import cc.xiaoxu.cloud.ai.service.KnowledgeBaseService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.ai.service.LocalApiService;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddCustomDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddLocalFileEventDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeAddTableDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.*;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
-import cc.xiaoxu.cloud.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,36 +33,35 @@ import java.util.List;
 public class KnowledgeController {
 
     private final KnowledgeService knowledgeService;
+    private final KnowledgeBaseService knowledgeBaseService;
     private final KnowledgeSectionService knowledgeSectionService;
     private final LocalApiService localApiService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    @PostMapping("/list")
-    @Operation(summary = "列表")
-    public List<KnowledgeExpandVO> list() {
-
-        return knowledgeService.lists(UserUtils.getUserId());
-    }
-
     @PostMapping("/add_files")
     @Operation(summary = "新增知识 - 文件批量 - 本地")
-    public void addFiles(@RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
+    public void addFiles(@Valid @RequestBody KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
 
         for (MultipartFile file : files) {
-            addFile(file);
+            addFile(dto, file);
             Thread.sleep(6000);
         }
     }
 
     @PostMapping("/add_file")
     @Operation(summary = "新增知识 - 文件批量 - 本地")
-    public void addFile(@RequestPart(name = "file") MultipartFile file) {
+    public void addFile(@Valid @RequestBody KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile file) {
 
-        // 本地文件上传
+        if (!knowledgeBaseService.lambdaQuery().eq(KnowledgeBase::getId, dto.getKnowledgeBaseId()).exists()) {
+            throw new CustomException("不存在的知识库");
+        }
+
+        // TODO (改造为文件服务) 本地文件上传
         log.debug("本地文件上传：{}", file.getOriginalFilename());
         String filePath = localApiService.uploadFile(file);
         log.debug("文件上传结束：{}", filePath);
-        Knowledge knowledge = knowledgeService.addKnowledge(file.getOriginalFilename(), filePath, UserUtils.getUserId(), KnowledgeTypeEnum.FILE_LOCAL);
+
+        Knowledge knowledge = knowledgeService.addKnowledge(dto, file.getOriginalFilename(), filePath, UserUtils.getUserId(), KnowledgeTypeEnum.FILE_LOCAL);
 
         knowledgeService.lambdaUpdate()
                 .eq(Knowledge::getId, knowledge.getId())
@@ -76,6 +74,7 @@ public class KnowledgeController {
         applicationEventPublisher.publishEvent(new KnowledgeAddLocalFileEventDTO(knowledge.getId(), UserUtils.getUserId()));
     }
 
+    @Deprecated
     @PostMapping("/add_table")
     @Operation(summary = "新增知识 - 数据表")
     public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
@@ -83,6 +82,7 @@ public class KnowledgeController {
         knowledgeService.addTable(dto, UserUtils.getUserId());
     }
 
+    @Deprecated
     @PostMapping("/add_custom")
     @Operation(summary = "新增知识 - 自定义数据")
     public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto) {
@@ -100,8 +100,15 @@ public class KnowledgeController {
 
     @PostMapping("/page")
     @Operation(summary = "知识 - 分页")
-    public Page<KnowledgeExpandVO> page(@Valid @RequestBody PageDTO dto) {
+    public Page<KnowledgeExpandVO> page(@Valid @RequestBody KnowledgePageDTO dto) {
 
         return knowledgeService.pages(dto, UserUtils.getUserId());
+    }
+
+    @PostMapping("/list")
+    @Operation(summary = "列表")
+    public List<KnowledgeExpandVO> list(@Valid @RequestBody KnowledgeListDTO dto) {
+
+        return knowledgeService.lists(dto, UserUtils.getUserId());
     }
 }

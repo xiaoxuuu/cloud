@@ -8,14 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KnowledgeAddTableDTO {
+@Schema(description = "知识 - 新增文件 - 请求参数")
+public class KnowledgeAddFileDTO {
 
     @Schema(description = "知识库id")
     private Integer knowledgeBaseId;
-
-    @Schema(description = "表名")
-    private String tableName;
-
-    @Schema(description = "数据查询语句")
-    private String sql;
 }

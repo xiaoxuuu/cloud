@@ -7,7 +7,6 @@ import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
-import cc.xiaoxu.cloud.bean.dto.PageDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
@@ -16,6 +15,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +30,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public Knowledge addKnowledge(String fileName, String fileId, Integer userId, KnowledgeTypeEnum knowledgeTypeEnum) {
+    public Knowledge addKnowledge(KnowledgeAddFileDTO dto, String fileName, String fileId, Integer userId, KnowledgeTypeEnum knowledgeTypeEnum) {
 
         Knowledge knowledge = new Knowledge();
+        knowledge.setKnowledgeBaseId(dto.getKnowledgeBaseId());
         knowledge.setUserId(userId);
         knowledge.setType(knowledgeTypeEnum.getCode());
         knowledge.setName(fileName);
@@ -47,6 +48,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     public void addTable(KnowledgeAddTableDTO dto, Integer userId) {
 
         Knowledge knowledge = new Knowledge();
+        knowledge.setKnowledgeBaseId(dto.getKnowledgeBaseId());
         knowledge.setUserId(userId);
         knowledge.setType(KnowledgeTypeEnum.TABLE.getCode());
         knowledge.setName(dto.getTableName());
@@ -78,6 +80,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
     private Knowledge createCustomData(KnowledgeAddCustomDTO dto, Integer userId) {
 
         Knowledge knowledge = new Knowledge();
+        knowledge.setKnowledgeBaseId(dto.getKnowledgeBaseId());
         knowledge.setUserId(userId);
         knowledge.setType(KnowledgeTypeEnum.CUSTOM.getCode());
         knowledge.setName(dto.getKnowledgeName());
@@ -105,9 +108,11 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .update();
     }
 
-    public Page<KnowledgeExpandVO> pages(PageDTO dto, Integer userId) {
+    public Page<KnowledgeExpandVO> pages(KnowledgePageDTO dto, Integer userId) {
 
         Page<Knowledge> entityPage = lambdaQuery()
+                .eq(null != dto.getKnowledgeBaseId(), Knowledge::getKnowledgeBaseId, dto.getKnowledgeBaseId())
+                .eq(StringUtils.isNotBlank(dto.getName()), Knowledge::getName, dto.getName())
                 .eq(Knowledge::getUserId, userId)
                 .ne(Knowledge::getState, StateEnum.DELETE.getCode())
                 .page(PageUtils.getPageCondition(dto));
@@ -129,9 +134,10 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         }
     }
 
-    public List<KnowledgeExpandVO> lists(Integer userId) {
+    public List<KnowledgeExpandVO> lists(KnowledgeListDTO dto, Integer userId) {
 
         List<Knowledge> knowledgeList = lambdaQuery()
+                .eq(null != dto.getKnowledgeBaseId(), Knowledge::getKnowledgeBaseId, dto.getKnowledgeBaseId())
                 .eq(Knowledge::getUserId, userId)
                 .eq(Knowledge::getState, StateEnum.ENABLE.getCode())
                 .eq(Knowledge::getStatus, FileStatusEnum.ALL_COMPLETED.getCode())

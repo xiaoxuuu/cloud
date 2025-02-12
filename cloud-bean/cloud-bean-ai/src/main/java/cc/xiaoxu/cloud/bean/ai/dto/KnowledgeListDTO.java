@@ -1,3 +1,4 @@
+
 package cc.xiaoxu.cloud.bean.ai.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,14 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class KnowledgeAddTableDTO {
+@Schema(description = "知识 - 列表查询 - 请求参数")
+public class KnowledgeListDTO {
 
     @Schema(description = "知识库id")
     private Integer knowledgeBaseId;
-
-    @Schema(description = "表名")
-    private String tableName;
-
-    @Schema(description = "数据查询语句")
-    private String sql;
 }

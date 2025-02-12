@@ -10,6 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KnowledgeAddCustomDTO {
 
+    @Schema(description = "知识库id")
+    private Integer knowledgeBaseId;
+
     @Schema(description = "知识库名称")
     private String knowledgeName;
 
