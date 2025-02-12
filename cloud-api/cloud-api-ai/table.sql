@@ -14,6 +14,7 @@ CREATE TABLE "t_conversation"
     "id"          SERIAL PRIMARY KEY,
     "name"        VARCHAR(255),
     "user_id"     INT        NOT NULL,
+    "model_id" INT NOT NULL,
     "state"       VARCHAR(1) NOT NULL,
     "remark"      VARCHAR(16),
     "create_time" TIMESTAMP  NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE "t_conversation"
 COMMENT ON COLUMN "t_conversation"."id" IS '对话主键';
 COMMENT ON COLUMN "t_conversation"."name" IS '对话名称';
 COMMENT ON COLUMN "t_conversation"."user_id" IS '所属用户';
+COMMENT ON COLUMN "t_conversation"."model_id" IS '模型id';
 COMMENT ON COLUMN "t_conversation"."state" IS '状态';
 COMMENT ON COLUMN "t_conversation"."remark" IS '备注';
 COMMENT ON COLUMN "t_conversation"."create_time" IS '创建时间';
@@ -64,17 +66,6 @@ CREATE TABLE "t_conversation_detail_content"
 COMMENT ON COLUMN "t_conversation_detail_content"."id" IS '对话内容主键';
 COMMENT ON COLUMN "t_conversation_detail_content"."content" IS '内容';
 COMMENT ON TABLE "t_conversation_detail_content" IS '对话-内容-详情';
-
-CREATE TABLE "t_conversation_info"
-(
-    "id"              SERIAL PRIMARY KEY,
-    "user_id"         INT,
-    "conversation_id" INT
-);
-COMMENT ON COLUMN "t_conversation_info"."id" IS '模型主键';
-COMMENT ON COLUMN "t_conversation_info"."user_id" IS '用户id';
-COMMENT ON COLUMN "t_conversation_info"."conversation_id" IS '对话id';
-COMMENT ON TABLE "t_conversation_info" IS '对话配置';
 
 CREATE TABLE t_knowledge
 (
