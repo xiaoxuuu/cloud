@@ -1,10 +1,8 @@
 package cc.xiaoxu.cloud.ai.controller;
 
-import cc.xiaoxu.cloud.ai.entity.Conversation;
 import cc.xiaoxu.cloud.ai.service.ConversationService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
-import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
@@ -44,23 +42,18 @@ public class ConversationController {
 
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
 
-        sw.start("获取对话数据");
-        Conversation conversation = conversationService.getOrCreateConversation(dto.getConversationId(), dto.getQuestion(), userId, dto.getModelId());
-
-        sw.start("构建必备类");
         setResponseHeader(response);
-        AskDTO vo = new AskDTO(dto.getQuestion(), 0.7, 5, dto.getKnowledgeBaseId());
         SseEmitter emitter = new SseEmitter();
 
         sw.start("获取知识数据");
-        List<KnowledgeSectionExpandVO> similarityDataList = knowledgeSectionService.getKnowledgeSectionDataList(vo, userId, sw);
+        List<KnowledgeSectionExpandVO> similarityDataList = knowledgeSectionService.getKnowledgeSectionDataList(dto, userId, sw);
         if (CollectionUtils.isEmpty(similarityDataList)) {
             conversationService.defaultAnswer(emitter);
             return emitter;
         }
 
         // 提问
-        conversationService.talk(vo, emitter, sw, dto, similarityDataList, userId);
+        conversationService.talk(emitter, sw, dto, similarityDataList, userId);
         sw.print();
         return emitter;
     }

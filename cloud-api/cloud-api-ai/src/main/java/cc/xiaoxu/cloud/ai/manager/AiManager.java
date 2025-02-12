@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.ai.manager;
 
+import cc.xiaoxu.cloud.ai.dao.ModelInfoMapper;
 import cc.xiaoxu.cloud.ai.entity.ModelInfo;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
@@ -28,8 +29,11 @@ public class AiManager {
 
     // TODO 聊天历史持久化
     private final PersistentChatMemoryStore persistentChatMemoryStore;
+    private final ModelInfoMapper modelInfoMapper;
 
-    public void knowledge(String question, String knowledgeData, Integer conversationId, ModelInfo modelInfo, SseEmitter emitter) {
+    public void knowledge(String question, String knowledgeData, Integer conversationId, Integer modelInfoId, SseEmitter emitter) {
+
+        ModelInfo modelInfo = modelInfoMapper.selectById(modelInfoId);
 
         // TODO 聊天历史持久化
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
@@ -80,7 +84,9 @@ public class AiManager {
     /**
      * 聊天
      */
-    public AiChatResultDTO chat(String question, ModelInfo modelInfo) {
+    public AiChatResultDTO chat(String question, Integer modelInfoId) {
+
+        ModelInfo modelInfo = modelInfoMapper.selectById(modelInfoId);
 
         ChatLanguageModel model = OpenAiChatModel.builder()
                 .baseUrl(modelInfo.getUrl())

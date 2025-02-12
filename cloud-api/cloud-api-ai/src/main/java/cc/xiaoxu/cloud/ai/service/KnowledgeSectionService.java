@@ -6,6 +6,7 @@ import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
 import cc.xiaoxu.cloud.ai.utils.FileUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
@@ -152,7 +153,9 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
                 .update();
     }
 
-    public List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, Integer userId, StopWatchUtil sw) {
+    public List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(ConversationAddDTO dto, Integer userId, StopWatchUtil sw) {
+
+        AskDTO vo = new AskDTO(dto.getQuestion(), 0.7, 5, dto.getKnowledgeBaseId());
 
         sw.start("问题转向量");
         // 问题转为向量
