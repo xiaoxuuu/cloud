@@ -39,4 +39,7 @@ public class ModelInfo {
 
     @Schema(description = "排序")
     private String sort;
+
+    @Schema(description = "api key")
+    private String apiKey;
 }

@@ -18,9 +18,9 @@ import lombok.experimental.Accessors;
 @Schema(description = "知识库")
 public class KnowledgeBase extends BaseEntityForPostgres {
 
-    @Schema(description = "名称")
-    private Integer conversationId;
+    @Schema(description = "用户")
+    private String userId;
 
-    @Schema(description = "知识库id")
-    private Integer knowledgeBaseId;
+    @Schema(description = "知识库名")
+    private String name;
 }
