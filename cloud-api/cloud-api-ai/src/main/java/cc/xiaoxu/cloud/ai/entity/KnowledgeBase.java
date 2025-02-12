@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 public class KnowledgeBase extends BaseEntityForPostgres {
 
     @Schema(description = "用户")
-    private String userId;
+    private Integer userId;
 
     @Schema(description = "知识库名")
     private String name;

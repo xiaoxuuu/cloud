@@ -17,5 +17,5 @@ public class KnowledgeAddCustomEventDTO {
     private Integer knowledgeId;
 
     @Schema(description = "用户")
-    private String userId;
+    private Integer userId;
 }

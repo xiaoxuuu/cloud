@@ -8,12 +8,14 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBasePageDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeBaseVO;
 import cc.xiaoxu.cloud.bean.dto.IdsDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.text.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,34 +23,46 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class KnowledgeBaseService extends ServiceImpl<KnowledgeBaseMapper, KnowledgeBase> {
 
-    public void add(KnowledgeBaseAddDTO dto, String userId) {
+    public void add(KnowledgeBaseAddDTO dto, Integer userId) {
 
-        KnowledgeBase entity = new KnowledgeBase();
-        entity.setUserId(userId);
-        entity.setName(dto.getName());
+        KnowledgeBase entity = getKnowledgeBase(dto, userId);
         save(entity);
     }
 
-    public void edit(KnowledgeBaseEditDTO dto, String userId) {
-
-        KnowledgeBase entity = lambdaQuery()
-                .eq(KnowledgeBase::getId, dto.getId())
-                .eq(KnowledgeBase::getUserId, userId)
-                .one();
+    @NotNull
+    private static KnowledgeBase getKnowledgeBase(KnowledgeBaseAddDTO dto, Integer userId) {
+        KnowledgeBase entity = new KnowledgeBase();
+        entity.setUserId(userId);
         entity.setName(dto.getName());
-        updateById(entity);
+        entity.setState(StateEnum.ENABLE.getCode());
+        entity.setCreateTime(DateUtils.getNowDate());
+        entity.setCreateId(userId);
+        return entity;
     }
 
-    public void del(IdsDTO dto, String userId) {
+    public void edit(KnowledgeBaseEditDTO dto, Integer userId) {
+
+        lambdaUpdate()
+                .eq(KnowledgeBase::getUserId, userId)
+                .in(KnowledgeBase::getId, dto.getId())
+                .set(KnowledgeBase::getName, dto.getName())
+                .set(KnowledgeBase::getModifyId, userId)
+                .set(KnowledgeBase::getModifyTime, DateUtils.getNowDate())
+                .update();
+    }
+
+    public void del(IdsDTO dto, Integer userId) {
 
         lambdaUpdate()
                 .eq(KnowledgeBase::getUserId, userId)
                 .in(KnowledgeBase::getId, dto.getIdList())
                 .set(KnowledgeBase::getState, StateEnum.DELETE.getCode())
+                .set(KnowledgeBase::getModifyId, userId)
+                .set(KnowledgeBase::getModifyTime, DateUtils.getNowDate())
                 .update();
     }
 
-    public Page<KnowledgeBaseVO> pages(KnowledgeBasePageDTO dto, String userId) {
+    public Page<KnowledgeBaseVO> pages(KnowledgeBasePageDTO dto, Integer userId) {
 
         Page<KnowledgeBase> entityPage = lambdaQuery()
                 .eq(KnowledgeBase::getUserId, userId)

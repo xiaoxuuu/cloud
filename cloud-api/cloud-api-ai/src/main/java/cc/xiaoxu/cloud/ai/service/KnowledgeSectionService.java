@@ -48,7 +48,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return true;
     }
 
-    public boolean readTableSection(Integer knowledgeId, String sql, String userId) {
+    public boolean readTableSection(Integer knowledgeId, String sql, Integer userId) {
 
         List<String> dataList = commonManager.getList(sql);
 
@@ -56,14 +56,14 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return true;
     }
 
-    public boolean readCustomSection(Integer knowledgeId, String content, String userId) {
+    public boolean readCustomSection(Integer knowledgeId, String content, Integer userId) {
 
         KnowledgeSection knowledgeSection = buildKnowledgeSection(knowledgeId, content, userId);
         save(knowledgeSection);
         return true;
     }
 
-    public void insertNewData(Integer knowledgeId, List<String> dataList, String userId) {
+    public void insertNewData(Integer knowledgeId, List<String> dataList, Integer userId) {
 
         log.debug("读取完成，一共 {} 条数据", dataList.size());
         // 移除旧数据
@@ -75,7 +75,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         saveBatch(knowledgeSectionList, 1000);
     }
 
-    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, String userId) {
+    private KnowledgeSection buildKnowledgeSection(Integer knowledgeId, String content, Integer userId) {
 
         KnowledgeSection knowledgeSection = new KnowledgeSection();
         knowledgeSection.setUserId(userId);
@@ -126,7 +126,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return list.size() - size.get();
     }
 
-    public Page<KnowledgeSectionVO> pages(PageDTO dto, String userId) {
+    public Page<KnowledgeSectionVO> pages(PageDTO dto, Integer userId) {
 
         Page<KnowledgeSection> entityPage = lambdaQuery()
                 .eq(KnowledgeSection::getUserId, userId)
@@ -139,7 +139,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
         return page;
     }
 
-    public void editState(KnowledgeEditStateDTO dto, String userId) {
+    public void editState(KnowledgeEditStateDTO dto, Integer userId) {
 
         lambdaUpdate()
                 .eq(KnowledgeSection::getUserId, userId)

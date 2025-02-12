@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.service.KnowledgeBaseService;
-import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBaseAddDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBaseEditDTO;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class KnowledgeBaseController {
 
     private final KnowledgeBaseService knowledgeBaseService;
-    private final KnowledgeSectionService knowledgeSectionService;
 
     @PostMapping("/add")
     @Operation(summary = "新增")

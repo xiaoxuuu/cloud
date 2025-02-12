@@ -16,7 +16,7 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
         return PROVIDER;
     }
 
-    public String getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO, @Param("userId") String userId) {
+    public String getSimilarityData(@Param("embedding") String embedding, @Param("askDTO") AskDTO askDTO, @Param("userId") Integer userId) {
 
         String embeddingStr = "'" + embedding + "'";
 
