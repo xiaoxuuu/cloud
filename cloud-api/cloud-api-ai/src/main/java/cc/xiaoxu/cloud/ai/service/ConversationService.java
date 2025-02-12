@@ -3,9 +3,7 @@ package cc.xiaoxu.cloud.ai.service;
 import cc.xiaoxu.cloud.ai.dao.ConversationMapper;
 import cc.xiaoxu.cloud.ai.dao.ModelInfoMapper;
 import cc.xiaoxu.cloud.ai.entity.Conversation;
-import cc.xiaoxu.cloud.ai.entity.ModelInfo;
 import cc.xiaoxu.cloud.ai.manager.AiManager;
-import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
@@ -60,17 +58,14 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
         return entity;
     }
 
-    public void talk(AskDTO vo, SseEmitter emitter, StopWatchUtil sw, ConversationAddDTO dto, List<KnowledgeSectionExpandVO> similarityDataList, Integer userId) {
+    public void talk(SseEmitter emitter, StopWatchUtil sw, ConversationAddDTO dto, List<KnowledgeSectionExpandVO> similarityDataList, Integer userId) {
 
         sw.start("获取对话数据");
         Conversation conversation = getOrCreateConversation(dto.getConversationId(), dto.getQuestion(), userId, dto.getModelId());
 
-        sw.start("获取模型数据");
-        ModelInfo modelInfo = modelInfoMapper.selectById(dto.getModelId());
-
         sw.start("提问");
         String similarityData = getSimilarityData(emitter, similarityDataList);
-        aiManager.knowledge(vo.getQuestion(), similarityData, conversation.getId(), modelInfo, emitter);
+        aiManager.knowledge(dto.getQuestion(), similarityData, conversation.getId(), dto.getModelId(), emitter);
     }
 
     private String getSimilarityData(SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData) {
