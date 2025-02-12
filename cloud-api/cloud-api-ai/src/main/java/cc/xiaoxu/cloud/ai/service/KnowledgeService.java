@@ -30,7 +30,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
 
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public Knowledge addKnowledge(String fileName, String fileId, String userId, KnowledgeTypeEnum knowledgeTypeEnum) {
+    public Knowledge addKnowledge(String fileName, String fileId, Integer userId, KnowledgeTypeEnum knowledgeTypeEnum) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setUserId(userId);
@@ -44,7 +44,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         return knowledge;
     }
 
-    public void addTable(KnowledgeAddTableDTO dto, String userId) {
+    public void addTable(KnowledgeAddTableDTO dto, Integer userId) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setUserId(userId);
@@ -60,7 +60,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         applicationEventPublisher.publishEvent(new KnowledgeAddTableEventDTO(dto.getTableName(), dto.getSql(), knowledge.getId(), userId));
     }
 
-    public void addCustom(KnowledgeAddCustomDTO dto, String userId) {
+    public void addCustom(KnowledgeAddCustomDTO dto, Integer userId) {
 
         Knowledge knowledge = lambdaQuery()
                 .eq(Knowledge::getUserId, userId)
@@ -75,7 +75,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         applicationEventPublisher.publishEvent(new KnowledgeAddCustomEventDTO(dto.getContent(), knowledge.getId(), userId));
     }
 
-    private Knowledge createCustomData(KnowledgeAddCustomDTO dto, String userId) {
+    private Knowledge createCustomData(KnowledgeAddCustomDTO dto, Integer userId) {
 
         Knowledge knowledge = new Knowledge();
         knowledge.setUserId(userId);
@@ -96,7 +96,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .update();
     }
 
-    public void editState(KnowledgeEditStateDTO dto, String userId) {
+    public void editState(KnowledgeEditStateDTO dto, Integer userId) {
 
         lambdaUpdate()
                 .eq(Knowledge::getUserId, userId)
@@ -105,7 +105,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .update();
     }
 
-    public Page<KnowledgeExpandVO> pages(PageDTO dto, String userId) {
+    public Page<KnowledgeExpandVO> pages(PageDTO dto, Integer userId) {
 
         Page<Knowledge> entityPage = lambdaQuery()
                 .eq(Knowledge::getUserId, userId)
@@ -129,7 +129,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         }
     }
 
-    public List<KnowledgeExpandVO> lists(String userId) {
+    public List<KnowledgeExpandVO> lists(Integer userId) {
 
         List<Knowledge> knowledgeList = lambdaQuery()
                 .eq(Knowledge::getUserId, userId)

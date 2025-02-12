@@ -21,7 +21,7 @@ public class Conversation extends BaseEntityForPostgres {
     private String name;
 
     @Schema(description = "用户id")
-    private String userId;
+    private Integer userId;
 
     @Schema(description = "模型id")
     private Integer modelId;

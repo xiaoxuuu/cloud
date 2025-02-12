@@ -38,7 +38,7 @@ public class TalkManager {
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
-    public void talk(AskDTO vo, SseEmitter emitter, String userId, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
+    public void talk(AskDTO vo, SseEmitter emitter, Integer userId, StopWatchUtil sw, AiModelEnum modelTypeEnum) {
 
         sw.start("获取知识数据");
         List<KnowledgeSectionExpandVO> similarityDataList = getKnowledgeSectionDataList(vo, userId, sw);
@@ -83,7 +83,7 @@ public class TalkManager {
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 
-    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, String userId, StopWatchUtil sw) {
+    private List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(AskDTO vo, Integer userId, StopWatchUtil sw) {
 
         sw.start("问题转向量");
         // 问题转为向量

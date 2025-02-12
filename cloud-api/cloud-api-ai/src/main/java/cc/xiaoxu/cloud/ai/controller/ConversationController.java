@@ -60,7 +60,7 @@ public class ConversationController {
                           @PathVariable("modelInfoId") String modelInfoId,
                           @PathVariable("question") String question, HttpServletResponse response) {
 
-        String userId = UserUtils.getUserId();
+        Integer userId = UserUtils.getUserId();
 
         StopWatchUtil sw = new StopWatchUtil("知识库提问");
 

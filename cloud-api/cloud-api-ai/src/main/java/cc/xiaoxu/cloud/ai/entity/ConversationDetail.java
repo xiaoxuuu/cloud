@@ -29,7 +29,7 @@ public class ConversationDetail {
     private Integer conversationId;
 
     @Schema(description = "用户id")
-    private String userId;
+    private Integer userId;
 
     @Schema(description = "模型内容id")
     private String detailId;
