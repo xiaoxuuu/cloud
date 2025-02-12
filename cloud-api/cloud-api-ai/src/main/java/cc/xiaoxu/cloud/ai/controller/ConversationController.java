@@ -61,6 +61,7 @@ public class ConversationController {
 
         // 提问
         conversationService.talk(vo, emitter, sw, dto, similarityDataList, userId);
+        sw.print();
         return emitter;
     }
 
