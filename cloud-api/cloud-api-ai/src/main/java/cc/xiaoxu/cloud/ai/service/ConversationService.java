@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.ConversationMapper;
-import cc.xiaoxu.cloud.ai.dao.ModelInfoMapper;
 import cc.xiaoxu.cloud.ai.entity.Conversation;
 import cc.xiaoxu.cloud.ai.manager.AiManager;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 public class ConversationService extends ServiceImpl<ConversationMapper, Conversation> {
 
     private final AiManager aiManager;
-    private final ModelInfoMapper modelInfoMapper;
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 

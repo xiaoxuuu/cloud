@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.ai.manager;
 
 import cc.xiaoxu.cloud.ai.service.ConversationDetailService;
-import cc.xiaoxu.cloud.ai.service.ConversationService;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatRoleEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.ConversationDetailVO;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
@@ -19,9 +18,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class PersistentChatMemoryStore implements ChatMemoryStore {
-
-    @Resource
-    private ConversationService conversationService;
 
     @Resource
     private ConversationDetailService conversationDetailService;
