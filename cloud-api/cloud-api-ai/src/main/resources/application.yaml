@@ -13,7 +13,7 @@ spring:
   application:
     name: ai
   profiles:
-    active: dev
+    active: local
   datasource:
     url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/d_api?currentSchema=public
     username: @env.api.db.username@
