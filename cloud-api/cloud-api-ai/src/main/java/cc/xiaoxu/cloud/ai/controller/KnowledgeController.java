@@ -44,7 +44,7 @@ public class KnowledgeController {
 
     @PostMapping("/add_files")
     @Operation(summary = "新增 - 文件批量")
-    public void addFiles(@Valid @RequestBody KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
+    public void addFiles(@Valid @RequestPart(name = "dto") KnowledgeAddFileDTO dto, @RequestPart(name = "files") MultipartFile[] files) throws InterruptedException {
 
         for (MultipartFile file : files) {
             addFile(dto, file);
@@ -54,7 +54,7 @@ public class KnowledgeController {
 
     @PostMapping("/add_file")
     @Operation(summary = "新增 - 文件")
-    public void addFile(@Valid @RequestBody KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile file) {
+    public void addFile(@Valid @RequestPart(name = "dto") KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile file) {
 
         if (!knowledgeBaseService.lambdaQuery().eq(KnowledgeBase::getId, dto.getKnowledgeBaseId()).exists()) {
             throw new CustomException("不存在的知识库");
