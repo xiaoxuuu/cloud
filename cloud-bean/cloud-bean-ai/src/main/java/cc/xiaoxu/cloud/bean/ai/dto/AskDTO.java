@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,5 +22,5 @@ public class AskDTO {
     private Integer similarityContentNum;
 
     @Schema(description = "选用知识库，留空则不限制")
-    private Integer knowledgeBaseId;
+    private List<Integer> knowledgeBaseIdList;
 }

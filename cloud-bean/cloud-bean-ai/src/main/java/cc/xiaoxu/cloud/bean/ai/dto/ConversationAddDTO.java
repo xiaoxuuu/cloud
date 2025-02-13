@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,14 +18,12 @@ public class ConversationAddDTO {
     @Schema(description = "问题")
     private String question;
 
-    @NotBlank(message = "请选择模型")
-    @Schema(description = "模型id")
-    private Integer modelId;
-
-    @NotBlank(message = "请选择知识库")
-    @Schema(description = "知识库id")
-    private Integer knowledgeBaseId;
-
     @Schema(description = "对话id，留空则新建对话")
     private Integer conversationId;
+
+    @Schema(description = "模型id，若未传入 conversationId 此参数必填")
+    private Integer modelId;
+
+    @Schema(description = "知识库id，若未传入 conversationId 此参数必填")
+    private List<Integer> knowledgeBaseIdList;
 }
