@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.core.bean.entity;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.utils.DateUtils;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -42,4 +43,11 @@ public class BaseEntityForPostgres {
 
     @Schema(description = "编辑人id")
     private Integer modifyId;
+
+    public static void buildCreate(BaseEntityForPostgres entity, Integer userId) {
+
+        entity.setState(StateEnum.ENABLE.getCode());
+        entity.setCreateTime(DateUtils.getNowDate());
+        entity.setCreateId(userId);
+    }
 }

@@ -1,12 +1,24 @@
 CREATE TABLE r_conversation_knowledge
 (
     "id"                SERIAL PRIMARY KEY,
-    "conversation_id"   INT NOT NULL,
-    "knowledge_base_id" INT NOT NULL
+    "conversation_id"   INT        NOT NULL,
+    "knowledge_base_id" INT        NOT NULL,
+    "state"             VARCHAR(1) NOT NULL,
+    "remark"            VARCHAR(16),
+    "create_time"       TIMESTAMP  NOT NULL,
+    "create_id"         INT,
+    "modify_time"       TIMESTAMP,
+    "modify_id"         INT
 );
 COMMENT ON COLUMN "r_conversation_knowledge"."id" IS '聊天主键';
 COMMENT ON COLUMN "r_conversation_knowledge"."conversation_id" IS '会话id';
 COMMENT ON COLUMN "r_conversation_knowledge"."knowledge_base_id" IS '知识库id';
+COMMENT ON COLUMN "r_conversation_knowledge"."state" IS '状态';
+COMMENT ON COLUMN "r_conversation_knowledge"."remark" IS '备注';
+COMMENT ON COLUMN "r_conversation_knowledge"."create_time" IS '创建时间';
+COMMENT ON COLUMN "r_conversation_knowledge"."create_id" IS '创建人id';
+COMMENT ON COLUMN "r_conversation_knowledge"."modify_time" IS '编辑时间';
+COMMENT ON COLUMN "r_conversation_knowledge"."modify_id" IS '编辑人id';
 COMMENT ON TABLE "r_conversation_knowledge" IS '关系 - 会话知识库引用';
 
 CREATE TABLE "t_conversation"
@@ -125,18 +137,18 @@ COMMENT ON TABLE "t_knowledge_base" IS '知识库';
 
 CREATE TABLE t_knowledge_section
 (
-    id           SERIAL PRIMARY KEY,
-    knowledge_base_id INT NOT NULL,
-    knowledge_id INT        NOT NULL,
-    user_id   VARCHAR(8),
-    cut_content  TEXT,
-    embedding vector(1024),
-    state        VARCHAR(1) NOT NULL,
-    remark       VARCHAR(16),
-    create_time  TIMESTAMP  NOT NULL,
-    create_id    INT,
-    modify_time  TIMESTAMP,
-    modify_id    INT
+    id                SERIAL PRIMARY KEY,
+    knowledge_base_id INT        NOT NULL,
+    knowledge_id      INT        NOT NULL,
+    user_id           VARCHAR(8),
+    cut_content       TEXT,
+    embedding         vector(1024),
+    state             VARCHAR(1) NOT NULL,
+    remark            VARCHAR(16),
+    create_time       TIMESTAMP  NOT NULL,
+    create_id         INT,
+    modify_time       TIMESTAMP,
+    modify_id         INT
 );
 COMMENT ON TABLE t_knowledge_section IS '知识库数据切片';
 COMMENT ON COLUMN t_knowledge_section.id IS '主键';

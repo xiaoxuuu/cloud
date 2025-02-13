@@ -7,6 +7,7 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBaseEditDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBasePageDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeBaseVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.text.StringUtils;
@@ -33,9 +34,7 @@ public class KnowledgeBaseService extends ServiceImpl<KnowledgeBaseMapper, Knowl
         KnowledgeBase entity = new KnowledgeBase();
         entity.setUserId(userId);
         entity.setName(dto.getName());
-        entity.setState(StateEnum.ENABLE.getCode());
-        entity.setCreateTime(DateUtils.getNowDate());
-        entity.setCreateId(userId);
+        BaseEntityForPostgres.buildCreate(entity, userId);
         return entity;
     }
 
