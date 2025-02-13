@@ -7,7 +7,6 @@ import cc.xiaoxu.cloud.ai.manager.CommonManager;
 import cc.xiaoxu.cloud.ai.utils.FileUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeEditStateDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
@@ -142,15 +141,6 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
             record.setEmbedding(null);
         }
         return page;
-    }
-
-    public void editState(KnowledgeEditStateDTO dto, Integer userId) {
-
-        lambdaUpdate()
-                .eq(KnowledgeSection::getUserId, userId)
-                .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
-                .set(KnowledgeSection::getState, dto.getState())
-                .update();
     }
 
     public List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(ConversationAddDTO dto, Integer userId, StopWatchUtil sw) {

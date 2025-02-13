@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class KnowledgeEditStateDTO extends IdsDTO {
 
-    @Schema(description = "表名")
+    @Schema(description = "状态")
     @SchemaEnum(clazz = StateEnum.class)
     private String state;
 }

@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeBase;
+import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.ai.service.KnowledgeBaseService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
@@ -11,7 +12,10 @@ import cc.xiaoxu.cloud.bean.ai.dto.*;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
+import cc.xiaoxu.cloud.bean.dto.IdsDTO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.DateUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -90,12 +94,25 @@ public class KnowledgeController {
         knowledgeService.addCustom(dto, UserUtils.getUserId());
     }
 
-    @PostMapping("/edit_state")
+    @PostMapping("/del")
     @Operation(summary = "删除知识")
-    public void editState(@Valid @RequestBody KnowledgeEditStateDTO dto) {
+    public void del(@Valid @RequestBody IdsDTO dto) {
 
-        knowledgeService.editState(dto, UserUtils.getUserId());
-        knowledgeSectionService.editState(dto, UserUtils.getUserId());
+        Integer userId = UserUtils.getUserId();
+        knowledgeService.lambdaUpdate()
+                .eq(Knowledge::getUserId, userId)
+                .in(Knowledge::getId, dto.getIdList())
+                .set(Knowledge::getState, StateEnum.DELETE.getCode())
+                .set(Knowledge::getModifyId, userId)
+                .set(Knowledge::getModifyTime, DateUtils.getNowDate())
+                .update();
+        knowledgeSectionService.lambdaUpdate()
+                .eq(KnowledgeSection::getUserId, userId)
+                .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
+                .set(KnowledgeSection::getState, StateEnum.DELETE.getCode())
+                .set(KnowledgeSection::getModifyId, userId)
+                .set(KnowledgeSection::getModifyTime, DateUtils.getNowDate())
+                .update();
     }
 
     @PostMapping("/page")
