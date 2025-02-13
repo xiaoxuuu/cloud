@@ -89,14 +89,14 @@ public class ConversationController {
     }
 
     @PostMapping("/page")
-    @Operation(summary = "分页 - 对话")
+    @Operation(summary = "分页")
     public Page<ConversationVO> page(@Valid @RequestBody ConversationPageDTO dto) {
 
         return conversationService.pages(dto, UserUtils.getUserId());
     }
 
     @PostMapping("/list")
-    @Operation(summary = "列表 - 对话")
+    @Operation(summary = "列表")
     public List<ConversationVO> list(@Valid @RequestBody ConversationListDTO dto) {
 
         return conversationService.lists(dto, UserUtils.getUserId());
@@ -110,7 +110,7 @@ public class ConversationController {
     }
 
     @PostMapping("/edit_knowledge")
-    @Operation(summary = "编辑知识库关系")
+    @Operation(summary = "编辑与知识库关系")
     public void editKnowledge(@Valid @RequestBody ConversationEditKnowledgeBaseDTO dto) {
 
         conversationKnowledgeService.editKnowledge(dto, UserUtils.getUserId());

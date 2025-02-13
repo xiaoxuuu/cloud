@@ -43,7 +43,7 @@ public class KnowledgeController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @PostMapping("/add_files")
-    @Operation(summary = "新增知识 - 文件批量 - 本地")
+    @Operation(summary = "新增 - 文件批量")
     public void addFiles(@Valid @RequestBody KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile[] files) throws InterruptedException {
 
         for (MultipartFile file : files) {
@@ -53,7 +53,7 @@ public class KnowledgeController {
     }
 
     @PostMapping("/add_file")
-    @Operation(summary = "新增知识 - 文件批量 - 本地")
+    @Operation(summary = "新增 - 文件")
     public void addFile(@Valid @RequestBody KnowledgeAddFileDTO dto, @RequestPart(name = "file") MultipartFile file) {
 
         if (!knowledgeBaseService.lambdaQuery().eq(KnowledgeBase::getId, dto.getKnowledgeBaseId()).exists()) {
@@ -80,7 +80,7 @@ public class KnowledgeController {
 
     @Deprecated
     @PostMapping("/add_table")
-    @Operation(summary = "新增知识 - 数据表")
+    @Operation(summary = "新增 - 数据表")
     public void addTable(@Valid @RequestBody KnowledgeAddTableDTO dto) {
 
         knowledgeService.addTable(dto, UserUtils.getUserId());
@@ -88,14 +88,14 @@ public class KnowledgeController {
 
     @Deprecated
     @PostMapping("/add_custom")
-    @Operation(summary = "新增知识 - 自定义数据")
+    @Operation(summary = "新增 - 自定义数据")
     public void addCustom(@Valid @RequestBody KnowledgeAddCustomDTO dto) {
 
         knowledgeService.addCustom(dto, UserUtils.getUserId());
     }
 
     @PostMapping("/del")
-    @Operation(summary = "删除知识")
+    @Operation(summary = "删除")
     public void del(@Valid @RequestBody IdsDTO dto) {
 
         Integer userId = UserUtils.getUserId();
@@ -116,7 +116,7 @@ public class KnowledgeController {
     }
 
     @PostMapping("/page")
-    @Operation(summary = "知识 - 分页")
+    @Operation(summary = "分页")
     public Page<KnowledgeExpandVO> page(@Valid @RequestBody KnowledgePageDTO dto) {
 
         return knowledgeService.pages(dto, UserUtils.getUserId());
