@@ -1,13 +1,11 @@
 package cc.xiaoxu.cloud.ai.controller;
 
 import cc.xiaoxu.cloud.ai.entity.Conversation;
+import cc.xiaoxu.cloud.ai.service.ConversationKnowledgeService;
 import cc.xiaoxu.cloud.ai.service.ConversationService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
-import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.ConversationEditDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.ConversationListDTO;
-import cc.xiaoxu.cloud.bean.ai.dto.ConversationPageDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.*;
 import cc.xiaoxu.cloud.bean.ai.vo.ConversationVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.dto.IdsDTO;
@@ -41,6 +39,7 @@ public class ConversationController {
 
     private final ConversationService conversationService;
     private final KnowledgeSectionService knowledgeSectionService;
+    private final ConversationKnowledgeService conversationKnowledgeService;
 
     // TODO 修改 新增会话
     @Wrap(disabled = true)
@@ -108,5 +107,12 @@ public class ConversationController {
     public void edit(@Valid @RequestBody ConversationEditDTO dto) {
 
         conversationService.edit(dto, UserUtils.getUserId());
+    }
+
+    @PostMapping("/edit_knowledge")
+    @Operation(summary = "编辑知识库关系")
+    public void editKnowledge(@Valid @RequestBody ConversationEditKnowledgeBaseDTO dto) {
+
+        conversationKnowledgeService.editKnowledge(dto, UserUtils.getUserId());
     }
 }

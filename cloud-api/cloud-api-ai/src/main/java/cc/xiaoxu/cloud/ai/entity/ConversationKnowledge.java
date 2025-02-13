@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.ai.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -17,11 +16,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @TableName("r_conversation_knowledge")
 @Schema(description = "关系 - 会话知识库引用")
-public class ConversationKnowledge {
-
-    @TableId(value = "id", type = IdType.AUTO)
-    @Schema(description = "主键id")
-    private Integer id;
+public class ConversationKnowledge extends BaseEntityForPostgres {
 
     @Schema(description = "名称")
     private Integer conversationId;
