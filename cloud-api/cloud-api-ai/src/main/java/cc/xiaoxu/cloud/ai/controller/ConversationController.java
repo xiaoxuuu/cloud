@@ -1,12 +1,21 @@
 package cc.xiaoxu.cloud.ai.controller;
 
+import cc.xiaoxu.cloud.ai.entity.Conversation;
 import cc.xiaoxu.cloud.ai.service.ConversationService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationEditDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationListDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationPageDTO;
+import cc.xiaoxu.cloud.bean.ai.vo.ConversationVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
+import cc.xiaoxu.cloud.bean.dto.IdsDTO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -68,5 +77,40 @@ public class ConversationController {
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Connection", "keep-alive");
         response.setHeader("X-Accel-Buffering", "no");
+    }
+
+    @PostMapping("/del")
+    @Operation(summary = "删除")
+    public void del(@Valid @RequestBody IdsDTO dto) {
+
+        Integer userId = UserUtils.getUserId();
+        conversationService.lambdaUpdate()
+                .eq(Conversation::getUserId, userId)
+                .in(Conversation::getId, dto.getIdList())
+                .set(Conversation::getState, StateEnum.DELETE.getCode())
+                .set(Conversation::getModifyId, userId)
+                .set(Conversation::getModifyTime, DateUtils.getNowDate())
+                .update();
+    }
+
+    @PostMapping("/page")
+    @Operation(summary = "分页 - 对话")
+    public Page<ConversationVO> page(@Valid @RequestBody ConversationPageDTO dto) {
+
+        return conversationService.pages(dto, UserUtils.getUserId());
+    }
+
+    @PostMapping("/list")
+    @Operation(summary = "列表 - 对话")
+    public List<ConversationVO> list(@Valid @RequestBody ConversationListDTO dto) {
+
+        return conversationService.lists(dto, UserUtils.getUserId());
+    }
+
+    @PostMapping("/edit")
+    @Operation(summary = "编辑")
+    public void edit(@Valid @RequestBody ConversationEditDTO dto) {
+
+        conversationService.edit(dto, UserUtils.getUserId());
     }
 }
