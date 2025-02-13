@@ -1,17 +1,28 @@
 package cc.xiaoxu.cloud.ai.service;
 
+import cc.xiaoxu.cloud.ai.dao.ConversationKnowledgeMapper;
 import cc.xiaoxu.cloud.ai.dao.ConversationMapper;
 import cc.xiaoxu.cloud.ai.entity.Conversation;
+import cc.xiaoxu.cloud.ai.entity.ConversationKnowledge;
 import cc.xiaoxu.cloud.ai.manager.AiManager;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationEditDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationListDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationPageDTO;
+import cc.xiaoxu.cloud.bean.ai.vo.ConversationVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
+import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -28,6 +39,7 @@ import java.util.stream.Collectors;
 public class ConversationService extends ServiceImpl<ConversationMapper, Conversation> {
 
     private final AiManager aiManager;
+    private final ConversationKnowledgeMapper conversationKnowledgeMapper;
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
@@ -110,6 +122,62 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
             throw new RuntimeException(e);
         } finally {
             emitter.complete();
+        }
+    }
+
+    public Page<ConversationVO> pages(ConversationPageDTO dto, Integer userId) {
+
+        Page<Conversation> entityPage = lambdaQuery()
+                .eq(Conversation::getUserId, userId)
+                .ne(Conversation::getState, StateEnum.DELETE.getCode())
+                .like(StringUtils.isBlank(dto.getName()), Conversation::getName, dto.getName())
+                .page(PageUtils.getPageCondition(dto));
+
+        Page<ConversationVO> page = PageUtils.getPage(entityPage, ConversationVO.class);
+
+        addExpandInfo(page.getRecords());
+
+        return page;
+    }
+
+    private void addExpandInfo(List<ConversationVO> list) {
+
+        // 查询对话引用知识库
+        List<Integer> conversationIdList = list.stream().map(ConversationVO::getId).toList();
+        LambdaQueryWrapper<ConversationKnowledge> wrapper = new LambdaQueryWrapper<ConversationKnowledge>().in(ConversationKnowledge::getConversationId, conversationIdList);
+        List<ConversationKnowledge> conversationKnowledgeList = conversationKnowledgeMapper.selectList(wrapper);
+        Map<Integer, List<Integer>> conversationKnowledgeLMap = conversationKnowledgeList.stream()
+                .collect(Collectors.groupingBy(ConversationKnowledge::getConversationId, Collectors.mapping(ConversationKnowledge::getKnowledgeBaseId, Collectors.toList())));
+
+        for (ConversationVO record : list) {
+            record.setKnowledgeBaseIdList(conversationKnowledgeLMap.get(record.getId()));
+        }
+    }
+
+    public List<ConversationVO> lists(ConversationListDTO dto, Integer userId) {
+
+        List<Conversation> entityList = lambdaQuery()
+                .eq(Conversation::getUserId, userId)
+                .ne(Conversation::getState, StateEnum.DELETE.getCode())
+                .like(StringUtils.isBlank(dto.getName()), Conversation::getName, dto.getName())
+                .list();
+
+        List<ConversationVO> list = BeanUtils.populateList(entityList, ConversationVO.class);
+        addExpandInfo(list);
+        return list;
+    }
+
+    public void edit(ConversationEditDTO dto, Integer userId) {
+
+        if (StringUtils.isNotBlank(dto.getName()) || null != dto.getModelId()) {
+            lambdaUpdate()
+                    .eq(Conversation::getUserId, userId)
+                    .in(Conversation::getId, dto.getId())
+                    .set(StringUtils.isNotBlank(dto.getName()), Conversation::getName, dto.getName())
+                    .set(null != dto.getModelId(), Conversation::getModelId, dto.getModelId())
+                    .set(Conversation::getModifyId, userId)
+                    .set(Conversation::getModifyTime, DateUtils.getNowDate())
+                    .update();
         }
     }
 }
