@@ -145,7 +145,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     public List<KnowledgeSectionExpandVO> getKnowledgeSectionDataList(ConversationAddDTO dto, Integer userId, StopWatchUtil sw) {
 
-        AskDTO vo = new AskDTO(dto.getQuestion(), 0.7, 5, dto.getKnowledgeBaseId());
+        AskDTO vo = new AskDTO(dto.getQuestion(), 0.7, 5, dto.getKnowledgeBaseIdList());
 
         sw.start("问题转向量");
         // 问题转为向量

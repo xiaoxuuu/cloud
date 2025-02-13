@@ -13,6 +13,7 @@ import cc.xiaoxu.cloud.bean.ai.vo.ConversationVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
@@ -62,9 +63,7 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
         entity.setName(question);
         entity.setUserId(userId);
         entity.setModelId(modelId);
-        entity.setState(StateEnum.ENABLE.getCode());
-        entity.setCreateTime(DateUtils.getNowDate());
-        entity.setCreateId(userId);
+        BaseEntityForPostgres.buildCreate(entity, userId);
         return entity;
     }
 
@@ -73,8 +72,13 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
         sw.start("获取对话数据");
         Conversation conversation = getOrCreateConversation(dto.getConversationId(), dto.getQuestion(), userId, dto.getModelId());
 
+        // TODO 保存提问信息
+
         sw.start("提问");
         String similarityData = getSimilarityData(emitter, similarityDataList);
+
+        // TODO 保存回答信息
+
         aiManager.knowledge(dto.getQuestion(), similarityData, conversation.getId(), dto.getModelId(), emitter);
     }
 

@@ -4,8 +4,11 @@ import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.dao.BaseProvider;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
+
+import java.util.stream.Collectors;
 
 public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
 
@@ -23,8 +26,9 @@ public class KnowledgeSectionProvider extends BaseProvider<KnowledgeSection> {
             SELECT(" * ");
             SELECT(" embedding <=> " + embeddingStr + " AS distance ");
             FROM("t_knowledge_section");
-            if (null != askDTO.getKnowledgeBaseId()) {
-                WHERE("knowledge_base_id = " + askDTO.getKnowledgeBaseId());
+            if (CollectionUtils.isNotEmpty(askDTO.getKnowledgeBaseIdList())) {
+                String data = askDTO.getKnowledgeBaseIdList().stream().map(k -> "'" + k + "'").collect(Collectors.joining(","));
+                WHERE("knowledge_base_id IN(" + data + ") ");
             } else {
                 WHERE("1 = 0");
             }
