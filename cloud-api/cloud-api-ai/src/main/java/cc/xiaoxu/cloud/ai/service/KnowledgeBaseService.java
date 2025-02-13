@@ -6,7 +6,6 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBaseAddDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBaseEditDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBasePageDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeBaseVO;
-import cc.xiaoxu.cloud.bean.dto.IdsDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
@@ -46,17 +45,6 @@ public class KnowledgeBaseService extends ServiceImpl<KnowledgeBaseMapper, Knowl
                 .eq(KnowledgeBase::getUserId, userId)
                 .in(KnowledgeBase::getId, dto.getId())
                 .set(KnowledgeBase::getName, dto.getName())
-                .set(KnowledgeBase::getModifyId, userId)
-                .set(KnowledgeBase::getModifyTime, DateUtils.getNowDate())
-                .update();
-    }
-
-    public void del(IdsDTO dto, Integer userId) {
-
-        lambdaUpdate()
-                .eq(KnowledgeBase::getUserId, userId)
-                .in(KnowledgeBase::getId, dto.getIdList())
-                .set(KnowledgeBase::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeBase::getModifyId, userId)
                 .set(KnowledgeBase::getModifyTime, DateUtils.getNowDate())
                 .update();

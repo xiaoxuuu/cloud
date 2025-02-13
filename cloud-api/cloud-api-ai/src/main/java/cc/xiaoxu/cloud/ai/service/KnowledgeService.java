@@ -99,15 +99,6 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
                 .update();
     }
 
-    public void editState(KnowledgeEditStateDTO dto, Integer userId) {
-
-        lambdaUpdate()
-                .eq(Knowledge::getUserId, userId)
-                .in(Knowledge::getId, dto.getIdList())
-                .set(Knowledge::getState, dto.getState())
-                .update();
-    }
-
     public Page<KnowledgeExpandVO> pages(KnowledgePageDTO dto, Integer userId) {
 
         Page<Knowledge> entityPage = lambdaQuery()
