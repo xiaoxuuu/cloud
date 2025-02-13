@@ -25,7 +25,7 @@ public class ModelInfoController {
     private final ModelInfoService modelInfoService;
 
     @PostMapping(value = "/list")
-    @Operation(summary = "模型列表")
+    @Operation(summary = "列表")
     public List<ModelInfoVO> list() {
 
         List<ModelInfo> modelList = modelInfoService.list();

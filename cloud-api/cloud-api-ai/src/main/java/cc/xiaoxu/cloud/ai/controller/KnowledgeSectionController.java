@@ -43,7 +43,7 @@ public class KnowledgeSectionController {
     }
 
     @PostMapping("/page")
-    @Operation(summary = "知识数据 - 分页")
+    @Operation(summary = "分页")
     public Page<KnowledgeSectionVO> page(@Valid @RequestBody PageDTO dto) {
 
         return knowledgeSectionService.pages(dto, UserUtils.getUserId());
