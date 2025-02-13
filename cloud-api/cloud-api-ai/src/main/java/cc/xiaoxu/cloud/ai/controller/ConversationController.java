@@ -11,6 +11,7 @@ import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.dto.IdsDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.annotation.Wrap;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -46,6 +47,15 @@ public class ConversationController {
     @PostMapping(value = "/talk", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "聊天")
     public SseEmitter talk(@Valid @RequestBody ConversationAddDTO dto, HttpServletResponse response) {
+
+        if (null == dto.getConversationId()) {
+            if (null == dto.getModelId()) {
+                throw new CustomException("请选择模型");
+            }
+            if (CollectionUtils.isEmpty(dto.getKnowledgeBaseIdList())) {
+                throw new CustomException("请选择知识库");
+            }
+        }
 
         Integer userId = UserUtils.getUserId();
 
