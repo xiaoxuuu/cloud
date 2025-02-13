@@ -42,6 +42,7 @@ public class ConversationController {
     private final ConversationService conversationService;
     private final KnowledgeSectionService knowledgeSectionService;
 
+    // TODO 修改 新增会话
     @Wrap(disabled = true)
     @PostMapping(value = "/talk", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "聊天")
@@ -66,11 +67,6 @@ public class ConversationController {
         sw.print();
         return emitter;
     }
-
-    // TODO 修改 新增会话
-    // TODO 会话列表查询
-    // TODO 会话历史记录查询
-    // TODO 删除会话
 
     public static void setResponseHeader(HttpServletResponse response) {
         // 设置响应的字符编码为 UTF-8
