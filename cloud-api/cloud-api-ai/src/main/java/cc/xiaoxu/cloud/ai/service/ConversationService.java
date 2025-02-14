@@ -2,13 +2,17 @@ package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.ConversationKnowledgeMapper;
 import cc.xiaoxu.cloud.ai.dao.ConversationMapper;
+import cc.xiaoxu.cloud.ai.dao.ModelInfoMapper;
 import cc.xiaoxu.cloud.ai.entity.Conversation;
+import cc.xiaoxu.cloud.ai.entity.ConversationDetail;
 import cc.xiaoxu.cloud.ai.entity.ConversationKnowledge;
+import cc.xiaoxu.cloud.ai.entity.ModelInfo;
 import cc.xiaoxu.cloud.ai.manager.AiManager;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationEditDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationListDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationPageDTO;
+import cc.xiaoxu.cloud.bean.ai.enums.AiChatRoleEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.ConversationVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
@@ -22,6 +26,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -41,6 +46,8 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
 
     private final AiManager aiManager;
     private final ConversationKnowledgeMapper conversationKnowledgeMapper;
+    private final ConversationDetailService conversationDetailService;
+    private final ModelInfoMapper modelInfoMapper;
 
     private static final String DEFAULT_ANSWER = "没有在知识库中查找到相关信息，请调整问题描述或更新知识库";
 
@@ -54,6 +61,20 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
         // 创建会话
         Conversation entity = getConversation(question, userId, modelId);
         save(entity);
+
+        String promot = """
+                    你是个经验丰富的知识总结专家，我将给你一些「知识列表」，然后我会对你提问。请你从「知识列表」中总结答案，并回复
+                要求：
+                - 请使用简洁且专业的语言回答问题；
+                - 请使用与问题相同的语言回答问题。
+                - 请使用 Markdown 语法优化答案的格式。
+                - 避免提及不属于「知识列表」中的知识，保证答案仅来源于「知识列表」。
+                - 「知识列表」中的图片、链接地址和脚本语言请直接返回。
+                - 如果「知识列表」不包含问题的答案，请回复「没有在知识库中查找到相关信息，请调整问题描述或更新知识库」。
+                - 如果提问多个问题，仅回答与「知识列表」相关的问题，无关问题直接忽略。
+                """;
+        conversationDetailService.create(promot, entity.getId(), userId, modelId, AiChatRoleEnum.SYSTEM, promot.length());
+
         return entity;
     }
 
@@ -67,19 +88,30 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
         return entity;
     }
 
+    @SneakyThrows
     public void talk(SseEmitter emitter, StopWatchUtil sw, ConversationAddDTO dto, List<KnowledgeSectionExpandVO> similarityDataList, Integer userId) {
 
         sw.start("获取对话数据");
         Conversation conversation = getOrCreateConversation(dto.getConversationId(), dto.getQuestion(), userId, dto.getModelId());
 
-        // TODO 保存提问信息
+        sw.start("获取模型数据");
+        ModelInfo modelInfo = modelInfoMapper.selectById(conversation.getModelId());
 
-        sw.start("提问");
+        emitter.send(SseVO.start());
+        emitter.send(SseVO.id(conversation.getId()));
+
+        sw.start("知识整理");
         String similarityData = getSimilarityData(emitter, similarityDataList);
 
-        // TODO 保存回答信息
+        // 保存提问信息
+        String q = """
+                问题：{{question}}
+                知识列表：{{knowledgeData}}
+                """;
+        ConversationDetail question = conversationDetailService.create(q.replace("{{question}}", dto.getQuestion()).replace("{{knowledgeData}}", similarityData), conversation.getId(), userId, modelInfo.getId(), AiChatRoleEnum.USER, dto.getQuestion().length());
 
-        aiManager.knowledge(dto.getQuestion(), similarityData, conversation.getId(), dto.getModelId(), emitter);
+        sw.start("提问");
+        aiManager.knowledge(dto.getQuestion(), similarityData, conversation.getId(), modelInfo, emitter, userId, question);
     }
 
     private String getSimilarityData(SseEmitter emitter, List<KnowledgeSectionExpandVO> similarityData) {
@@ -91,7 +123,6 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
                 .collect(Collectors.joining(","));
         if (null != emitter) {
             try {
-                emitter.send(SseVO.start());
                 for (KnowledgeSectionExpandVO similarityDatum : similarityData) {
                     similarityDatum.setEmbedding(null);
                     emitter.send(SseVO.paramMap(Map.of("USE_DATA", similarityDatum)));

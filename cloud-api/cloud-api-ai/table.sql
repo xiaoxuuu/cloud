@@ -51,11 +51,11 @@ CREATE TABLE "t_conversation_detail"
     "id"              SERIAL PRIMARY KEY,
     "conversation_id" INT         NOT NULL,
     "user_id"         INT         NOT NULL,
-    "detail_id"       VARCHAR(64) NOT NULL,
+    "detail_id" VARCHAR(64),
     "object"          VARCHAR(32),
     "content_id"      INT         NOT NULL,
     "create_time"     TIMESTAMP   NOT NULL,
-    "model"           VARCHAR(32) NOT NULL,
+    "model_id"  INT NOT NULL,
     "role"            VARCHAR(16) NOT NULL,
     "token"           INT
 );
@@ -65,7 +65,7 @@ COMMENT ON COLUMN "t_conversation_detail"."user_id" IS '所属用户';
 COMMENT ON COLUMN "t_conversation_detail"."detail_id" IS '模型内容id';
 COMMENT ON COLUMN "t_conversation_detail"."content_id" IS '内容id';
 COMMENT ON COLUMN "t_conversation_detail"."create_time" IS '创建时间';
-COMMENT ON COLUMN "t_conversation_detail"."model" IS '模型';
+COMMENT ON COLUMN "t_conversation_detail"."model_id" IS '模型id';
 COMMENT ON COLUMN "t_conversation_detail"."role" IS '角色';
 COMMENT ON COLUMN "t_conversation_detail"."token" IS '消耗token';
 COMMENT ON TABLE "t_conversation_detail" IS '对话-内容';

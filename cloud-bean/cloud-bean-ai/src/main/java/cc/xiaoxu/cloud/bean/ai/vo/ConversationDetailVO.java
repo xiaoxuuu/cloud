@@ -27,7 +27,7 @@ public class ConversationDetailVO {
     private Date createTime;
 
     @Schema(description = "模型")
-    private String model;
+    private Integer modelId;
 
     @Schema(description = "角色")
     private String role;
