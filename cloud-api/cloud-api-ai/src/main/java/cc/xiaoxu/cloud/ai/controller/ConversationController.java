@@ -66,10 +66,10 @@ public class ConversationController {
 
         sw.start("获取知识数据");
         List<KnowledgeSectionExpandVO> similarityDataList = knowledgeSectionService.getKnowledgeSectionDataList(dto, userId, sw);
-        if (CollectionUtils.isEmpty(similarityDataList)) {
-            conversationService.defaultAnswer(emitter);
-            return emitter;
-        }
+//        if (CollectionUtils.isEmpty(similarityDataList)) {
+//            conversationService.defaultAnswer(emitter);
+//            return emitter;
+//        }
 
         // 提问
         conversationService.talk(emitter, sw, dto, similarityDataList, userId);

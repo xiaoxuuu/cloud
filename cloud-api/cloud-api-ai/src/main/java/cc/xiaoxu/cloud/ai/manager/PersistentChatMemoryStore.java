@@ -25,31 +25,24 @@ public class PersistentChatMemoryStore implements ChatMemoryStore {
     @Override
     public List<ChatMessage> getMessages(Object memoryId) {
 
-        log.error("getMessages");
-        List<ConversationDetailVO> conversationDetailList = conversationDetailService.getConversationDetailList((int) memoryId);
-        return conversationDetailList.stream().map(k -> {
-            AiChatRoleEnum roleEnum = EnumUtils.getByClass(k.getModel(), AiChatRoleEnum.class);
-            return switch (roleEnum) {
-                case AI -> new AiMessage(k.getContent());
-                case SYSTEM -> new SystemMessage(k.getContent());
-                case USER -> new UserMessage(k.getContent());
-            };
-        }).toList();
+        List<ConversationDetailVO> conversationDetailList = conversationDetailService.getConversationDetailList(Integer.parseInt(String.valueOf(memoryId)));
+        return conversationDetailList.stream()
+                .map(k -> {
+                    AiChatRoleEnum roleEnum = EnumUtils.getByClass(k.getRole(), AiChatRoleEnum.class);
+                    return switch (roleEnum) {
+                        case AI -> new AiMessage(k.getContent());
+                        case SYSTEM -> new SystemMessage(k.getContent());
+                        case USER -> new UserMessage(k.getContent());
+                    };
+                })
+                .toList();
     }
 
     @Override
     public void updateMessages(Object memoryId, List<ChatMessage> messages) {
-
-        log.error("updateMessages");
     }
 
     @Override
     public void deleteMessages(Object memoryId) {
-
-        log.error("deleteMessages");
-//        conversationService.lambdaUpdate()
-//                .set(Conversation::getState, StateEnum.DELETE.getCode())
-//                .eq(Conversation::getId, memoryId)
-//                .update();
     }
 }
