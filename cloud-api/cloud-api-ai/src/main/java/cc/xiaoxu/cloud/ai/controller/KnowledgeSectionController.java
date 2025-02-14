@@ -4,9 +4,11 @@ import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.service.KnowledgeSectionService;
 import cc.xiaoxu.cloud.ai.service.KnowledgeService;
 import cc.xiaoxu.cloud.ai.utils.UserUtils;
+import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PageDTO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,8 +40,20 @@ public class KnowledgeSectionController {
 
     @PostMapping("/calc_vector")
     @Operation(summary = "知识向量计算")
-    public boolean calcVector(@Valid @RequestBody IdDTO vo) {
-        return knowledgeSectionService.calcVector(vo);
+    public boolean calcVector(@Valid @RequestBody IdDTO dto) {
+
+        boolean b = knowledgeSectionService.calcVector(dto);
+        if (!b) {
+            return false;
+        }
+        knowledgeService.changeStatus(dto.getId(), FileStatusEnum.ALL_COMPLETED);
+
+        knowledgeService.lambdaUpdate()
+                .set(Knowledge::getState, StateEnum.ENABLE.getCode())
+                .eq(Knowledge::getId, dto.getId())
+                .eq(Knowledge::getState, StateEnum.PROGRESSING.getCode())
+                .update();
+        return true;
     }
 
     @PostMapping("/page")
