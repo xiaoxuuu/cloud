@@ -12,6 +12,7 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class AddLocalFileEvent {
     private final KnowledgeSectionService knowledgeSectionService;
     private final LocalApiService localApiService;
 
+    @Async
     @EventListener(classes = {KnowledgeAddLocalFileEventDTO.class})
     public void onApplicationEvent(KnowledgeAddLocalFileEventDTO dto) {
 

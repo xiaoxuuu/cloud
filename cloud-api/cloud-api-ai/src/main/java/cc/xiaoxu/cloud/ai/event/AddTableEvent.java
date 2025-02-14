@@ -10,6 +10,7 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -20,6 +21,7 @@ public class AddTableEvent {
     private final KnowledgeService knowledgeService;
     private final KnowledgeSectionService knowledgeSectionService;
 
+    @Async
     @EventListener(classes = {KnowledgeAddTableEventDTO.class})
     public void onApplicationEvent(KnowledgeAddTableEventDTO dto) {
 
