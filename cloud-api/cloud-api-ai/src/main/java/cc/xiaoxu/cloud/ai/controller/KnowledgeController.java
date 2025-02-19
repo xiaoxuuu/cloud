@@ -65,7 +65,7 @@ public class KnowledgeController {
         String filePath = localApiService.uploadFile(file);
         log.debug("文件上传结束：{}", filePath);
 
-        Knowledge knowledge = knowledgeService.addKnowledge(dto, file.getOriginalFilename(), filePath, UserUtils.getUserId(), KnowledgeTypeEnum.FILE_LOCAL);
+        Knowledge knowledge = knowledgeService.addKnowledge(dto, file.getOriginalFilename(), filePath, UserUtils.getUserId(), KnowledgeTypeEnum.FILE);
 
         knowledgeService.lambdaUpdate()
                 .eq(Knowledge::getId, knowledge.getId())

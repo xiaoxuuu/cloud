@@ -169,6 +169,7 @@ CREATE TABLE "t_model_info"
     "id"           SERIAL PRIMARY KEY,
     "company"      VARCHAR(16),
     "name"         VARCHAR(64),
+    "type" VARCHAR(16),
     "model"        VARCHAR(64),
     "introduction" VARCHAR(255),
     "url"          VARCHAR(255),
@@ -178,6 +179,8 @@ CREATE TABLE "t_model_info"
 COMMENT ON COLUMN "t_model_info"."id" IS '模型主键';
 COMMENT ON COLUMN "t_model_info"."company" IS '模型公司';
 COMMENT ON COLUMN "t_model_info"."name" IS '模型名称';
+COMMENT
+ON COLUMN "t_model_info"."type" IS '类型';
 COMMENT ON COLUMN "t_model_info"."model" IS '模型类型';
 COMMENT ON COLUMN "t_model_info"."introduction" IS '简介';
 COMMENT ON COLUMN "t_model_info"."url" IS 'api url';

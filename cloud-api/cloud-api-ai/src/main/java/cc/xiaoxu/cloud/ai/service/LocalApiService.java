@@ -66,11 +66,10 @@ public class LocalApiService {
         return vectorList;
     }
 
-    public List<Double> vector(String text) {
+    public List<Float> vector(String text) {
 
         return localVector(List.of(text)).getFirst().getEmbedding();
     }
-
 
     public List<String> split(String content) {
         log.debug("文件切片");
