@@ -3,7 +3,6 @@ package cc.xiaoxu.cloud.ai.service;
 import cc.xiaoxu.cloud.ai.dao.KnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.bean.ai.dto.*;
-import cc.xiaoxu.cloud.bean.ai.enums.ALiFileUploadResultEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.FileStatusEnum;
 import cc.xiaoxu.cloud.bean.ai.enums.KnowledgeTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeExpandVO;
@@ -38,7 +37,7 @@ public class KnowledgeService extends ServiceImpl<KnowledgeMapper, Knowledge> {
         knowledge.setType(knowledgeTypeEnum.getCode());
         knowledge.setName(fileName);
         knowledge.setFileId(fileId);
-        knowledge.setStatus(ALiFileUploadResultEnum.INIT.getCode());
+        knowledge.setStatus(FileStatusEnum.UPLOAD_INIT.getCode());
         knowledge.setState(StateEnum.PROGRESSING.getCode());
         knowledge.setCreateTime(new Date());
         save(knowledge);
