@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @Tag(name = "对话")
-@RequestMapping("/conversation")
+@RequestMapping("/conversation_detail")
 public class ConversationDetailController {
 
     private final ConversationDetailService conversationDetailService;
