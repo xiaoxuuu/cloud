@@ -4,10 +4,14 @@ import cc.xiaoxu.cloud.ai.dao.ConversationDetailContentMapper;
 import cc.xiaoxu.cloud.ai.dao.ConversationDetailMapper;
 import cc.xiaoxu.cloud.ai.entity.ConversationDetail;
 import cc.xiaoxu.cloud.ai.entity.ConversationDetailContent;
+import cc.xiaoxu.cloud.bean.ai.dto.ConversationDetailPageDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatRoleEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.ConversationDetailVO;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.PageUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,10 +31,28 @@ public class ConversationDetailService extends ServiceImpl<ConversationDetailMap
 
     private final ConversationDetailContentMapper conversationDetailContentMapper;
 
+    public Page<ConversationDetailVO> pages(@Valid ConversationDetailPageDTO dto, Integer userId) {
+
+        Page<ConversationDetail> entityPage = lambdaQuery()
+                .eq(ConversationDetail::getConversationId, dto.getConversionId())
+                .eq(ConversationDetail::getUserId, userId)
+                .orderBy(true, false, ConversationDetail::getId)
+                .page(PageUtils.getPageCondition(dto));
+
+        List<ConversationDetailVO> conversationDetailVO = toConversationDetailVO(entityPage.getRecords());
+
+        return PageUtils.getPage(entityPage, conversationDetailVO);
+    }
+
     public List<ConversationDetailVO> getConversationDetailList(Integer conversationId) {
 
         // 查询对话
         List<ConversationDetail> conversationList = lambdaQuery().eq(ConversationDetail::getConversationId, conversationId).list();
+        return toConversationDetailVO(conversationList);
+    }
+
+    public List<ConversationDetailVO> toConversationDetailVO(List<ConversationDetail> conversationList) {
+
         List<Integer> contentIdList = conversationList.stream().map(ConversationDetail::getContentId).toList();
 
         // 查询每句话
