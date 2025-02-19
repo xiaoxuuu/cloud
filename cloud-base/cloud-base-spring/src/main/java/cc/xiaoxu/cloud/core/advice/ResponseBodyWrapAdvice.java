@@ -70,7 +70,7 @@ public class ResponseBodyWrapAdvice implements ResponseBodyAdvice<Object> {
         }
 
         // 未被包裹，手动包裹
-        r.setBody(data);
+        r.setData(data);
         return bodyIsString ? JsonUtils.toString(r) : r;
     }
 
