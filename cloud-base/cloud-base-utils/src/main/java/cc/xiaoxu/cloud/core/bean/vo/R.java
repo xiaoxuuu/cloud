@@ -25,7 +25,7 @@ public class R<T> {
     private String msg;
 
     @Schema(name = "响应参数 body")
-    private T body;
+    private T data;
 
     @Schema(name = "是否调用成功", example = "true")
     private Boolean success;
@@ -56,7 +56,7 @@ public class R<T> {
     public static <T> R<T> success(T t) {
 
         R<T> respVo = new R<>(REnum.SUCCESS);
-        respVo.setBody(t);
+        respVo.setData(t);
         return respVo;
     }
 
