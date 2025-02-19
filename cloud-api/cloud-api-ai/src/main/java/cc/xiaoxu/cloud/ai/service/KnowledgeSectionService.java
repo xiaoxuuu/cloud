@@ -1,13 +1,17 @@
 package cc.xiaoxu.cloud.ai.service;
 
 import cc.xiaoxu.cloud.ai.dao.KnowledgeSectionMapper;
+import cc.xiaoxu.cloud.ai.dao.ModelInfoMapper;
 import cc.xiaoxu.cloud.ai.entity.Knowledge;
 import cc.xiaoxu.cloud.ai.entity.KnowledgeSection;
+import cc.xiaoxu.cloud.ai.entity.ModelInfo;
+import cc.xiaoxu.cloud.ai.manager.AiManager;
 import cc.xiaoxu.cloud.ai.manager.CommonManager;
 import cc.xiaoxu.cloud.ai.utils.FileUtils;
 import cc.xiaoxu.cloud.bean.ai.dto.AskDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationAddDTO;
 import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
+import cc.xiaoxu.cloud.bean.ai.enums.AiModelTypeEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionVO;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
@@ -16,6 +20,7 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -35,6 +40,8 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     private final CommonManager commonManager;
     private final LocalApiService localApiService;
+    private final AiManager aiManager;
+    private final ModelInfoMapper modelInfoMapper;
 
     public boolean rebuildSection(Knowledge knowledge) {
 
@@ -112,13 +119,15 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     public int calcVector(List<KnowledgeSection> list, int batchSize) {
 
+        ModelInfo modelInfo = modelInfoMapper.selectOne(new LambdaQueryWrapper<ModelInfo>().eq(ModelInfo::getType, AiModelTypeEnum.EMBEDDING.getCode()));
+
         AtomicInteger size = new AtomicInteger(list.size());
         log.debug("文本切片：{} 片", size);
         List<List<KnowledgeSection>> lists = ListUtils.splitList(list, batchSize);
         lists.parallelStream().forEach(knowledgeSections -> {
             List<String> cutList = knowledgeSections.stream().map(KnowledgeSection::getCutContent).toList();
-            List<LocalVectorDTO> vectorList = localApiService.localVector(cutList);
-            Map<Integer, List<Double>> map = vectorList.stream().collect(Collectors.toMap(LocalVectorDTO::getIndex, LocalVectorDTO::getEmbedding));
+            List<LocalVectorDTO> vectorList = aiManager.embedding(cutList, modelInfo);
+            Map<Integer, List<Float>> map = vectorList.stream().collect(Collectors.toMap(LocalVectorDTO::getIndex, LocalVectorDTO::getEmbedding));
             for (int i = 0; i < knowledgeSections.size(); i++) {
                 if (map.containsKey(i)) {
                     getBaseMapper().updateEmbedding(String.valueOf(map.get(i)), knowledgeSections.get(i).getId());
@@ -149,7 +158,7 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
         sw.start("问题转向量");
         // 问题转为向量
-        List<Double> vectorList = localApiService.vector(vo.getQuestion());
+        List<Float> vectorList = localApiService.vector(vo.getQuestion());
         String embedding = String.valueOf(vectorList);
         log.info("向量计算完成，维度：{}", vectorList.size());
 

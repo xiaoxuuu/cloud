@@ -17,5 +17,5 @@ public class LocalVectorDTO {
     private Integer index;
 
     @Schema(description = "向量")
-    private List<Double> embedding;
+    private List<Float> embedding;
 }

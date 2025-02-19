@@ -28,6 +28,9 @@ public class ModelInfo {
     @Schema(description = "模型名称")
     private String name;
 
+    @Schema(description = "模型 类型")
+    private String type;
+
     @Schema(description = "模型类型")
     private String model;
 

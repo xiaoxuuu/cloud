@@ -4,13 +4,17 @@ import cc.xiaoxu.cloud.ai.entity.ConversationDetail;
 import cc.xiaoxu.cloud.ai.entity.ModelInfo;
 import cc.xiaoxu.cloud.ai.service.ConversationDetailService;
 import cc.xiaoxu.cloud.bean.ai.dto.AiChatResultDTO;
+import cc.xiaoxu.cloud.bean.ai.dto.LocalVectorDTO;
 import cc.xiaoxu.cloud.bean.ai.enums.AiChatRoleEnum;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
+import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.TokenStream;
@@ -20,6 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -112,5 +118,30 @@ public class AiManager {
         aiChatResultDTO.setToken(0);
         aiChatResultDTO.setStatusCode(200);
         return aiChatResultDTO;
+    }
+
+    public List<LocalVectorDTO> embedding(List<String> contentList, ModelInfo modelInfo) {
+
+        // 初始化 Embedding 模型
+        OpenAiEmbeddingModel embeddingModel = new OpenAiEmbeddingModel.OpenAiEmbeddingModelBuilder()
+                .apiKey(modelInfo.getApiKey())
+                .baseUrl(modelInfo.getUrl())
+                .dimensions(1024)
+                .modelName(modelInfo.getModel())
+                .logRequests(true)
+//                .logResponses(true)
+                .build();
+
+        List<TextSegment> segmentList = contentList.stream().map(TextSegment::from).toList();
+        dev.langchain4j.model.output.Response<List<Embedding>> response = embeddingModel.embedAll(segmentList);
+
+        List<LocalVectorDTO> vectorList = new ArrayList<>();
+        List<Embedding> embeddingList = response.content();
+        for (int i = 0; i < embeddingList.size(); i++) {
+
+            vectorList.add(new LocalVectorDTO(i, embeddingList.get(i).vectorAsList()));
+        }
+
+        return vectorList;
     }
 }
