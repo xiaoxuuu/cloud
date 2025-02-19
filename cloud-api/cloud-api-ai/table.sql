@@ -83,7 +83,7 @@ CREATE TABLE t_knowledge
 (
     id                SERIAL PRIMARY KEY,
     knowledge_base_id INT        NOT NULL,
-    user_id           VARCHAR(8),
+    user_id INT NOT NULL,
     type              VARCHAR(32),
     name              VARCHAR(255),
     file_id           TEXT,

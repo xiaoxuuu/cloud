@@ -13,6 +13,7 @@ import cc.xiaoxu.cloud.bean.ai.dto.KnowledgeBasePageDTO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeBaseVO;
 import cc.xiaoxu.cloud.bean.dto.IdsDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +55,10 @@ public class KnowledgeBaseController {
     @PostMapping("/del")
     @Operation(summary = "删除")
     public void del(@Valid @RequestBody IdsDTO dto) {
+
+        if (CollectionUtils.isEmpty(dto.getIdList())) {
+            throw new CustomException("请选择知识库");
+        }
 
         Integer userId = UserUtils.getUserId();
         knowledgeBaseService.lambdaUpdate()
