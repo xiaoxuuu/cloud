@@ -140,7 +140,7 @@ CREATE TABLE t_knowledge_section
     id                SERIAL PRIMARY KEY,
     knowledge_base_id INT        NOT NULL,
     knowledge_id      INT        NOT NULL,
-    user_id           VARCHAR(8),
+    user_id INT NOT NULL,
     cut_content       TEXT,
     embedding         vector(1024),
     state             VARCHAR(1) NOT NULL,
