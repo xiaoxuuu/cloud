@@ -119,7 +119,11 @@ public class KnowledgeSectionService extends ServiceImpl<KnowledgeSectionMapper,
 
     public int calcVector(List<KnowledgeSection> list, int batchSize) {
 
-        ModelInfo modelInfo = modelInfoMapper.selectOne(new LambdaQueryWrapper<ModelInfo>().eq(ModelInfo::getType, AiModelTypeEnum.EMBEDDING.getCode()));
+        LambdaQueryWrapper<ModelInfo> wrapper = new LambdaQueryWrapper<ModelInfo>()
+                .eq(ModelInfo::getType, AiModelTypeEnum.EMBEDDING.getCode())
+                .orderByDesc(ModelInfo::getId)
+                .last(" LIMIT 1 ");
+        ModelInfo modelInfo = modelInfoMapper.selectOne(wrapper);
 
         AtomicInteger size = new AtomicInteger(list.size());
         log.debug("文本切片：{} 片", size);
