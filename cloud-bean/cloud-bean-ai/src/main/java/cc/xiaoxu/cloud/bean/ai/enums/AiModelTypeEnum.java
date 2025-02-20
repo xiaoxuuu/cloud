@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum AiModelTypeEnum implements EnumInterface<Integer> {
+public enum AiModelTypeEnum implements EnumInterface<String> {
 
     LLM("llm", "语言模型"),
     EMBEDDING("embedding", "向量模型"),
