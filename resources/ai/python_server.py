@@ -41,9 +41,10 @@ async def get_embeddings(request: EmbeddingsRequest):
     """处理文本嵌入请求"""
     try:
         texts = request.input
+        truncate_dim = 1024
 
         # 为每个文本生成嵌入向量
-        embeddings = embedding_model.encode(texts, task="text-matching", 1024)
+        embeddings = embedding_model.encode(texts, task="text-matching", truncate_dim=truncate_dim)
 
         # 返回嵌入向量
         return [{"index": i, "text": text, "embedding": embedding.tolist()}
