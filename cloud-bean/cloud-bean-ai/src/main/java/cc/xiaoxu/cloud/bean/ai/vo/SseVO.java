@@ -42,6 +42,10 @@ public class SseVO<T> {
         return new SseVO<>(Type.MSG, t);
     }
 
+    public static <T> SseVO<T> think(T t) {
+        return new SseVO<>(Type.THINK, t);
+    }
+
     public static <T> SseVO<T> end() {
         return new SseVO<>(Type.END, null);
     }
@@ -55,6 +59,7 @@ public class SseVO<T> {
         NAME("NAME", "本次对话名称"),
         PARAM_MAP("PARAM_MAP", "参数 MAP"),
         MSG("MSG", "会话内容"),
+        THINK("THINK", "思考内容"),
         END("END", "会话结束"),
         ;
 
