@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.my.entity;
 
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @TableName("t_constant")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Constant extends BaseEntityForPostgres {
+public class Constant extends BaseEntity {
 
     @Schema(description = "名称")
     private String name;

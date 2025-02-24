@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.ai.entity;
 
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @TableName("t_knowledge")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Knowledge extends BaseEntityForPostgres {
+public class Knowledge extends BaseEntity {
 
     @Schema(description = "知识库id")
     private Integer knowledgeBaseId;

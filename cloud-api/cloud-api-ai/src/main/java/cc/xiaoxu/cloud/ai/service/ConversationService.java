@@ -17,7 +17,7 @@ import cc.xiaoxu.cloud.bean.ai.vo.ConversationVO;
 import cc.xiaoxu.cloud.bean.ai.vo.KnowledgeSectionExpandVO;
 import cc.xiaoxu.cloud.bean.ai.vo.SseVO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
 import cc.xiaoxu.cloud.core.utils.StopWatchUtil;
@@ -84,7 +84,7 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
         entity.setName(question);
         entity.setUserId(userId);
         entity.setModelId(modelId);
-        BaseEntityForPostgres.buildCreate(entity, userId);
+        BaseEntity.buildCreate(entity, userId);
         return entity;
     }
 

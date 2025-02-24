@@ -70,7 +70,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                 .sorted(Comparator.comparing(NavWebsiteShowVO::getVisitNum, Comparator.reverseOrder())
                         // 按 id 倒序
                         .thenComparing(NavWebsiteShowVO::getId, Comparator.reverseOrder()))
-                .limit(30)
+                .limit(15)
                 .toList();
     }
 

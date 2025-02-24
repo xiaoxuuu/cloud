@@ -36,7 +36,7 @@ public class NavWebsite extends BaseEntity {
     private String type;
 
     @Schema(description = "图标id")
-    private String iconId;
+    private Integer iconId;
 
     @Schema(description = "上次正常访问时间（抓取）")
     private String lastAvailableTime;

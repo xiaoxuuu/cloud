@@ -24,7 +24,7 @@ public class FileRecordService extends ServiceImpl<FileRecordMapper, FileRecord>
         log.error("使用本地文件服务器");
     }
 
-    public String saveFileRecord(MultipartFile file, String fileName, String relativePath) {
+    public Integer saveFileRecord(MultipartFile file, String fileName, String relativePath) {
         FileRecord fileRecord = new FileRecord();
         fileRecord.setOriginalName(fileName);
         String suffix = getSuffix(fileName);
