@@ -13,7 +13,7 @@ import java.util.Set;
 public class NavWebsiteShowVO {
 
     @Schema(description = "id")
-    private String id;
+    private Integer id;
 
     @Schema(description = "展示名称")
     private String shortName;

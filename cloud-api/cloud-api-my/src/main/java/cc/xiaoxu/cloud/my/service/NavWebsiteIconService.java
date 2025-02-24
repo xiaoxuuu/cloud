@@ -22,7 +22,7 @@ public class NavWebsiteIconService extends ServiceImpl<NavWebsiteIconMapper, Nav
     /**
      * 数据缓存
      */
-    private Map<String, NavWebsiteIcon> navIconMap = new HashMap<>();
+    private Map<Integer, NavWebsiteIcon> navIconMap = new HashMap<>();
 
     public void setNavIconMap(List<NavWebsiteIcon> navIconList) {
         this.navIconMap = navIconList.stream().collect(Collectors.toMap(NavWebsiteIcon::getId, a -> a));

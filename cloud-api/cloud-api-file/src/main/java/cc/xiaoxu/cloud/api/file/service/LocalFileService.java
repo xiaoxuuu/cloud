@@ -81,7 +81,7 @@ public class LocalFileService implements FileService {
             out.write(file.getBytes());
             out.close();
             FileVO fileVO = new FileVO(fileName, relativePath, localFileConfig.getHost() + FileConstants.FILE_SEPARATOR + relativePath, localFileConfig.getHost());
-            String id = fileRecordService.saveFileRecord(file, fileName, relativePath);
+            Integer id = fileRecordService.saveFileRecord(file, fileName, relativePath);
             fileVO.setId(id);
             return fileVO;
         } catch (Exception e) {

@@ -8,7 +8,7 @@ import lombok.Data;
 public class FileVO {
 
     @Schema(description = "id")
-    private String id;
+    private Integer id;
 
     @Schema(description = "文件原名称")
     private String originalName;

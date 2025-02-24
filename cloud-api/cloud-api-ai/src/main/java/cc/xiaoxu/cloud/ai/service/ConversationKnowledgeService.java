@@ -4,7 +4,7 @@ import cc.xiaoxu.cloud.ai.dao.ConversationKnowledgeMapper;
 import cc.xiaoxu.cloud.ai.entity.ConversationKnowledge;
 import cc.xiaoxu.cloud.bean.ai.dto.ConversationEditKnowledgeBaseDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.core.bean.entity.BaseEntityForPostgres;
+import cc.xiaoxu.cloud.core.bean.entity.BaseEntity;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -36,7 +36,7 @@ public class ConversationKnowledgeService extends ServiceImpl<ConversationKnowle
             ConversationKnowledge entity = new ConversationKnowledge();
             entity.setConversationId(dto.getId());
             entity.setKnowledgeBaseId(dto.getKnowledgeBaseId());
-            BaseEntityForPostgres.buildCreate(entity, userId);
+            BaseEntity.buildCreate(entity, userId);
             save(entity);
         }
     }
