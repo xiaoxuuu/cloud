@@ -1,3 +1,9 @@
+# 启动类输出配置
+app:
+  config:
+    # tavily
+    tavily: @env.tavily.apikey@
+
 server:
   port: 10003
   forward-headers-strategy: framework
