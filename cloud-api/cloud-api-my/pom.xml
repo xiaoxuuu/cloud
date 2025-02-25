@@ -30,6 +30,10 @@
             <groupId>cc.xiaoxu</groupId>
             <artifactId>cloud-base-redis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cc.xiaoxu</groupId>
+            <artifactId>cloud-base-ai</artifactId>
+        </dependency>
 
         <!-- SpringCloud Alibaba Nacos -->
         <dependency>

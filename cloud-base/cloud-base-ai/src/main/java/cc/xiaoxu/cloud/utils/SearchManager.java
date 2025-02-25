@@ -1,7 +1,7 @@
-package cc.xiaoxu.cloud.my.manager;
+package cc.xiaoxu.cloud.utils;
 
-import cc.xiaoxu.cloud.bean.dto.WebExtractDTO;
-import cc.xiaoxu.cloud.bean.dto.WebSearchDTO;
+import cc.xiaoxu.cloud.bean.WebExtractDTO;
+import cc.xiaoxu.cloud.bean.WebSearchDTO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;

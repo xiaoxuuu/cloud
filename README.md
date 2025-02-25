@@ -16,6 +16,7 @@ cloud
 │   └── cloud-api-my        // [10003] 自有业务服务
 ├── cloud-api-all           // [ 9999] 聚合业务服务，依赖所有 cloud-api 下的服务，通过统一的入口启动，便于测试
 ├── cloud-base              //         基础能力
+│   ├── cloud-base-ai       //         ai 能力
 │   ├── cloud-base-database //         postgresql
 │   ├── cloud-base-doc      //         文档
 │   ├── cloud-base-redis    //         redis

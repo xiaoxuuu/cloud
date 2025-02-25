@@ -141,6 +141,11 @@
             </dependency>
             <dependency>
                 <groupId>cc.xiaoxu</groupId>
+                <artifactId>cloud-base-ai</artifactId>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cc.xiaoxu</groupId>
                 <artifactId>cloud-base-dubbo</artifactId>
                 <version>${cloud.version}</version>
             </dependency>
