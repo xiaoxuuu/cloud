@@ -19,6 +19,7 @@
         <module>cloud-base-satoken</module>
         <module>cloud-base-dubbo</module>
         <module>cloud-base-doc</module>
+        <module>cloud-base-ai</module>
     </modules>
 
     <properties>
