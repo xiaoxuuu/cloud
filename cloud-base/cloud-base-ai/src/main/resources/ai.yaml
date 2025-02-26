@@ -1,0 +1,9 @@
+# 启动类输出配置
+app:
+  config:
+    # tavily
+    tavily: @env.tavily.apikey@
+    ai:
+      base-url: @env.ai.base-url@
+      apikey: @env.ai.apikey@
+      model: @env.ai.model-name@

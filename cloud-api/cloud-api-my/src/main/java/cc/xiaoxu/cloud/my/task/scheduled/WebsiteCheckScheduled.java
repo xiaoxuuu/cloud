@@ -1,11 +1,16 @@
 package cc.xiaoxu.cloud.my.task.scheduled;
 
+import cc.xiaoxu.cloud.assistant.ChatAssistant;
+import cc.xiaoxu.cloud.bean.WebExtractDTO;
+import cc.xiaoxu.cloud.bean.WebExtractResultDTO;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
 import cc.xiaoxu.cloud.my.service.NavWebsiteIconService;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.utils.WebsiteUtil;
+import cc.xiaoxu.cloud.utils.SearchManager;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +19,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -24,6 +31,12 @@ public class WebsiteCheckScheduled {
 
     @Resource
     private NavWebsiteIconService navWebsiteIconService;
+
+    @Resource
+    private ChatAssistant chatAssistant;
+
+    @Resource
+    private SearchManager searchManager;
 
     @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
@@ -46,6 +59,40 @@ public class WebsiteCheckScheduled {
     }
 
     @Scheduled(cron = "${app.config.refresh-website-name}")
+    public void getWebsiteDesc() {
+
+        List<NavWebsite> navWebsiteList = navWebsiteService.getList();
+        log.info("获取网站简介数据 {}...", navWebsiteList.size());
+
+        navWebsiteList = navWebsiteList.stream().filter(k -> StringUtils.isBlank(k.getDescription())).toList();
+
+        // 每次从 navWebsiteList 取出 5 条数据
+        List<List<NavWebsite>> lists = ListUtils.splitList(navWebsiteList, 5);
+        for (List<NavWebsite> websiteList : lists) {
+            List<String> urlList = websiteList.stream().map(NavWebsite::getUrl).toList();
+            Map<String, NavWebsite> websiteMap = websiteList.stream().collect(Collectors.toMap(NavWebsite::getUrl, a -> a));
+
+            WebExtractDTO extract = searchManager.extract(urlList);
+            for (WebExtractResultDTO result : extract.getResults()) {
+                NavWebsite website = websiteMap.get(result.getUrl());
+                if (null == website) {
+                    continue;
+                }
+
+                String desc = chatAssistant.analysis(website.getWebsiteName(), result.getRawContent());
+                navWebsiteService.lambdaUpdate()
+                        .eq(NavWebsite::getId, website.getId())
+                        .set(NavWebsite::getDescription, desc)
+                        .set(NavWebsite::getLastAvailableTime, DateUtils.getNowString())
+                        .update();
+            }
+
+
+        }
+        refreshUrl();
+    }
+
+    @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteName() {
 
         long currentTimeMillis = System.currentTimeMillis();
@@ -64,6 +111,7 @@ public class WebsiteCheckScheduled {
                 }
             }
 
+            // 网站标题处理
             String websiteTitle;
             boolean success = true;
             try {
