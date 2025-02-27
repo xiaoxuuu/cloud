@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.assistant.ChatAssistant;
 import cc.xiaoxu.cloud.bean.WebExtractDTO;
 import cc.xiaoxu.cloud.bean.WebExtractResultDTO;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
@@ -12,6 +13,7 @@ import cc.xiaoxu.cloud.my.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.utils.WebsiteUtil;
 import cc.xiaoxu.cloud.utils.SearchManager;
 import jakarta.annotation.Resource;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -58,6 +60,7 @@ public class WebsiteCheckScheduled {
         navWebsiteService.setNavList(navWebsiteService.getList());
     }
 
+    @SneakyThrows
     @Scheduled(cron = "${app.config.refresh-website-name}")
     public void getWebsiteDesc() {
 
@@ -80,14 +83,21 @@ public class WebsiteCheckScheduled {
                 }
 
                 String desc = chatAssistant.analysis(website.getWebsiteName(), result.getRawContent());
+                ChatRes chatRes = JsonUtils.parse(desc, ChatRes.class);
                 navWebsiteService.lambdaUpdate()
                         .eq(NavWebsite::getId, website.getId())
-                        .set(NavWebsite::getDescription, desc)
+                        .set(NavWebsite::getDescription, chatRes.description)
+                        .set(StringUtils.isBlank(website.getWebsiteName()), NavWebsite::getWebsiteName, chatRes.website_name)
                         .set(NavWebsite::getLastAvailableTime, DateUtils.getNowDate())
                         .update();
+
+                Thread.sleep(30 * 1000);
             }
         }
         refreshUrl();
+    }
+
+    public record ChatRes(String website_name, String short_name, String description) {
     }
 
     @Scheduled(cron = "${app.config.refresh-website-name}")
