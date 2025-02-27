@@ -122,6 +122,8 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
             return "从未成功";
         }
         long currentTimeMillis = System.currentTimeMillis();
+
+        date = date.contains(".") ? date.substring(0, 19) : date;
         long oldDateMillis = DateUtils.stringToLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         long l = currentTimeMillis - oldDateMillis;
