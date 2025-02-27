@@ -1,9 +1,10 @@
 # 启动类输出配置
-app:
-  config:
-    # tavily
-    tavily: @env.tavily.apikey@
-    ai:
-      base-url: @env.ai.base-url@
-      apikey: @env.ai.apikey@
-      model: @env.ai.model-name@
+#app:
+#  config:
+#    # tavily
+#    # 此处配置文件在各个应用中单独配置
+#    tavily: @env.tavily.apikey@
+#    ai:
+#      base-url: @env.ai.base-url@
+#      apikey: @env.ai.apikey@
+#      model-name: @env.ai.model-name@

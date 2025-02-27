@@ -83,11 +83,9 @@ public class WebsiteCheckScheduled {
                 navWebsiteService.lambdaUpdate()
                         .eq(NavWebsite::getId, website.getId())
                         .set(NavWebsite::getDescription, desc)
-                        .set(NavWebsite::getLastAvailableTime, DateUtils.getNowString())
+                        .set(NavWebsite::getLastAvailableTime, DateUtils.getNowDate())
                         .update();
             }
-
-
         }
         refreshUrl();
     }

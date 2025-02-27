@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class SearchManager {
 
-    @Value("${api.tavily}")
+    @Value("${app.config.tavily}")
     private String tavilyApiKey;
 
     private static final String SEARCH_BODY = """

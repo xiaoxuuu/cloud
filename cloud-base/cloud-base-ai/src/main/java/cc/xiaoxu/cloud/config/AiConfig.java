@@ -20,13 +20,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AiConfig {
 
-    @Value("${app.ai.base-url}")
+    @Value("${app.config.ai.base-url}")
     private String baseUrl;
 
-    @Value("${app.ai.apikey}")
+    @Value("${app.config.ai.apikey}")
     private String apikey;
 
-    @Value("${app.ai.model-name}")
+    @Value("${app.config.ai.model-name}")
     private String modelName;
 
     @Bean
