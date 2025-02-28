@@ -69,7 +69,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                 // 按访问次数倒序
                 .sorted(Comparator.comparing(NavWebsiteShowVO::getVisitNum, Comparator.reverseOrder())
                         // 按 id 倒序
-                        .thenComparing(NavWebsiteShowVO::getId, Comparator.reverseOrder()))
+                        .thenComparing(NavWebsiteShowVO::getLastAvailableTime, Comparator.reverseOrder()))
                 .limit(15)
                 .toList();
     }
@@ -109,6 +109,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         vo.setTypeSet(Set.of(Optional.ofNullable(navWebsite.getType()).orElse("").split(",")));
         vo.setLabelSet(Set.of(Optional.ofNullable(navWebsite.getLabel()).orElse("").split(",")));
         vo.setLastVisitDesc(getLastVisitDesc(navWebsite.getLastAvailableTime()));
+
         NavWebsiteIcon navWebsiteIcon = navWebsiteIconService.getNavIconMap().getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());
         vo.setIconType(navWebsiteIcon.getType());
         // 翻译网站图标
