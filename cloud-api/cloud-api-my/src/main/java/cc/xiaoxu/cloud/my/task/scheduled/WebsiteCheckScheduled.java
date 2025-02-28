@@ -82,7 +82,7 @@ public class WebsiteCheckScheduled {
                     continue;
                 }
 
-                String desc = chatAssistant.analysis(website.getWebsiteName(), result.getRawContent());
+                String desc = chatAssistant.analysis(website.getUrl(), website.getShortName(), website.getWebsiteName(), result.getRawContent());
                 ChatRes chatRes = JsonUtils.parse(desc, ChatRes.class);
                 navWebsiteService.lambdaUpdate()
                         .eq(NavWebsite::getId, website.getId())
