@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -68,33 +69,41 @@ public class WebsiteCheckScheduled {
         List<NavWebsite> navWebsiteList = navWebsiteService.getList();
         log.info("获取网站简介数据 {}...", navWebsiteList.size());
 
-        navWebsiteList = navWebsiteList.stream().filter(k -> StringUtils.isBlank(k.getDescription())).toList();
+        navWebsiteList = navWebsiteList.stream()
+                .filter(k -> StringUtils.isBlank(k.getDescription()))
+                .sorted(Comparator.comparing(NavWebsite::getVisitNum, Comparator.reverseOrder()))
+                .toList();
 
         // 每次从 navWebsiteList 取出 5 条数据
         List<List<NavWebsite>> lists = ListUtils.splitList(navWebsiteList, 5);
+        boolean wait = false;
         for (List<NavWebsite> websiteList : lists) {
             List<String> urlList = websiteList.stream().map(NavWebsite::getUrl).toList();
             Map<String, NavWebsite> websiteMap = websiteList.stream().collect(Collectors.toMap(NavWebsite::getUrl, a -> a));
 
             WebExtractDTO extract = searchManager.extract(urlList);
-            // 成功
+
+
             for (WebExtractResultDTO result : extract.getResults()) {
                 NavWebsite website = websiteMap.get(result.getUrl());
                 if (null == website) {
                     continue;
                 }
 
+                log.debug("分析网站：[{}]{}", website.getId(), website.getShortName());
                 String desc = chatAssistant.analysis(website.getUrl(), website.getShortName(), website.getWebsiteName(), result.getRawContent());
+                wait = true;
                 ChatRes chatRes = JsonUtils.parse(desc, ChatRes.class);
                 navWebsiteService.lambdaUpdate()
                         .eq(NavWebsite::getId, website.getId())
                         .set(NavWebsite::getDescription, chatRes.description)
                         .set(StringUtils.isBlank(website.getWebsiteName()), NavWebsite::getWebsiteName, chatRes.website_name)
+                        .set(NavWebsite::getRemark, chatRes.short_name)
                         .set(NavWebsite::getLastAvailableTime, DateUtils.getNowDate())
                         .update();
                 websiteMap.remove(result.getUrl());
-
-                Thread.sleep(30 * 1000);
+                log.debug("分析 1 个网站完成，等待 20s");
+                Thread.sleep(20 * 1000);
             }
 
             if (!websiteMap.isEmpty()) {
@@ -102,6 +111,11 @@ public class WebsiteCheckScheduled {
                         .in(NavWebsite::getId, websiteMap.values().stream().map(NavWebsite::getId).toList())
                         .set(NavWebsite::getDescription, "-")
                         .update();
+            }
+            if (wait) {
+                log.debug("分析网站完成，等待 40s");
+                Thread.sleep(40 * 1000);
+                wait = false;
             }
         }
         refreshUrl();
@@ -121,7 +135,7 @@ public class WebsiteCheckScheduled {
             NavWebsite navWebsite = navWebsiteList.get(i);
             Date lastAvailableTime = navWebsite.getLastAvailableTime();
             // 跳过 72 小时内成功访问的数据
-            if (null == lastAvailableTime) {
+            if (null != lastAvailableTime) {
                 long oldDateMillis = DateUtils.toLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 long time = currentTimeMillis - oldDateMillis;
                 if (time < 1000 * 60 * 60 * 24 * 3) {
