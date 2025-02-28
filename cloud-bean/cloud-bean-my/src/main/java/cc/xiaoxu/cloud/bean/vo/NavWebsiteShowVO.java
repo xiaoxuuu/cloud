@@ -1,10 +1,12 @@
 package cc.xiaoxu.cloud.bean.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -39,8 +41,9 @@ public class NavWebsiteShowVO {
     @Schema(description = "访问次数")
     private Integer visitNum;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Schema(description = "上次正常访问时间（抓取）")
-    private String lastAvailableTime;
+    private Date lastAvailableTime;
 
     @Schema(description = "上次访问时间")
     private String lastVisitDesc;

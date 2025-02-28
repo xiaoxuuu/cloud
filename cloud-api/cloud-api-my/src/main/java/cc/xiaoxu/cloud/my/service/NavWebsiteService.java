@@ -117,15 +117,14 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         return vo;
     }
 
-    private String getLastVisitDesc(String date) {
+    private String getLastVisitDesc(Date date) {
 
-        if (StringUtils.isBlank(date)) {
+        if (null == date) {
             return "从未成功";
         }
         long currentTimeMillis = System.currentTimeMillis();
 
-        date = date.contains(".") ? date.substring(0, 19) : date;
-        long oldDateMillis = DateUtils.stringToLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long oldDateMillis = DateUtils.toLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         long l = currentTimeMillis - oldDateMillis;
         if (l < 1000 * 60 * 60) {

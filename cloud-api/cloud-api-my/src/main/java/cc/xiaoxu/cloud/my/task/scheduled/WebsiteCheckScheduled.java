@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -118,10 +119,10 @@ public class WebsiteCheckScheduled {
 
         for (int i = 0; i < navWebsiteList.size(); i++) {
             NavWebsite navWebsite = navWebsiteList.get(i);
-            String lastAvailableTime = navWebsite.getLastAvailableTime();
+            Date lastAvailableTime = navWebsite.getLastAvailableTime();
             // 跳过 72 小时内成功访问的数据
-            if (StringUtils.isNotBlank(lastAvailableTime)) {
-                long oldDateMillis = DateUtils.stringToLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            if (null == lastAvailableTime) {
+                long oldDateMillis = DateUtils.toLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 long time = currentTimeMillis - oldDateMillis;
                 if (time < 1000 * 60 * 60 * 24 * 3) {
                     continue;
@@ -140,7 +141,7 @@ public class WebsiteCheckScheduled {
             }
             if (success) {
                 log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
-                navWebsite.setLastAvailableTime(DateUtils.getNowString());
+                navWebsite.setLastAvailableTime(DateUtils.getNowDate());
             }
             navWebsiteService.lambdaUpdate()
                     .eq(NavWebsite::getId, navWebsite.getId())
