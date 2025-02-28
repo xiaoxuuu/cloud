@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.my.service;
 
+import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
@@ -151,14 +151,14 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     /**
      * 添加访问次数
      */
-    public void addVisitNum(NavWebsiteAddVisitNumVO vo) {
+    public void addVisitNum(IdDTO dto) {
 
         for (NavWebsite navWebsite : navList) {
-            if (navWebsite.getId().equals(vo.getId())) {
+            if (navWebsite.getId().equals(dto.getId())) {
                 navWebsite.setVisitNum(navWebsite.getVisitNum() + 1);
             }
         }
-        this.baseMapper.updateNum(Integer.parseInt(vo.getId()));
+        this.baseMapper.updateNum(dto.getId());
     }
 
     public Page<NavWebsiteShowVO> pages(NavWebsitePageDTO dto) {
