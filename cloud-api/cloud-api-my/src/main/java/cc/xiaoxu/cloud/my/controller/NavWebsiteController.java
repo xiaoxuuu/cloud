@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
-import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVisitNumVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
@@ -44,9 +44,9 @@ public class NavWebsiteController {
     @Operation(summary = "添加访问次数", description = "添加访问次数")
     @PostMapping("/add-visit-num")
     public @ResponseBody
-    void addVisitNum(@RequestBody NavWebsiteAddVisitNumVO vo) {
+    void addVisitNum(@RequestBody IdDTO dto) {
 
-        navWebsiteService.addVisitNum(vo);
+        navWebsiteService.addVisitNum(dto);
     }
 
     @Operation(summary = "刷新数据", description = "手动刷新缓存数据")
