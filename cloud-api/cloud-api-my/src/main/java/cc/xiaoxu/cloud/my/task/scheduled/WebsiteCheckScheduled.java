@@ -76,6 +76,7 @@ public class WebsiteCheckScheduled {
             Map<String, NavWebsite> websiteMap = websiteList.stream().collect(Collectors.toMap(NavWebsite::getUrl, a -> a));
 
             WebExtractDTO extract = searchManager.extract(urlList);
+            // 成功
             for (WebExtractResultDTO result : extract.getResults()) {
                 NavWebsite website = websiteMap.get(result.getUrl());
                 if (null == website) {
@@ -90,8 +91,16 @@ public class WebsiteCheckScheduled {
                         .set(StringUtils.isBlank(website.getWebsiteName()), NavWebsite::getWebsiteName, chatRes.website_name)
                         .set(NavWebsite::getLastAvailableTime, DateUtils.getNowDate())
                         .update();
+                websiteMap.remove(result.getUrl());
 
                 Thread.sleep(30 * 1000);
+            }
+
+            if (!websiteMap.isEmpty()) {
+                navWebsiteService.lambdaUpdate()
+                        .in(NavWebsite::getId, websiteMap.values().stream().map(NavWebsite::getId).toList())
+                        .set(NavWebsite::getDescription, "-")
+                        .update();
             }
         }
         refreshUrl();
