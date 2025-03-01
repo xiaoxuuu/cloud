@@ -92,8 +92,16 @@ public class WebsiteCheckScheduled {
 
                 log.debug("分析网站：[{}]{}", website.getId(), website.getShortName());
                 String desc = chatAssistant.analysis(website.getUrl(), website.getShortName(), website.getWebsiteName(), result.getRawContent());
+                log.debug("分析 1 个网站完成，等待 20s");
+                Thread.sleep(20 * 1000);
                 wait = true;
-                ChatRes chatRes = JsonUtils.parse(desc, ChatRes.class);
+                ChatRes chatRes = null;
+                try {
+                    chatRes = JsonUtils.parse(desc, ChatRes.class);
+                } catch (com.alibaba.fastjson2.JSONException e) {
+                    log.error("json parse 异常：{}", e.getMessage());
+                    continue;
+                }
                 navWebsiteService.lambdaUpdate()
                         .eq(NavWebsite::getId, website.getId())
                         .set(NavWebsite::getDescription, chatRes.description)
@@ -102,8 +110,6 @@ public class WebsiteCheckScheduled {
                         .set(NavWebsite::getLastAvailableTime, DateUtils.getNowDate())
                         .update();
                 websiteMap.remove(result.getUrl());
-                log.debug("分析 1 个网站完成，等待 20s");
-                Thread.sleep(20 * 1000);
             }
 
             if (!websiteMap.isEmpty()) {
