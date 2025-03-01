@@ -130,20 +130,17 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         if (l < 1000 * 60 * 60) {
             return "刚刚";
         }
-        if (l < 1000 * 60 * 60 * 24) {
-            return "一天内";
-        }
         if (l < 1000 * 60 * 60 * 24 * 3) {
-            return "三天内";
+            return "近日";
         }
         if (l < 1000 * 60 * 60 * 24 * 7) {
-            return "一周内";
+            return "近一周";
         }
         if (l < 1000L * 60 * 60 * 24 * 30) {
-            return "30天内";
+            return "近一月";
         }
         if (l < 1000L * 60 * 60 * 24 * 365) {
-            return "一年内";
+            return "近一年";
         }
         return "超过一年";
     }
