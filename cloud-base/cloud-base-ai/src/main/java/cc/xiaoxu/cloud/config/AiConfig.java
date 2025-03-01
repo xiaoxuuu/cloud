@@ -36,6 +36,7 @@ public class AiConfig {
                 .baseUrl(baseUrl)
                 .apiKey(apikey)
                 .modelName(modelName)
+                .strictJsonSchema(true)
 //                .logRequests(true)
 //                .logResponses(true)
                 .build();
