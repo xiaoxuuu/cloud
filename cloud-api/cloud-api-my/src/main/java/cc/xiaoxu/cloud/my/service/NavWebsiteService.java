@@ -21,7 +21,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -52,20 +55,6 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                 })
                 // 转换类型
                 .map(this::tran)
-                // 按照类型过滤
-                .filter(k -> {
-                    if (StringUtils.isNotBlank(vo.getType())) {
-                        return k.getTypeSet().contains(vo.getType());
-                    }
-                    return true;
-                })
-                // 按照标签过滤
-                .filter(k -> {
-                    if (StringUtils.isNotBlank(vo.getLabel())) {
-                        return k.getLabelSet().contains(vo.getLabel());
-                    }
-                    return true;
-                })
                 // 按访问次数倒序
                 .sorted(Comparator.comparing(NavWebsiteShowVO::getVisitNum, Comparator.reverseOrder())
                         // 按 id 倒序
@@ -106,8 +95,6 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
 
         NavWebsiteShowVO vo = new NavWebsiteShowVO();
         BeanUtils.copyProperties(navWebsite, vo);
-        vo.setTypeSet(Set.of(Optional.ofNullable(navWebsite.getType()).orElse("").split(",")));
-        vo.setLabelSet(Set.of(Optional.ofNullable(navWebsite.getLabel()).orElse("").split(",")));
         vo.setLastVisitDesc(getLastVisitDesc(navWebsite.getLastAvailableTime()));
 
         NavWebsiteIcon navWebsiteIcon = navWebsiteIconService.getNavIconMap().getOrDefault(navWebsite.getIconId(), new NavWebsiteIcon());

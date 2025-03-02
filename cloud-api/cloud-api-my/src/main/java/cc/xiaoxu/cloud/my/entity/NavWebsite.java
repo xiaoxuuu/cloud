@@ -32,12 +32,6 @@ public class NavWebsite extends BaseEntity {
     @Schema(description = "网站描述")
     private String description;
 
-    @Schema(description = "标签")
-    private String label;
-
-    @Schema(description = "类型")
-    private String type;
-
     @Schema(description = "图标id")
     private Integer iconId;
 
