@@ -24,12 +24,6 @@ public class NavWebsiteVO extends BaseVO {
     @Schema(description = "网站描述")
     private String description;
 
-    @Schema(description = "标签")
-    private String label;
-
-    @Schema(description = "类型")
-    private String type;
-
     @Schema(description = "上次正常访问时间（抓取）")
     private String lastAvailableTime;
 

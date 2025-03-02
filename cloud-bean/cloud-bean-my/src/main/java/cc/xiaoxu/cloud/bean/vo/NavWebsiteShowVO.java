@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -25,12 +24,6 @@ public class NavWebsiteShowVO {
 
     @Schema(description = "网站描述")
     private String description;
-
-    @Schema(description = "标签")
-    private Set<String> labelSet;
-
-    @Schema(description = "类型")
-    private Set<String> typeSet;
 
     @Schema(description = "图标")
     private String icon;

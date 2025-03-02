@@ -5,7 +5,6 @@ import cc.xiaoxu.cloud.core.dao.BaseProvider;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
@@ -36,12 +35,8 @@ public class NavWebsiteProvider extends BaseProvider<NavWebsite> {
         // 时间
         moreThan(sql, StringUtils.isNotEmpty(dto.getLastAvailableTimeStart()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeStart(), getTablePrefix());
         lessThan(sql, StringUtils.isNotEmpty(dto.getLastAvailableTimeEnd()), NavWebsite::getLastAvailableTime, dto.getLastAvailableTimeEnd(), getTablePrefix());
-        // 类型
-        like(sql, StringUtils.isNotEmpty(dto.getType()), NavWebsite::getType, dto.getType());
         // 访问次数
         eq(sql, StringUtils.isNotEmpty(dto.getVisitNum()), NavWebsite::getVisitNum, dto.getVisitNum());
-        // 标签
-        in(sql, CollectionUtils.isNotEmpty(dto.getLabelList()), NavWebsite::getLabel, dto.getLabelList());
 
         // 图标是否存在
         if (null != dto.getHaveIcon()) {

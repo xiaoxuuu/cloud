@@ -12,10 +12,4 @@ public class NavWebsiteSearchVO {
 
     @Schema(description = "关键字")
     private String keyword;
-
-    @Schema(description = "标签（暂未实现）")
-    private String label;
-
-    @Schema(description = "类型（暂未实现）")
-    private String type;
 }
