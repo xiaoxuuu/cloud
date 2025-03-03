@@ -59,7 +59,7 @@ public class CloudController {
         return getCheckCode();
     }
 
-    private static String getCheckCode() {
+    public static String getCheckCode() {
         return MD5Utils.toMd5(DateUtils.getNowCustomString(DateConstants.DATE_MARK)).substring(0, 6);
     }
 }
