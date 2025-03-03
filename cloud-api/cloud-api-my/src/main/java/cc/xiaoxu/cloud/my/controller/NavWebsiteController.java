@@ -2,8 +2,11 @@ package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
+import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
+import cc.xiaoxu.cloud.core.controller.CloudController;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.my.service.NavWebsiteService;
 import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,6 +27,16 @@ public class NavWebsiteController {
 
     @Resource
     private WebsiteCheckScheduled websiteCheckScheduled;
+
+    @Operation(summary = "新增", description = "新增数据")
+    @PostMapping("/add/{code}")
+    public @ResponseBody void add(@PathVariable("code") String code, @RequestBody NavWebsiteAddVO vo) {
+
+        if (!code.equals(CloudController.getCheckCode() + "1108")) {
+            throw new CustomException("无权限");
+        }
+        navWebsiteService.add(vo);
+    }
 
     @Operation(summary = "搜索", description = "获取列表")
     @PostMapping("/search")

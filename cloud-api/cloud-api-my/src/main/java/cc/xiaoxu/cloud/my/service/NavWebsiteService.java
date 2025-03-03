@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.my.service;
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.NavWebsitePageDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
 import cc.xiaoxu.cloud.core.utils.DateUtils;
@@ -149,5 +150,20 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
 
         Page<NavWebsite> entityPage = getBaseMapper().pages(dto, new Page<>(dto.getCurrent(), dto.getSize()));
         return PageUtils.getPage(entityPage, this::tran);
+    }
+
+    public void add(NavWebsiteAddVO vo) {
+
+        NavWebsite navWebsite = new NavWebsite();
+        navWebsite.setShortName(vo.getShortName());
+        navWebsite.setWebsiteName(vo.getWebsiteName());
+        navWebsite.setUrl(vo.getUrl());
+        navWebsite.setDescription(vo.getDescription());
+        navWebsite.setIconId(vo.getIconId());
+        navWebsite.setLastAvailableTime(DateUtils.getNowDate());
+        navWebsite.setVisitNum(0);
+        navWebsite.setState(StateEnum.ENABLE.getCode());
+        navWebsite.setCreateTime(DateUtils.getNowDate());
+        save(navWebsite);
     }
 }
