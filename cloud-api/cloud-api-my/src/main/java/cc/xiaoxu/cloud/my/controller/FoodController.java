@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.my.controller;
 
-import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
+import cc.xiaoxu.cloud.my.dao.FoodMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -9,19 +9,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @AllArgsConstructor
-@Tag(name = "测试", description = "测试控制器")
-@RequestMapping("/test_my")
-public class TestMyController {
+@Tag(name = "美食", description = "美食控制器")
+@RequestMapping("/food")
+public class FoodController {
 
-    private final WebsiteCheckScheduled websiteCheckScheduled;
+    private final FoodMapper commonMapper;
 
-    @Operation(summary = "获取描述", description = "网站首页信息")
+    @Operation(summary = "获取美食", description = "美食")
     @GetMapping("/get")
     public @ResponseBody
-    void index() {
+    List index() {
 
-        websiteCheckScheduled.getWebsiteDesc();
+        return commonMapper.getFood();
     }
 }
