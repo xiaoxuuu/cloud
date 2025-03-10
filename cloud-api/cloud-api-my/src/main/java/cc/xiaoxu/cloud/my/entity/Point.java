@@ -40,7 +40,7 @@ public class Point extends BaseInfoEntity {
     private String latitude;
 
     @Schema(description = "上级id，用于数据归总")
-    private String parentId;
+    private Integer parentId;
 
     @Schema(description = "收藏次数")
     private Integer collectTimes;
