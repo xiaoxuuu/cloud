@@ -12,6 +12,7 @@ public enum PointTypeEnum implements EnumInterface<String> {
     FOOD("food", "美食"),
     FUN_NAME("fun_name", "有趣地名"),
     SCENERY("scenery", "美景"),
+    UNCATEGORIZED("uncategorized", "未分类"),
     ;
 
     @EnumValue
