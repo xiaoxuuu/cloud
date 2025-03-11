@@ -1,8 +1,11 @@
 package cc.xiaoxu.cloud.my.service;
 
+import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
@@ -38,5 +41,16 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private void handle(PointSearchDTO dto, List<? extends PointSimpleVO> pointVOList) {
 
+    }
+
+    public PointFullVO get(IdDTO dto) {
+
+        Point point = getById(dto.getId());
+        if (null == point) {
+            throw new CustomException("无数据");
+        }
+        PointFullVO vo = new PointFullVO();
+        BeanUtils.populate(point, vo);
+        return vo;
     }
 }
