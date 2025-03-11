@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.entity;
 
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.core.bean.entity.BaseInfoEntity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,7 @@ import java.util.Date;
 public class Point extends BaseInfoEntity {
 
     @Schema(description = "点位类型")
+    @TableField(value = "point_type")
     private PointTypeEnum pointType;
 
     @Schema(description = "名称")
