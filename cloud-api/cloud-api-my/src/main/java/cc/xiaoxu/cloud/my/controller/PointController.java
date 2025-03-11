@@ -1,7 +1,9 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
+import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
 import cc.xiaoxu.cloud.my.service.PointService;
@@ -27,6 +29,14 @@ public class PointController {
     List<? extends PointSimpleVO> list(@RequestBody PointSearchDTO dto) {
 
         return pointService.lists(dto);
+    }
+
+    @Operation(summary = "详情", description = "获取地点列表")
+    @PostMapping("/get")
+    public @ResponseBody
+    PointFullVO get(@RequestBody IdDTO dto) {
+
+        return pointService.get(dto);
     }
 
     @Operation(summary = "地点类型", description = "获取地点类型列表，用于条件查询")
