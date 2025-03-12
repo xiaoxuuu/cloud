@@ -4,13 +4,18 @@ import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "点位 - 精简参数 - 响应参数")
-public class PointSimpleVO {
+public class PointSimpleVO extends BaseIdVO {
+
+    @Schema(description = "名称")
+    private String pointName;
 
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;
