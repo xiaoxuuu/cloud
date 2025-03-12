@@ -26,8 +26,8 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
         List<Point> pointList = lambdaQuery()
-                .eq(StringUtils.isNotBlank(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .like(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
+                .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(CollectionUtils.isNotEmpty(dto.getStateList()), Point::getState, dto.getStateList())
                 // 异常数据排除
                 .isNotNull(Point::getLongitude)

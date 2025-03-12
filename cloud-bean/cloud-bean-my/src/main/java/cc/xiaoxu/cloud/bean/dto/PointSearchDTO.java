@@ -1,6 +1,5 @@
 package cc.xiaoxu.cloud.bean.dto;
 
-import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.util.List;
 public class PointSearchDTO {
 
     @Schema(description = "点位类型")
-    private String pointType;
+    private List<String> pointType;
 
     @Schema(description = "点位名称")
     private String pointName;
@@ -24,5 +23,5 @@ public class PointSearchDTO {
     private Double level;
 
     @Schema(description = "状态")
-    private List<StateEnum> stateList;
+    private List<String> stateList;
 }
