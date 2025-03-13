@@ -37,6 +37,7 @@ app:
     refresh-website-name: '0 0 0 * * ?'
     # tavily
     tavily: @env.tavily.apikey@
+    amap: @env.amap.apikey@
     ai:
       base-url: @env.ai.base-url@
       apikey: @env.ai.apikey@
