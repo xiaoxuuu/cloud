@@ -42,6 +42,7 @@ app:
   config:
     # tavily
     tavily: @env.tavily.apikey@
+    amap: @env.amap.apikey@
     ai:
       base-url: @env.ai.base-url@
       apikey: @env.ai.apikey@
