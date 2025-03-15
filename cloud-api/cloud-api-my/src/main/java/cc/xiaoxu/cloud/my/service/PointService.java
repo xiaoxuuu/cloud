@@ -1,11 +1,13 @@
 package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
+import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
@@ -22,6 +24,14 @@ import java.util.List;
 @Slf4j
 @Service
 public class PointService extends ServiceImpl<PointMapper, Point> {
+
+    public void add(PointAddDTO dto) {
+
+        Point point = new Point();
+        BeanUtils.populate(dto, point);
+        point.setAmapUpdateTime(DateUtils.getNowDate());
+        save(point);
+    }
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
