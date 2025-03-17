@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
+import cc.xiaoxu.cloud.bean.dto.PointEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
@@ -30,7 +31,32 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         Point point = new Point();
         BeanUtils.populate(dto, point);
         point.setAmapUpdateTime(DateUtils.getNowDate());
+        point.setState(StateEnum.ENABLE.getCode());
         save(point);
+    }
+
+    public void edit(PointEditDTO dto) {
+
+        lambdaUpdate()
+                .set(null != dto.getPointType(), Point::getPointType, dto.getPointType())
+                .set(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
+                .set(StringUtils.isNotBlank(dto.getDescribe()), Point::getDescribe, dto.getDescribe())
+                .set(StringUtils.isNotBlank(dto.getAddress()), Point::getAddress, dto.getAddress())
+                .set(StringUtils.isNotBlank(dto.getLongitude()), Point::getLongitude, dto.getLongitude())
+                .set(StringUtils.isNotBlank(dto.getLatitude()), Point::getLatitude, dto.getLatitude())
+                .set(dto.getCollectTimes() != null, Point::getCollectTimes, dto.getCollectTimes())
+                .set(dto.getVisitedTimes() != null, Point::getVisitedTimes, dto.getVisitedTimes())
+                .set(StringUtils.isNotBlank(dto.getSource()), Point::getSource, dto.getSource())
+                .set(StringUtils.isNotBlank(dto.getAddressCode()), Point::getAddressCode, dto.getAddressCode())
+                .set(StringUtils.isNotBlank(dto.getAmapWia()), Point::getAmapWia, dto.getAmapWia())
+                .set(StringUtils.isNotBlank(dto.getAmapTag()), Point::getAmapTag, dto.getAmapTag())
+                .set(StringUtils.isNotBlank(dto.getAmapRating()), Point::getAmapRating, dto.getAmapRating())
+                .set(StringUtils.isNotBlank(dto.getAmapCost()), Point::getAmapCost, dto.getAmapCost())
+                .set(StringUtils.isNotBlank(dto.getAmapPoiId()), Point::getAmapPoiId, dto.getAmapPoiId())
+                .set(Point::getAmapUpdateTime, DateUtils.getNowDate())
+                .set(Point::getState, StateEnum.ENABLE.getCode())
+                .eq(Point::getId, dto.getId())
+                .update();
     }
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {

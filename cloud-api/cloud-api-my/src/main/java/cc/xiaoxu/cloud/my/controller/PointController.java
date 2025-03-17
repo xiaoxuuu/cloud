@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
+import cc.xiaoxu.cloud.bean.dto.PointEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
@@ -30,6 +31,14 @@ public class PointController {
     void add(@RequestBody PointAddDTO dto) {
 
         pointService.add(dto);
+    }
+
+    @Operation(summary = "编辑", description = "编辑地点")
+    @PostMapping("/edit")
+    public @ResponseBody
+    void edit(@RequestBody PointEditDTO dto) {
+
+        pointService.edit(dto);
     }
 
     @Operation(summary = "列表", description = "获取地点列表")
