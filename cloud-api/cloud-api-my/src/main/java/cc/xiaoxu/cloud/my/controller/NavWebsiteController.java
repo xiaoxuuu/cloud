@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/nav")
 public class NavWebsiteController {
+
+    @Value("${app.config.auth-code}")
+    private String authCode;
 
     @Resource
     private NavWebsiteService navWebsiteService;
@@ -32,7 +36,7 @@ public class NavWebsiteController {
     @PostMapping("/add/{code}")
     public @ResponseBody void add(@PathVariable("code") String code, @RequestBody NavWebsiteAddVO vo) {
 
-        if (!code.equals(CloudController.getCheckCode() + "1108")) {
+        if (!code.equals(CloudController.getCheckCode() + authCode)) {
             throw new CustomException("无权限");
         }
         navWebsiteService.add(vo);

@@ -8,36 +8,48 @@ import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
+import cc.xiaoxu.cloud.core.controller.CloudController;
+import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.my.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
 @Tag(name = "点位", description = "点位控制器")
 @RequestMapping("/point")
 public class PointController {
 
-    private final PointService pointService;
+    @Value("${app.config.auth-code}")
+    private String authCode;
+
+    @Resource
+    private PointService pointService;
 
     @Operation(summary = "新增", description = "新增地点")
-    @PostMapping("/add")
+    @PostMapping("/add/{code}")
     public @ResponseBody
-    void add(@RequestBody PointAddDTO dto) {
+    void add(@PathVariable("code") String code, @RequestBody PointAddDTO dto) {
 
+        if (!code.equals(CloudController.getCheckCode() + authCode)) {
+            throw new CustomException("无权限");
+        }
         pointService.add(dto);
     }
 
     @Operation(summary = "编辑", description = "编辑地点")
-    @PostMapping("/edit")
+    @PostMapping("/edit/{code}")
     public @ResponseBody
-    void edit(@RequestBody PointEditDTO dto) {
+    void edit(@PathVariable("code") String code, @RequestBody PointEditDTO dto) {
 
+        if (!code.equals(CloudController.getCheckCode() + authCode)) {
+            throw new CustomException("无权限");
+        }
         pointService.edit(dto);
     }
 

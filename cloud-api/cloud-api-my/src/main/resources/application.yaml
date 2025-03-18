@@ -40,7 +40,7 @@ spring:
 # 启动类输出配置
 app:
   config:
-    # tavily
+    auth-code: @env.auth.code@
     tavily: @env.tavily.apikey@
     amap: @env.amap.apikey@
     ai:

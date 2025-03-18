@@ -35,7 +35,7 @@ app:
     refresh-data: '0 0 0 * * ?'
     # 每天一次
     refresh-website-name: '0 0 0 * * ?'
-    # tavily
+    auth-code: @env.auth.code@
     tavily: @env.tavily.apikey@
     amap: @env.amap.apikey@
     ai:
