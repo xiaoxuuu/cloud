@@ -81,7 +81,15 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(IdDTO dto) {
 
-        Point point = getById(dto.getId());
+        Point point;
+        if (dto.getId() < 0) {
+            point = lambdaQuery()
+                    .eq(Point::getState, StateEnum.PROGRESSING.getCode())
+                    .last(" LIMIT 1 ")
+                    .one();
+        } else {
+            point = getById(dto.getId());
+        }
         if (null == point) {
             throw new CustomException("无数据");
         }
