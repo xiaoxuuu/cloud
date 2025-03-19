@@ -19,7 +19,7 @@ public class PointTypeVO {
     private String desc;
 
     public PointTypeVO(PointTypeEnum pointTypeEnum) {
-        this.code = pointTypeEnum.getCode();
+        this.code = pointTypeEnum.name();
         this.desc = pointTypeEnum.getIntroduction();
     }
 }
