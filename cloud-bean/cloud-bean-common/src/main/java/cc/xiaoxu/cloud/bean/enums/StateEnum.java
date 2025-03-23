@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.bean.enums;
 
 import cc.xiaoxu.cloud.core.utils.enums.inter.EnumDescInterface;
 import cc.xiaoxu.cloud.core.utils.enums.inter.EnumInterface;
+import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +19,7 @@ public enum StateEnum implements EnumInterface<String>, EnumDescInterface {
     PROGRESSING("P", "处理中"),
     ;
 
+    @EnumValue
     private final String code;
     private final String introduction;
 
