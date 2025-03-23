@@ -54,7 +54,8 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(StringUtils.isNotBlank(dto.getAmapCost()), Point::getAmapCost, dto.getAmapCost())
                 .set(StringUtils.isNotBlank(dto.getAmapPoiId()), Point::getAmapPoiId, dto.getAmapPoiId())
                 .set(Point::getAmapUpdateTime, DateUtils.getNowDate())
-                .set(Point::getState, StateEnum.ENABLE.getCode())
+                .set(null != dto.getState(), Point::getState, dto.getState())
+                .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
                 .eq(Point::getId, dto.getId())
                 .update();
     }
@@ -84,7 +85,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         Point point;
         if (dto.getId() < 0) {
             point = lambdaQuery()
-                    .eq(Point::getState, StateEnum.PROGRESSING.getCode())
+                    .eq(Point::getState, StateEnum.PROGRESSING)
                     .last(" LIMIT 1 ")
                     .one();
         } else {
@@ -96,5 +97,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         PointFullVO vo = new PointFullVO();
         BeanUtils.populate(point, vo);
         return vo;
+    }
+
+    public Integer countProgressing() {
+        return baseMapper.countProgressing();
     }
 }
