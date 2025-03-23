@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.bean.dto;
 
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,4 +16,7 @@ public class PointEditDTO extends PointAddDTO {
 
     @Schema(description = "数据id")
     private Integer id;
+
+    @Schema(description = "状态")
+    private StateEnum state;
 }

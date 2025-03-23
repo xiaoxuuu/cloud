@@ -61,6 +61,14 @@ public class PointController {
         return pointService.lists(dto);
     }
 
+    @Operation(summary = "获取待处理数量", description = "获取待处理数量")
+    @PostMapping("/count_progressing")
+    public @ResponseBody
+    Integer countProgressing() {
+
+        return pointService.countProgressing();
+    }
+
     @Operation(summary = "详情", description = "获取地点列表")
     @PostMapping("/get")
     public @ResponseBody
