@@ -66,6 +66,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .like(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(CollectionUtils.isNotEmpty(dto.getStateList()), Point::getState, dto.getStateList())
+                .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 0)
                 // 异常数据排除
                 .isNotNull(Point::getLongitude)
                 .isNotNull(Point::getLatitude)
