@@ -25,4 +25,7 @@ public class PointSearchDTO {
 
     @Schema(description = "状态")
     private List<String> stateList;
+
+    @Schema(description = "我去过")
+    private Boolean visit;
 }
