@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 @Service
 public class AmapManager {
@@ -70,7 +73,7 @@ public class AmapManager {
             HttpUtils httpUtils = HttpUtils.builder()
                     .url(POI_SEARCH_URL)
                     .param("key", amapApiKey)
-                    .param("keywords", requestDTO.getKeywords())
+                    .param("keywords", URLEncoder.encode(requestDTO.getKeywords(), StandardCharsets.UTF_8))
                     .param("output", "json")
                     .param("page_size", requestDTO.getPageSize().toString())
                     .param("page_num", requestDTO.getPageNum().toString())
@@ -94,7 +97,7 @@ public class AmapManager {
             return JsonUtils.parse(response, AmapPoiSearchResponseDTO.class);
         } catch (Exception e) {
             log.error("调用高德地图搜索POI API失败", e);
-            throw new RuntimeException("调用高德地图搜索POI API失败: " + e.getMessage());
+            throw new RuntimeException("调用高德地图搜索 POI API 异常");
         }
     }
 }
