@@ -66,7 +66,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .like(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(CollectionUtils.isNotEmpty(dto.getStateList()), Point::getState, dto.getStateList())
-                .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 0)
+                .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 1)
                 // 异常数据排除
                 .isNotNull(Point::getLongitude)
                 .isNotNull(Point::getLatitude)
@@ -74,7 +74,12 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .ne(Point::getState, StateEnum.DELETE.getCode())
                 .list();
 
-        return BeanUtils.populateList(pointList, PointSimpleVO.class);
+        return pointList.stream().map(k -> {
+            PointSimpleVO vo = new PointSimpleVO();
+            BeanUtils.populate(k, vo);
+            vo.setSort(Long.parseLong(null == k.getVisitedTimes() ? "0" : k.getVisitedTimes() + DateUtils.dateToString(k.getAmapUpdateTime(), "yyyyMMdd")));
+            return vo;
+        }).toList();
     }
 
     private void handle(PointSearchDTO dto, List<? extends PointSimpleVO> pointVOList) {
