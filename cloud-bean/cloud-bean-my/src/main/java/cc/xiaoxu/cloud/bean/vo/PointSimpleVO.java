@@ -25,4 +25,7 @@ public class PointSimpleVO extends BaseIdVO {
 
     @Schema(description = "纬度")
     private String latitude;
+
+    @Schema(description = "排序权重")
+    private Long sort;
 }
