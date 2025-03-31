@@ -3,22 +3,15 @@ package cc.xiaoxu.cloud.bean.dto.amap;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "高德地图搜索POI 2.0 - 请求参数")
-public class AmapPoiSearchRequestDTO {
-
-    @Schema(description = "搜索关键词", required = true)
-    private String keywords;
-
-    @Schema(description = "搜索区域，可选值：城市中文、中文全拼、citycode、adcode、矩形区域、圆形区域、多边形区域")
-    private String region;
-
-    @Schema(description = "是否强制限制在设置的城市内搜索，可选值：true/false")
-    private Boolean cityLimit;
+public class AmapPoiSearchRequestDTO extends AmapBaseRequestDTO {
 
     @Schema(description = "每页记录数据，强烈建议不超过25，最大值为50")
     private Integer pageSize = 20;

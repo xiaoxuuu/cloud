@@ -41,8 +41,8 @@ public class AmapManager {
                     .param("datatype", "poi");
 
             // 添加可选参数
-            if (StringUtils.hasText(requestDTO.getCity())) {
-                httpUtils.param("city", requestDTO.getCity());
+            if (StringUtils.hasText(requestDTO.getRegion())) {
+                httpUtils.param("city", requestDTO.getRegion());
             }
             if (StringUtils.hasText(requestDTO.getLocation())) {
                 httpUtils.param("location", requestDTO.getLocation());
