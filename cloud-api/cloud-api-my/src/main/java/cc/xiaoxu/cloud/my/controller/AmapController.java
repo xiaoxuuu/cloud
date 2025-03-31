@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.bean.dto.amap.AmapInputTipsRequestDTO;
+import cc.xiaoxu.cloud.bean.dto.amap.AmapInputTipsResponseDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchResponseDTO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
@@ -22,10 +24,19 @@ public class AmapController {
     @Resource
     private AmapManager amapManager;
 
+    @Operation(summary = "输入提示", description = "输入提示，用于 POI 接口无法搜索的数据降级")
+    @PostMapping("/input_tips/{code}")
+    public @ResponseBody AmapInputTipsResponseDTO inputTips(@PathVariable("code") String code, @RequestBody AmapInputTipsRequestDTO dto) {
+
+        if (!code.equals(CloudController.getCheckCode() + authCode)) {
+            throw new CustomException("无权限");
+        }
+        return amapManager.inputTips(dto);
+    }
+
     @Operation(summary = "poi 搜索", description = "poi 搜索")
     @PostMapping("/search_poi/{code}")
-    public @ResponseBody
-    AmapPoiSearchResponseDTO searchPoi(@PathVariable("code") String code, @RequestBody AmapPoiSearchRequestDTO dto) {
+    public @ResponseBody AmapPoiSearchResponseDTO searchPoi(@PathVariable("code") String code, @RequestBody AmapPoiSearchRequestDTO dto) {
 
         if (!code.equals(CloudController.getCheckCode() + authCode)) {
             throw new CustomException("无权限");
