@@ -101,3 +101,59 @@ ON COLUMN "public"."t_point"."modify_time" IS '修改时间';
 
 COMMENT
 ON TABLE "public"."t_point" IS '收藏点位';
+
+CREATE TABLE "public"."t_point_source"
+(
+    "id"          int4 NOT NULL,
+    "point_id"    int4 NOT NULL,
+    "type"        varchar(16) COLLATE "pg_catalog"."default",
+    "source"      varchar(16) COLLATE "pg_catalog"."default",
+    "title"       varchar(255) COLLATE "pg_catalog"."default",
+    "content"     varchar(255) COLLATE "pg_catalog"."default",
+    "url"         varchar(255) COLLATE "pg_catalog"."default",
+    "state"       varchar(1) COLLATE "pg_catalog"."default",
+    "remark"      varchar(255) COLLATE "pg_catalog"."default",
+    "create_time" date,
+    "modify_time" date,
+    CONSTRAINT "t_point_source_pkey" PRIMARY KEY ("id")
+)
+;
+
+ALTER TABLE "public"."t_point_source"
+    OWNER TO "postgres";
+
+COMMENT
+ON COLUMN "public"."t_point_source"."id" IS '主键';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."point_id" IS '地点id';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."type" IS '类型';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."source" IS '来源';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."title" IS '标题';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."content" IS '内容';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."url" IS '链接';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."state" IS '状态';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."remark" IS '状态';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."create_time" IS '创建时间';
+
+COMMENT
+ON COLUMN "public"."t_point_source"."modify_time" IS '修改时间';
+
+COMMENT
+ON TABLE "public"."t_point_source" IS '收藏点位来源';
