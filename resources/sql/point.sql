@@ -14,15 +14,15 @@ CREATE TABLE "public"."t_point"
     "source"           varchar(255) COLLATE "pg_catalog"."default",
     "address_code"     varchar(255) COLLATE "pg_catalog"."default",
     "amap_wia"         varchar(32) COLLATE "pg_catalog"."default",
-    "amap_update_time" date,
+    "amap_update_time" timestamp(6),
     "amap_tag"         text COLLATE "pg_catalog"."default",
     "amap_rating"      varchar(255) COLLATE "pg_catalog"."default",
     "amap_cost"        varchar(255) COLLATE "pg_catalog"."default",
     "amap_poi_id"      varchar(255) COLLATE "pg_catalog"."default",
     "state"            varchar(1) COLLATE "pg_catalog"."default",
     "remark"           varchar(255) COLLATE "pg_catalog"."default",
-    "create_time"      date,
-    "modify_time"      date
+    "create_time"      timestamp(6),
+    "modify_time"      timestamp(6)
 )
 ;
 
@@ -113,8 +113,8 @@ CREATE TABLE "public"."t_point_source"
     "url"         varchar(255) COLLATE "pg_catalog"."default",
     "state"       varchar(1) COLLATE "pg_catalog"."default",
     "remark"      varchar(255) COLLATE "pg_catalog"."default",
-    "create_time" date,
-    "modify_time" date,
+    "create_time" timestamp(6),
+    "modify_time" timestamp(6),
     CONSTRAINT "t_point_source_pkey" PRIMARY KEY ("id")
 )
 ;
