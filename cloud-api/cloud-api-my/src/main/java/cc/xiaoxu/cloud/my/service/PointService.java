@@ -33,9 +33,13 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         point.setAmapUpdateTime(DateUtils.getNowDate());
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
+
+        // TODO 新增来源
     }
 
     public void edit(PointEditDTO dto) {
+
+        // TODO 编辑来源
 
         lambdaUpdate()
                 .set(null != dto.getPointType(), Point::getPointType, dto.getPointType())
@@ -46,7 +50,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(StringUtils.isNotBlank(dto.getLatitude()), Point::getLatitude, dto.getLatitude())
                 .set(dto.getCollectTimes() != null, Point::getCollectTimes, dto.getCollectTimes())
                 .set(dto.getVisitedTimes() != null, Point::getVisitedTimes, dto.getVisitedTimes())
-                .set(StringUtils.isNotBlank(dto.getSource()), Point::getSource, dto.getSource())
                 .set(StringUtils.isNotBlank(dto.getAddressCode()), Point::getAddressCode, dto.getAddressCode())
                 .set(StringUtils.isNotBlank(dto.getAmapWia()), Point::getAmapWia, dto.getAmapWia())
                 .set(StringUtils.isNotBlank(dto.getAmapTag()), Point::getAmapTag, dto.getAmapTag())
@@ -62,6 +65,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
+        // TODO 来源搜索
         List<Point> pointList = lambdaQuery()
                 .like(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
@@ -88,6 +92,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(IdDTO dto) {
 
+        // TODO 来源展示
         Point point;
         if (dto.getId() < 0) {
             point = lambdaQuery()
