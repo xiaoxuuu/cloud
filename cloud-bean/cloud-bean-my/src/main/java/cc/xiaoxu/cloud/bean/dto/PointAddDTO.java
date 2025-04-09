@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +39,7 @@ public class PointAddDTO {
     private Integer visitedTimes;
 
     @Schema(description = "来源")
-    private String source;
+    private List<PointSourceAddDTO> source;
 
     @Schema(description = "地址code")
     private String addressCode;

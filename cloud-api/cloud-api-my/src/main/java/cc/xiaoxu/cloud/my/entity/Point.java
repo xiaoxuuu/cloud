@@ -53,9 +53,6 @@ public class Point extends BaseInfoEntity {
     @Schema(description = "我去过的次数")
     private Integer visitedTimes;
 
-    @Schema(description = "来源")
-    private String source;
-
     @Schema(description = "地址code")
     private String addressCode;
 
