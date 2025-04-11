@@ -4,6 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+import java.util.Arrays;
+
 /**
  * <p>获取启动信息</p>
  *
@@ -33,7 +35,7 @@ public class GetStartInfoUtils {
         startTime = StringUtils.isBlank(startTime) ? notConfigured : startTime.replace("_", " ");
 
         // 文本处理
-        String message = "%s(%s) Start Success, Package Time: %s, Start Time: %s";
-        return message.formatted(name, port, packageTime, startTime);
+        String message = "%s(%s)%s Start Success, Package Time: %s, Start Time: %s";
+        return message.formatted(name, port, Arrays.toString(environment.getActiveProfiles()), packageTime, startTime);
     }
 }
