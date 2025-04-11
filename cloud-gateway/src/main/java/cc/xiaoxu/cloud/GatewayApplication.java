@@ -9,6 +9,8 @@ import org.springframework.boot.context.metrics.buffering.BufferingApplicationSt
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+import java.util.Arrays;
+
 @Slf4j
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class GatewayApplication {
@@ -44,7 +46,7 @@ public class GatewayApplication {
         startTime = StringUtils.isBlank(startTime) ? notConfigured : startTime.replace("_", " ");
 
         // 文本处理
-        String message = "%s(%s) Start Success, Package Time: %s, Start Time: %s";
-        return message.formatted(name, port, packageTime, startTime);
+        String message = "%s(%s)%s Start Success, Package Time: %s, Start Time: %s";
+        return message.formatted(name, port, Arrays.toString(environment.getActiveProfiles()), packageTime, startTime);
     }
 }
