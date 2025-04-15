@@ -11,6 +11,7 @@ spring:
       - optional:logging.yaml
       - optional:file-server.yaml
       - optional:spring.yaml
+      - optional:git-info.yaml
   application:
     name: all
   profiles:
