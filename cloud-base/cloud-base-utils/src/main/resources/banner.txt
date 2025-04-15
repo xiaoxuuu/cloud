@@ -2,8 +2,15 @@ ${AnsiColor.BLUE}┏┓    •
 ┗┓┏┓┏┓┓┏┓┏┓
 ┗┛┣┛┛ ┗┛┗┗┫
   ┛       ┛
-${AnsiColor.BRIGHT_RED}${AnsiStyle.BOLD}Spring Boot Version: ${spring-boot.version}
+${AnsiColor.YELLOW}${AnsiStyle.BOLD}Spring Boot Version: ${spring-boot.version}
 Application Name: ${spring.application.name}(${app.version})
-Port: ${server.port}, Profile: ${spring.profiles.active}
-Package Time: ${time.package:Not Configured}
-Start Time: ${time.start:Not Configured}${AnsiStyle.NORMAL}
+Port: ${AnsiColor.BRIGHT_RED}${server.port}${AnsiColor.YELLOW}, Profile: ${AnsiColor.BRIGHT_RED}${spring.profiles.active}${AnsiColor.YELLOW}
+Package Time: ${build.time:Not Configured}
+Start Time: ${time.start:Not Configured}
+Git Branch: ${AnsiColor.BRIGHT_RED}${git.branch:unknown}${AnsiColor.YELLOW}
+Recent 5 Commits:
+${git.commit[0]:No commit info}
+${git.commit[1]:No commit info}
+${git.commit[2]:No commit info}
+${git.commit[3]:No commit info}
+${git.commit[4]:No commit info}${AnsiStyle.NORMAL}

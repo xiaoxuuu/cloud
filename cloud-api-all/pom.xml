@@ -134,22 +134,53 @@
                 </executions>
             </plugin>
 
-            <!-- 打包时间 -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${build-helper-maven-plugin.version}</version>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>timestamp-property</id>
+                        <id>get-git-info</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>timestamp-property</goal>
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <name>env.build.time</name>
-                            <pattern>yyyy-MM-dd_HH:mm:ss</pattern>
-                            <locale>zh_CN</locale>
-                            <timeZone>GMT+8</timeZone>
+                            <!--  设置可执行文件为 shell 脚本 -->
+                            <executable>sh</executable>
+                            <!-- 脚本文件路径 (相对于项目根目录) -->
+                            <arguments>
+                                <argument>${maven.multiModuleProjectDirectory}/resources/generate_git_info.sh</argument>
+                                <argument>${project.basedir}</argument>
+                            </arguments>
+                            <!-- 输出日志 -->
+                            <outputFile>git-info.log</outputFile>
+                            <workingDirectory>${maven.multiModuleProjectDirectory}/resources</workingDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-git-info</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/src/main/resources</directory>
+                                    <includes>
+                                        <include>git-info.yaml</include>
+                                    </includes>
+                                    <filtering>true</filtering>  <!-- important -->
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
