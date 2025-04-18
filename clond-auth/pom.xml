@@ -84,9 +84,6 @@
                         <mainClass>cc.xiaoxu.cloud.DemoApplication</mainClass>
                         <!-- 指定运行的参数 -->
                         <environment>
-                            <!--suppress UnresolvedMavenProperty -->
-                            <!-- 打包时间，build-helper-maven-plugin 插件会自动赋值，可忽略报错 -->
-                            <time.package>${env.build.time}</time.package>
                             <TZ>Asia/Shanghai</TZ>
                         </environment>
                     </container>
@@ -118,27 +115,6 @@
                         <goals>
                             <goal>build</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- 打包时间 -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>${build-helper-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>timestamp-property</id>
-                        <goals>
-                            <goal>timestamp-property</goal>
-                        </goals>
-                        <configuration>
-                            <name>env.build.time</name>
-                            <pattern>yyyy-MM-dd_HH:mm:ss</pattern>
-                            <locale>zh_CN</locale>
-                            <timeZone>GMT+8</timeZone>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
