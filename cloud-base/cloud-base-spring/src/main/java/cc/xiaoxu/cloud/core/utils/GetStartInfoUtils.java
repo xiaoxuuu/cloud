@@ -28,7 +28,7 @@ public class GetStartInfoUtils {
         String port = environment.getProperty("server.port");
         port = StringUtils.isBlank(port) ? notConfigured : port;
         // 打包时间
-        String packageTime = environment.getProperty("time.package");
+        String packageTime = environment.getProperty("build.time");
         packageTime = StringUtils.isBlank(packageTime) ? notConfigured : packageTime.replace("_", " ");
         // 启动时间
         String startTime = environment.getProperty("time.start");
