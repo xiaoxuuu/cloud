@@ -96,9 +96,6 @@
                         <mainClass>cc.xiaoxu.cloud.AllApplication</mainClass>
                         <!-- 指定运行的参数 -->
                         <environment>
-                            <!--suppress UnresolvedMavenProperty -->
-                            <!-- 打包时间，build-helper-maven-plugin 插件会自动赋值，可忽略报错 -->
-                            <time.package>${env.build.time}</time.package>
                             <TZ>Asia/Shanghai</TZ>
                         </environment>
                     </container>
