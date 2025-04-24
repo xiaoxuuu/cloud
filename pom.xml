@@ -327,6 +327,27 @@
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo-spring-boot-starter.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib-maven-plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -389,25 +410,131 @@
     <build>
         <pluginManagement>
             <plugins>
+                <!-- jar 打包插件 -->
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
+
+                <!-- docker 打包插件 -->
                 <plugin>
                     <groupId>com.google.cloud.tools</groupId>
                     <artifactId>jib-maven-plugin</artifactId>
-                    <version>${jib-maven-plugin.version}</version>
+                    <configuration>
+                        <!-- 容器相关设置 -->
+                        <container>
+                            <!-- jvm 参数 -->
+                            <jvmFlags>
+                                <jvmFlag>${env.jvm.xms}</jvmFlag>
+                                <jvmFlag>${env.jvm.xmx}</jvmFlag>
+                                <jvmFlag>-Dfile.encoding=utf-8</jvmFlag>
+                                <jvmFlag>-Duser.timezone=Asia/Shanghai</jvmFlag>
+                            </jvmFlags>
+                            <!-- 创建时间 -->
+                            <creationTime>${maven.build.timestamp}</creationTime>
+                            <!-- 放置应用程序内容的容器上的根目录 -->
+                            <appRoot>/home</appRoot>
+                            <!-- 容器在运行时公开的端口 -->
+                            <!--                        <ports>23333</ports>-->
+                            <!-- 容器中的工作目录 -->
+                            <workingDirectory>/home/java</workingDirectory>
+                            <mainClass>cc.xiaoxu.cloud.AllApplication</mainClass>
+                            <!-- 指定运行的参数 -->
+                            <environment>
+                                <TZ>Asia/Shanghai</TZ>
+                            </environment>
+                        </container>
+                        <!-- 基础镜像，如果是私服，需要加上鉴权信息，和 to 下的 auth 节点相同 -->
+                        <from>
+                            <image>${env.image.warehouse.url}/${env.namespace}/openjdk:${maven.compiler.target}</image>
+                            <auth>
+                                <username>${env.image.warehouse.username}</username>
+                                <password>${env.image.warehouse.password}</password>
+                            </auth>
+                        </from>
+                        <!-- 构建后的镜像名称以及私服地址、鉴权信息 -->
+                        <to>
+                            <image>${env.image.warehouse.url}/${env.namespace}/${project.artifactId}:${cloud.version}
+                            </image>
+                            <auth>
+                                <username>${env.image.warehouse.username}</username>
+                                <password>${env.image.warehouse.password}</password>
+                            </auth>
+                        </to>
+                        <!-- 允许非 https -->
+                        <allowInsecureRegistries>true</allowInsecureRegistries>
+                    </configuration>
+                    <!-- 将 jib 与 mvn 构建的生命周期绑定 mvn install 自动构造镜像 -->
+                    <!-- 打包及推送命令 mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -->
+                    <executions>
+                        <execution>
+                            <phase>install</phase>
+                            <goals>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>${maven-resources-plugin.version}</version>
-                </plugin>
+
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>${exec-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>get-git-info</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>exec</goal>
+                            </goals>
+                            <configuration>
+                                <!--  设置可执行文件为 shell 脚本 -->
+                                <executable>sh</executable>
+                                <!-- 脚本文件路径 (相对于项目根目录) -->
+                                <arguments>
+                                    <argument>${maven.multiModuleProjectDirectory}/resources/generate_git_info.sh
+                                    </argument>
+                                    <argument>${project.basedir}</argument>
+                                </arguments>
+                                <!-- 输出日志 -->
+                                <outputFile>git-info.log</outputFile>
+                                <workingDirectory>${maven.multiModuleProjectDirectory}/resources</workingDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>copy-git-info</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/target/classes</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${basedir}/src/main/resources</directory>
+                                        <includes>
+                                            <include>git-info.yaml</include>
+                                        </includes>
+                                        <filtering>true</filtering>  <!-- important -->
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

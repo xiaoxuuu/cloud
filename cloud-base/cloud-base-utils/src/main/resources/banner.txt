@@ -9,8 +9,8 @@ Package Time: ${build.time:Not Configured}
 Start Time: ${time.start:Not Configured}
 Git Branch: ${AnsiColor.BRIGHT_RED}${git.branch:unknown}${AnsiColor.YELLOW}
 Recent 5 Commits:
-${git.commit[0]:No commit info}
-${git.commit[1]:No commit info}
-${git.commit[2]:No commit info}
-${git.commit[3]:No commit info}
-${git.commit[4]:No commit info}${AnsiStyle.NORMAL}
+${git.commits[0]:No commit info}
+${git.commits[1]:No commit info}
+${git.commits[2]:No commit info}
+${git.commits[3]:No commit info}
+${git.commits[4]:No commit info}${AnsiStyle.NORMAL}
