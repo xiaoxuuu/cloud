@@ -36,5 +36,5 @@ fi
 # 将 YAML 内容输出到文件
 echo "$YAML_CONTENT" > "$APPLICATION_YAML"
 
-#echo "Git info appended to $APPLICATION_YAML"
-#echo "$YAML_CONTENT"
+echo "Git info appended to $APPLICATION_YAML"
+echo "$YAML_CONTENT"
