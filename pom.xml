@@ -490,7 +490,7 @@
                     <executions>
                         <execution>
                             <id>get-git-info</id>
-                            <phase>package</phase>
+                            <phase>generate-sources</phase>  <!--  更早的阶段 -->
                             <goals>
                                 <goal>exec</goal>
                             </goals>
@@ -504,7 +504,7 @@
                                     <argument>${project.basedir}</argument>
                                 </arguments>
                                 <!-- 输出日志 -->
-                                <outputFile>git-info.log</outputFile>
+                                <outputFile>${maven.multiModuleProjectDirectory}/logs/git-info.log</outputFile>
                                 <workingDirectory>${maven.multiModuleProjectDirectory}/resources</workingDirectory>
                             </configuration>
                         </execution>
