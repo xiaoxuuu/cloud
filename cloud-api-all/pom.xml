@@ -55,7 +55,6 @@
             </resource>
         </resources>
         <plugins>
-
             <!-- jar 打包插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
