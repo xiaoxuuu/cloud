@@ -59,7 +59,7 @@
                 <configuration>
                     <!-- 容器相关设置 -->
                     <container>
-                        <mainClass>cc.xiaoxu.cloud.AllApplication</mainClass>
+                        <mainClass>cc.xiaoxu.cloud.GatewayApplication</mainClass>
                     </container>
                 </configuration>
             </plugin>
