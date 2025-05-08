@@ -77,6 +77,11 @@
             </resource>
         </resources>
         <plugins>
+            <!-- jar 打包插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
 
             <!-- docker 打包插件 -->
             <plugin>
@@ -88,6 +93,16 @@
                         <mainClass>cc.xiaoxu.cloud.MyApplication</mainClass>
                     </container>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
