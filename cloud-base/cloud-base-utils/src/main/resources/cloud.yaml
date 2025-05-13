@@ -1,3 +1,7 @@
 # 启动类输出配置
 app:
-  version: 1.0
+  version: 1.
+spring:
+  config:
+    import:
+      - optional:git-info.yaml
