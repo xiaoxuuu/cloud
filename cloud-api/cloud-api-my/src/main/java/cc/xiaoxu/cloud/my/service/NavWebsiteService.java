@@ -6,8 +6,8 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteAddVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteSearchVO;
 import cc.xiaoxu.cloud.bean.vo.NavWebsiteShowVO;
-import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.PageUtils;
+import cc.xiaoxu.cloud.core.utils.date.DateUtils;
 import cc.xiaoxu.cloud.my.dao.NavWebsiteMapper;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
@@ -112,7 +112,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         }
         long currentTimeMillis = System.currentTimeMillis();
 
-        long oldDateMillis = DateUtils.toLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long oldDateMillis = DateUtils.convertToLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         long l = currentTimeMillis - oldDateMillis;
         if (l < 1000 * 60 * 60) {

@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.core.bean.entity;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.date.DateUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;

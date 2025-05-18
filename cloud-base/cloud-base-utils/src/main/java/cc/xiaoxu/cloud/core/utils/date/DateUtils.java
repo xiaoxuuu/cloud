@@ -1,4 +1,4 @@
-package cc.xiaoxu.cloud.core.utils;
+package cc.xiaoxu.cloud.core.utils.date;
 
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 
@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author 小徐
  * @since 2023/1/3 16:51
  */
-public class DateUtils {
+public class DateUtils extends BasicDateUtils {
 
     /**
      * 获取系统默认时区
@@ -28,6 +28,7 @@ public class DateUtils {
      * 禁止实例化
      */
     private DateUtils() {
+        super();
         throw new IllegalAccessError(this.getClass().getName());
     }
 
@@ -212,7 +213,7 @@ public class DateUtils {
         if (Objects.isNull(l1) || Objects.isNull(l2)) {
             return false;
         }
-        return toLocalDateTime(l1).isAfter(toLocalDateTime(l2));
+        return convertToLocalDateTime(l1).isAfter(convertToLocalDateTime(l2));
     }
 
     /**
@@ -222,7 +223,7 @@ public class DateUtils {
      * @param o 日期
      * @return 结果
      */
-    public static LocalDateTime toLocalDateTime(Object o) {
+    public static LocalDateTime convertToLocalDateTime(Object o) {
 
         return switch (o) {
             case String s -> stringToLocalDateTime(s);
