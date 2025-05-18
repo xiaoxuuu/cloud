@@ -17,7 +17,7 @@ public class BasicDateUtils {
     /**
      * 默认时区
      */
-    private static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Shanghai");
+    protected static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Shanghai");
 
     /**
      * 禁止实例化
