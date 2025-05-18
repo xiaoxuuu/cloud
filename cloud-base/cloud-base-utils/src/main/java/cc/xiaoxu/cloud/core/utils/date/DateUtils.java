@@ -3,7 +3,9 @@ package cc.xiaoxu.cloud.core.utils.date;
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,11 +20,6 @@ import java.util.Objects;
  * @since 2023/1/3 16:51
  */
 public class DateUtils extends BasicDateUtils {
-
-    /**
-     * 获取系统默认时区
-     */
-    private static final ZoneId ZONE_ID = ZoneId.systemDefault();
 
     /**
      * 禁止实例化
@@ -41,7 +38,7 @@ public class DateUtils extends BasicDateUtils {
     public static LocalDateTime dateToLocalDateTime(Date date) {
 
         Instant instant = date.toInstant();
-        return instant.atZone(ZONE_ID).toLocalDateTime();
+        return instant.atZone(DEFAULT_ZONE_ID).toLocalDateTime();
     }
 
     /**
@@ -52,7 +49,7 @@ public class DateUtils extends BasicDateUtils {
      */
     public static Date localDateTimeToDate(LocalDateTime localDateTime) {
 
-        ZonedDateTime zdt = localDateTime.atZone(ZONE_ID);
+        ZonedDateTime zdt = localDateTime.atZone(DEFAULT_ZONE_ID);
         return Date.from(zdt.toInstant());
     }
 
@@ -214,26 +211,6 @@ public class DateUtils extends BasicDateUtils {
             return false;
         }
         return convertToLocalDateTime(l1).isAfter(convertToLocalDateTime(l2));
-    }
-
-    /**
-     * <p>将常见日期自动转换为 {@link LocalDateTime LocalDateTime}</p>
-     * <p>{@link String String} 类型默认使用 {@link DateUtils#stringToLocalDateTime(String date) XDateUtils.stringToLocalDateTime(String date)} 方法</p>
-     *
-     * @param o 日期
-     * @return 结果
-     */
-    public static LocalDateTime convertToLocalDateTime(Object o) {
-
-        return switch (o) {
-            case String s -> stringToLocalDateTime(s);
-            case Date date -> dateToLocalDateTime(date);
-            case LocalDateTime localDateTime -> localDateTime;
-            case Instant instant -> instant.atZone(ZONE_ID).toLocalDateTime();
-            case LocalDate localDate -> localDate.atStartOfDay(ZONE_ID).toLocalDateTime();
-            case ZonedDateTime zonedDateTime -> zonedDateTime.toLocalDateTime();
-            default -> throw new RuntimeException("日期转换时遇到暂不支持的数据类型");
-        };
     }
 
     /**
