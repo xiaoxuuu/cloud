@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.core.utils.random;
 
-import cc.xiaoxu.cloud.core.utils.DateUtils;
+import cc.xiaoxu.cloud.core.utils.date.DateUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

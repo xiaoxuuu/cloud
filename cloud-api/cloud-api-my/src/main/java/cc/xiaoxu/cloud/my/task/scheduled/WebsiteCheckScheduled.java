@@ -3,8 +3,8 @@ package cc.xiaoxu.cloud.my.task.scheduled;
 import cc.xiaoxu.cloud.assistant.ChatAssistant;
 import cc.xiaoxu.cloud.bean.WebExtractDTO;
 import cc.xiaoxu.cloud.bean.WebExtractResultDTO;
-import cc.xiaoxu.cloud.core.utils.DateUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import cc.xiaoxu.cloud.core.utils.date.DateUtils;
 import cc.xiaoxu.cloud.core.utils.set.ListUtils;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
@@ -142,7 +142,7 @@ public class WebsiteCheckScheduled {
             Date lastAvailableTime = navWebsite.getLastAvailableTime();
             // 跳过 72 小时内成功访问的数据
             if (null != lastAvailableTime) {
-                long oldDateMillis = DateUtils.toLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long oldDateMillis = DateUtils.convertToLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 long time = currentTimeMillis - oldDateMillis;
                 if (time < 1000 * 60 * 60 * 24 * 3) {
                     continue;
