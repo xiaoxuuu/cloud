@@ -23,7 +23,7 @@ public class BaseEntity extends BaseInfoEntity {
     public static void buildCreate(BaseEntity entity, Integer userId) {
 
         entity.setState(StateEnum.ENABLE.getCode());
-        entity.setCreateTime(DateUtils.getNowDate());
+        entity.setCreateTime(DateUtils.now());
         entity.setCreateId(userId);
     }
 }

@@ -39,7 +39,7 @@ public class CloudController {
         Map<String, String> map = new HashMap<>();
         map.put("打包时间", packageTime.replace("_", " "));
         map.put("启动时间", startTime.replace("_", " "));
-        map.put("主机时间", DateUtils.getNowString());
+        map.put("主机时间", DateUtils.now());
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             map.put("主机名", inetAddress.getHostName());
@@ -60,6 +60,6 @@ public class CloudController {
     }
 
     public static String getCheckCode() {
-        return MD5Utils.toMd5(DateUtils.getNowCustomString(DateConstants.DATE_MARK)).substring(0, 6);
+        return MD5Utils.toMd5(DateUtils.now(DateConstants.DATE_MARK)).substring(0, 6);
     }
 }

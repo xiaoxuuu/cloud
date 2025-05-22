@@ -66,21 +66,21 @@ public class KnowledgeBaseController {
                 .in(KnowledgeBase::getId, dto.getIdList())
                 .set(KnowledgeBase::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeBase::getModifyId, userId)
-                .set(KnowledgeBase::getModifyTime, DateUtils.getNowDate())
+                .set(KnowledgeBase::getModifyTime, DateUtils.now())
                 .update();
         knowledgeService.lambdaUpdate()
                 .eq(Knowledge::getUserId, userId)
                 .in(Knowledge::getKnowledgeBaseId, dto.getIdList())
                 .set(Knowledge::getState, StateEnum.DELETE.getCode())
                 .set(Knowledge::getModifyId, userId)
-                .set(Knowledge::getModifyTime, DateUtils.getNowDate())
+                .set(Knowledge::getModifyTime, DateUtils.now())
                 .update();
         knowledgeSectionService.lambdaUpdate()
                 .eq(KnowledgeSection::getUserId, userId)
                 .in(KnowledgeSection::getKnowledgeBaseId, dto.getIdList())
                 .set(KnowledgeSection::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeSection::getModifyId, userId)
-                .set(KnowledgeSection::getModifyTime, DateUtils.getNowDate())
+                .set(KnowledgeSection::getModifyTime, DateUtils.now())
                 .update();
     }
 

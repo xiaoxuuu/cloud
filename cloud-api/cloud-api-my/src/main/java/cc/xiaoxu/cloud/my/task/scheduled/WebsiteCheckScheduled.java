@@ -107,7 +107,7 @@ public class WebsiteCheckScheduled {
                         .set(NavWebsite::getDescription, chatRes.description)
                         .set(StringUtils.isBlank(website.getWebsiteName()), NavWebsite::getWebsiteName, chatRes.website_name)
                         .set(NavWebsite::getRemark, chatRes.short_name)
-                        .set(NavWebsite::getLastAvailableTime, DateUtils.getNowDate())
+                        .set(NavWebsite::getLastAvailableTime, DateUtils.now())
                         .update();
                 websiteMap.remove(result.getUrl());
             }
@@ -161,12 +161,12 @@ public class WebsiteCheckScheduled {
             }
             if (success) {
                 log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
-                navWebsite.setLastAvailableTime(DateUtils.getNowDate());
+                navWebsite.setLastAvailableTime(DateUtils.now());
             }
             navWebsiteService.lambdaUpdate()
                     .eq(NavWebsite::getId, navWebsite.getId())
                     .set(NavWebsite::getWebsiteName, websiteTitle)
-                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.getNowString())
+                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.now())
                     .update();
         }
         log.info("操作结束...");

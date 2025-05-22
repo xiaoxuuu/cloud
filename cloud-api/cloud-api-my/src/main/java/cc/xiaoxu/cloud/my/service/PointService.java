@@ -30,7 +30,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
         Point point = new Point();
         BeanUtils.populate(dto, point);
-        point.setAmapUpdateTime(DateUtils.getNowDate());
+        point.setAmapUpdateTime(DateUtils.now());
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
 
@@ -56,7 +56,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(StringUtils.isNotBlank(dto.getAmapRating()), Point::getAmapRating, dto.getAmapRating())
                 .set(StringUtils.isNotBlank(dto.getAmapCost()), Point::getAmapCost, dto.getAmapCost())
                 .set(StringUtils.isNotBlank(dto.getAmapPoiId()), Point::getAmapPoiId, dto.getAmapPoiId())
-                .set(Point::getAmapUpdateTime, DateUtils.getNowDate())
+                .set(Point::getAmapUpdateTime, DateUtils.now())
                 .set(null != dto.getState(), Point::getState, dto.getState())
                 .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
                 .eq(Point::getId, dto.getId())
@@ -81,7 +81,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         return pointList.stream().map(k -> {
             PointSimpleVO vo = new PointSimpleVO();
             BeanUtils.populate(k, vo);
-            vo.setSort(Long.parseLong(null == k.getVisitedTimes() ? "0" : k.getVisitedTimes() + DateUtils.dateToString(k.getAmapUpdateTime(), "yyyyMMdd")));
+            vo.setSort(Long.parseLong(null == k.getVisitedTimes() ? "0" : k.getVisitedTimes() + DateUtils.toString(k.getAmapUpdateTime(), "yyyyMMdd")));
             return vo;
         }).toList();
     }

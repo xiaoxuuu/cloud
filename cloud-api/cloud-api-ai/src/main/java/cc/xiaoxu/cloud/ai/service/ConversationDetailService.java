@@ -94,7 +94,7 @@ public class ConversationDetailService extends ServiceImpl<ConversationDetailMap
         ConversationDetail conversationDetail = new ConversationDetail();
         conversationDetail.setConversationId(conversationId);
         conversationDetail.setUserId(userId);
-        conversationDetail.setCreateTime(DateUtils.getNowDate());
+        conversationDetail.setCreateTime(DateUtils.now());
         conversationDetail.setModelId(modelId);
         conversationDetail.setRole(role.getCode());
         conversationDetail.setToken(token);

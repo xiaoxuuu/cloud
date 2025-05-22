@@ -27,7 +27,7 @@ public class ConversationKnowledgeService extends ServiceImpl<ConversationKnowle
                     .eq(ConversationKnowledge::getKnowledgeBaseId, dto.getKnowledgeBaseId())
                     .set(ConversationKnowledge::getState, StateEnum.DELETE.getCode())
                     .set(ConversationKnowledge::getModifyId, userId)
-                    .set(ConversationKnowledge::getModifyTime, DateUtils.getNowDate())
+                    .set(ConversationKnowledge::getModifyTime, DateUtils.now())
                     .update();
         }
 
