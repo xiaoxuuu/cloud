@@ -94,7 +94,7 @@ public class ConversationController {
                 .in(Conversation::getId, dto.getIdList())
                 .set(Conversation::getState, StateEnum.DELETE.getCode())
                 .set(Conversation::getModifyId, userId)
-                .set(Conversation::getModifyTime, DateUtils.getNowDate())
+                .set(Conversation::getModifyTime, DateUtils.now())
                 .update();
     }
 

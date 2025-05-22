@@ -211,7 +211,7 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
                     .set(StringUtils.isNotBlank(dto.getName()), Conversation::getName, dto.getName())
                     .set(null != dto.getModelId(), Conversation::getModelId, dto.getModelId())
                     .set(Conversation::getModifyId, userId)
-                    .set(Conversation::getModifyTime, DateUtils.getNowDate())
+                    .set(Conversation::getModifyTime, DateUtils.now())
                     .update();
         }
     }

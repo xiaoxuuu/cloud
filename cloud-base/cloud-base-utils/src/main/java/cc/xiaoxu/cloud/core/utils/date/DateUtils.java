@@ -47,7 +47,7 @@ public class DateUtils extends BasicDateUtils {
      * @param localDateTime 日期
      * @return 转换的 {@link Date Date}
      */
-    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+    public static Date toDate(LocalDateTime localDateTime) {
 
         ZonedDateTime zdt = localDateTime.atZone(DEFAULT_ZONE_ID);
         return Date.from(zdt.toInstant());
@@ -91,26 +91,15 @@ public class DateUtils extends BasicDateUtils {
     }
 
     /**
-     * {@link LocalDateTime LocalDateTime} 转 {@link String String}
-     *
-     * @param localDateTime 日期，默认格式：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants#DEFAULT_DATE_TIME_FORMAT DateConstants.DEFAULT_DATE_FORMAT}
-     * @return 转换结果
-     */
-    public static String localDateTimeToString(LocalDateTime localDateTime) {
-
-        return localDateTime.format(DateTimeFormatter.ofPattern(DateConstants.DEFAULT_DATE_TIME_FORMAT));
-    }
-
-    /**
      * {@link Date Date} 转 {@link String String}
      *
      * @param date    指定时间
      * @param pattern 样式
      * @return 结果
      */
-    public static String dateToString(Date date, String pattern) {
+    public static String toString(Object date, String pattern) {
 
-        return localDateTimeToString(dateToLocalDateTime(date), pattern);
+        return convertToLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
@@ -122,7 +111,7 @@ public class DateUtils extends BasicDateUtils {
      */
     public static Date stringToDate(String date, String pattern) {
 
-        return localDateTimeToDate(stringToLocalDateTime(date, pattern));
+        return toDate(stringToLocalDateTime(date, pattern));
     }
 
     public static String formatDate(Date date, String format) {
@@ -136,8 +125,8 @@ public class DateUtils extends BasicDateUtils {
      * @param pattern 格式
      * @return 日期
      */
-    public static String getNowCustomString(String pattern) {
-        return localDateTimeToString(LocalDateTime.now(), pattern);
+    public static String now(String pattern) {
+        return toString(LocalDateTime.now(), pattern);
     }
 
     /**
@@ -145,27 +134,8 @@ public class DateUtils extends BasicDateUtils {
      *
      * @return 当前时间
      */
-    public static String getNowString() {
-        return localDateTimeToString(LocalDateTime.now(), DateConstants.DEFAULT_DATE_TIME_FORMAT);
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @return 当前时间
-     */
-    public static Date getNowDate() {
-        return localDateTimeToDate(LocalDateTime.now());
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @param pattern 样式
-     * @return 当前时间
-     */
-    public static String getNowString(String pattern) {
-        return localDateTimeToString(LocalDateTime.now(), pattern);
+    public static String now() {
+        return now(DateConstants.DEFAULT_DATE_TIME_FORMAT);
     }
 
     /**
@@ -176,7 +146,7 @@ public class DateUtils extends BasicDateUtils {
      */
     public static List<Integer> getLastSomeYear(int someYear) {
 
-        return getLastSomeYear(someYear, Integer.parseInt(getNowString(DateConstants.YEAR)));
+        return getLastSomeYear(someYear, Integer.parseInt(now(DateConstants.YEAR)));
     }
 
     /**

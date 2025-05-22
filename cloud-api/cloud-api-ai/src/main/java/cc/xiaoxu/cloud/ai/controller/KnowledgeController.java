@@ -105,14 +105,14 @@ public class KnowledgeController {
                 .in(Knowledge::getId, dto.getIdList())
                 .set(Knowledge::getState, StateEnum.DELETE.getCode())
                 .set(Knowledge::getModifyId, userId)
-                .set(Knowledge::getModifyTime, DateUtils.getNowDate())
+                .set(Knowledge::getModifyTime, DateUtils.now())
                 .update();
         knowledgeSectionService.lambdaUpdate()
                 .eq(KnowledgeSection::getUserId, userId)
                 .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
                 .set(KnowledgeSection::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeSection::getModifyId, userId)
-                .set(KnowledgeSection::getModifyTime, DateUtils.getNowDate())
+                .set(KnowledgeSection::getModifyTime, DateUtils.now())
                 .update();
     }
 

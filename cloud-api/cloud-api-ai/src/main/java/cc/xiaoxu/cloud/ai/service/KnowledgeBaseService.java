@@ -45,7 +45,7 @@ public class KnowledgeBaseService extends ServiceImpl<KnowledgeBaseMapper, Knowl
                 .in(KnowledgeBase::getId, dto.getId())
                 .set(KnowledgeBase::getName, dto.getName())
                 .set(KnowledgeBase::getModifyId, userId)
-                .set(KnowledgeBase::getModifyTime, DateUtils.getNowDate())
+                .set(KnowledgeBase::getModifyTime, DateUtils.now())
                 .update();
     }
 

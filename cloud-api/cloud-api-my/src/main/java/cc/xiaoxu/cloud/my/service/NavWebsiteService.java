@@ -160,10 +160,10 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         navWebsite.setUrl(vo.getUrl());
         navWebsite.setDescription(vo.getDescription());
         navWebsite.setIconId(vo.getIconId());
-        navWebsite.setLastAvailableTime(DateUtils.getNowDate());
+        navWebsite.setLastAvailableTime(DateUtils.now());
         navWebsite.setVisitNum(0);
         navWebsite.setState(StateEnum.ENABLE.getCode());
-        navWebsite.setCreateTime(DateUtils.getNowDate());
+        navWebsite.setCreateTime(DateUtils.now());
         save(navWebsite);
     }
 }
