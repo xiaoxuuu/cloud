@@ -2,8 +2,6 @@ package cc.xiaoxu.cloud.core.utils.date;
 
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,18 +28,6 @@ public class DateUtils extends BasicDateUtils {
     }
 
     /**
-     * {@link Date Date} 转 {@link LocalDateTime LocalDateTime}
-     *
-     * @param date 日期
-     * @return 转换的 {@link LocalDateTime LocalDateTime}
-     */
-    public static LocalDateTime dateToLocalDateTime(Date date) {
-
-        Instant instant = date.toInstant();
-        return instant.atZone(DEFAULT_ZONE_ID).toLocalDateTime();
-    }
-
-    /**
      * {@link LocalDateTime LocalDateTime} 转 {@link Date Date}
      *
      * @param localDateTime 日期
@@ -54,43 +40,6 @@ public class DateUtils extends BasicDateUtils {
     }
 
     /**
-     * {@link String String} 转 {@link LocalDateTime LocalDateTime}
-     *
-     * @param date    日期
-     * @param pattern 日期格式，参考：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants DateConstants}
-     * @return 转换结果
-     */
-    public static LocalDateTime stringToLocalDateTime(String date, String pattern) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        return LocalDateTime.parse(date, formatter);
-    }
-
-    /**
-     * {@link String String} 转 {@link LocalDateTime LocalDateTime}
-     *
-     * @param date 日期，默认格式：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants#DEFAULT_DATE_TIME_FORMAT DateConstants.DEFAULT_DATE_FORMAT}
-     * @return 转换结果
-     */
-    public static LocalDateTime stringToLocalDateTime(String date) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateConstants.DEFAULT_DATE_TIME_FORMAT);
-        return LocalDateTime.parse(date, formatter);
-    }
-
-    /**
-     * {@link LocalDateTime LocalDateTime} 转 {@link String String}
-     *
-     * @param localDateTime 日期
-     * @param pattern       日期格式，参考：{@link cc.xiaoxu.cloud.core.utils.constants.DateConstants DateConstants}
-     * @return 转换结果
-     */
-    public static String localDateTimeToString(LocalDateTime localDateTime, String pattern) {
-
-        return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
-    }
-
-    /**
      * {@link Date Date} 转 {@link String String}
      *
      * @param date    指定时间
@@ -100,23 +49,6 @@ public class DateUtils extends BasicDateUtils {
     public static String toString(Object date, String pattern) {
 
         return convertToLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
-    }
-
-    /**
-     * {@link String String} 转 {@link Date Date}
-     *
-     * @param date    日期
-     * @param pattern 格式化字符串
-     * @return 结果
-     */
-    public static Date stringToDate(String date, String pattern) {
-
-        return toDate(stringToLocalDateTime(date, pattern));
-    }
-
-    public static String formatDate(Date date, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.format(date);
     }
 
     /**
