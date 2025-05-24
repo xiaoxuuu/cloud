@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -17,7 +18,12 @@ public class BasicDateUtils {
     /**
      * 默认时区
      */
-    protected static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Shanghai");
+    public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Shanghai");
+
+    /**
+     * 年月日时分秒
+     */
+    public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 禁止实例化
@@ -39,6 +45,7 @@ public class BasicDateUtils {
             throw new IllegalArgumentException("obj can not be null");
         }
         return switch (obj) {
+            case String s -> convertToLocalDateTime(s, DEFAULT_DATE_TIME_FORMAT);
             // LocalDateTime 直接返回
             case LocalDateTime o -> o;
             // LocalDate 转换为当天的午夜时间
@@ -49,5 +56,13 @@ public class BasicDateUtils {
             case Instant o -> LocalDateTime.ofInstant(o, DEFAULT_ZONE_ID);
             default -> throw new IllegalArgumentException("暂不支持的数据类型: " + obj.getClass().getName());
         };
+    }
+
+    public static LocalDateTime convertToLocalDateTime(String str, String pattern) {
+
+        if (null == str) {
+            throw new IllegalArgumentException("str can not be null");
+        }
+        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
     }
 }
