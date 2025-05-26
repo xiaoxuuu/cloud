@@ -21,7 +21,7 @@ public class DateConstants {
     /**
      * 年月日时分秒毫秒
      */
-    public static final String DATE_TIME_FORMAT_DETAIL = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String DATE_TIME_DETAIL_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
 
     /**
      * 年月日
@@ -34,6 +34,11 @@ public class DateConstants {
     public static final String DATE_FORMAT_2 = "yyyy/MM/dd";
 
     /**
+     * 年月日
+     */
+    public static final String DATE_MARK = "yyyyMMdd";
+
+    /**
      * 年月
      */
     public static final String YEAR_MONTH_FORMAT = "yyyy-MM";
@@ -42,11 +47,6 @@ public class DateConstants {
      * 年月
      */
     public static final String YEAR_MONTH_FORMAT_2 = "yyyy/MM";
-
-    /**
-     * 年月日
-     */
-    public static final String DATE_MARK = "yyyyMMdd";
 
     /**
      * 年
