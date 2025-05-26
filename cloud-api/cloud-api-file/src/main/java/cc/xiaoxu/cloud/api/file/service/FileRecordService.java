@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -34,7 +35,7 @@ public class FileRecordService extends ServiceImpl<FileRecordMapper, FileRecord>
         } catch (IOException e) {
             throw new CustomException("未获取到文件名：" + e.getMessage());
         }
-        fileRecord.setName(DateUtils.now(DateConstants.SHORT_TIME_FORMAT) + md5 + "." + suffix);
+        fileRecord.setName(DateUtils.toString(LocalDateTime.now(), DateConstants.SHORT_TIME_FORMAT) + md5 + "." + suffix);
         fileRecord.setPath(relativePath);
         fileRecord.setSuffix(suffix);
         fileRecord.setMd5(md5);

@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -105,14 +106,14 @@ public class KnowledgeController {
                 .in(Knowledge::getId, dto.getIdList())
                 .set(Knowledge::getState, StateEnum.DELETE.getCode())
                 .set(Knowledge::getModifyId, userId)
-                .set(Knowledge::getModifyTime, DateUtils.now())
+                .set(Knowledge::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
         knowledgeSectionService.lambdaUpdate()
                 .eq(KnowledgeSection::getUserId, userId)
                 .in(KnowledgeSection::getKnowledgeId, dto.getIdList())
                 .set(KnowledgeSection::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeSection::getModifyId, userId)
-                .set(KnowledgeSection::getModifyTime, DateUtils.now())
+                .set(KnowledgeSection::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
     }
 

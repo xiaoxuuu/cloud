@@ -3,10 +3,7 @@ package cc.xiaoxu.cloud.core.utils.date;
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,49 +25,6 @@ public class DateUtils extends BasicDateUtils {
     }
 
     /**
-     * {@link LocalDateTime LocalDateTime} 转 {@link Date Date}
-     *
-     * @param localDateTime 日期
-     * @return 转换的 {@link Date Date}
-     */
-    public static Date toDate(LocalDateTime localDateTime) {
-
-        ZonedDateTime zdt = localDateTime.atZone(DEFAULT_ZONE_ID);
-        return Date.from(zdt.toInstant());
-    }
-
-    /**
-     * {@link Date Date} 转 {@link String String}
-     *
-     * @param date    指定时间
-     * @param pattern 样式
-     * @return 结果
-     */
-    public static String toString(Object date, String pattern) {
-
-        return convertToLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
-    }
-
-    /**
-     * 获取当前日期
-     *
-     * @param pattern 格式
-     * @return 日期
-     */
-    public static String now(String pattern) {
-        return toString(LocalDateTime.now(), pattern);
-    }
-
-    /**
-     * 获取当前时间
-     *
-     * @return 当前时间
-     */
-    public static String now() {
-        return now(DateConstants.DEFAULT_DATE_TIME_FORMAT);
-    }
-
-    /**
      * 获取最近几年年份
      *
      * @param someYear 0 为今年。1 为去年 + 今年，以此类推
@@ -78,7 +32,7 @@ public class DateUtils extends BasicDateUtils {
      */
     public static List<Integer> getLastSomeYear(int someYear) {
 
-        return getLastSomeYear(someYear, Integer.parseInt(now(DateConstants.YEAR)));
+        return getLastSomeYear(someYear, Integer.parseInt(toString(LocalDateTime.now(), DateConstants.YEAR)));
     }
 
     /**

@@ -1,9 +1,8 @@
 package cc.xiaoxu.cloud.core.utils.date;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
+
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -45,7 +44,7 @@ public class BasicDateUtils {
             throw new IllegalArgumentException("obj can not be null");
         }
         return switch (obj) {
-            case String s -> convertToLocalDateTime(s, DEFAULT_DATE_TIME_FORMAT);
+            case String s -> convertToLocalDateTime(s, DateConstants.DEFAULT_DATE_TIME_FORMAT);
             // LocalDateTime 直接返回
             case LocalDateTime o -> o;
             // LocalDate 转换为当天的午夜时间
@@ -64,5 +63,30 @@ public class BasicDateUtils {
             throw new IllegalArgumentException("str can not be null");
         }
         return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
+    }
+
+
+    /**
+     * {@link LocalDateTime LocalDateTime} 转 {@link Date Date}
+     *
+     * @param localDateTime 日期
+     * @return 转换的 {@link Date Date}
+     */
+    public static Date toDate(LocalDateTime localDateTime) {
+
+        ZonedDateTime zdt = localDateTime.atZone(DEFAULT_ZONE_ID);
+        return Date.from(zdt.toInstant());
+    }
+
+    /**
+     * {@link Date Date} 转 {@link String String}
+     *
+     * @param date    指定时间
+     * @param pattern 样式
+     * @return 结果
+     */
+    public static String toString(Object date, String pattern) {
+
+        return convertToLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
     }
 }

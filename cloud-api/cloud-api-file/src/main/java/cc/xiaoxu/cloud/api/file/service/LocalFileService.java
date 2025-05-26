@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -48,9 +49,9 @@ public class LocalFileService implements FileService {
     private String getRelativePath() {
 
         return "localFile" + FileConstants.FILE_SEPARATOR +
-                DateUtils.now(DateConstants.YEAR) + FileConstants.FILE_SEPARATOR +
-                DateUtils.now(DateConstants.MONTH) + FileConstants.FILE_SEPARATOR +
-                DateUtils.now(DateConstants.DAY);
+                DateUtils.toString(LocalDateTime.now(), DateConstants.YEAR) + FileConstants.FILE_SEPARATOR +
+                DateUtils.toString(LocalDateTime.now(), DateConstants.MONTH) + FileConstants.FILE_SEPARATOR +
+                DateUtils.toString(LocalDateTime.now(), DateConstants.DAY);
     }
 
     private String getUploadPath() {

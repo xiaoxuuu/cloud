@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class BaseEntity extends BaseInfoEntity {
     public static void buildCreate(BaseEntity entity, Integer userId) {
 
         entity.setState(StateEnum.ENABLE.getCode());
-        entity.setCreateTime(DateUtils.now());
+        entity.setCreateTime(DateUtils.toDate(LocalDateTime.now()));
         entity.setCreateId(userId);
     }
 }

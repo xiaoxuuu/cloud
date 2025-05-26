@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class ConversationKnowledgeService extends ServiceImpl<ConversationKnowle
                     .eq(ConversationKnowledge::getKnowledgeBaseId, dto.getKnowledgeBaseId())
                     .set(ConversationKnowledge::getState, StateEnum.DELETE.getCode())
                     .set(ConversationKnowledge::getModifyId, userId)
-                    .set(ConversationKnowledge::getModifyTime, DateUtils.now())
+                    .set(ConversationKnowledge::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                     .update();
         }
 

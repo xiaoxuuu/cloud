@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -211,7 +212,7 @@ public class ConversationService extends ServiceImpl<ConversationMapper, Convers
                     .set(StringUtils.isNotBlank(dto.getName()), Conversation::getName, dto.getName())
                     .set(null != dto.getModelId(), Conversation::getModelId, dto.getModelId())
                     .set(Conversation::getModifyId, userId)
-                    .set(Conversation::getModifyTime, DateUtils.now())
+                    .set(Conversation::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                     .update();
         }
     }

@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -160,10 +161,10 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         navWebsite.setUrl(vo.getUrl());
         navWebsite.setDescription(vo.getDescription());
         navWebsite.setIconId(vo.getIconId());
-        navWebsite.setLastAvailableTime(DateUtils.now());
+        navWebsite.setLastAvailableTime(DateUtils.toDate(LocalDateTime.now()));
         navWebsite.setVisitNum(0);
         navWebsite.setState(StateEnum.ENABLE.getCode());
-        navWebsite.setCreateTime(DateUtils.now());
+        navWebsite.setCreateTime(DateUtils.toDate(LocalDateTime.now()));
         save(navWebsite);
     }
 }

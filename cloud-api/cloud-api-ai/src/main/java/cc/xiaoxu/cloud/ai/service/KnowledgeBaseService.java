@@ -18,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -45,7 +47,7 @@ public class KnowledgeBaseService extends ServiceImpl<KnowledgeBaseMapper, Knowl
                 .in(KnowledgeBase::getId, dto.getId())
                 .set(KnowledgeBase::getName, dto.getName())
                 .set(KnowledgeBase::getModifyId, userId)
-                .set(KnowledgeBase::getModifyTime, DateUtils.now())
+                .set(KnowledgeBase::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
     }
 
