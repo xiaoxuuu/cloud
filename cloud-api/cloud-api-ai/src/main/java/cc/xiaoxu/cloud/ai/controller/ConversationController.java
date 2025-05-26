@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -94,7 +95,7 @@ public class ConversationController {
                 .in(Conversation::getId, dto.getIdList())
                 .set(Conversation::getState, StateEnum.DELETE.getCode())
                 .set(Conversation::getModifyId, userId)
-                .set(Conversation::getModifyTime, DateUtils.now())
+                .set(Conversation::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
     }
 

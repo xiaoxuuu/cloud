@@ -18,6 +18,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +95,7 @@ public class ConversationDetailService extends ServiceImpl<ConversationDetailMap
         ConversationDetail conversationDetail = new ConversationDetail();
         conversationDetail.setConversationId(conversationId);
         conversationDetail.setUserId(userId);
-        conversationDetail.setCreateTime(DateUtils.now());
+        conversationDetail.setCreateTime(DateUtils.toDate(LocalDateTime.now()));
         conversationDetail.setModelId(modelId);
         conversationDetail.setRole(role.getCode());
         conversationDetail.setToken(token);

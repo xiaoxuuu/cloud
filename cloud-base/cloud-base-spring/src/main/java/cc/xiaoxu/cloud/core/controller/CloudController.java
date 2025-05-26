@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class CloudController {
         Map<String, String> map = new HashMap<>();
         map.put("打包时间", packageTime.replace("_", " "));
         map.put("启动时间", startTime.replace("_", " "));
-        map.put("主机时间", DateUtils.now());
+        map.put("主机时间", DateUtils.toDate(LocalDateTime.now()));
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             map.put("主机名", inetAddress.getHostName());
@@ -60,6 +61,6 @@ public class CloudController {
     }
 
     public static String getCheckCode() {
-        return MD5Utils.toMd5(DateUtils.now(DateConstants.DATE_MARK)).substring(0, 6);
+        return MD5Utils.toMd5(DateUtils.toString(LocalDateTime.now(), DateConstants.DATE_MARK)).substring(0, 6);
     }
 }

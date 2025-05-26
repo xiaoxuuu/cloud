@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -66,21 +68,21 @@ public class KnowledgeBaseController {
                 .in(KnowledgeBase::getId, dto.getIdList())
                 .set(KnowledgeBase::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeBase::getModifyId, userId)
-                .set(KnowledgeBase::getModifyTime, DateUtils.now())
+                .set(KnowledgeBase::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
         knowledgeService.lambdaUpdate()
                 .eq(Knowledge::getUserId, userId)
                 .in(Knowledge::getKnowledgeBaseId, dto.getIdList())
                 .set(Knowledge::getState, StateEnum.DELETE.getCode())
                 .set(Knowledge::getModifyId, userId)
-                .set(Knowledge::getModifyTime, DateUtils.now())
+                .set(Knowledge::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
         knowledgeSectionService.lambdaUpdate()
                 .eq(KnowledgeSection::getUserId, userId)
                 .in(KnowledgeSection::getKnowledgeBaseId, dto.getIdList())
                 .set(KnowledgeSection::getState, StateEnum.DELETE.getCode())
                 .set(KnowledgeSection::getModifyId, userId)
-                .set(KnowledgeSection::getModifyTime, DateUtils.now())
+                .set(KnowledgeSection::getModifyTime, DateUtils.toDate(LocalDateTime.now()))
                 .update();
     }
 

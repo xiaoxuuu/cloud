@@ -19,6 +19,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -30,7 +31,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
         Point point = new Point();
         BeanUtils.populate(dto, point);
-        point.setAmapUpdateTime(DateUtils.now());
+        point.setAmapUpdateTime(DateUtils.toDate(LocalDateTime.now()));
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
 
@@ -56,7 +57,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(StringUtils.isNotBlank(dto.getAmapRating()), Point::getAmapRating, dto.getAmapRating())
                 .set(StringUtils.isNotBlank(dto.getAmapCost()), Point::getAmapCost, dto.getAmapCost())
                 .set(StringUtils.isNotBlank(dto.getAmapPoiId()), Point::getAmapPoiId, dto.getAmapPoiId())
-                .set(Point::getAmapUpdateTime, DateUtils.now())
+                .set(Point::getAmapUpdateTime, DateUtils.toDate(LocalDateTime.now()))
                 .set(null != dto.getState(), Point::getState, dto.getState())
                 .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
                 .eq(Point::getId, dto.getId())

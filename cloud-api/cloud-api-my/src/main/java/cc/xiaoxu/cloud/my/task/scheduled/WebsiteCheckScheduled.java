@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.Date;
@@ -107,7 +108,7 @@ public class WebsiteCheckScheduled {
                         .set(NavWebsite::getDescription, chatRes.description)
                         .set(StringUtils.isBlank(website.getWebsiteName()), NavWebsite::getWebsiteName, chatRes.website_name)
                         .set(NavWebsite::getRemark, chatRes.short_name)
-                        .set(NavWebsite::getLastAvailableTime, DateUtils.now())
+                        .set(NavWebsite::getLastAvailableTime, DateUtils.toDate(LocalDateTime.now()))
                         .update();
                 websiteMap.remove(result.getUrl());
             }
@@ -161,12 +162,12 @@ public class WebsiteCheckScheduled {
             }
             if (success) {
                 log.info("获取到网站名称：【{}/{}】【{}】【{}】", (i + 1), navWebsiteList.size(), websiteTitle, navWebsite.getShortName());
-                navWebsite.setLastAvailableTime(DateUtils.now());
+                navWebsite.setLastAvailableTime(DateUtils.toDate(LocalDateTime.now()));
             }
             navWebsiteService.lambdaUpdate()
                     .eq(NavWebsite::getId, navWebsite.getId())
                     .set(NavWebsite::getWebsiteName, websiteTitle)
-                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.now())
+                    .set(success, NavWebsite::getLastAvailableTime, DateUtils.toDate(LocalDateTime.now()))
                     .update();
         }
         log.info("操作结束...");
