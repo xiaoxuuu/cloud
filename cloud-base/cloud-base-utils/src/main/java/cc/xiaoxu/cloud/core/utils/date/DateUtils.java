@@ -114,25 +114,4 @@ public class DateUtils extends BasicDateUtils {
         }
         return convertToLocalDateTime(l1).isAfter(convertToLocalDateTime(l2));
     }
-
-    /**
-     * 获取 RFC 格式时间
-     * @return RFC 格式时间
-     */
-    public static String rfcTime() {
-
-        return rfcTime(LocalDateTime.now());
-    }
-
-    /**
-     * 获取 RFC 格式时间
-     * @param localDateTime 日期时间
-     * @return RFC 格式时间
-     */
-    public static String rfcTime(LocalDateTime localDateTime) {
-
-        ZonedDateTime zonedDateTime = localDateTime.atZone(java.time.ZoneId.systemDefault());
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateConstants.RFC_PATTERN);
-        return zonedDateTime.format(formatter);
-    }
 }
