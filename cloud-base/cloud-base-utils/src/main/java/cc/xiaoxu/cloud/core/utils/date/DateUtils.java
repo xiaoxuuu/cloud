@@ -57,15 +57,15 @@ public class DateUtils extends BasicDateUtils {
     /**
      * <p>比较时间大小，会自动对时间进行转换</p>
      *
-     * @param l1 时间1
-     * @param l2 时间2
-     * @return {@code 时间1 > 时间2 = true}
+     * @param o1 时间1
+     * @param o2 时间2
+     * @return {@code o1 > o2 = true}
      */
-    public static boolean moreThan(Object l1, Object l2) {
+    public static boolean moreThan(Object o1, Object o2) {
 
-        if (Objects.isNull(l1) || Objects.isNull(l2)) {
+        if (Objects.isNull(o1) || Objects.isNull(o2)) {
             return false;
         }
-        return convertToLocalDateTime(l1).isAfter(convertToLocalDateTime(l2));
+        return convertToLocalDateTime(o1).isAfter(convertToLocalDateTime(o2));
     }
 }
