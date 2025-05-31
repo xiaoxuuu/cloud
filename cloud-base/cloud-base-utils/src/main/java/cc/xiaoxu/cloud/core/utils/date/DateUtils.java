@@ -3,6 +3,7 @@ package cc.xiaoxu.cloud.core.utils.date;
 import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,5 +68,30 @@ public class DateUtils extends BasicDateUtils {
             return false;
         }
         return convertToLocalDateTime(o1).isAfter(convertToLocalDateTime(o2));
+    }
+
+    public static List<String> findEveryDay(Object o1, Object o2, String pattern) {
+
+        if (pattern == null || pattern.isEmpty()) {
+            throw new IllegalArgumentException("Input parameters cannot be null or empty.");
+        }
+
+        LocalDateTime left = convertToLocalDateTime(o1);
+        LocalDateTime right = convertToLocalDateTime(o2);
+        if (left.isAfter(right)) {
+            LocalDateTime temp = left;
+            left = right;
+            right = temp;
+        }
+
+        List<String> dates = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime current = left;
+        while (!current.isAfter(right)) {
+            String formattedDate = current.format(formatter);
+            dates.add(formattedDate);
+            current = current.plusDays(1);
+        }
+        return dates;
     }
 }
