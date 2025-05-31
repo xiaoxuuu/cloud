@@ -1,7 +1,5 @@
 package cc.xiaoxu.cloud.core.utils.date;
 
-import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
-
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -44,7 +42,7 @@ public class BasicDateUtils {
             throw new IllegalArgumentException("obj can not be null");
         }
         return switch (obj) {
-            case String s -> convertToLocalDateTime(s, DateConstants.DEFAULT_DATE_TIME_FORMAT);
+            case String s -> throw new IllegalArgumentException("String should not use this function.");
             // LocalDateTime 直接返回
             case LocalDateTime o -> o;
             // LocalDate 转换为当天的午夜时间
@@ -62,9 +60,21 @@ public class BasicDateUtils {
         if (null == str) {
             throw new IllegalArgumentException("str can not be null");
         }
-        return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
+        try {
+            return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
+        } catch (java.time.DateTimeException e) {
+            LocalDate localDate = convertToLocalDate(str, pattern);
+            return convertToLocalDateTime(localDate);
+        }
     }
 
+    public static LocalDate convertToLocalDate(String str, String pattern) {
+
+        if (null == str) {
+            throw new IllegalArgumentException("str can not be null");
+        }
+        return LocalDate.parse(str, DateTimeFormatter.ofPattern(pattern));
+    }
 
     /**
      * {@link LocalDateTime LocalDateTime} 转 {@link Date Date}

@@ -70,6 +70,14 @@ public class DateUtils extends BasicDateUtils {
         return convertToLocalDateTime(o1).isAfter(convertToLocalDateTime(o2));
     }
 
+    /**
+     * 查询两日期中的每天，两端闭区间
+     *
+     * @param o1      第一个日期
+     * @param o2      第二个日期
+     * @param pattern 输出的格式
+     * @return 两日期包含的每天
+     */
     public static List<String> findEveryDay(Object o1, Object o2, String pattern) {
 
         if (pattern == null || pattern.isEmpty()) {
