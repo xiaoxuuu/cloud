@@ -99,4 +99,15 @@ public class BasicDateUtils {
 
         return convertToLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
     }
+
+    /**
+     * {@link Date Date} 转 {@link String String}
+     *
+     * @param date 指定时间
+     * @return 结果
+     */
+    public static Long toTimestamp(Object date) {
+
+        return convertToLocalDateTime(date).toInstant(ZoneOffset.UTC).toEpochMilli();
+    }
 }
