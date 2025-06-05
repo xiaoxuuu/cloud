@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -101,5 +102,37 @@ public class DateUtils extends BasicDateUtils {
             current = current.plusDays(1);
         }
         return dates;
+    }
+
+    /**
+     * 计算两个 LocalDateTime 对象之间的时间差（以毫秒为单位）。
+     *
+     * @param stDate  起始 LocalDateTime 对象，不能为 null。
+     * @param endDate 结束 LocalDateTime 对象，不能为 null。
+     * @return 两个日期之间的时间差，以毫秒为单位。
+     * @throws IllegalArgumentException 如果 stDate 或 endDate 为 null。
+     */
+    public static long timeDifference(LocalDateTime stDate, LocalDateTime endDate) {
+
+        return timeDifference(stDate, endDate, ChronoUnit.MILLIS);
+    }
+
+    /**
+     * 计算两个 LocalDateTime 对象之间的时间差（以指定的单位）。
+     *
+     * @param o1   起始 LocalDateTime 对象，不能为 null。
+     * @param o2   结束 LocalDateTime 对象，不能为 null。
+     * @param unit 时间单位，例如 ChronoUnit.MILLIS, ChronoUnit.SECONDS, ChronoUnit.MINUTES, ChronoUnit.HOURS, ChronoUnit.DAYS. 不能为 null。
+     * @return 两个日期之间的时间差，以指定单位为单位。
+     * @throws IllegalArgumentException 如果 stDate 或 endDate 或 unit 为 null。
+     */
+    public static long timeDifference(Object o1, LocalDateTime o2, ChronoUnit unit) {
+
+        if (unit == null) {
+            throw new IllegalArgumentException("unit cannot be null.");
+        }
+        LocalDateTime stDate = convertToLocalDateTime(o1);
+        LocalDateTime endDate = convertToLocalDateTime(o1);
+        return unit.between(stDate, endDate);
     }
 }
