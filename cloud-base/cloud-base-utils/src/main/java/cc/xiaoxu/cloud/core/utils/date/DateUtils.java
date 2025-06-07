@@ -68,7 +68,7 @@ public class DateUtils extends BasicDateUtils {
         if (Objects.isNull(o1) || Objects.isNull(o2)) {
             return false;
         }
-        return convertToLocalDateTime(o1).isAfter(convertToLocalDateTime(o2));
+        return toLocalDateTime(o1).isAfter(toLocalDateTime(o2));
     }
 
     /**
@@ -85,8 +85,8 @@ public class DateUtils extends BasicDateUtils {
             throw new IllegalArgumentException("Input parameters cannot be null or empty.");
         }
 
-        LocalDateTime left = convertToLocalDateTime(o1);
-        LocalDateTime right = convertToLocalDateTime(o2);
+        LocalDateTime left = toLocalDateTime(o1);
+        LocalDateTime right = toLocalDateTime(o2);
         if (left.isAfter(right)) {
             LocalDateTime temp = left;
             left = right;
@@ -131,8 +131,8 @@ public class DateUtils extends BasicDateUtils {
         if (unit == null) {
             throw new IllegalArgumentException("unit cannot be null.");
         }
-        LocalDateTime stDate = convertToLocalDateTime(o1);
-        LocalDateTime endDate = convertToLocalDateTime(o1);
+        LocalDateTime stDate = toLocalDateTime(o1);
+        LocalDateTime endDate = toLocalDateTime(o1);
         return unit.between(stDate, endDate);
     }
 }
