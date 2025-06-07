@@ -113,7 +113,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
         }
         long currentTimeMillis = System.currentTimeMillis();
 
-        long oldDateMillis = DateUtils.convertToLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long oldDateMillis = DateUtils.toLocalDateTime(date).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 
         long l = currentTimeMillis - oldDateMillis;
         if (l < 1000 * 60 * 60) {

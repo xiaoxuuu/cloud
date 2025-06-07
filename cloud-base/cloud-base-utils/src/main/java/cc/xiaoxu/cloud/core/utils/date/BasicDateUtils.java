@@ -36,13 +36,13 @@ public class BasicDateUtils {
      * @return 结果
      * @throws IllegalArgumentException 如果 obj 为 null 或不支持的类型
      */
-    public static LocalDateTime convertToLocalDateTime(Object obj) {
+    public static LocalDateTime toLocalDateTime(Object obj) {
 
         if (null == obj) {
             throw new IllegalArgumentException("obj can not be null");
         }
         return switch (obj) {
-            case String s -> throw new IllegalArgumentException("String should not use this function.");
+            case String s -> stringToLocalDateTime(s, DEFAULT_DATE_TIME_FORMAT);
             // LocalDateTime 直接返回
             case LocalDateTime o -> o;
             // LocalDate 转换为当天的午夜时间
@@ -55,7 +55,7 @@ public class BasicDateUtils {
         };
     }
 
-    public static LocalDateTime convertToLocalDateTime(String str, String pattern) {
+    public static LocalDateTime stringToLocalDateTime(String str, String pattern) {
 
         if (null == str) {
             throw new IllegalArgumentException("str can not be null");
@@ -63,12 +63,12 @@ public class BasicDateUtils {
         try {
             return LocalDateTime.parse(str, DateTimeFormatter.ofPattern(pattern));
         } catch (java.time.DateTimeException e) {
-            LocalDate localDate = convertToLocalDate(str, pattern);
-            return convertToLocalDateTime(localDate);
+            LocalDate localDate = stringToLocalDate(str, pattern);
+            return toLocalDateTime(localDate);
         }
     }
 
-    public static LocalDate convertToLocalDate(String str, String pattern) {
+    public static LocalDate stringToLocalDate(String str, String pattern) {
 
         if (null == str) {
             throw new IllegalArgumentException("str can not be null");
@@ -97,7 +97,7 @@ public class BasicDateUtils {
      */
     public static String toString(Object date, String pattern) {
 
-        return convertToLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
+        return toLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
@@ -108,6 +108,6 @@ public class BasicDateUtils {
      */
     public static Long toTimestamp(Object date) {
 
-        return convertToLocalDateTime(date).toInstant(ZoneOffset.UTC).toEpochMilli();
+        return toLocalDateTime(date).toInstant(ZoneOffset.UTC).toEpochMilli();
     }
 }

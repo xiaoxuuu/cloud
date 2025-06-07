@@ -143,7 +143,7 @@ public class WebsiteCheckScheduled {
             Date lastAvailableTime = navWebsite.getLastAvailableTime();
             // 跳过 72 小时内成功访问的数据
             if (null != lastAvailableTime) {
-                long oldDateMillis = DateUtils.convertToLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                long oldDateMillis = DateUtils.toLocalDateTime(lastAvailableTime).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
                 long time = currentTimeMillis - oldDateMillis;
                 if (time < 1000 * 60 * 60 * 24 * 3) {
                     continue;
