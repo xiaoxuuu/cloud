@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.core.utils.date;
 
+import cc.xiaoxu.cloud.core.utils.constants.DateConstants;
+
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -11,16 +13,6 @@ import java.util.Date;
  * @since 2025/6/20 17:17
  */
 public class BasicDateUtils {
-
-    /**
-     * 默认时区
-     */
-    public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Shanghai");
-
-    /**
-     * 年月日时分秒
-     */
-    public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 禁止实例化
@@ -42,15 +34,15 @@ public class BasicDateUtils {
             throw new IllegalArgumentException("obj can not be null");
         }
         return switch (obj) {
-            case String s -> stringToLocalDateTime(s, DEFAULT_DATE_TIME_FORMAT);
+            case String s -> stringToLocalDateTime(s, DateConstants.DEFAULT_DATE_TIME_FORMAT);
             // LocalDateTime 直接返回
             case LocalDateTime o -> o;
             // LocalDate 转换为当天的午夜时间
             case LocalDate o -> o.atStartOfDay();
             case java.sql.Date o -> o.toLocalDate().atStartOfDay();
             case java.sql.Timestamp o -> o.toLocalDateTime();
-            case Date o -> LocalDateTime.ofInstant(o.toInstant(), DEFAULT_ZONE_ID);
-            case Instant o -> LocalDateTime.ofInstant(o, DEFAULT_ZONE_ID);
+            case Date o -> LocalDateTime.ofInstant(o.toInstant(), DateConstants.DEFAULT_ZONE_ID);
+            case Instant o -> LocalDateTime.ofInstant(o, DateConstants.DEFAULT_ZONE_ID);
             default -> throw new IllegalArgumentException("暂不支持的数据类型: " + obj.getClass().getName());
         };
     }
@@ -84,12 +76,12 @@ public class BasicDateUtils {
      */
     public static Date toDate(LocalDateTime localDateTime) {
 
-        ZonedDateTime zdt = localDateTime.atZone(DEFAULT_ZONE_ID);
+        ZonedDateTime zdt = localDateTime.atZone(DateConstants.DEFAULT_ZONE_ID);
         return Date.from(zdt.toInstant());
     }
 
     /**
-     * {@link Date Date} 转 {@link String String}
+     * {@link Object Object} 转 {@link String String}
      *
      * @param date    指定时间
      * @param pattern 样式
@@ -101,7 +93,7 @@ public class BasicDateUtils {
     }
 
     /**
-     * {@link Date Date} 转 {@link String String}
+     * {@link Date Date} 转 {@link Long Long}
      *
      * @param date 指定时间
      * @return 结果

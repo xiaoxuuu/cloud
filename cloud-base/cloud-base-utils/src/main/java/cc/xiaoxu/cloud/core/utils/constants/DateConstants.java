@@ -1,5 +1,7 @@
 package cc.xiaoxu.cloud.core.utils.constants;
 
+import java.time.ZoneId;
+
 /**
  * <p>日期静态变量</p>
  *
@@ -7,6 +9,11 @@ package cc.xiaoxu.cloud.core.utils.constants;
  * @since 2023/1/3 16:44
  */
 public class DateConstants {
+
+    /**
+     * 默认时区
+     */
+    public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of("Asia/Shanghai");
 
     /**
      * 年月日时分秒
