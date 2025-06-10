@@ -97,7 +97,7 @@ public class ListUtils {
         if (length <= 0) {
             throw new IllegalArgumentException("目标集合长度需要大于 0");
         }
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return new ArrayList<>();
         }
 
