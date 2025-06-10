@@ -351,8 +351,15 @@ public class ListUtils {
     public static <T> List<T> removeTail(List<T> list, T t) {
 
         int i = list.size() - 1;
-        while (i >= 0 && Objects.isNull(t) ? Objects.isNull(list.get(i)) : (Objects.equals(t, list.get(i)))) {
-            i--;
+        while (i >= 0) {
+            if (Objects.isNull(t) ? Objects.isNull(list.get(i)) : (Objects.equals(t, list.get(i)))) {
+                i--;
+            } else {
+                break;
+            }
+        }
+        if (i == -1) {
+            return new ArrayList<>();
         }
         List<T> newList = new ArrayList<>(i + 1);
         for (int j = 0; j <= i; j++) {
