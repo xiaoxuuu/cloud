@@ -348,6 +348,16 @@ public class ListUtils {
         return result;
     }
 
+    /**
+     * <p>从列表的尾部移除所有连续出现的指定元素 t</p>
+     * <p>["a", "b"] = removeTail(["a", "b", "c", "c", "c"], "c")</p>
+     * <p>[1, 2, 3] = removeTail([1, 2, 3, null, null], null)</p>
+     * <p>[] = removeTail([1, 1, 1, 1, 1], 1)</p>
+     *
+     * @param list 原始集合
+     * @param t    需移除数据
+     * @return 移除后的数据
+     */
     public static <T> List<T> removeTail(List<T> list, T t) {
 
         int i = list.size() - 1;
