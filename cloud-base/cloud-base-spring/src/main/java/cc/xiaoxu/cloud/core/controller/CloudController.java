@@ -40,7 +40,7 @@ public class CloudController {
         Map<String, String> map = new HashMap<>();
         map.put("打包时间", packageTime.replace("_", " "));
         map.put("启动时间", startTime.replace("_", " "));
-        map.put("主机时间", DateUtils.toDate(LocalDateTime.now()));
+        map.put("主机时间", DateUtils.toString(LocalDateTime.now()));
         try {
             InetAddress inetAddress = InetAddress.getLocalHost();
             map.put("主机名", inetAddress.getHostName());
