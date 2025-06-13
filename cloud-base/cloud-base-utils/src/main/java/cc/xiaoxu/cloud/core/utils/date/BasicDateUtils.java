@@ -29,12 +29,16 @@ public class BasicDateUtils {
      * @throws IllegalArgumentException 如果 obj 为 null 或不支持的类型
      */
     public static LocalDateTime toLocalDateTime(Object obj) {
+        return toLocalDateTime(obj, DateConstants.DEFAULT_DATE_TIME_FORMAT);
+    }
+
+    public static LocalDateTime toLocalDateTime(Object obj, String pattern) {
 
         if (null == obj) {
             throw new IllegalArgumentException("obj can not be null");
         }
         return switch (obj) {
-            case String s -> stringToLocalDateTime(s, DateConstants.DEFAULT_DATE_TIME_FORMAT);
+            case String s -> stringToLocalDateTime(s, pattern);
             // LocalDateTime 直接返回
             case LocalDateTime o -> o;
             // LocalDate 转换为当天的午夜时间
@@ -47,6 +51,15 @@ public class BasicDateUtils {
         };
     }
 
+    /**
+     * <p>将常见的时间字符串自动转换为 {@link LocalDateTime}</p>
+     * <p>仅包含日期的字符串会使用当天 00:00:00，例如：2020-01-01 -> 2020-01-01 00:00:00</p>
+     * <p>不支持仅包含时间的字符串</p>
+     *
+     * @param str     时间字符串
+     * @param pattern 时间样式
+     * @return 结果
+     */
     public static LocalDateTime stringToLocalDateTime(String str, String pattern) {
 
         if (null == str) {
@@ -60,6 +73,13 @@ public class BasicDateUtils {
         }
     }
 
+    /**
+     * 将常见时间字符串自动转换为 {@link LocalDate}
+     *
+     * @param str     时间字符串
+     * @param pattern 时间样式
+     * @return 结果
+     */
     public static LocalDate stringToLocalDate(String str, String pattern) {
 
         if (null == str) {
@@ -81,7 +101,7 @@ public class BasicDateUtils {
     }
 
     /**
-     * {@link Object Object} 转 {@link String String}
+     * 任意 {@link Object Object} 时间转 {@link String String}
      *
      * @param date    指定时间
      * @param pattern 样式
@@ -89,7 +109,7 @@ public class BasicDateUtils {
      */
     public static String toString(Object date, String pattern) {
 
-        return toLocalDateTime(date).format(DateTimeFormatter.ofPattern(pattern));
+        return toLocalDateTime(date, pattern).format(DateTimeFormatter.ofPattern(pattern));
     }
 
     /**
