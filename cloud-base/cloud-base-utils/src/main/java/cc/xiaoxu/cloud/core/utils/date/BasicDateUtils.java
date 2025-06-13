@@ -107,6 +107,18 @@ public class BasicDateUtils {
      * @param pattern 样式
      * @return 结果
      */
+    public static String toString(Object date) {
+
+        return toLocalDateTime(date).format(DateTimeFormatter.ofPattern(DateConstants.DEFAULT_DATE_TIME_FORMAT));
+    }
+
+    /**
+     * 任意 {@link Object Object} 时间转 {@link String String}
+     *
+     * @param date    指定时间
+     * @param pattern 样式
+     * @return 结果
+     */
     public static String toString(Object date, String pattern) {
 
         return toLocalDateTime(date, pattern).format(DateTimeFormatter.ofPattern(pattern));
