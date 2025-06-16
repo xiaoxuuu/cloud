@@ -66,9 +66,16 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
-        // TODO 来源搜索
+        // 来源搜索
         List<Point> pointList = lambdaQuery()
-                .like(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
+                .and(wrapper -> wrapper.or(orWrapper -> orWrapper
+                        .like(Point::getPointName, dto.getPointName())
+                        .or().like(Point::getDescribe, dto.getPointName())
+                        .or().like(Point::getAddress, dto.getPointName())
+                        .or().like(Point::getLongitude, dto.getPointName())
+                        .or().like(Point::getLatitude, dto.getPointName())
+                        .or().like(Point::getAmapTag, dto.getPointName())
+                ))
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(CollectionUtils.isNotEmpty(dto.getStateList()), Point::getState, dto.getStateList())
                 .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 1)
