@@ -1,7 +1,5 @@
 package cc.xiaoxu.cloud.bean.vo;
 
-import cc.xiaoxu.cloud.bean.enums.SearchMapTypeEnum;
-import cc.xiaoxu.cloud.doc.annotation.SchemaEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,10 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "点位 - 地图搜索 - 响应参数")
 public class PointMapSearchVO {
-
-    @SchemaEnum(clazz = SearchMapTypeEnum.class)
-    @Schema(description = "地图类型")
-    private SearchMapTypeEnum mapType;
 
     @Schema(description = "此位置在地图中的唯一 ID")
     private String mapId;

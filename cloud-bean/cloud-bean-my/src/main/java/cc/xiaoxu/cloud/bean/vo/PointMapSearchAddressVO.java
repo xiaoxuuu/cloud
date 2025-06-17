@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "点位 - 地图搜索 - 地址信息 - 响应参数")
 public class PointMapSearchAddressVO {
 
-    @Schema(description = "地址")
-    private String address;
-
     @Schema(description = "坐标点，格式：经度,纬度")
     private String location;
 
@@ -28,4 +25,7 @@ public class PointMapSearchAddressVO {
 
     @Schema(description = "所在区县编码")
     private String districtCode;
+
+    @Schema(description = "地址")
+    private String address;
 }
