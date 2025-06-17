@@ -15,12 +15,15 @@ import cc.xiaoxu.cloud.my.manager.AmapManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Tag(name = "高德地图", description = "高德地图接口器")
@@ -35,17 +38,17 @@ public class AmapController {
 
     @Operation(summary = "地址搜索", description = "优先调用 POI 接口，数据不足 10 条自动降级输入提示")
     @PostMapping("/search/{code}")
-    public @ResponseBody List<PointMapSearchVO> search(@PathVariable("code") String code, @RequestBody PointMapSearchDTO dto) {
+    public @ResponseBody Map<String, List<PointMapSearchVO>> search(@PathVariable("code") String code, @RequestBody PointMapSearchDTO dto) {
 
         if (!code.equals(CloudController.getCheckCode() + authCode)) {
             throw new CustomException("无权限");
         }
 
         if (StringUtils.isEmpty(dto.getKeywords())) {
-            return List.of();
+            return Map.of();
         }
 
-        List<PointMapSearchVO> pointMapSearchVOList = new ArrayList<>(20);
+        Map<String, List<PointMapSearchVO>> map = new LinkedHashMap<>();
 
         // TODO 查询已有数据
 
@@ -56,18 +59,22 @@ public class AmapController {
         amapDTO.setKeywords(dto.getKeywords());
         amapDTO.setRegion(dto.getCity());
         AmapPoiSearchResponseDTO amapPoiSearchResponseDTO = amapManager.searchPoi(amapDTO);
-        pointMapSearchVOList.addAll(amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois()));
+        if (CollectionUtils.isNotEmpty(amapPoiSearchResponseDTO.getPois())) {
+            map.put(SearchMapTypeEnum.AMAP_POI.getIntroduction(), amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois()));
+        }
 
-        if (pointMapSearchVOList.size() <= 10) {
+        if (amapPoiSearchResponseDTO.getPois().size() <= 10) {
             // 调用高德输入提示接口
             AmapInputTipsRequestDTO inputDTO = new AmapInputTipsRequestDTO();
             inputDTO.setLocation(dto.getCity());
             inputDTO.setKeywords(dto.getKeywords());
             AmapInputTipsResponseDTO amapInputTipsResponseDTO = amapManager.inputTips(inputDTO);
-            pointMapSearchVOList.addAll(amapInputToPointMapSearchVO(amapInputTipsResponseDTO.getTips()));
+            if (CollectionUtils.isNotEmpty(amapInputTipsResponseDTO.getTips())) {
+                map.put(SearchMapTypeEnum.AMAP_INPUT.getIntroduction(), amapInputToPointMapSearchVO(amapInputTipsResponseDTO.getTips()));
+            }
         }
 
-        return pointMapSearchVOList;
+        return map;
     }
 
     private List<PointMapSearchVO> amapPoiToPointMapSearchVO(List<AmapPoiSearchResponseDTO.AmapPoiDTO> poiDTOList) {
@@ -77,7 +84,6 @@ public class AmapController {
         for (AmapPoiSearchResponseDTO.AmapPoiDTO poi : poiDTOList) {
 
             PointMapSearchVO searchVO = new PointMapSearchVO();
-            searchVO.setMapType(SearchMapTypeEnum.AMAP_POI);
             PointMapSearchAddressVO addressVO = new PointMapSearchAddressVO();
             searchVO.setAddressVO(addressVO);
             PointMapSearchBusinessVO businessVO = new PointMapSearchBusinessVO();
@@ -144,7 +150,6 @@ public class AmapController {
         for (AmapInputTipsResponseDTO.AmapInputTipDTO tip : tips) {
 
             PointMapSearchVO poi = new PointMapSearchVO();
-            poi.setMapType(SearchMapTypeEnum.AMAP_INPUT);
             PointMapSearchAddressVO addressVO = new PointMapSearchAddressVO();
             poi.setAddressVO(addressVO);
             PointMapSearchBusinessVO businessVO = new PointMapSearchBusinessVO();
