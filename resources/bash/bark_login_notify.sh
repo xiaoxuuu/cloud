@@ -98,8 +98,30 @@ LOGIN_IP=$(echo $PAM_RHOST | awk '{print $1}')
 LOGIN_SERVICE=$(echo $PAM_SERVICE)
 LOGIN_TYPE=$(echo $PAM_TYPE)
 
-# TODO 获取用户登陆类型：我希望可以识别登陆、退出、su 切换用户
+# 获取用户登陆类型：我希望可以识别登陆、退出、su 切换用户
 LOGIN_TYPE_NAME=""
+case "$PAM_TYPE" in
+  open_session)
+    LOGIN_TYPE_NAME="登录"
+    ;;
+  close_session)
+    LOGIN_TYPE_NAME="退出"
+    ;;
+  account) # 通常用于su
+    if [[ "$PAM_SERVICE" == "su" ]]; then
+      LOGIN_TYPE_NAME="su切换用户"
+       SU_USER=$(sudo grep "^${PAM_USER}:" /etc/passwd | cut -d: -f1) # 获取 su 切换的目标用户
+       if [ -n "$SU_USER" ]; then
+            LOGIN_USER="su ${SU_USER}"
+       fi
+    else
+      LOGIN_TYPE_NAME="账户验证"
+    fi
+    ;;
+  *)
+    LOGIN_TYPE_NAME="未知类型"
+    ;;
+esac
 
 # 查询 DNS 获取自身 IP
 OWN_IP=$(get_own_ip)
