@@ -26,6 +26,8 @@ BARK_KEYS=(
 
 # 日志文件
 LOG_FILE="/var/log/login_notifications.log"
+# 初始化一个 4 位随机数，打印在日志时间后面，用于识别这是本次登陆输出的日志，区分上下两次登陆日志
+RANDOM_ID=$((1000 + RANDOM % 9000))
 
 # 函数：日志输出
 log_message() {
@@ -39,7 +41,7 @@ log_message() {
     message=$(echo "$message" | tr '\n' ' ')
   fi
 
-  echo "[$timestamp] $level: $message" >> "${LOG_FILE}"
+  echo "[$timestamp][$RANDOM_ID] $level: $message" >> "${LOG_FILE}"
 }
 
 
@@ -70,7 +72,7 @@ get_own_ip() {
 
   if [[ -z "$OWN_IP" ]]; then
     OWN_IP="Unknown"
-    log_message "WARNING" "Failed to determine own IP address."
+    log_message "WARN " "Failed to determine own IP address."
   fi
   echo "$OWN_IP"
 }
@@ -89,13 +91,13 @@ get_ip_location() {
       # 如果匹配失败，location 为空, 需要提供默认值
       if [[ -z "$location" ]] ; then
         location="Unknown"
-        log_message "WARNING" "Failed to parse location from API response using grep/sed."
+        log_message "WARN " "Failed to parse location from API response using grep/sed."
       fi
     else
-      log_message "WARNING"  "Failed to query IP location for ${ip} (百度 API error)."
+      log_message "WARN "  "Failed to query IP location for ${ip} (百度 API error)."
     fi
   else
-    log_message "WARNING"  "Failed to query IP location for ${ip} (curl error)."
+    log_message "WARN "  "Failed to query IP location for ${ip} (curl error)."
   fi
 
   if [[ -z "$location" ]]; then
@@ -182,11 +184,11 @@ EOF
 )
 
 # 记录日志
-log_message "INFO" "Title: ${TITLE} Body: ${BODY}."
+log_message "INFO " "${TITLE}, ${BODY}"
 
 # 白名单的 IP 登录只记录日志，不发送通知
 if $IS_WHITELISTED; then
-  log_message "INFO" "Whitelisted IP ${LOGIN_IP}, skipping notification."
+  log_message "INFO " "Whitelisted IP ${LOGIN_IP}, skipping notification."
   exit 0
 fi
 
@@ -194,7 +196,7 @@ fi
 # 检查用户是否在排除列表中
 for user in "${EXCLUDE_USERS[@]}"; do
   if [ "$LOGIN_USER" == "$user" ]; then
-    log_message "INFO" "User ${LOGIN_USER} is excluded, skipping notification."
+    log_message "INFO " "User ${LOGIN_USER} is excluded, skipping notification."
     exit 0  # 如果在排除列表中，则退出脚本，不发送通知
   fi
 done
@@ -205,7 +207,7 @@ if [ -n "${BARK_KEYS[0]}" ]; then  # 确保 BARK_KEYS 不为空
     send_bark_notification "${BARK_KEY}" "${PAYLOAD}"
   done
 else
-  log_message "WARNING" "BARK_KEYS is empty, no notification will be sent."
+  log_message "WARN " "BARK_KEYS is empty, no notification will be sent."
 fi
 
 exit 0
