@@ -27,6 +27,21 @@ BARK_KEYS=(
 # 日志文件
 LOG_FILE="/var/log/login_notifications.log"
 
+# 函数：日志输出
+log_message() {
+  local level="$1"             # 日志级别 (INFO, ERROR, WARN)
+  local message="$2"           # 日志消息
+  local replace_newline="$3" # 是否替换换行符 (true/false)
+
+  local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+  if [ "$replace_newline" == "true" ]; then
+    message=$(echo "$message" | tr '\n' ' ')
+  fi
+
+  echo "[$timestamp] $level: $message" >> "${LOG_FILE}"
+}
+
 
 # 函数：发送 Bark 推送
 send_bark_notification() {
@@ -39,7 +54,7 @@ send_bark_notification() {
     -d "$payload" > /dev/null 2>&1
 
   if [ $? -ne 0 ]; then
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] ERROR: Failed to send Bark notification with key: ${bark_key}" >> "${LOG_FILE}"
+    log_message "ERROR"  "Failed to send Bark notification with key: ${bark_key}"
   fi
 }
 
@@ -55,7 +70,7 @@ get_own_ip() {
 
   if [[ -z "$OWN_IP" ]]; then
     OWN_IP="Unknown"
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] WARNING: Failed to determine own IP address." >> "${LOG_FILE}"
+    log_message "WARNING" "Failed to determine own IP address."
   fi
   echo "$OWN_IP"
 }
@@ -74,13 +89,13 @@ get_ip_location() {
       # 如果匹配失败，location 为空, 需要提供默认值
       if [[ -z "$location" ]] ; then
         location="Unknown"
-        echo "[$(date +"%Y-%m-%d %H:%M:%S")] WARNING: Failed to parse location from API response using grep/sed." >> "${LOG_FILE}"
+        log_message "WARNING" "Failed to parse location from API response using grep/sed."
       fi
     else
-      echo "[$(date +"%Y-%m-%d %H:%M:%S")] WARNING: Failed to query IP location for ${ip} (百度 API error)." >> "${LOG_FILE}"
+      log_message "WARNING"  "Failed to query IP location for ${ip} (百度 API error)."
     fi
   else
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] WARNING: Failed to query IP location for ${ip} (curl error)." >> "${LOG_FILE}"
+    log_message "WARNING"  "Failed to query IP location for ${ip} (curl error)."
   fi
 
   if [[ -z "$location" ]]; then
@@ -167,11 +182,11 @@ EOF
 )
 
 # 记录日志
-echo "[$(date +"%Y-%m-%d %H:%M:%S")] Title: ${TITLE} Body: ${BODY}." >> "${LOG_FILE}"
+log_message "INFO" "Title: ${TITLE} Body: ${BODY}."
 
 # 白名单的 IP 登录只记录日志，不发送通知
 if $IS_WHITELISTED; then
-  echo "[$(date +"%Y-%m-%d %H:%M:%S")] Whitelisted IP ${LOGIN_IP}, skipping notification." >> "${LOG_FILE}"
+  log_message "INFO" "Whitelisted IP ${LOGIN_IP}, skipping notification."
   exit 0
 fi
 
@@ -179,7 +194,7 @@ fi
 # 检查用户是否在排除列表中
 for user in "${EXCLUDE_USERS[@]}"; do
   if [ "$LOGIN_USER" == "$user" ]; then
-    echo "[$(date +"%Y-%m-%d %H:%M:%S")] User ${LOGIN_USER} is excluded, skipping notification." >> "${LOG_FILE}"
+    log_message "INFO" "User ${LOGIN_USER} is excluded, skipping notification."
     exit 0  # 如果在排除列表中，则退出脚本，不发送通知
   fi
 done
@@ -190,7 +205,7 @@ if [ -n "${BARK_KEYS[0]}" ]; then  # 确保 BARK_KEYS 不为空
     send_bark_notification "${BARK_KEY}" "${PAYLOAD}"
   done
 else
-  echo "[$(date +"%Y-%m-%d %H:%M:%S")] WARNING: BARK_KEYS is empty, no notification will be sent." >> "${LOG_FILE}"
+  log_message "WARNING" "BARK_KEYS is empty, no notification will be sent."
 fi
 
 exit 0
