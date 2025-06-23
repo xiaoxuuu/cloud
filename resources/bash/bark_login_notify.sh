@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# 授权：chmod +x /usr/local/bin/bark_login_notify.sh
-# 配置文件：/etc/pam.d/ 下的 su login sshd
+# 授权: chmod +x /usr/local/bin/bark_login_notify.sh
+# 配置文件: /etc/pam.d/ 下的 su login sshd
 # session     optional    pam_exec.so /usr/local/bin/bark_login_notify.sh
 
 # 排除用户列表
@@ -36,12 +36,13 @@ log_message() {
   local replace_newline="$3" # 是否替换换行符 (true/false)
 
   local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+  local formatted_message="$message" # 创建一个新的变量
 
   if [ "$replace_newline" == "true" ]; then
-    message=$(echo "$message" | tr '\n' ' ')
+    formatted_message=$(echo "$message" | tr '\n' ' ')
   fi
 
-  echo "[$timestamp][$RANDOM_ID] $level: $message" >> "${LOG_FILE}"
+  echo "[$timestamp][$RANDOM_ID] $level: $formatted_message" >> "${LOG_FILE}" # 使用新变量
 }
 
 
@@ -70,9 +71,10 @@ get_own_ip() {
     OWN_IP=$(curl -s icanhazip.com 2>/dev/null)
   fi
 
-  if [[ -z "$OWN_IP" ]]; then
+  if [[ -z "$OWN_IP" || "$OWN_IP" == "Unknown" ]]; then
     OWN_IP="Unknown"
     log_message "WARN " "Failed to determine own IP address."
+    OWN_IP="" # 清空变量，阻止后续 IP 查询
   fi
   echo "$OWN_IP"
 }
@@ -82,6 +84,15 @@ get_own_ip() {
 get_ip_location() {
   local ip="$1"
   local location=""
+
+  if [[ -z "$ip" ]]; then
+    log_message "WARN " "No IP address to query location for."
+    location="Unknown"
+    echo "$location"
+    return
+  fi
+
+
   local result=$(curl -s "https://opendata.baidu.com/api.php?query=${ip}&co=&resource_id=6006&oe=utf8" 2>/dev/null)
 
   if [[ -n "$result" ]]; then
@@ -94,7 +105,7 @@ get_ip_location() {
         log_message "WARN " "Failed to parse location from API response using grep/sed."
       fi
     else
-      log_message "WARN "  "Failed to query IP location for ${ip} (百度 API error)."
+      log_message "WARN "  "Failed to query IP location for ${ip} (BaiDu API error)."
     fi
   else
     log_message "WARN "  "Failed to query IP location for ${ip} (curl error)."
@@ -119,33 +130,36 @@ LOGIN_TYPE=$(echo $PAM_TYPE)
 LOGIN_TYPE_NAME=""
 case "$PAM_TYPE" in
   open_session)
-    LOGIN_TYPE_NAME="登录"
+    LOGIN_TYPE_NAME="LOGIN"
     ;;
   close_session)
-    LOGIN_TYPE_NAME="退出"
+    LOGIN_TYPE_NAME="LOGOUT"
     ;;
   account) # 通常用于su
     if [[ "$PAM_SERVICE" == "su" ]]; then
-      LOGIN_TYPE_NAME="su切换用户"
-       SU_USER=$(sudo grep "^${PAM_USER}:" /etc/passwd | cut -d: -f1) # 获取 su 切换的目标用户
-       if [ -n "$SU_USER" ]; then
+        LOGIN_TYPE_NAME="su login" #  修改类型为 su 登录
+        SU_USER=$(sudo grep "^${PAM_USER}:" /etc/passwd | cut -d: -f1) # 获取 su 切换的目标用户
+        if [ -n "$SU_USER" ]; then
             LOGIN_USER="su ${SU_USER}"
-       fi
+        fi
     else
-      LOGIN_TYPE_NAME="账户验证"
+      LOGIN_TYPE_NAME="Account Check"
     fi
     ;;
   *)
-    LOGIN_TYPE_NAME="未知类型"
+    LOGIN_TYPE_NAME="Unknown Login Type"
     ;;
 esac
 
 # 查询 DNS 获取自身 IP
 OWN_IP=$(get_own_ip)
-LOGIN_LOCATION=$(get_ip_location "${LOGIN_IP}")
 
-
-
+# 如果没有获取到 IP，则跳过 IP 地址查询
+if [[ -n "$OWN_IP" ]]; then
+  LOGIN_LOCATION=$(get_ip_location "${LOGIN_IP}")
+else
+  LOGIN_LOCATION="Unknown"
+fi
 # 确定是否为重点通知用户
 IS_IMPORTANT="active"
 for user in "${IMPORTANT_USERS[@]}"; do
@@ -166,8 +180,10 @@ done
 
 
 # 构建消息标题和内容
+# 使用 printf 构建 BODY，确保换行符被正确解释
+BODY=$(printf "IP: %s\nAddress: %s\nTime: %s\nUser: %s\nService: %s\nType: %s" "${LOGIN_IP}" "${LOGIN_LOCATION}" "${LOGIN_TIME}" "${LOGIN_USER}" "${LOGIN_SERVICE}" "${LOGIN_TYPE}")
+# 构建消息标题和内容
 TITLE="${LOGIN_USER} ${LOGIN_TYPE_NAME} ${OWN_IP}"
-BODY="登陆IP：${LOGIN_IP}\n登陆地点：${LOGIN_LOCATION}\n登陆时间：${LOGIN_TIME}\n登陆用户：${LOGIN_USER}\n\n登陆服务：${LOGIN_SERVICE}\n类型：${LOGIN_TYPE}"
 
 # 构建 JSON Payload
 PAYLOAD=$(cat <<EOF
@@ -176,7 +192,7 @@ PAYLOAD=$(cat <<EOF
   "body": "${BODY}",
   "isArchive": 1,
   "sound": "glass",
-  "group": "服务器登录日志",
+  "group": "Server Login Push",
   "volume": 10,
   "level": "${IS_IMPORTANT}"
 }
@@ -184,7 +200,7 @@ EOF
 )
 
 # 记录日志
-log_message "INFO " "${TITLE}, ${BODY}"
+log_message "INFO " "${TITLE}, ${BODY}" "true" # 日志打印 TITLE+BODY，替换换行符为空格
 
 # 白名单的 IP 登录只记录日志，不发送通知
 if $IS_WHITELISTED; then
