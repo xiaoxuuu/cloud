@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 授权: chmod +x /usr/local/bin/bark_login_notify.sh
-# 配置文件: /etc/pam.d/ 下的 su login sshd
+# 配置文件: /etc/pam.d/ 下的 su login sshd other
 # session     optional    pam_exec.so /usr/local/bin/bark_login_notify.sh
 
 # 排除用户列表
@@ -126,31 +126,6 @@ LOGIN_IP=$(echo $PAM_RHOST | awk '{print $1}')
 LOGIN_SERVICE=$(echo $PAM_SERVICE)
 LOGIN_TYPE=$(echo $PAM_TYPE)
 
-# 获取用户登陆类型：我希望可以识别登陆、退出、su 切换用户
-LOGIN_TYPE_NAME=""
-case "$PAM_TYPE" in
-  open_session)
-    LOGIN_TYPE_NAME="LOGIN"
-    ;;
-  close_session)
-    LOGIN_TYPE_NAME="LOGOUT"
-    ;;
-  account) # 通常用于su
-    if [[ "$PAM_SERVICE" == "su" ]]; then
-        LOGIN_TYPE_NAME="su login" #  修改类型为 su 登录
-        SU_USER=$(sudo grep "^${PAM_USER}:" /etc/passwd | cut -d: -f1) # 获取 su 切换的目标用户
-        if [ -n "$SU_USER" ]; then
-            LOGIN_USER="su ${SU_USER}"
-        fi
-    else
-      LOGIN_TYPE_NAME="Account Check"
-    fi
-    ;;
-  *)
-    LOGIN_TYPE_NAME="Unknown Login Type"
-    ;;
-esac
-
 # 查询 DNS 获取自身 IP
 OWN_IP=$(get_own_ip)
 
@@ -183,7 +158,7 @@ done
 # 使用 printf 构建 BODY，确保换行符被正确解释
 BODY=$(printf "IP: %s\nAddress: %s\nTime: %s\nUser: %s\nService: %s\nType: %s" "${LOGIN_IP}" "${LOGIN_LOCATION}" "${LOGIN_TIME}" "${LOGIN_USER}" "${LOGIN_SERVICE}" "${LOGIN_TYPE}")
 # 构建消息标题和内容
-TITLE="${LOGIN_USER} ${LOGIN_TYPE_NAME} ${OWN_IP}"
+TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_TYPE}"
 
 # 构建 JSON Payload
 PAYLOAD=$(cat <<EOF
