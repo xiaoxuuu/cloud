@@ -14,7 +14,7 @@ IMPORTANT_USERS=(
   "root"
 )
 
-# 白名单 IP，此名单中的 IP 登录无需推送消息，但是需要打印日志
+# 白名单 IP，此名单中的 IP 登录静默推送消息，优先于 重点通知用户列表
 WHITE_IP_LIST=(
   "127.0.0.1"
 )
@@ -147,11 +147,13 @@ if [[ -n "$OWN_IP" ]]; then
 else
   LOGIN_LOCATION="Unknown"
 fi
-# 确定是否为重点通知用户
-IS_IMPORTANT="active"
+
+PUSH_LEVEL="active"
+
+# 确定是否为重点通知用户，优先于白名单
 for user in "${IMPORTANT_USERS[@]}"; do
   if [ "$LOGIN_USER" == "$user" ]; then
-    IS_IMPORTANT="critical"
+    PUSH_LEVEL="critical"
     break
   fi
 done
@@ -165,10 +167,15 @@ for ip in "${WHITE_IP_LIST[@]}"; do
   fi
 done
 
+# 如果是白名单IP，则设置 PUSH_LEVEL 为 passive
+if $IS_WHITELISTED; then
+  PUSH_LEVEL="passive"
+fi
+
 
 # 构建消息标题和内容
 # 使用 printf 构建 BODY，确保换行符被正确解释
-BODY="IP: ${LOGIN_IP}\nAddress: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nUser: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE_NAME}"
+BODY="IP: ${LOGIN_IP}\nAddress: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nUser: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE}"
 # 构建消息标题和内容
 TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_SERVICE} ${LOGIN_TYPE_NAME}"
 
@@ -181,19 +188,13 @@ PAYLOAD=$(cat <<EOF
   "sound": "glass",
   "group": "Server Login Push",
   "volume": 10,
-  "level": "${IS_IMPORTANT}"
+  "level": "${PUSH_LEVEL}"
 }
 EOF
 )
 
 # 记录日志
 log_message "INFO " "${TITLE}, ${BODY}" "true" # 日志打印 TITLE+BODY，替换换行符为空格
-
-# 白名单的 IP 登录只记录日志，不发送通知
-if $IS_WHITELISTED; then
-  log_message "INFO " "Whitelisted IP ${LOGIN_IP}, skipping notification."
-  exit 0
-fi
 
 
 # 检查用户是否在排除列表中
