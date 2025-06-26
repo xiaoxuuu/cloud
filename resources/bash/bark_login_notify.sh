@@ -33,18 +33,17 @@ RANDOM_ID=$((1000 + RANDOM % 9000))
 log_message() {
   local level="$1"             # 日志级别 (INFO, ERROR, WARN)
   local message="$2"           # 日志消息
-  local replace_newline="$3" # 是否替换换行符 (true/false)
+  local replace_newline="$3"   # 是否替换换行符 (true/false)
 
   local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
-  local formatted_message="$message" # 创建一个新的变量
+  local formatted_message="$message"
 
   if [ "$replace_newline" == "true" ]; then
-    formatted_message=$(echo "$message" | tr '\n' ' ')
+    formatted_message=$(echo -e "$message" | tr '\n' ' ')
   fi
 
-  echo "[$timestamp][$RANDOM_ID] $level: $formatted_message" >> "${LOG_FILE}" # 使用新变量
+  echo "[$timestamp][$RANDOM_ID] $level: $formatted_message" >> "${LOG_FILE}"
 }
-
 
 # 函数：发送 Bark 推送
 send_bark_notification() {
@@ -126,6 +125,19 @@ LOGIN_IP=$(echo $PAM_RHOST | awk '{print $1}')
 LOGIN_SERVICE=$(echo $PAM_SERVICE)
 LOGIN_TYPE=$(echo $PAM_TYPE)
 
+# 翻译 LOGIN_TYPE
+case "$LOGIN_TYPE" in
+  "open_session")
+    LOGIN_TYPE_NAME="login"
+    ;;
+  "close_session")
+    LOGIN_TYPE_NAME="logout"
+    ;;
+  *)
+    LOGIN_TYPE_NAME="$LOGIN_TYPE" # 未知类型，保持原样
+    ;;
+esac
+
 # 查询 DNS 获取自身 IP
 OWN_IP=$(get_own_ip)
 
@@ -156,9 +168,9 @@ done
 
 # 构建消息标题和内容
 # 使用 printf 构建 BODY，确保换行符被正确解释
-BODY=$(printf "IP: %s\nAddress: %s\nTime: %s\nUser: %s\nService: %s\nType: %s" "${LOGIN_IP}" "${LOGIN_LOCATION}" "${LOGIN_TIME}" "${LOGIN_USER}" "${LOGIN_SERVICE}" "${LOGIN_TYPE}")
+BODY="IP: ${LOGIN_IP}\nAddress: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nUser: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE_NAME}"
 # 构建消息标题和内容
-TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_TYPE}"
+TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_SERVICE} ${LOGIN_TYPE_NAME}"
 
 # 构建 JSON Payload
 PAYLOAD=$(cat <<EOF
