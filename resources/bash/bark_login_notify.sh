@@ -175,14 +175,14 @@ fi
 
 # 构建消息标题和内容
 # 使用 printf 构建 BODY，确保换行符被正确解释
-BODY="IP: ${LOGIN_IP}\nAddress: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nUser: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE}"
-# 构建消息标题和内容
+BODY="IP: ${LOGIN_IP}\nLocation: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nUser: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE}"
 TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_SERVICE} ${LOGIN_TYPE_NAME}"
 
 # 构建 JSON Payload
 PAYLOAD=$(cat <<EOF
 {
   "title": "${TITLE}",
+  "subtitle": "Loc: ${LOGIN_LOCATION}",
   "body": "${BODY}",
   "isArchive": 1,
   "sound": "glass",
