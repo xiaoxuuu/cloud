@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# TODO 我发现 Bark 的推送通知是可以使用 device_keys 参数实现一次发送给多个设备
-# TODO 我已经去掉了 URL 中的 device_key，增加了 json device_keys
+# TODO 我发现 Bark 的推送通知是可以使用 device_keys 参数实现一次发送给多个设备，这样我就无需再 url 中传递 device_key
+# TODO 我已经去掉了 URL 中的 device_key，增加了 json 数组 device_keys
 # TODO 请调整代码，解包 send_bark_notification 方法，调用一次发送即可，不要使用 for 循环调用
 
 # 授权: chmod +x /usr/local/bin/bark_login_notify.sh
@@ -193,7 +193,7 @@ PAYLOAD=$(cat <<EOF
   "group": "Server Login Push",
   "volume": 10,
   "level": "${PUSH_LEVEL}",
-  "device_keys": []
+  "device_keys": [${DEVICE_KEYS}]
 }
 EOF
 )
