@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# TODO 我发现 Bark 的推送通知是可以使用 device_keys 参数实现一次发送给多个设备，这样我就无需再 url 中传递 device_key
-# TODO 我已经去掉了 URL 中的 device_key，增加了 json 数组 device_keys
-# TODO 请调整代码，解包 send_bark_notification 方法，调用一次发送即可，不要使用 for 循环调用
-
 # 授权: chmod +x /usr/local/bin/bark_login_notify.sh
 # 配置文件: /etc/pam.d/ 下的 su login sshd other
 # session     optional    pam_exec.so /usr/local/bin/bark_login_notify.sh
@@ -23,7 +19,7 @@ WHITE_IP_LIST=(
   "127.0.0.1"
 )
 
-# Bark 推送 API Endpoint
+# Bark 推送 API Keys, 多个请填写
 BARK_KEYS=(
   "" # 请填写你的 Bark Key
 )
@@ -49,10 +45,9 @@ log_message() {
   echo "[$timestamp][$RANDOM_ID] $level: $formatted_message" >> "${LOG_FILE}"
 }
 
-# 函数：发送 Bark 推送
+# 函数：发送 Bark 推送 ，不再需要 bark_key 参数，使用 device_keys 数组
 send_bark_notification() {
-  local bark_key="$1"
-  local payload="$2"
+  local payload="$1"
 
   timeout 5 curl -s -X POST \
     "https://api.day.app/push" \
@@ -60,7 +55,7 @@ send_bark_notification() {
     -d "$payload" > /dev/null 2>&1
 
   if [ $? -ne 0 ]; then
-    log_message "ERROR"  "Failed to send Bark notification with key: ${bark_key}"
+    log_message "ERROR"  "Failed to send Bark notification"
   fi
 }
 
@@ -179,14 +174,18 @@ fi
 
 # 构建消息标题和内容
 # 使用 printf 构建 BODY，确保换行符被正确解释
-BODY="IP: ${LOGIN_IP}\nLocation: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nUser: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE}"
+BODY="From IP: ${LOGIN_IP}\nFrom Location: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME}\nTarget User: ${LOGIN_USER}\nService: ${LOGIN_SERVICE}\nType: ${LOGIN_TYPE}\nNotice Level: ${PUSH_LEVEL}"
 TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_SERVICE} ${LOGIN_TYPE_NAME}"
+
+# 构建 device_keys 的 JSON 数组
+DEVICE_KEYS=$(IFS=',' ; echo "${BARK_KEYS[*]}")
+DEVICE_KEYS="\"$(echo ${DEVICE_KEYS//,/\",\"})\"" # 将逗号分隔的 keys 转换为 JSON String Array
 
 # 构建 JSON Payload
 PAYLOAD=$(cat <<EOF
 {
   "title": "${TITLE}",
-  "subtitle": "Loc: ${LOGIN_LOCATION}",
+  "subtitle": "Location: ${LOGIN_LOCATION}",
   "body": "${BODY}",
   "isArchive": 1,
   "sound": "glass",
@@ -210,11 +209,9 @@ for user in "${EXCLUDE_USERS[@]}"; do
   fi
 done
 
-# 发送 Bark 推送 (循环)
+# 发送 Bark 推送 (单次调用)
 if [ -n "${BARK_KEYS[0]}" ]; then  # 确保 BARK_KEYS 不为空
-  for BARK_KEY in "${BARK_KEYS[@]}"; do
-    send_bark_notification "${BARK_KEY}" "${PAYLOAD}"
-  done
+  send_bark_notification "${PAYLOAD}"
 else
   log_message "WARN " "BARK_KEYS is empty, no notification will be sent."
 fi
