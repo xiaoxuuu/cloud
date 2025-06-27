@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO 我发现 Bark 的推送通知是可以使用 device_keys 参数实现一次发送给多个设备
+# TODO 我已经去掉了 URL 中的 device_key，增加了 json device_keys
+# TODO 请调整代码，解包 send_bark_notification 方法，调用一次发送即可，不要使用 for 循环调用
+
 # 授权: chmod +x /usr/local/bin/bark_login_notify.sh
 # 配置文件: /etc/pam.d/ 下的 su login sshd other
 # session     optional    pam_exec.so /usr/local/bin/bark_login_notify.sh
@@ -51,8 +55,8 @@ send_bark_notification() {
   local payload="$2"
 
   timeout 5 curl -s -X POST \
-    "https://api.day.app/${bark_key}" \
-    -H "Content-Type: application/json" \
+    "https://api.day.app/push" \
+    -H "Content-Type: application/json; charset=utf-8" \
     -d "$payload" > /dev/null 2>&1
 
   if [ $? -ne 0 ]; then
@@ -188,7 +192,8 @@ PAYLOAD=$(cat <<EOF
   "sound": "glass",
   "group": "Server Login Push",
   "volume": 10,
-  "level": "${PUSH_LEVEL}"
+  "level": "${PUSH_LEVEL}",
+  "device_keys": []
 }
 EOF
 )
