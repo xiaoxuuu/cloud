@@ -205,7 +205,6 @@ if [ ${#WHITE_IP_LIST_ARRAY[@]} -gt 0 ] && [ -n "$LOGIN_IP" ]; then
   fi
 else
   log_message "WARN " "WHITE_IP_LIST_ARRAY is empty or LOGIN_IP is empty, skipping whitelist check."
-  PUSH_LEVEL="active" # 默认值，如果跳过检查，可以设置一个默认的 PUSH_LEVEL
 fi
 
 
