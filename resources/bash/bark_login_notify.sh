@@ -179,18 +179,28 @@ for user in "${IMPORTANT_USERS_ARRAY[@]}"; do
   fi
 done
 
-# 白名单检查
-IS_WHITELISTED=false
-for ip in "${WHITE_IP_LIST_ARRAY[@]}"; do
-  if [ "$LOGIN_IP" == "$ip" ]; then
-    IS_WHITELISTED=true
-    break
-  fi
-done
+# 退出，不发送重点通知
+if [ "$LOGIN_TYPE" != "close_session" ]; then
+  PUSH_LEVEL="active"
+fi
 
-# 如果是白名单IP，则设置 PUSH_LEVEL 为 passive
-if $IS_WHITELISTED; then
-  PUSH_LEVEL="passive"
+# 白名单检查，WHITE_IP_LIST_ARRAY 不为空，且 LOGIN_IP 不为空
+if [ ${#WHITE_IP_LIST_ARRAY[@]} -gt 0 ] && [ -n "$LOGIN_IP" ]; then
+  IS_WHITELISTED=false
+  for ip in "${WHITE_IP_LIST_ARRAY[@]}"; do
+    if [ "$LOGIN_IP" == "$ip" ]; then
+      IS_WHITELISTED=true
+      break
+    fi
+  done
+
+  # 如果是白名单IP，则设置 PUSH_LEVEL 为 passive
+  if $IS_WHITELISTED; then
+    PUSH_LEVEL="passive"
+  fi
+else
+  log_message "WARN " "WHITE_IP_LIST_ARRAY is empty or LOGIN_IP is empty, skipping whitelist check."
+  PUSH_LEVEL="active" # 默认值，如果跳过检查，可以设置一个默认的 PUSH_LEVEL
 fi
 
 
@@ -244,4 +254,5 @@ else
   log_message "WARN " "BARK_KEYS is empty, no notification will be sent."
 fi
 
+log_message "END" ""
 exit 0
