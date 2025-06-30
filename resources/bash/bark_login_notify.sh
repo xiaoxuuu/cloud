@@ -1,31 +1,54 @@
 #!/bin/bash
 
 # 授权: chmod +x /usr/local/bin/bark_login_notify.sh
+# 授权: chmod 644 /usr/local/bin/bark_login_notify.conf
 # 配置文件: /etc/pam.d/ 下的 su login sshd other
 # session     optional    pam_exec.so /usr/local/bin/bark_login_notify.sh
 
-# 排除用户列表
-EXCLUDE_USERS=(
+# 获取脚本自身的绝对路径
+SCRIPT_PATH="$(realpath $0)"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
-)
+# 构建配置文件的完整路径
+CONFIG_FILE="$SCRIPT_DIR/bark_login_notify.conf"
 
-# 重点通知用户列表
-IMPORTANT_USERS=(
-  "root"
-)
+# 加载配置文件
+if [ -f "$CONFIG_FILE" ]; then
+  source "$CONFIG_FILE"
+else
+  echo "Error: bark_login_notify.conf not found in $SCRIPT_DIR. Exiting." >&2
+  exit 1
+fi
 
-# 白名单 IP，此名单中的 IP 登录静默推送消息，优先于 重点通知用户列表
-WHITE_IP_LIST=(
-  "127.0.0.1"
-)
+# 排除用户列表 (将字符串转换为数组)
+if [ -n "$EXCLUDE_USERS" ]; then
+  IFS=',' read -r -a EXCLUDE_USERS_ARRAY <<< "$EXCLUDE_USERS"
+else
+  EXCLUDE_USERS_ARRAY=()
+fi
 
-# Bark 推送 API Keys, 多个请填写
-BARK_KEYS=(
-  "" # 请填写你的 Bark Key
-)
+# 重点通知用户列表 (将字符串转换为数组)
+if [ -n "$IMPORTANT_USERS" ]; then
+  IFS=',' read -r -a IMPORTANT_USERS_ARRAY <<< "$IMPORTANT_USERS"
+else
+  IMPORTANT_USERS_ARRAY=()
+fi
 
-# 日志文件
-LOG_FILE="/var/log/login_notifications.log"
+# 白名单 IP 列表 (将字符串转换为数组)
+if [ -n "$WHITE_IP_LIST" ]; then
+  IFS=',' read -r -a WHITE_IP_LIST_ARRAY <<< "$WHITE_IP_LIST"
+else
+  WHITE_IP_LIST_ARRAY=()
+fi
+
+
+# Bark 推送 API Keys (将字符串转换为数组)
+if [ -n "$BARK_KEYS" ]; then
+  IFS=',' read -r -a BARK_KEYS_ARRAY <<< "$BARK_KEYS"
+else
+  BARK_KEYS_ARRAY=()
+fi
+
 # 初始化一个 4 位随机数，打印在日志时间后面，用于识别这是本次登陆输出的日志，区分上下两次登陆日志
 RANDOM_ID=$((1000 + RANDOM % 9000))
 
@@ -45,7 +68,7 @@ log_message() {
   echo "[$timestamp][$RANDOM_ID] $level: $formatted_message" >> "${LOG_FILE}"
 }
 
-# 函数：发送 Bark 推送 ，不再需要 bark_key 参数，使用 device_keys 数组
+# 函数：Bark 推送
 send_bark_notification() {
   local payload="$1"
 
@@ -89,7 +112,6 @@ get_ip_location() {
     echo "$location"
     return
   fi
-
 
   local result=$(curl -s "https://opendata.baidu.com/api.php?query=${ip}&co=&resource_id=6006&oe=utf8" 2>/dev/null)
 
@@ -149,8 +171,8 @@ fi
 
 PUSH_LEVEL="active"
 
-# 确定是否为重点通知用户，优先于白名单
-for user in "${IMPORTANT_USERS[@]}"; do
+# 确定是否为重点通知用户
+for user in "${IMPORTANT_USERS_ARRAY[@]}"; do
   if [ "$LOGIN_USER" == "$user" ]; then
     PUSH_LEVEL="critical"
     break
@@ -159,7 +181,7 @@ done
 
 # 白名单检查
 IS_WHITELISTED=false
-for ip in "${WHITE_IP_LIST[@]}"; do
+for ip in "${WHITE_IP_LIST_ARRAY[@]}"; do
   if [ "$LOGIN_IP" == "$ip" ]; then
     IS_WHITELISTED=true
     break
@@ -178,8 +200,14 @@ BODY="From IP: ${LOGIN_IP}\nFrom Location: ${LOGIN_LOCATION}\nTime: ${LOGIN_TIME
 TITLE="${OWN_IP} [${LOGIN_USER}] ${LOGIN_SERVICE} ${LOGIN_TYPE_NAME}"
 
 # 构建 device_keys 的 JSON 数组
-DEVICE_KEYS=$(IFS=',' ; echo "${BARK_KEYS[*]}")
-DEVICE_KEYS="\"$(echo ${DEVICE_KEYS//,/\",\"})\"" # 将逗号分隔的 keys 转换为 JSON String Array
+DEVICE_KEYS=$(
+  IFS=','
+  echo "["
+  for key in "${BARK_KEYS_ARRAY[@]}"; do
+    echo "\"$key\","
+  done | sed '$s/,$//'  # remove trailing comma
+  echo "]"
+)
 
 # 构建 JSON Payload
 PAYLOAD=$(cat <<EOF
@@ -192,7 +220,7 @@ PAYLOAD=$(cat <<EOF
   "group": "Server Login Push",
   "volume": 10,
   "level": "${PUSH_LEVEL}",
-  "device_keys": [${DEVICE_KEYS}]
+  "device_keys": $DEVICE_KEYS
 }
 EOF
 )
@@ -202,7 +230,7 @@ log_message "INFO " "${TITLE}, ${BODY}" "true" # 日志打印 TITLE+BODY，替�
 
 
 # 检查用户是否在排除列表中
-for user in "${EXCLUDE_USERS[@]}"; do
+for user in "${EXCLUDE_USERS_ARRAY[@]}"; do
   if [ "$LOGIN_USER" == "$user" ]; then
     log_message "INFO " "User ${LOGIN_USER} is excluded, skipping notification."
     exit 0  # 如果在排除列表中，则退出脚本，不发送通知
@@ -210,7 +238,7 @@ for user in "${EXCLUDE_USERS[@]}"; do
 done
 
 # 发送 Bark 推送 (单次调用)
-if [ -n "${BARK_KEYS[0]}" ]; then  # 确保 BARK_KEYS 不为空
+if [ -n "${BARK_KEYS_ARRAY[0]}" ]; then  # 确保 BARK_KEYS 不为空
   send_bark_notification "${PAYLOAD}"
 else
   log_message "WARN " "BARK_KEYS is empty, no notification will be sent."
