@@ -58,6 +58,11 @@ log_message() {
   local message="$2"           # 日志消息
   local replace_newline="$3"   # 是否替换换行符 (true/false)
 
+  if [ "$level" == "EMPTY" ]; then
+    echo "" >> "${LOG_FILE}"  # 输出空行
+    return                    # 退出函数
+  fi
+
   local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
   local formatted_message="$message"
 
@@ -180,7 +185,7 @@ for user in "${IMPORTANT_USERS_ARRAY[@]}"; do
 done
 
 # 退出，不发送重点通知
-if [ "$LOGIN_TYPE" != "close_session" ]; then
+if [ "$LOGIN_TYPE" == "close_session" ]; then
   PUSH_LEVEL="active"
 fi
 
@@ -254,5 +259,5 @@ else
   log_message "WARN " "BARK_KEYS is empty, no notification will be sent."
 fi
 
-log_message "END" ""
+log_message "EMPTY"
 exit 0
