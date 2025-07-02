@@ -19,17 +19,19 @@ cloud
 │   ├── cloud-base-ai       //         ai 能力
 │   ├── cloud-base-database //         postgresql
 │   ├── cloud-base-doc      //         文档
+│   ├── cloud-base-dubbo    //         dubbo
 │   ├── cloud-base-redis    //         redis
 │   ├── cloud-base-satoken  //         satoken
 │   ├── cloud-base-spring   //         构建一个基础的 Spring Web 服务引用这个即可
 │   └── cloud-base-util     //         仅包含基础工具
 ├── cloud-bean              //         实体类模块
-│   ├── cloud-bean-common   //         基础bean
+│   ├── cloud-bean-ai
+│   ├── cloud-bean-common
+│   ├── cloud-bean-file
 │   └── cloud-bean-my
 ├── cloud-gateway           // [ 8888] 网关
 └── cloud-remote            //         远程调用模块
-    ├── cloud-remote-file
-    └── cloud-remote-my
+    └── cloud-remote-file
 ```
 
 # 功能
