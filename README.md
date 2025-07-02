@@ -91,6 +91,8 @@ mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -T 12 -P
 
 打包完成后，服务器拉取对应镜像即可：
 
+> 推荐使用 docker-compose 启动
+
 ```shell
 docker pull xxx
 docker run -itd xxx
@@ -98,8 +100,8 @@ docker run -itd xxx
 
 # TODO
 
-- 数据表未完全迁入 postgresql
 - 启动执行任务实现
 - 分布式未完全接入
 - knife4j 接入
 - 登录接入
+- 微信登录接入
