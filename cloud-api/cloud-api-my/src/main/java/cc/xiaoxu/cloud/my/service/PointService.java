@@ -9,7 +9,6 @@ import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
-import cc.xiaoxu.cloud.core.utils.date.DateUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,7 +18,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -31,7 +29,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
         Point point = new Point();
         BeanUtils.populate(dto, point);
-        point.setAmapUpdateTime(DateUtils.toDate(LocalDateTime.now()));
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
 
@@ -44,7 +41,8 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
         lambdaUpdate()
                 .set(null != dto.getPointType(), Point::getPointType, dto.getPointType())
-                .set(StringUtils.isNotBlank(dto.getPointName()), Point::getPointName, dto.getPointName())
+                .set(StringUtils.isNotBlank(dto.getPointShortName()), Point::getPointShortName, dto.getPointShortName())
+                .set(StringUtils.isNotBlank(dto.getPointFullName()), Point::getPointFullName, dto.getPointFullName())
                 .set(StringUtils.isNotBlank(dto.getDescribe()), Point::getDescribe, dto.getDescribe())
                 .set(StringUtils.isNotBlank(dto.getAddress()), Point::getAddress, dto.getAddress())
                 .set(StringUtils.isNotBlank(dto.getLongitude()), Point::getLongitude, dto.getLongitude())
@@ -52,12 +50,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(dto.getCollectTimes() != null, Point::getCollectTimes, dto.getCollectTimes())
                 .set(dto.getVisitedTimes() != null, Point::getVisitedTimes, dto.getVisitedTimes())
                 .set(StringUtils.isNotBlank(dto.getAddressCode()), Point::getAddressCode, dto.getAddressCode())
-                .set(StringUtils.isNotBlank(dto.getAmapWia()), Point::getAmapWia, dto.getAmapWia())
-                .set(StringUtils.isNotBlank(dto.getAmapTag()), Point::getAmapTag, dto.getAmapTag())
-                .set(StringUtils.isNotBlank(dto.getAmapRating()), Point::getAmapRating, dto.getAmapRating())
-                .set(StringUtils.isNotBlank(dto.getAmapCost()), Point::getAmapCost, dto.getAmapCost())
-                .set(StringUtils.isNotBlank(dto.getAmapPoiId()), Point::getAmapPoiId, dto.getAmapPoiId())
-                .set(Point::getAmapUpdateTime, DateUtils.toDate(LocalDateTime.now()))
                 .set(null != dto.getState(), Point::getState, dto.getState())
                 .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
                 .eq(Point::getId, dto.getId())
@@ -69,12 +61,12 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         // 来源搜索
         List<Point> pointList = lambdaQuery()
                 .and(wrapper -> wrapper.or(orWrapper -> orWrapper
-                        .like(Point::getPointName, dto.getPointName())
+                        .like(Point::getPointFullName, dto.getPointName())
+                        .or().like(Point::getPointFullName, dto.getPointName())
                         .or().like(Point::getDescribe, dto.getPointName())
                         .or().like(Point::getAddress, dto.getPointName())
                         .or().like(Point::getLongitude, dto.getPointName())
                         .or().like(Point::getLatitude, dto.getPointName())
-                        .or().like(Point::getAmapTag, dto.getPointName())
                 ))
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(CollectionUtils.isNotEmpty(dto.getStateList()), Point::getState, dto.getStateList())
@@ -89,7 +81,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         return pointList.stream().map(k -> {
             PointSimpleVO vo = new PointSimpleVO();
             BeanUtils.populate(k, vo);
-            vo.setSort(Long.parseLong(null == k.getVisitedTimes() ? "0" : k.getVisitedTimes() + DateUtils.toString(k.getAmapUpdateTime(), "yyyyMMdd")));
+            // TODO 排序
             return vo;
         }).toList();
     }

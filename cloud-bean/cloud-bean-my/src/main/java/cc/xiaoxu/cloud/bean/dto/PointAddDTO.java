@@ -17,8 +17,11 @@ public class PointAddDTO {
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;
 
-    @Schema(description = "名称")
-    private String pointName;
+    @Schema(description = "简称")
+    private String pointShortName;
+
+    @Schema(description = "全称")
+    private String pointFullName;
 
     @Schema(description = "地点描述")
     private String describe;
@@ -43,19 +46,4 @@ public class PointAddDTO {
 
     @Schema(description = "地址code")
     private String addressCode;
-
-    @Schema(description = "高德 - WIA 坐标（来源高德小程序）")
-    private String amapWia;
-
-    @Schema(description = "高德 - 标签")
-    private String amapTag;
-
-    @Schema(description = "高德 - 评分")
-    private String amapRating;
-
-    @Schema(description = "高德 - 人均消费")
-    private String amapCost;
-
-    @Schema(description = "高德 - POI ID")
-    private String amapPoiId;
 }
