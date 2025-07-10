@@ -1,17 +1,17 @@
 package cc.xiaoxu.cloud.my.service;
 
-import cc.xiaoxu.cloud.bean.dto.IdDTO;
-import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
-import cc.xiaoxu.cloud.bean.dto.PointEditDTO;
-import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
+import cc.xiaoxu.cloud.bean.dto.*;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
+import cc.xiaoxu.cloud.my.dao.PointSourceMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
+import cc.xiaoxu.cloud.my.entity.PointSource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,7 +23,10 @@ import java.util.List;
 @Getter
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PointService extends ServiceImpl<PointMapper, Point> {
+
+    private final PointSourceMapper pointSourceMapper;
 
     public void add(PointAddDTO dto) {
 
@@ -32,7 +35,21 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
 
-        // TODO 新增来源
+        List<PointSourceAddDTO> sourceAddDTOList = dto.getSource();
+        addSource(sourceAddDTOList);
+    }
+
+    private void addSource(List<PointSourceAddDTO> sourceAddDTOList) {
+        if (CollectionUtils.isNotEmpty(sourceAddDTOList)) {
+            List<PointSource> list = sourceAddDTOList.stream().map(source -> {
+                PointSource pointSource = new PointSource();
+                BeanUtils.populate(source, pointSource);
+                return pointSource;
+            }).toList();
+            for (PointSource pointSource : list) {
+                pointSourceMapper.insert(pointSource);
+            }
+        }
     }
 
     public void edit(PointEditDTO dto) {
