@@ -46,4 +46,7 @@ public class PointAddDTO {
 
     @Schema(description = "地址code")
     private String addressCode;
+
+    @Schema(description = "高德地图")
+    private String amap;
 }
