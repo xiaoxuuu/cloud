@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @Schema(description = "点位 - 精简参数 - 响应参数")
 public class PointSimpleVO extends BaseIdVO {
 
-    @Schema(description = "名称")
-    private String pointName;
+    @Schema(description = "简称")
+    private String pointShortName;
 
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;
@@ -25,7 +25,4 @@ public class PointSimpleVO extends BaseIdVO {
 
     @Schema(description = "纬度")
     private String latitude;
-
-    @Schema(description = "排序权重")
-    private Long sort;
 }

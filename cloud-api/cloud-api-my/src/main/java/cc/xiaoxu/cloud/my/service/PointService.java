@@ -125,7 +125,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         return pointList.stream().map(k -> {
             PointSimpleVO vo = new PointSimpleVO();
             BeanUtils.populate(k, vo);
-            // TODO 排序
             return vo;
         }).toList();
     }
