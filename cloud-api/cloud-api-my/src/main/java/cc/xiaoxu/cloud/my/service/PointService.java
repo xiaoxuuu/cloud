@@ -88,6 +88,19 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
         // 来源搜索
+        List<PointSource> sourceList = pointSourceService.lambdaQuery()
+                .and(wrapper -> wrapper.or(orWrapper -> orWrapper
+                        .like(PointSource::getSource, dto.getPointName())
+                        .or().like(PointSource::getTitle, dto.getPointName())
+                        .or().like(PointSource::getContent, dto.getPointName())
+                        .or().like(PointSource::getUrl, dto.getPointName())
+                ))
+                // 删除数据排除
+                .ne(PointSource::getState, StateEnum.DELETE.getCode())
+                .list();
+        List<String> idList = sourceList.stream().map(PointSource::getPointId).distinct().toList();
+
+        // 搜索
         List<Point> pointList = lambdaQuery()
                 .and(wrapper -> wrapper.or(orWrapper -> orWrapper
                         .like(Point::getPointFullName, dto.getPointName())
@@ -96,6 +109,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                         .or().like(Point::getAddress, dto.getPointName())
                         .or().like(Point::getLongitude, dto.getPointName())
                         .or().like(Point::getLatitude, dto.getPointName())
+                        .or().in(Point::getId, idList)
                 ))
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(CollectionUtils.isNotEmpty(dto.getStateList()), Point::getState, dto.getStateList())
