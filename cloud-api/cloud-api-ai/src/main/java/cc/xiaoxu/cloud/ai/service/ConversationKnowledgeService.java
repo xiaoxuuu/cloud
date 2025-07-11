@@ -36,7 +36,7 @@ public class ConversationKnowledgeService extends ServiceImpl<ConversationKnowle
         if (EnumUtils.getByClass(dto.getState(), StateEnum.class) == StateEnum.ENABLE) {
 
             ConversationKnowledge entity = new ConversationKnowledge();
-            entity.setConversationId(dto.getId());
+            entity.setConversationId(Integer.parseInt(dto.getId()));
             entity.setKnowledgeBaseId(dto.getKnowledgeBaseId());
             BaseEntity.buildCreate(entity, userId);
             save(entity);

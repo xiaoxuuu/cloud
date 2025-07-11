@@ -144,7 +144,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                 navWebsite.setVisitNum(navWebsite.getVisitNum() + 1);
             }
         }
-        this.baseMapper.updateNum(dto.getId());
+        this.baseMapper.updateNum(Integer.parseInt(dto.getId()));
     }
 
     public Page<NavWebsiteShowVO> pages(NavWebsitePageDTO dto) {

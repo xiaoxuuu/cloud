@@ -6,3 +6,7 @@ logging:
 knife4j:
   basic:
     enable: false
+
+spring:
+  datasource:
+    url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/d_api_dev?currentSchema=public

@@ -46,11 +46,11 @@ public class KnowledgeSectionController {
         if (!b) {
             return false;
         }
-        knowledgeService.changeStatus(dto.getId(), FileStatusEnum.ALL_COMPLETED);
+        knowledgeService.changeStatus(Integer.parseInt(dto.getId()), FileStatusEnum.ALL_COMPLETED);
 
         knowledgeService.lambdaUpdate()
                 .set(Knowledge::getState, StateEnum.ENABLE.getCode())
-                .eq(Knowledge::getId, dto.getId())
+                .eq(Knowledge::getId, Integer.parseInt(dto.getId()))
                 .eq(Knowledge::getState, StateEnum.PROGRESSING.getCode())
                 .update();
         return true;

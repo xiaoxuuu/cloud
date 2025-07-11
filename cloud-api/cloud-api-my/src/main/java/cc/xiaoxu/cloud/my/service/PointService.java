@@ -65,7 +65,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(StringUtils.isNotBlank(dto.getAddressCode()), Point::getAddressCode, dto.getAddressCode())
                 .set(null != dto.getState(), Point::getState, dto.getState())
                 .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
-                .eq(Point::getId, dto.getId())
+                .eq(Point::getId, Integer.parseInt(dto.getId()))
                 .update();
 
         List<PointSourceEditDTO> sourceList = dto.getSourceEdit();
@@ -99,7 +99,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 // 删除数据排除
                 .ne(PointSource::getState, StateEnum.DELETE.getCode())
                 .list();
-        List<String> idList = sourceList.stream().map(PointSource::getPointId).distinct().toList();
+        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().map(Integer::parseInt).toList();
 
         // 搜索
         List<Point> pointList = lambdaQuery()
@@ -137,13 +137,14 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     public PointFullVO get(IdDTO dto) {
 
         Point point;
-        if (dto.getId() < 0) {
+        int id = Integer.parseInt(dto.getId());
+        if (id < 0) {
             point = lambdaQuery()
                     .eq(Point::getState, StateEnum.PROGRESSING)
                     .last(" LIMIT 1 ")
                     .one();
         } else {
-            point = getById(dto.getId());
+            point = getById(id);
         }
         if (null == point) {
             throw new CustomException("无数据");
