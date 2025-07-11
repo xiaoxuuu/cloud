@@ -7,7 +7,6 @@ import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
-import cc.xiaoxu.cloud.my.dao.PointSourceMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointSource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -26,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PointService extends ServiceImpl<PointMapper, Point> {
 
-    private final PointSourceMapper pointSourceMapper;
+    private final PointSourceService pointSourceService;
 
     public void add(PointAddDTO dto) {
 
@@ -39,22 +38,18 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         addSource(sourceAddDTOList);
     }
 
-    private void addSource(List<PointSourceAddDTO> sourceAddDTOList) {
+    private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList) {
         if (CollectionUtils.isNotEmpty(sourceAddDTOList)) {
             List<PointSource> list = sourceAddDTOList.stream().map(source -> {
                 PointSource pointSource = new PointSource();
                 BeanUtils.populate(source, pointSource);
                 return pointSource;
             }).toList();
-            for (PointSource pointSource : list) {
-                pointSourceMapper.insert(pointSource);
-            }
+            pointSourceService.saveBatch(list);
         }
     }
 
     public void edit(PointEditDTO dto) {
-
-        // TODO 编辑来源
 
         lambdaUpdate()
                 .set(null != dto.getPointType(), Point::getPointType, dto.getPointType())
@@ -71,6 +66,23 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
                 .eq(Point::getId, dto.getId())
                 .update();
+
+        List<PointSourceEditDTO> sourceList = dto.getSourceEdit();
+        // 新增
+        List<PointSourceEditDTO> addSourceList = sourceList.stream().filter(k -> StringUtils.isEmpty(k.getId())).toList();
+        addSource(addSourceList);
+        // 编辑
+        List<PointSourceEditDTO> editSourceList = sourceList.stream().filter(k -> StringUtils.isNotEmpty(k.getId())).toList();
+        for (PointSourceEditDTO sourceDTO : editSourceList) {
+            pointSourceService.lambdaUpdate()
+                    .set(null != sourceDTO.getType(), PointSource::getType, sourceDTO.getType())
+                    .set(StringUtils.isNotBlank(sourceDTO.getSource()), PointSource::getSource, sourceDTO.getSource())
+                    .set(StringUtils.isNotBlank(sourceDTO.getTitle()), PointSource::getTitle, sourceDTO.getTitle())
+                    .set(StringUtils.isNotBlank(sourceDTO.getContent()), PointSource::getContent, sourceDTO.getContent())
+                    .set(StringUtils.isNotBlank(sourceDTO.getUrl()), PointSource::getUrl, sourceDTO.getUrl())
+                    .eq(PointSource::getId, sourceDTO.getId())
+                    .update();
+        }
     }
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
