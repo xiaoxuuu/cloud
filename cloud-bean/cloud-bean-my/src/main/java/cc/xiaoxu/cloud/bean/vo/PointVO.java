@@ -30,4 +30,7 @@ public class PointVO extends PointSimpleVO {
 
     @Schema(description = "我去过的次数")
     private Integer visitedTimes;
+
+    @Schema(description = "地址code")
+    private String addressCode;
 }

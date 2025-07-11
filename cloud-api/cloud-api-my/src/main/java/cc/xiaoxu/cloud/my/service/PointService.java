@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.bean.dto.*;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
+import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
@@ -135,7 +136,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(IdDTO dto) {
 
-        // TODO 来源展示
         Point point;
         if (dto.getId() < 0) {
             point = lambdaQuery()
@@ -150,6 +150,11 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         }
         PointFullVO vo = new PointFullVO();
         BeanUtils.populate(point, vo);
+
+        // 来源
+        List<PointSource> sourceList = pointSourceService.lambdaQuery().eq(PointSource::getPointId, point.getId()).list();
+        List<PointSourceVO> pointSourceList = BeanUtils.populateList(sourceList, PointSourceVO.class);
+        vo.setPointSourceList(pointSourceList);
         return vo;
     }
 
