@@ -102,8 +102,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().map(Integer::parseInt).toList();
 
         // 搜索
+        boolean or = CollectionUtils.isNotEmpty(idList) || StringUtils.isNotEmpty(dto.getPointName());
         List<Point> pointList = lambdaQuery()
-                .and(wrapper -> wrapper.or(orWrapper -> orWrapper
+                .and(or, wrapper -> wrapper.or(orWrapper -> orWrapper
                         .like(Point::getPointFullName, dto.getPointName())
                         .or().like(Point::getPointFullName, dto.getPointName())
                         .or().like(Point::getDescribe, dto.getPointName())
@@ -125,6 +126,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         return pointList.stream().map(k -> {
             PointSimpleVO vo = new PointSimpleVO();
             BeanUtils.populate(k, vo);
+            vo.setPointName(k.getPointShortName());
             return vo;
         }).toList();
     }
@@ -155,6 +157,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         List<PointSource> sourceList = pointSourceService.lambdaQuery().eq(PointSource::getPointId, point.getId()).list();
         List<PointSourceVO> pointSourceList = BeanUtils.populateList(sourceList, PointSourceVO.class);
         vo.setPointSourceList(pointSourceList);
+        vo.setPointName(point.getPointFullName());
         return vo;
     }
 

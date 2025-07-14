@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Slf4j
 @Configuration
-@MapperScan(basePackages = {"cc.xiaoxu.**.dao"})
+@MapperScan(basePackages = {"cc.xiaoxu.cloud.**.dao"})
 @EnableTransactionManagement
 public class MybatisPlusConfig {
 

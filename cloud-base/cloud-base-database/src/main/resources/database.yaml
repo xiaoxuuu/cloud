@@ -36,7 +36,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     # 这个配置会将执行的 sql 打印出来，在开发或测试的时候可以用
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+    #log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
     # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
     call-setters-on-nulls: true
   global-config:

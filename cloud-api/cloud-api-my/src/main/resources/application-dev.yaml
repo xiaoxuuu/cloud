@@ -10,8 +10,18 @@ app:
 # 日志输出配置
 logging:
   level:
+    # MyBatis 框架本身的日志级别（可选，用于调试框架内部问题）
+    org.apache: DEBUG
+    com.baomidou: DEBUG
+    cc.xiaoxu.cloud.my.dao: DEBUG
     cc.xiaoxu.cloud: DEBUG
 
 spring:
   datasource:
     url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/d_api_dev?currentSchema=public
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
