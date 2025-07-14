@@ -26,9 +26,6 @@ public class DocumentConfig {
     @Value("${app.version}")
     private String appVersion;
 
-    @Value("${server.port}")
-    private String port;
-
     @Value("${spring.profiles.active}")
     private String activeProfiles;
 
@@ -39,6 +36,9 @@ public class DocumentConfig {
         if ("prod".equals(activeProfiles)) {
             log.warn("swagger server url: /api");
             server.url("/api");
+        } else if ("test".equals(activeProfiles)) {
+            log.warn("swagger server url: /api-test");
+            server.url("/api-test");
         } else {
             log.warn("swagger server url: /");
             server.url("/");
