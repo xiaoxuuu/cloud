@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://pg:3306/d_api_dev?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
+    url: jdbc:postgresql://pg:5432/d_api_dev?useUnicode=true&useSSL=false&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=True
   data:
     redis:
       host: redis
