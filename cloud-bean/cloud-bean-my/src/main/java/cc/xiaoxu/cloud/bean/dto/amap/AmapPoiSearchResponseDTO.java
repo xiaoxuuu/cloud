@@ -34,29 +34,20 @@ public class AmapPoiSearchResponseDTO {
     @Schema(description = "POI信息")
     public static class AmapPoiDTO {
 
+        @Schema(description = "POI名称")
+        private String name;
+
         @Schema(description = "POI的ID")
         private String id;
 
-        @Schema(description = "POI名称")
-        private String name;
+        @Schema(description = "坐标点，格式：经度,纬度")
+        private String location;
 
         @Schema(description = "POI类型")
         private String type;
 
         @Schema(description = "POI类型编码")
         private String typecode;
-
-        @Schema(description = "地址")
-        private String address;
-
-        @Schema(description = "坐标点，格式：经度,纬度")
-        private String location;
-
-        @Schema(description = "电话")
-        private String tel;
-
-        @Schema(description = "距离中心点的距离，单位：米")
-        private String distance;
 
         @Schema(description = "POI所在省份名称")
         private String pname;
@@ -66,6 +57,17 @@ public class AmapPoiSearchResponseDTO {
 
         @Schema(description = "POI所在区县名称")
         private String adname;
+
+        @Schema(description = "地址")
+        private String address;
+
+        @Schema(description = "电话")
+        private String tel;
+
+        @Schema(description = "距离中心点的距离，单位：米")
+        private String distance;
+
+
 
         @Schema(description = "POI所在区县编码")
         private String adcode;

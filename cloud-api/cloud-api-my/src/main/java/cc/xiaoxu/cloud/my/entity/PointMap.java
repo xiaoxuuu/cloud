@@ -18,11 +18,14 @@ import lombok.experimental.Accessors;
 public class PointMap extends BaseInfoEntity {
 
     @Schema(description = "地点id")
-    private String pointId;
+    private Integer pointId;
+
+    @Schema(description = "高德地图 - 地点id")
+    private String amapId;
 
     @Schema(description = "高德地图 - WIA 坐标（来源高德小程序）")
     private String amapWia;
 
-    @Schema(description = "高德结果")
+    @Schema(description = "高德地图 - 详细数据")
     private String amapResult;
 }

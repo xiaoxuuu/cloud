@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.my.task.AmapTask;
 import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestMyController {
 
     private final WebsiteCheckScheduled websiteCheckScheduled;
+    private final AmapTask amapTask;
 
     @Operation(summary = "获取描述", description = "网站首页信息")
     @GetMapping("/get")
@@ -23,5 +25,13 @@ public class TestMyController {
     void index() {
 
         websiteCheckScheduled.getWebsiteDesc();
+    }
+
+    @Operation(summary = "更新高德数据", description = "更新高德数据")
+    @GetMapping("/updateAmapData")
+    public @ResponseBody
+    void updateAmapData() {
+
+        amapTask.updateAmapData();
     }
 }
