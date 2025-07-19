@@ -11,7 +11,6 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -50,7 +49,7 @@ public class AmapTask {
                 .list();
         Map<Integer, PointMap> pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getPointId, k -> k));
         Set<Integer> existsDataSet = pointMapList.stream()
-                .filter(k -> StringUtils.isNotBlank(k.getAmapResult()))
+                .filter(k -> null != k.getAmapResult())
                 .map(PointMap::getPointId)
                 .collect(Collectors.toSet());
 
@@ -67,10 +66,12 @@ public class AmapTask {
             JSONObject jsonObject = JSON.parseObject(amapResponse);
             Object poiListObj = jsonObject.get("pois");
             String poiListString = JSON.toJSONString(poiListObj);
+            // TODO poiListString == null
             List<JSONObject> poiList = JSON.parseArray(poiListString, JSONObject.class);
             if (poiList.isEmpty()) {
                 continue;
             }
+            // TODO 经纬度相同，免审核
             JSONObject firstData = poiList.getFirst();
             String id = (String) firstData.get("id");
             PointMap pointMap = pointMapMap.get(point.getId());
@@ -79,7 +80,7 @@ public class AmapTask {
                 pointMap.setPointId(point.getId());
             }
             pointMap.setAmapId(id);
-            pointMap.setAmapResult(JSONObject.toJSONString(firstData));
+            pointMap.setAmapResult(firstData);
             pointMapService.saveOrUpdate(pointMap);
         }
     }
