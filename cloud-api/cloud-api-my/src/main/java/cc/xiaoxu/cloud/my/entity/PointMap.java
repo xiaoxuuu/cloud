@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.entity;
 
 import cc.xiaoxu.cloud.core.bean.entity.BaseInfoEntity;
-import cc.xiaoxu.cloud.my.JsonbTypeHandler;
+import cc.xiaoxu.cloud.core.handler.JsonbTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
