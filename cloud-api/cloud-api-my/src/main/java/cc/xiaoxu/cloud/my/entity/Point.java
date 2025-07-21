@@ -1,8 +1,8 @@
 package cc.xiaoxu.cloud.my.entity;
 
+import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.core.bean.entity.BaseInfoEntity;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,6 @@ import lombok.experimental.Accessors;
 public class Point extends BaseInfoEntity {
 
     @Schema(description = "点位类型")
-    @TableField(value = "point_type")
     private PointTypeEnum pointType;
 
     @Schema(description = "简称")
@@ -55,4 +54,7 @@ public class Point extends BaseInfoEntity {
 
     @Schema(description = "地址code")
     private String addressCode;
+
+    @Schema(description = "营业状态")
+    private OperatingStatusEnum operatingStatus;
 }
