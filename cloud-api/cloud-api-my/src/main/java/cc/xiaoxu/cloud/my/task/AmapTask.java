@@ -72,7 +72,6 @@ public class AmapTask {
             JSONObject firstData = chooseData(point, poiListString);
             if (null == firstData) {
                 point.setOperatingStatus(OperatingStatusEnum.SUSPECTED_CLOSURE);
-                pointService.updateById(point);
             } else {
                 String id = (String) firstData.get("id");
                 PointMap pointMap = pointMapMap.get(point.getId());
@@ -83,7 +82,9 @@ public class AmapTask {
                 pointMap.setAmapId(id);
                 pointMap.setAmapResult(firstData);
                 pointMapService.saveOrUpdate(pointMap);
+                point.setOperatingStatus(OperatingStatusEnum.OPEN);
             }
+            pointService.updateById(point);
         }
     }
 
