@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.task;
 
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
+import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointMap;
@@ -11,6 +12,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -66,22 +68,43 @@ public class AmapTask {
             JSONObject jsonObject = JSON.parseObject(amapResponse);
             Object poiListObj = jsonObject.get("pois");
             String poiListString = JSON.toJSONString(poiListObj);
-            // TODO poiListString == null
-            List<JSONObject> poiList = JSON.parseArray(poiListString, JSONObject.class);
-            if (poiList.isEmpty()) {
-                continue;
+
+            JSONObject firstData = chooseData(point, poiListString);
+            if (null == firstData) {
+                point.setOperatingStatus(OperatingStatusEnum.SUSPECTED_CLOSURE);
+                pointService.updateById(point);
+            } else {
+                String id = (String) firstData.get("id");
+                PointMap pointMap = pointMapMap.get(point.getId());
+                if (pointMap == null) {
+                    pointMap = new PointMap();
+                    pointMap.setPointId(point.getId());
+                }
+                pointMap.setAmapId(id);
+                pointMap.setAmapResult(firstData);
+                pointMapService.saveOrUpdate(pointMap);
             }
-            // TODO 经纬度相同，免审核
-            JSONObject firstData = poiList.getFirst();
-            String id = (String) firstData.get("id");
-            PointMap pointMap = pointMapMap.get(point.getId());
-            if (pointMap == null) {
-                pointMap = new PointMap();
-                pointMap.setPointId(point.getId());
-            }
-            pointMap.setAmapId(id);
-            pointMap.setAmapResult(firstData);
-            pointMapService.saveOrUpdate(pointMap);
         }
+    }
+
+    private static JSONObject chooseData(Point point, String poiListString) {
+
+        if (StringUtils.isEmpty(poiListString)) {
+            log.error("高德数据为 null");
+            return null;
+        }
+        List<JSONObject> poiList = JSON.parseArray(poiListString, JSONObject.class);
+        if (poiList.isEmpty()) {
+            log.error("高德数据为空");
+            return null;
+        }
+        for (JSONObject poi : poiList) {
+            String location = (String) poi.get("location");
+            if (location.equals(point.getLongitude() + "," + point.getLatitude())) {
+                return poi;
+            }
+        }
+        log.error("未匹配到地点数据");
+        return null;
     }
 }
