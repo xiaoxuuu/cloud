@@ -44,7 +44,7 @@ public class AmapTask {
 
         List<Point> pointList = pointService.lambdaQuery()
                 .ne(Point::getState, StateEnum.DELETE.getCode())
-                .ne(Point::getOperatingStatus, OperatingStatusEnum.CLOSE)
+                .isNull(Point::getOperatingStatus)
                 .list();
 
         List<PointMap> pointMapList = pointMapService.lambdaQuery()
