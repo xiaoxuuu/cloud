@@ -9,10 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum OperatingStatusEnum implements EnumInterface<String> {
 
-    OPEN("open", "开业"),
-    CLOSE("close", "关门"),
-    RELOCATION("relocation", "搬迁"),
-    SUSPECTED_CLOSURE("suspected_closure", "疑似关闭"),
+    OPEN("OPEN", "开业"),
+    CLOSE("CLOSE", "关门"),
+    RELOCATION("RELOCATION", "搬迁"),
+    SUSPECTED_CLOSURE("SUSPECTED_CLOSURE", "疑似关闭"),
     ;
 
     @EnumValue
