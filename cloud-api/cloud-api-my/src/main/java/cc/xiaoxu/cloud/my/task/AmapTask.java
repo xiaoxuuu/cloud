@@ -12,6 +12,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -96,7 +97,7 @@ public class AmapTask {
             return null;
         }
         List<JSONObject> poiList = JSON.parseArray(poiListString, JSONObject.class);
-        if (poiList.isEmpty()) {
+        if (CollectionUtils.isEmpty(poiList)) {
             log.error("高德数据为空");
             return null;
         }
