@@ -17,4 +17,19 @@ public class PointFullVO extends PointVO {
 
     @Schema(description = "来源")
     private List<PointSourceVO> pointSourceList;
+
+    @Schema(description = "标签")
+    private String tagList;
+
+    @Schema(description = "电话")
+    private String telList;
+
+    @Schema(description = "消费")
+    private String cost;
+
+    @Schema(description = "评分")
+    private String rating;
+
+    @Schema(description = "营业时间")
+    private String openTime;
 }
