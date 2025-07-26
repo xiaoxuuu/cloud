@@ -9,7 +9,9 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
+import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.entity.PointSource;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -27,6 +30,7 @@ import java.util.List;
 public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private final PointSourceService pointSourceService;
+    private final PointMapService pointMapService;
 
     public void add(PointAddDTO dto) {
 
@@ -158,7 +162,43 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         List<PointSourceVO> pointSourceList = BeanUtils.populateList(sourceList, PointSourceVO.class);
         vo.setPointSourceList(pointSourceList);
         vo.setPointName(point.getPointFullName());
+
+        // 地图数据
+        PointMap pointMap = pointMapService.lambdaQuery()
+                .eq(PointMap::getPointId, point.getId())
+                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
+                .orderBy(true, false, PointMap::getId)
+                .last(" LIMIT 1 ")
+                .one();
+        buildAmap(vo, pointMap);
+
         return vo;
+    }
+
+    private void buildAmap(PointFullVO point, PointMap pointMap) {
+        Object amapResult = pointMap.getAmapResult();
+        JSONObject amapJson = JSONObject.parseObject((String) amapResult);
+        if (amapJson.containsKey("tag")) {
+            String tag = (String) amapJson.get("tag");
+            if (StringUtils.isNotEmpty(tag)) {
+                point.setTagList(Arrays.stream(tag.split(",")).toList());
+            }
+        }
+        if (amapJson.containsKey("tel")) {
+            String tel = (String) amapJson.get("tel");
+            if (StringUtils.isNotEmpty(tel)) {
+                point.setTelList(Arrays.stream(tel.split(",")).toList());
+            }
+        }
+        if (amapJson.containsKey("cost")) {
+            point.setCost((String) amapJson.get("cost"));
+        }
+        if (amapJson.containsKey("rating")) {
+            point.setRating((String) amapJson.get("rating"));
+        }
+        if (amapJson.containsKey("opentime_week")) {
+            point.setOpenTime((String) amapJson.get("opentime_week"));
+        }
     }
 
     public Integer countProgressing() {
