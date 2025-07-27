@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.bean.vo;
 
+import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,4 +34,7 @@ public class PointVO extends PointSimpleVO {
 
     @Schema(description = "地址code")
     private String addressCode;
+
+    @Schema(description = "营业状态")
+    private OperatingStatusEnum operatingStatus;
 }
