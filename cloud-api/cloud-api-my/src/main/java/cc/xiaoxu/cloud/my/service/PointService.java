@@ -178,26 +178,29 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     private void buildAmap(PointFullVO point, PointMap pointMap) {
         Object amapResult = pointMap.getAmapResult();
         JSONObject amapJson = JSONObject.parseObject((String) amapResult);
-        if (amapJson.containsKey("tag")) {
-            String tag = (String) amapJson.get("tag");
-            if (StringUtils.isNotEmpty(tag)) {
-                point.setTagList(Arrays.stream(tag.split(",")).toList());
+        if (amapJson.containsKey("business")) {
+            JSONObject businessJson = (JSONObject) amapJson.get("business");
+            if (businessJson.containsKey("tag")) {
+                String tag = (String) businessJson.get("tag");
+                if (StringUtils.isNotEmpty(tag)) {
+                    point.setTagList(Arrays.stream(tag.split(",")).toList());
+                }
             }
-        }
-        if (amapJson.containsKey("tel")) {
-            String tel = (String) amapJson.get("tel");
-            if (StringUtils.isNotEmpty(tel)) {
-                point.setTelList(Arrays.stream(tel.split(",")).toList());
+            if (businessJson.containsKey("tel")) {
+                String tel = (String) businessJson.get("tel");
+                if (StringUtils.isNotEmpty(tel)) {
+                    point.setTelList(Arrays.stream(tel.split(",")).toList());
+                }
             }
-        }
-        if (amapJson.containsKey("cost")) {
-            point.setCost((String) amapJson.get("cost"));
-        }
-        if (amapJson.containsKey("rating")) {
-            point.setRating((String) amapJson.get("rating"));
-        }
-        if (amapJson.containsKey("opentime_week")) {
-            point.setOpenTime((String) amapJson.get("opentime_week"));
+            if (businessJson.containsKey("cost")) {
+                point.setCost((String) businessJson.get("cost"));
+            }
+            if (businessJson.containsKey("rating")) {
+                point.setRating((String) businessJson.get("rating"));
+            }
+            if (businessJson.containsKey("opentime_week")) {
+                point.setOpenTime((String) businessJson.get("opentime_week"));
+            }
         }
     }
 
