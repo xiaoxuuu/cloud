@@ -176,6 +176,10 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     }
 
     private void buildAmap(PointFullVO point, PointMap pointMap) {
+
+        if (pointMap == null) {
+            return;
+        }
         Object amapResult = pointMap.getAmapResult();
         if (null == amapResult) {
             return;
