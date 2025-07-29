@@ -177,6 +177,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private void buildAmap(PointFullVO point, PointMap pointMap) {
         Object amapResult = pointMap.getAmapResult();
+        if (null == amapResult) {
+            return;
+        }
         JSONObject amapJson = JSONObject.parseObject((String) amapResult);
         if (amapJson.containsKey("business")) {
             JSONObject businessJson = (JSONObject) amapJson.get("business");
