@@ -23,9 +23,6 @@ public class PointSearchDTO {
     @Schema(description = "缩放层级")
     private Double level;
 
-    @Schema(description = "状态")
-    private List<String> stateList;
-
-    @Schema(description = "我去过")
+    @Schema(description = "作者去过")
     private Boolean visit;
 }

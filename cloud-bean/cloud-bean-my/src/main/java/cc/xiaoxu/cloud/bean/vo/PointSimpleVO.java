@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.bean.vo;
 
+import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,7 @@ public class PointSimpleVO extends BaseIdVO {
 
     @Schema(description = "纬度")
     private String latitude;
+
+    @Schema(description = "营业状态")
+    private OperatingStatusEnum operatingStatus;
 }
