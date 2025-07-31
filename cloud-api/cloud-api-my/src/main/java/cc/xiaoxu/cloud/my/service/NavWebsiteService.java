@@ -140,7 +140,7 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     public void addVisitNum(IdDTO dto) {
 
         for (NavWebsite navWebsite : navList) {
-            if (navWebsite.getId().equals(dto.getId())) {
+            if (navWebsite.getId().equals(Integer.parseInt(dto.getId()))) {
                 navWebsite.setVisitNum(navWebsite.getVisitNum() + 1);
             }
         }
