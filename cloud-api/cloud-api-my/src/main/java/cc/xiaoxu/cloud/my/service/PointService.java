@@ -115,7 +115,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                         .or().like(Point::getAddress, dto.getPointName())
                         .or().like(Point::getLongitude, dto.getPointName())
                         .or().like(Point::getLatitude, dto.getPointName())
-                        .or().in(Point::getId, idList)
+                        .or().in(CollectionUtils.isNotEmpty(idList), Point::getId, idList)
                 ))
                 .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(Point::getState, List.of(StateEnum.ENABLE.getCode(), StateEnum.PROGRESSING.getCode()))
