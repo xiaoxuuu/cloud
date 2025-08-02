@@ -52,14 +52,12 @@ public class WebsiteCheckScheduled {
 
     public void refreshIcon() {
 
-        log.debug("刷新图标数据至 Redis...");
         List<NavWebsiteIcon> iconList = navWebsiteIconService.getList();
         navWebsiteIconService.setNavIconMap(iconList);
     }
 
     public void refreshUrl() {
 
-        log.debug("刷新网站数据至缓存...");
         navWebsiteService.setNavList(navWebsiteService.getList());
     }
 
