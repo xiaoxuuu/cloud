@@ -10,3 +10,9 @@ knife4j:
 spring:
   datasource:
     url: jdbc:@env.api.db.type@://@env.api.db.host@:@env.api.db.port@/d_api_dev?currentSchema=public
+
+mybatis-plus:
+  configuration:
+    #    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
