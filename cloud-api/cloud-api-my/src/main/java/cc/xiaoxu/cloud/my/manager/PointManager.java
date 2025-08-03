@@ -109,6 +109,7 @@ public class PointManager {
                 // 无效数据排除
                 .ne(PointMap::getState, StateEnum.DELETE.getCode())
                 .list();
+        pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getId, a -> a));
         log.debug("查询到 {} 条点位地图数据...", pointMapList.size());
     }
 
