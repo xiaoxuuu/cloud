@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,8 +31,13 @@ public class PointManager {
     private PointSourceService pointSourceService;
 
     private List<Point> pointList = new ArrayList<>();
+    private Map<Integer, Point> pointMap = new HashMap<>();
+
     private List<PointMap> pointMapList = new ArrayList<>();
+    private Map<Integer, PointMap> pointMapMap = new HashMap<>();
+
     private List<PointSource> pointSourceList = new ArrayList<>();
+    private Map<Integer, PointSource> pointSourceMap = new HashMap<>();
 
     public void updatePointList() {
 
@@ -40,6 +48,7 @@ public class PointManager {
                 // 无效数据排除
                 .ne(Point::getState, StateEnum.DELETE.getCode())
                 .list();
+        pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
         log.debug("查询到 {} 条点位数据...", pointList.size());
     }
 
