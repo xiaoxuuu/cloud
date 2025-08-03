@@ -13,44 +13,24 @@ import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.entity.PointSource;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Getter
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PointService extends ServiceImpl<PointMapper, Point> {
 
-    @Resource
-    private PointSourceService pointSourceService;
-
-    @Resource
-    private PointMapService pointMapService;
-
-    @Setter
-    private List<Point> pointList = new ArrayList<>();
-
-    /**
-     * 查询全量数据
-     */
-    public void updateCacheList() {
-
-        List<Point> list = this.lambdaQuery().isNotNull(Point::getLongitude)
-                .isNotNull(Point::getLatitude)
-                .ne(Point::getState, StateEnum.DELETE.getCode())
-                .list();
-        log.debug("查询到 {} 条点位数据...", list.size());
-        setPointList(list);
-    }
+    private final PointSourceService pointSourceService;
+    private final PointMapService pointMapService;
 
     public void add(PointAddDTO dto) {
 
