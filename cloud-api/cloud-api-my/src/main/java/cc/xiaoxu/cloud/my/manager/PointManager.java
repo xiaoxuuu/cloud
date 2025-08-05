@@ -58,7 +58,7 @@ public class PointManager {
                 // 删除数据排除
                 .ne(PointSource::getState, StateEnum.DELETE.getCode())
                 .list();
-        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().map(Integer::parseInt).toList();
+        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().toList();
 
         // 搜索
         boolean or = CollectionUtils.isNotEmpty(idList) || StringUtils.isNotEmpty(dto.getPointName());
@@ -119,6 +119,7 @@ public class PointManager {
                 // 无效数据排除
                 .ne(PointSource::getState, StateEnum.DELETE.getCode())
                 .list();
+        pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
         log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 }
