@@ -103,7 +103,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 // 删除数据排除
                 .ne(PointSource::getState, StateEnum.DELETE.getCode())
                 .list();
-        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().map(Integer::parseInt).toList();
+        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().toList();
 
         // 搜索
         boolean or = CollectionUtils.isNotEmpty(idList) || StringUtils.isNotEmpty(dto.getPointName());
