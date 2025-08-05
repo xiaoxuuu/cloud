@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 public class PointSource extends BaseInfoEntity {
 
     @Schema(description = "点位id")
-    private String pointId;
+    private Integer pointId;
 
     @Schema(description = "类型")
     private PointSourceTypeEnum type;
