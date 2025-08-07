@@ -11,6 +11,7 @@ import cc.xiaoxu.cloud.core.utils.date.DateUtils;
 import cc.xiaoxu.cloud.my.dao.NavWebsiteMapper;
 import cc.xiaoxu.cloud.my.entity.NavWebsite;
 import cc.xiaoxu.cloud.my.entity.NavWebsiteIcon;
+import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -50,8 +51,10 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                 // 关键字
                 .filter(k -> {
                     if (StringUtils.isNotBlank(vo.getKeyword())) {
-                        return containsValue(k.getShortName(), vo.getKeyword()) || containsValue(k.getWebsiteName(), vo.getKeyword()) ||
-                                containsValue(k.getUrl(), vo.getKeyword()) || containsValue(k.getDescription(), vo.getKeyword());
+                        return SearchUtils.containsValue(k.getShortName(), vo.getKeyword()) ||
+                                SearchUtils.containsValue(k.getWebsiteName(), vo.getKeyword()) ||
+                                SearchUtils.containsValue(k.getUrl(), vo.getKeyword()) ||
+                                SearchUtils.containsValue(k.getDescription(), vo.getKeyword());
                     }
                     return true;
                 })
@@ -63,19 +66,6 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
                         .thenComparing(NavWebsiteShowVO::getLastAvailableTime, Comparator.reverseOrder()))
                 .limit(15)
                 .toList();
-    }
-
-    /**
-     * 模糊匹配
-     */
-    private boolean containsValue(String value, String keyword) {
-
-        if (StringUtils.isBlank(value)) {
-            return false;
-        }
-        String valueLowerCase = value.toLowerCase();
-        String keywordLowerCase = keyword.toLowerCase();
-        return valueLowerCase.contains(keywordLowerCase);
     }
 
     /**
