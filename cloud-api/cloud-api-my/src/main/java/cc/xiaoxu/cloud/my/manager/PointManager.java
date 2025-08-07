@@ -10,16 +10,14 @@ import cc.xiaoxu.cloud.my.entity.PointSource;
 import cc.xiaoxu.cloud.my.service.PointMapService;
 import cc.xiaoxu.cloud.my.service.PointService;
 import cc.xiaoxu.cloud.my.service.PointSourceService;
+import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,6 +45,16 @@ public class PointManager {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
+        Set<Integer> pointSourceSet = pointSourceList.stream()
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(dto.getPointName())) {
+                        return SearchUtils.containsValue(k.getTitle(), dto.getPointName()) ||
+                                SearchUtils.containsValue(k.getContent(), dto.getPointName());
+                    }
+                    return true;
+                })
+                .map(PointSource::getPointId)
+                .collect(Collectors.toSet());
         // 来源搜索
         List<PointSource> sourceList = pointSourceService.lambdaQuery()
                 .and(wrapper -> wrapper.or(orWrapper -> orWrapper
