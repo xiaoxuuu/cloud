@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
+import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
@@ -13,7 +14,6 @@ import cc.xiaoxu.cloud.my.service.PointSourceService;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -56,29 +56,23 @@ public class PointManager {
                 .map(PointSource::getPointId)
                 .collect(Collectors.toSet());
 
-        // 搜索
-        boolean or = CollectionUtils.isNotEmpty(pointSourceSet) || StringUtils.isNotEmpty(dto.getPointName());
-//        List<Point> pointList = lambdaQuery()
-//                .and(or, wrapper -> wrapper.or(orWrapper -> orWrapper
-//                        .like(Point::getPointFullName, dto.getPointName())
-//                        .or().like(Point::getPointFullName, dto.getPointName())
-//                        .or().like(Point::getDescribe, dto.getPointName())
-//                        .or().like(Point::getAddress, dto.getPointName())
-//                        .or().like(Point::getLongitude, dto.getPointName())
-//                        .or().like(Point::getLatitude, dto.getPointName())
-//                        .or().in(CollectionUtils.isNotEmpty(idList), Point::getId, idList)
-//                ))
-//                .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
-//                .in(Point::getState, List.of(StateEnum.ENABLE.getCode(), StateEnum.PROGRESSING.getCode()))
-//                .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 1)
-//                // 异常数据排除
-//                .isNotNull(Point::getLongitude)
-//                .isNotNull(Point::getLatitude)
-//                // 删除数据排除
-//                .ne(Point::getState, StateEnum.DELETE.getCode())
-//                .list();
+        Set<PointTypeEnum> pointTypeSet = new HashSet<>(dto.getPointType());
 
-        return pointList.stream().map(k -> {
+        // 搜索
+        List<Point> filterPointList = pointList.stream()
+                .filter(k -> {
+                    // 模糊匹配
+                    return pointSourceSet.contains(k.getId()) ||
+                            SearchUtils.containsValue(k.getPointFullName(), dto.getPointName()) ||
+                            SearchUtils.containsValue(k.getPointShortName(), dto.getPointName()) ||
+                            SearchUtils.containsValue(k.getAddress(), dto.getPointName()) ||
+                            SearchUtils.containsValue(k.getAddressCode(), dto.getPointName()) ||
+                            SearchUtils.containsValue(k.getDescribe(), dto.getPointName());
+                })
+
+                .toList();
+
+        return filterPointList.stream().map(k -> {
             PointSimpleVO vo = new PointSimpleVO();
             BeanUtils.populate(k, vo);
             vo.setPointName(k.getPointShortName());
