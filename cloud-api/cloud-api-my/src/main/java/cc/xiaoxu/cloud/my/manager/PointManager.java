@@ -55,21 +55,9 @@ public class PointManager {
                 })
                 .map(PointSource::getPointId)
                 .collect(Collectors.toSet());
-        // 来源搜索
-        List<PointSource> sourceList = pointSourceService.lambdaQuery()
-                .and(wrapper -> wrapper.or(orWrapper -> orWrapper
-                        .like(PointSource::getSource, dto.getPointName())
-                        .or().like(PointSource::getTitle, dto.getPointName())
-                        .or().like(PointSource::getContent, dto.getPointName())
-                        .or().like(PointSource::getUrl, dto.getPointName())
-                ))
-                // 删除数据排除
-                .ne(PointSource::getState, StateEnum.DELETE.getCode())
-                .list();
-        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().toList();
 
         // 搜索
-        boolean or = CollectionUtils.isNotEmpty(idList) || StringUtils.isNotEmpty(dto.getPointName());
+        boolean or = CollectionUtils.isNotEmpty(pointSourceSet) || StringUtils.isNotEmpty(dto.getPointName());
 //        List<Point> pointList = lambdaQuery()
 //                .and(or, wrapper -> wrapper.or(orWrapper -> orWrapper
 //                        .like(Point::getPointFullName, dto.getPointName())
