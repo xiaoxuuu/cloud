@@ -77,7 +77,17 @@ public class PointManager {
                     }
                     return pointTypeSet.contains(k.getPointType());
                 })
-
+                .filter(k -> {
+                    // 作者访问过
+                    if (null == dto.getVisit()) {
+                        return true;
+                    }
+                    if (dto.getVisit()) {
+                        return k.getVisitedTimes() > 1;
+                    } else {
+                        return true;
+                    }
+                })
                 .toList();
 
         return filterPointList.stream().map(k -> {
