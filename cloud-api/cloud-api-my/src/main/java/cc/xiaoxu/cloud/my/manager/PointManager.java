@@ -14,6 +14,7 @@ import cc.xiaoxu.cloud.my.service.PointSourceService;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +69,13 @@ public class PointManager {
                             SearchUtils.containsValue(k.getAddress(), dto.getPointName()) ||
                             SearchUtils.containsValue(k.getAddressCode(), dto.getPointName()) ||
                             SearchUtils.containsValue(k.getDescribe(), dto.getPointName());
+                })
+                .filter(k -> {
+                    // 点位类型
+                    if (CollectionUtils.isNotEmpty(pointTypeSet)) {
+                        return true;
+                    }
+                    return pointTypeSet.contains(k.getPointType());
                 })
 
                 .toList();
