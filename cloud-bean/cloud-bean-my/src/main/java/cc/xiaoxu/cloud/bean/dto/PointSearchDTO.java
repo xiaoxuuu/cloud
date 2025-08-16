@@ -1,6 +1,5 @@
 package cc.xiaoxu.cloud.bean.dto;
 
-import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.util.List;
 public class PointSearchDTO {
 
     @Schema(description = "点位类型")
-    private List<PointTypeEnum> pointType;
+    private List<String> pointType;
 
     @Schema(description = "点位名称")
     private String pointName;

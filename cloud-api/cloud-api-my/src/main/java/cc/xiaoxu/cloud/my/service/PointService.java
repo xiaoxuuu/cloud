@@ -117,7 +117,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                         .or().like(Point::getLatitude, dto.getPointName())
                         .or().in(CollectionUtils.isNotEmpty(idList), Point::getId, idList)
                 ))
-                .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
+//                .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
                 .in(Point::getState, List.of(StateEnum.ENABLE.getCode(), StateEnum.PROGRESSING.getCode()))
                 .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 1)
                 // 异常数据排除

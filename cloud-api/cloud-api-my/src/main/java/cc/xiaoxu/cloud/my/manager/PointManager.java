@@ -5,6 +5,7 @@ import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
+import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.entity.PointSource;
@@ -57,7 +58,9 @@ public class PointManager {
                 .map(PointSource::getPointId)
                 .collect(Collectors.toSet());
 
-        Set<PointTypeEnum> pointTypeSet = new HashSet<>(dto.getPointType());
+        Set<PointTypeEnum> pointTypeSet = dto.getPointType().stream()
+                .map(k -> EnumUtils.getByClass(dto.getPointType(), PointTypeEnum.class))
+                .collect(Collectors.toSet());
 
         // 搜索
         List<Point> filterPointList = pointList.stream()
