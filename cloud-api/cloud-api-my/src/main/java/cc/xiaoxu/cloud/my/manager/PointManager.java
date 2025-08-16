@@ -47,6 +47,7 @@ public class PointManager {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
+        // TODO 经纬度过滤
         Set<Integer> pointSourceSet = pointSourceList.stream()
                 .filter(k -> {
                     if (StringUtils.isNotBlank(dto.getPointName())) {
