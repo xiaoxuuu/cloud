@@ -26,11 +26,8 @@ public class SignLanguageWordVO extends BaseIdVO {
     @Schema(description = "所属词典")
     private String dictId;
 
-    @Schema(description = "图片链接")
-    private String imgUrl;
-
-    @Schema(description = "视频链接")
-    private String videoUrl;
+    @Schema(description = "词汇ID")
+    private String wordId;
 
     @Schema(description = "关联ID")
     private Set<Integer> wordIdList;

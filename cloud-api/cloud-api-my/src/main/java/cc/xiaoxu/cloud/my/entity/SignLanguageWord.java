@@ -28,4 +28,7 @@ public class SignLanguageWord extends BaseInfoEntity {
 
     @Schema(description = "所属词典")
     private String dictId;
+
+    @Schema(description = "词汇ID")
+    private String wordId;
 }
