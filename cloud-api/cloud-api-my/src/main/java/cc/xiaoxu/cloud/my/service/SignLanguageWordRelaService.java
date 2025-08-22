@@ -23,7 +23,7 @@ public class SignLanguageWordRelaService extends ServiceImpl<SignLanguageWordRel
 
         List<SignLanguageWordRela> list = lambdaQuery()
                 .in(SignLanguageWordRela::getWordIdLeft, wordIds)
-                .in(SignLanguageWordRela::getWordIdRight, wordIds)
+                .or().in(SignLanguageWordRela::getWordIdRight, wordIds)
                 .list();
 
         Map<Integer, Set<Integer>> map = new HashMap<>();
