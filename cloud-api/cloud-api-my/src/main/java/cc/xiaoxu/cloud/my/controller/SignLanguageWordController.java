@@ -32,4 +32,16 @@ public class SignLanguageWordController {
 
         return signLanguageWordService.lists(dto);
     }
+
+//    @PostConstruct
+//    public void u( ){
+//        List<SignLanguageWord> list = signLanguageWordService.list();
+//        for (int i = 0; i < list.size(); i++) {
+//            SignLanguageWord signLanguageWord = list.get(i);
+//            signLanguageWordService.lambdaUpdate()
+//                    .set(SignLanguageWord::getId, i + 1)
+//                    .eq(SignLanguageWord::getWordId, signLanguageWord.getWordId())
+//                    .update();
+//        }
+//    }
 }
