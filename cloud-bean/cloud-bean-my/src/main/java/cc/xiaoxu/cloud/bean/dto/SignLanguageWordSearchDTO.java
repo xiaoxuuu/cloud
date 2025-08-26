@@ -13,4 +13,7 @@ public class SignLanguageWordSearchDTO {
 
     @Schema(description = "搜索关键词", requiredMode = Schema.RequiredMode.REQUIRED)
     private String keywords;
+
+    @Schema(description = "移除的数据")
+    private Integer id;
 }

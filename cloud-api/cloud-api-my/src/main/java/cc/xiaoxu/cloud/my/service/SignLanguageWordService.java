@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,10 +31,16 @@ public class SignLanguageWordService extends ServiceImpl<SignLanguageWordMapper,
 
         List<SignLanguageWord> list = lambdaQuery()
                 .like(SignLanguageWord::getWordName, dto.getKeywords())
+                // 移除指定数据及其关联数据
+                .ne(null != dto.getId(), SignLanguageWord::getId, dto.getId())
                 .last(" LIMIT 20 ")
                 .list();
 
         Map<Integer, Set<Integer>> relaMap = signLanguageWordRelaService.getWordRela(list.stream().map(SignLanguageWord::getId).toList());
+        // 移除指定数据及其关联数据
+        list = list.stream()
+                .filter(k -> !relaMap.getOrDefault(dto.getId(), new HashSet<>()).contains(k.getId()))
+                .toList();
         return tran(list, relaMap);
     }
 
