@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.IdsDTO;
+import cc.xiaoxu.cloud.bean.dto.SignLanguageWordRelaAddDTO;
 import cc.xiaoxu.cloud.bean.dto.SignLanguageWordSearchDTO;
 import cc.xiaoxu.cloud.bean.vo.SignLanguageWordVO;
 import cc.xiaoxu.cloud.my.service.SignLanguageWordService;
@@ -31,6 +32,13 @@ public class SignLanguageWordController {
     public @ResponseBody List<SignLanguageWordVO> listRela(@RequestBody IdsDTO dto) {
 
         return signLanguageWordService.lists(dto);
+    }
+
+    @Operation(summary = "增加关联", description = "增加关联列表")
+    @PostMapping("/add_rela")
+    public void addRela(@RequestBody SignLanguageWordRelaAddDTO dto) {
+
+        signLanguageWordService.add(dto);
     }
 
 //    @PostConstruct

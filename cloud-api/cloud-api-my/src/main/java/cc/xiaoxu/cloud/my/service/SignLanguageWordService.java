@@ -1,11 +1,13 @@
 package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.bean.dto.IdsDTO;
+import cc.xiaoxu.cloud.bean.dto.SignLanguageWordRelaAddDTO;
 import cc.xiaoxu.cloud.bean.dto.SignLanguageWordSearchDTO;
 import cc.xiaoxu.cloud.bean.vo.SignLanguageWordVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.SignLanguageWordMapper;
 import cc.xiaoxu.cloud.my.entity.SignLanguageWord;
+import cc.xiaoxu.cloud.my.entity.SignLanguageWordRela;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,5 +54,17 @@ public class SignLanguageWordService extends ServiceImpl<SignLanguageWordMapper,
             vo.setWordIdList(relaMap.get(k.getId()));
             return vo;
         }).toList();
+    }
+
+    public void add(SignLanguageWordRelaAddDTO dto) {
+
+        if (dto.getWordIdLeft() > dto.getWordIdRight()) {
+            int temp = dto.getWordIdLeft();
+            dto.setWordIdLeft(dto.getWordIdRight());
+            dto.setWordIdRight(temp);
+        }
+        signLanguageWordRelaService.save(new SignLanguageWordRela()
+                .setWordIdLeft(dto.getWordIdLeft())
+                .setWordIdRight(dto.getWordIdRight()));
     }
 }
