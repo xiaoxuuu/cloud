@@ -128,9 +128,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .list();
 
         double scale = 14.5;
-        double removeKm = 1;
+        double removeKm = 2;
 
-        List<PointSimpleVO> list = pointList.stream()
+        return pointList.stream()
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
                 .filter(k -> removeByScale(k, dto, scale, removeKm))
                 .map(k -> {
@@ -141,23 +141,18 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                     rebuildLatitudeAndLongitude(dto, vo, scale);
                     return vo;
                 }).toList();
-
-        return list;
     }
 
     private boolean removeByScale(Point k, PointSearchDTO dto, double scale, double removeKm) {
         if (dto.getScale() <= scale) {
             return true;
         }
-        // 计算点到中心点的距离，只返回10km内的数据
         double distance = calculateDistance(
                 Double.parseDouble(k.getLatitude()),
                 Double.parseDouble(k.getLongitude()),
                 dto.getCenterLatitude(),
                 dto.getCenterLongitude()
         );
-
-        log.error("距离中心点距离：{} {}", k.getPointShortName(), distance);
         return distance <= removeKm;
     }
 
@@ -166,8 +161,17 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             log.error("偏移经纬度");
             // 对经纬度进行偏移，保护隐私，控制在2公里范围内
             // 15 0.0005
-            k.setLatitude(offsetLatitude(k.getLatitude(), 0.0005)); // 约2公里的纬度偏移
-            k.setLongitude(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.0005)); // 约2公里的经度偏移
+            // 14
+            // 13
+            // 12
+            // 11
+            // 10
+            //  9
+            //  8
+            //  7
+            //  6
+            k.setLatitude(offsetLatitude(k.getLatitude(), 0.0005));
+            k.setLongitude(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.0005));
         }
     }
 
