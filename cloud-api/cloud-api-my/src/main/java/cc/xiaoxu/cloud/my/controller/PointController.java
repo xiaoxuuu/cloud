@@ -58,6 +58,9 @@ public class PointController {
     public @ResponseBody
     List<? extends PointSimpleVO> list(@RequestBody PointSearchDTO dto) {
 
+        if (null == dto.getScale() || null == dto.getCenterLatitude() || null == dto.getCenterLongitude()) {
+            throw new CustomException("参数错误");
+        }
         return pointService.lists(dto);
     }
 
