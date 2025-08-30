@@ -127,12 +127,98 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .ne(Point::getState, StateEnum.DELETE.getCode())
                 .list();
 
-        return pointList.stream().map(k -> {
-            PointSimpleVO vo = new PointSimpleVO();
-            BeanUtils.populate(k, vo);
-            vo.setPointName(k.getPointShortName());
-            return vo;
-        }).toList();
+        double scale = 14.5;
+        double removeKm = 1;
+
+        List<PointSimpleVO> list = pointList.stream()
+                // scale 小于一定数值，移除距离中心点指定距离外的数据
+                .filter(k -> removeByScale(k, dto, scale, removeKm))
+                .map(k -> {
+                    PointSimpleVO vo = new PointSimpleVO();
+                    BeanUtils.populate(k, vo);
+                    vo.setPointName(k.getPointShortName());
+                    // scale 大于一定数值，移除距离中心点指定距离外的数据
+                    rebuildLatitudeAndLongitude(dto, vo, scale);
+                    return vo;
+                }).toList();
+
+        return list;
+    }
+
+    private boolean removeByScale(Point k, PointSearchDTO dto, double scale, double removeKm) {
+        if (dto.getScale() <= scale) {
+            return true;
+        }
+        // 计算点到中心点的距离，只返回10km内的数据
+        double distance = calculateDistance(
+                Double.parseDouble(k.getLatitude()),
+                Double.parseDouble(k.getLongitude()),
+                dto.getCenterLatitude(),
+                dto.getCenterLongitude()
+        );
+
+        log.error("距离中心点距离：{} {}", k.getPointShortName(), distance);
+        return distance <= removeKm;
+    }
+
+    private static void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointSimpleVO k, double scale) {
+        if (dto.getScale() <= scale) {
+            log.error("偏移经纬度");
+            // 对经纬度进行偏移，保护隐私，控制在2公里范围内
+            // 15 0.0005
+            k.setLatitude(offsetLatitude(k.getLatitude(), 0.0005)); // 约2公里的纬度偏移
+            k.setLongitude(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.0005)); // 约2公里的经度偏移
+        }
+    }
+
+    /**
+     * 对纬度进行偏移
+     * @param lat 原始纬度
+     * @param maxOffset 最大偏移量（度）
+     * @return 偏移后的纬度
+     */
+    private static String offsetLatitude(String lat, double maxOffset) {
+        double latitude = Double.parseDouble(lat);
+        // 添加随机偏移，范围在 -maxOffset 到 +maxOffset 之间，控制在约2公里内
+        double offsetValue = (Math.random() * 2 - 1) * maxOffset;
+        return String.valueOf(latitude + offsetValue);
+    }
+
+    /**
+     * 对经度进行偏移
+     * @param lon 原始经度
+     * @param lat 纬度（用于计算经度偏移）
+     * @param maxOffset 最大偏移量（度）
+     * @return 偏移后的经度
+     */
+    private static String offsetLongitude(String lon, String lat, double maxOffset) {
+        double longitude = Double.parseDouble(lon);
+        double latitude = Double.parseDouble(lat);
+        // 根据纬度调整经度偏移量，保证偏移距离大致相同
+        double offsetFactor = Math.cos(Math.toRadians(latitude));
+        double offsetValue = (Math.random() * 2 - 1) * maxOffset * offsetFactor;
+        return String.valueOf(longitude + offsetValue);
+    }
+
+    /**
+     * 计算两个经纬度点之间的距离（单位：公里）
+     * 使用 Haversine 公式
+     * @param lat1 点1纬度
+     * @param lon1 点1经度
+     * @param lat2 点2纬度
+     * @param lon2 点2经度
+     * @return 距离（公里）
+     */
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final double EARTH_RADIUS = 6371; // 地球半径（公里）
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return EARTH_RADIUS * c;
     }
 
     private void handle(PointSearchDTO dto, List<? extends PointSimpleVO> pointVOList) {
