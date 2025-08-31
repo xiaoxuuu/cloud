@@ -10,6 +10,7 @@ import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,6 +31,9 @@ public class PointController {
 
     @Resource
     private PointService pointService;
+
+    @Resource
+    private PointManager pointManager;
 
     @Operation(summary = "新增", description = "新增地点")
     @PostMapping("/add/{code}")
@@ -61,7 +65,7 @@ public class PointController {
         if (null == dto.getScale() || null == dto.getCenterLatitude() || null == dto.getCenterLongitude()) {
             throw new CustomException("参数错误");
         }
-        return pointService.lists(dto);
+        return pointManager.lists(dto);
     }
 
     @Operation(summary = "获取待处理数量", description = "获取待处理数量")
