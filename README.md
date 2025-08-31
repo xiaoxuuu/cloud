@@ -1,3 +1,11 @@
+# TODO
+
+- 常量缓存
+- 登录接入
+- 微信登录接入
+- 分布式未完全接入
+- knife4j 接入
+
 # 简介
 
 此项目旨在提供一个简单上手的 Spring 框架集成脚手架，项目在 `cloud-base-util` 包中内嵌了一些高频使用的工具类。
@@ -100,11 +108,3 @@ docker run -itd xxx
 cd /data/docker/ && sh updateV2.sh -r cloud-api-all && docker logs -f cloud-api-all
 cd /data/docker/ && sh updateV2.sh -r cloud-api-all-test && docker logs -f cloud-api-all-test
 ```
-
-# TODO
-
-- 启动执行任务实现
-- 分布式未完全接入
-- knife4j 接入
-- 登录接入
-- 微信登录接入
