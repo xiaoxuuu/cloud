@@ -63,9 +63,14 @@ public class PointManager {
                 .map(PointSource::getPointId)
                 .collect(Collectors.toSet());
 
-        Set<PointTypeEnum> pointTypeSet = dto.getPointType().stream()
-                .map(k -> EnumUtils.getByClass(dto.getPointType(), PointTypeEnum.class))
-                .collect(Collectors.toSet());
+        Set<PointTypeEnum> pointTypeSet;
+        if (CollectionUtils.isNotEmpty(dto.getPointType())) {
+            pointTypeSet = dto.getPointType().stream()
+                    .map(k -> EnumUtils.getByClass(dto.getPointType(), PointTypeEnum.class))
+                    .collect(Collectors.toSet());
+        } else {
+            pointTypeSet = new HashSet<>();
+        }
 
         // 搜索
         List<Point> filterPointList = pointList.stream()
