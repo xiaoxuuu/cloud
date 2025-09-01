@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -31,56 +32,16 @@ public class PointSearchManager {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
-        // 来源
-        Set<Integer> pointSourceSet = pointManager.getPointSourceList().stream()
-                .filter(k -> {
-                    if (StringUtils.isNotBlank(dto.getPointName())) {
-                        return SearchUtils.containsValue(k.getTitle(), dto.getPointName()) ||
-                                SearchUtils.containsValue(k.getContent(), dto.getPointName());
-                    }
-                    return true;
-                })
-                .map(PointSource::getPointId)
-                .collect(Collectors.toSet());
-
-        Set<PointTypeEnum> pointTypeSet;
-        if (CollectionUtils.isNotEmpty(dto.getPointType())) {
-            pointTypeSet = dto.getPointType().stream()
-                    .map(k -> EnumUtils.getByClass(dto.getPointType(), PointTypeEnum.class))
-                    .collect(Collectors.toSet());
-        } else {
-            pointTypeSet = new HashSet<>();
-        }
+        Set<PointTypeEnum> pointTypeSet = getPointTypeFilter(dto);
 
         // 搜索
         List<Point> filterPointList = pointManager.getPointList().stream()
-                .filter(k -> {
-                    // 模糊匹配
-                    return pointSourceSet.contains(k.getId()) ||
-                            SearchUtils.containsValue(k.getPointFullName(), dto.getPointName()) ||
-                            SearchUtils.containsValue(k.getPointShortName(), dto.getPointName()) ||
-                            SearchUtils.containsValue(k.getAddress(), dto.getPointName()) ||
-                            SearchUtils.containsValue(k.getAddressCode(), dto.getPointName()) ||
-                            SearchUtils.containsValue(k.getDescribe(), dto.getPointName());
-                })
-                .filter(k -> {
-                    // 点位类型
-                    if (CollectionUtils.isEmpty(pointTypeSet)) {
-                        return true;
-                    }
-                    return pointTypeSet.contains(k.getPointType());
-                })
-                .filter(k -> {
-                    // 作者访问过
-                    if (null == dto.getVisit()) {
-                        return true;
-                    }
-                    if (dto.getVisit()) {
-                        return k.getVisitedTimes() > 1;
-                    } else {
-                        return true;
-                    }
-                })
+                // 模糊匹配
+                .filter(k -> pointNameLike(dto, k))
+                // 点位类型
+                .filter(k -> pointType(k, pointTypeSet))
+                // 作者访问过
+                .filter(k -> authorVisit(dto, k))
                 .toList();
 
         Constant pointRemoveKm = constantService.lambdaQuery()
@@ -103,6 +64,71 @@ public class PointSearchManager {
                     rebuildLatitudeAndLongitude(dto, vo, scale);
                     return vo;
                 }).toList();
+    }
+
+    private static boolean authorVisit(PointSearchDTO dto, Point k) {
+        if (null == dto.getVisit()) {
+            return true;
+        }
+        if (dto.getVisit()) {
+            return k.getVisitedTimes() > 1;
+        } else {
+            return true;
+        }
+    }
+
+    private static boolean pointType(Point k, Set<PointTypeEnum> pointTypeSet) {
+        if (CollectionUtils.isEmpty(pointTypeSet)) {
+            return true;
+        }
+        return pointTypeSet.contains(k.getPointType());
+    }
+
+    private boolean pointNameLike(PointSearchDTO dto, Point k) {
+
+        Set<Integer> pointSourceSet = pointManager.getPointSourceList().stream()
+                .filter(v -> {
+                    if (StringUtils.isNotBlank(dto.getPointName())) {
+                        return SearchUtils.containsValue(v.getTitle(), dto.getPointName()) ||
+                                SearchUtils.containsValue(v.getContent(), dto.getPointName());
+                    }
+                    return true;
+                })
+                .map(PointSource::getPointId)
+                .collect(Collectors.toSet());
+        return pointSourceSet.contains(k.getId()) ||
+                SearchUtils.containsValue(k.getPointFullName(), dto.getPointName()) ||
+                SearchUtils.containsValue(k.getPointShortName(), dto.getPointName()) ||
+                SearchUtils.containsValue(k.getAddress(), dto.getPointName()) ||
+                SearchUtils.containsValue(k.getAddressCode(), dto.getPointName()) ||
+                SearchUtils.containsValue(k.getDescribe(), dto.getPointName());
+    }
+
+    @NotNull
+    private static Set<PointTypeEnum> getPointTypeFilter(PointSearchDTO dto) {
+        Set<PointTypeEnum> pointTypeSet;
+        if (CollectionUtils.isNotEmpty(dto.getPointType())) {
+            pointTypeSet = dto.getPointType().stream()
+                    .map(k -> EnumUtils.getByClass(dto.getPointType(), PointTypeEnum.class))
+                    .collect(Collectors.toSet());
+        } else {
+            pointTypeSet = new HashSet<>();
+        }
+        return pointTypeSet;
+    }
+
+    @NotNull
+    private Set<Integer> getPointSourceFilter(PointSearchDTO dto) {
+        return pointManager.getPointSourceList().stream()
+                .filter(k -> {
+                    if (StringUtils.isNotBlank(dto.getPointName())) {
+                        return SearchUtils.containsValue(k.getTitle(), dto.getPointName()) ||
+                                SearchUtils.containsValue(k.getContent(), dto.getPointName());
+                    }
+                    return true;
+                })
+                .map(PointSource::getPointId)
+                .collect(Collectors.toSet());
     }
 
     private boolean removeByScale(Point k, PointSearchDTO dto, double scale, double removeKm) {
