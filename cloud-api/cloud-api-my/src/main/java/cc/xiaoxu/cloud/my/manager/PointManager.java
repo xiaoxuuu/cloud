@@ -52,6 +52,7 @@ public class PointManager {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
+        // 来源
         Set<Integer> pointSourceSet = pointSourceList.stream()
                 .filter(k -> {
                     if (StringUtils.isNotBlank(dto.getPointName())) {
@@ -85,7 +86,7 @@ public class PointManager {
                 })
                 .filter(k -> {
                     // 点位类型
-                    if (CollectionUtils.isNotEmpty(pointTypeSet)) {
+                    if (CollectionUtils.isEmpty(pointTypeSet)) {
                         return true;
                     }
                     return pointTypeSet.contains(k.getPointType());
@@ -112,7 +113,7 @@ public class PointManager {
                 .one();
         double scale = Double.parseDouble(pointScale.getValue());
 
-        return pointList.stream()
+        return filterPointList.stream()
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
                 .filter(k -> removeByScale(k, dto, scale, removeKm))
                 .map(k -> {
