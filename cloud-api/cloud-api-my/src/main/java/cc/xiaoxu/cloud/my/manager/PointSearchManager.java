@@ -32,18 +32,6 @@ public class PointSearchManager {
 
     public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
 
-        Set<PointTypeEnum> pointTypeSet = getPointTypeFilter(dto);
-
-        // 搜索
-        List<Point> filterPointList = pointManager.getPointList().stream()
-                // 模糊匹配
-                .filter(k -> pointNameLike(dto, k))
-                // 点位类型
-                .filter(k -> pointType(k, pointTypeSet))
-                // 作者访问过
-                .filter(k -> authorVisit(dto, k))
-                .toList();
-
         Constant pointRemoveKm = constantService.lambdaQuery()
                 .eq(Constant::getName, "point_remove_km")
                 .one();
@@ -53,17 +41,30 @@ public class PointSearchManager {
                 .one();
         double scale = Double.parseDouble(pointScale.getValue());
 
-        return filterPointList.stream()
+        // 搜索
+        return pointManager.getPointList().stream()
+                // 模糊匹配
+                .filter(k -> pointNameLike(dto, k))
+                // 点位类型
+                .filter(k -> pointType(k, dto))
+                // 作者访问过
+                .filter(k -> authorVisit(dto, k))
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
                 .filter(k -> removeByScale(k, dto, scale, removeKm))
-                .map(k -> {
-                    PointSimpleVO vo = new PointSimpleVO();
-                    BeanUtils.populate(k, vo);
-                    vo.setPointName(k.getPointShortName());
-                    // scale 大于一定数值，移除距离中心点指定距离外的数据
-                    rebuildLatitudeAndLongitude(dto, vo, scale);
-                    return vo;
-                }).toList();
+                .map(k -> tran(dto, k, scale))
+                // scale 大于一定数值，移除距离中心点指定距离外的数据
+                .peek(k -> rebuildLatitudeAndLongitude(dto, k, scale))
+                .toList();
+    }
+
+    @NotNull
+    private static PointSimpleVO tran(PointSearchDTO dto, Point k, double scale) {
+        PointSimpleVO vo = new PointSimpleVO();
+        BeanUtils.populate(k, vo);
+        vo.setPointName(k.getPointShortName());
+
+        rebuildLatitudeAndLongitude(dto, vo, scale);
+        return vo;
     }
 
     private static boolean authorVisit(PointSearchDTO dto, Point k) {
@@ -77,7 +78,9 @@ public class PointSearchManager {
         }
     }
 
-    private static boolean pointType(Point k, Set<PointTypeEnum> pointTypeSet) {
+    private boolean pointType(Point k, PointSearchDTO dto) {
+
+        Set<PointTypeEnum> pointTypeSet = getPointTypeFilter(dto);
         if (CollectionUtils.isEmpty(pointTypeSet)) {
             return true;
         }
