@@ -46,11 +46,11 @@ public class PointSearchManager {
                 // 模糊匹配
                 .filter(k -> pointNameLike(dto, k))
                 // 点位类型
-                .filter(k -> pointType(k, dto))
+                .filter(k -> pointType(dto, k))
                 // 作者访问过
                 .filter(k -> authorVisit(dto, k))
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
-                .filter(k -> removeByScale(k, dto, scale, removeKm))
+                .filter(k -> removeByScale(dto, k, scale, removeKm))
                 .map(this::tran)
                 // scale 大于一定数值，移除距离中心点指定距离外的数据
                 .peek(k -> rebuildLatitudeAndLongitude(dto, k, scale))
@@ -77,7 +77,7 @@ public class PointSearchManager {
         }
     }
 
-    private boolean pointType(Point k, PointSearchDTO dto) {
+    private boolean pointType(PointSearchDTO dto, Point k) {
 
         Set<PointTypeEnum> pointTypeSet = getPointTypeFilter(dto);
         if (CollectionUtils.isEmpty(pointTypeSet)) {
@@ -119,21 +119,7 @@ public class PointSearchManager {
         return pointTypeSet;
     }
 
-    @NotNull
-    private Set<Integer> getPointSourceFilter(PointSearchDTO dto) {
-        return pointManager.getPointSourceList().stream()
-                .filter(k -> {
-                    if (StringUtils.isNotBlank(dto.getPointName())) {
-                        return SearchUtils.containsValue(k.getTitle(), dto.getPointName()) ||
-                                SearchUtils.containsValue(k.getContent(), dto.getPointName());
-                    }
-                    return true;
-                })
-                .map(PointSource::getPointId)
-                .collect(Collectors.toSet());
-    }
-
-    private boolean removeByScale(Point k, PointSearchDTO dto, double scale, double removeKm) {
+    private boolean removeByScale(PointSearchDTO dto, Point k, double scale, double removeKm) {
         if (dto.getScale() <= scale) {
             return true;
         }
