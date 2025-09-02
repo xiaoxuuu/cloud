@@ -51,23 +51,22 @@ public class PointSearchManager {
                 .filter(k -> authorVisit(dto, k))
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
                 .filter(k -> removeByScale(k, dto, scale, removeKm))
-                .map(k -> tran(dto, k, scale))
+                .map(this::tran)
                 // scale 大于一定数值，移除距离中心点指定距离外的数据
                 .peek(k -> rebuildLatitudeAndLongitude(dto, k, scale))
                 .toList();
     }
 
     @NotNull
-    private static PointSimpleVO tran(PointSearchDTO dto, Point k, double scale) {
+    private PointSimpleVO tran(Point k) {
+
         PointSimpleVO vo = new PointSimpleVO();
         BeanUtils.populate(k, vo);
         vo.setPointName(k.getPointShortName());
-
-        rebuildLatitudeAndLongitude(dto, vo, scale);
         return vo;
     }
 
-    private static boolean authorVisit(PointSearchDTO dto, Point k) {
+    private boolean authorVisit(PointSearchDTO dto, Point k) {
         if (null == dto.getVisit()) {
             return true;
         }
@@ -147,7 +146,7 @@ public class PointSearchManager {
         return distance <= removeKm;
     }
 
-    private static void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointSimpleVO k, double scale) {
+    private void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointSimpleVO k, double scale) {
         if (dto.getScale() <= scale) {
             log.error("偏移经纬度");
             // 对经纬度进行偏移，保护隐私，控制在2公里范围内
