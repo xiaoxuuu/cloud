@@ -30,7 +30,7 @@ public class PointSearchManager {
     private final ConstantService constantService;
     private final PointManager pointManager;
 
-    public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
+    public List<? extends PointSimpleVO> search(PointSearchDTO dto) {
 
         Constant pointRemoveKm = constantService.lambdaQuery()
                 .eq(Constant::getName, "point_remove_km")
@@ -71,6 +71,9 @@ public class PointSearchManager {
             return true;
         }
         if (dto.getVisit()) {
+            if (null == k.getVisitedTimes()) {
+                return false;
+            }
             return k.getVisitedTimes() > 1;
         } else {
             return true;

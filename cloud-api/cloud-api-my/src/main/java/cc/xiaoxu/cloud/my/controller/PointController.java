@@ -57,15 +57,15 @@ public class PointController {
         pointService.edit(dto);
     }
 
-    @Operation(summary = "列表", description = "获取地点列表")
-    @PostMapping("/list")
+    @Operation(summary = "搜索", description = "搜索地点列表")
+    @PostMapping("/search")
     public @ResponseBody
-    List<? extends PointSimpleVO> list(@RequestBody PointSearchDTO dto) {
+    List<? extends PointSimpleVO> search(@RequestBody PointSearchDTO dto) {
 
         if (null == dto.getScale() || null == dto.getCenterLatitude() || null == dto.getCenterLongitude()) {
             throw new CustomException("参数错误");
         }
-        return pointSearchManager.lists(dto);
+        return pointSearchManager.search(dto);
     }
 
     @Operation(summary = "获取待处理数量", description = "获取待处理数量")
