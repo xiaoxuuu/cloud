@@ -1,9 +1,11 @@
 package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.entity.PointSource;
+import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.service.PointMapService;
 import cc.xiaoxu.cloud.my.service.PointService;
@@ -36,8 +38,8 @@ public class PointManager {
     @Resource
     private PointSourceService pointSourceService;
 
-    private List<Point> pointList = new ArrayList<>();
-    private Map<Integer, Point> pointMap = new HashMap<>();
+    private List<PointTemp> pointList = new ArrayList<>();
+    private Map<Integer, PointTemp> pointMap = new HashMap<>();
 
     private List<PointMap> pointMapList = new ArrayList<>();
     private Map<Integer, PointMap> pointMapMap = new HashMap<>();
@@ -53,9 +55,63 @@ public class PointManager {
                 .isNotNull(Point::getLatitude)
                 // 无效数据排除
                 .ne(Point::getState, StateEnum.DELETE.getCode())
-                .list();
-        pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
+                .list().stream()
+                .map(this::tranFake)
+                .peek(this::createFakeLatLon)
+                .toList();
+        pointMap = pointList.stream()
+                .collect(Collectors.toMap(Point::getId, a -> a));
         log.debug("查询到 {} 条点位数据...", pointList.size());
+    }
+
+    private PointTemp tranFake(Point point) {
+        PointTemp pointTemp = new PointTemp();
+        BeanUtils.populate(point, pointTemp);
+        return pointTemp;
+    }
+
+    private void createFakeLatLon(PointTemp k) {
+        // 15 0.0005
+        // 14
+        // 13
+        // 12
+        // 11
+        // 10
+        //  9
+        //  8
+        //  7
+        //  6
+        k.setLatitudeFake(offsetLatitude(k.getLatitude(), 0.001));
+        k.setLongitudeFake(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.001));
+    }
+
+    /**
+     * 对纬度进行偏移
+     * @param lat 原始纬度
+     * @param maxOffset 最大偏移量（度）
+     * @return 偏移后的纬度
+     */
+    private static String offsetLatitude(String lat, double maxOffset) {
+        double latitude = Double.parseDouble(lat);
+        // 添加随机偏移，范围在 -maxOffset 到 +maxOffset 之间，控制在约2公里内
+        double offsetValue = (Math.random() * 2 - 1) * maxOffset;
+        return String.valueOf(latitude + offsetValue);
+    }
+
+    /**
+     * 对经度进行偏移
+     * @param lon 原始经度
+     * @param lat 纬度（用于计算经度偏移）
+     * @param maxOffset 最大偏移量（度）
+     * @return 偏移后的经度
+     */
+    private static String offsetLongitude(String lon, String lat, double maxOffset) {
+        double longitude = Double.parseDouble(lon);
+        double latitude = Double.parseDouble(lat);
+        // 根据纬度调整经度偏移量，保证偏移距离大致相同
+        double offsetFactor = Math.cos(Math.toRadians(latitude));
+        double offsetValue = (Math.random() * 2 - 1) * maxOffset * offsetFactor;
+        return String.valueOf(longitude + offsetValue);
     }
 
     public void updatePointMapList() {

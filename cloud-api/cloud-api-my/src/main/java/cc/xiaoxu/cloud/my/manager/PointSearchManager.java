@@ -8,6 +8,7 @@ import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import cc.xiaoxu.cloud.my.entity.Constant;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointSource;
+import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,8 @@ public class PointSearchManager {
         double scale = Double.parseDouble(pointScale.getValue());
 
         // 搜索
-        return pointManager.getPointList().stream()
+        return pointManager.getPointList()
+                .stream()
                 // 模糊匹配
                 .filter(k -> pointNameLike(dto, k))
                 // 点位类型
@@ -51,9 +53,9 @@ public class PointSearchManager {
                 .filter(k -> authorVisit(dto, k))
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
                 .filter(k -> removeByScale(dto, k, scale, removeKm))
-                .map(this::tran)
                 // scale 大于一定数值，移除距离中心点指定距离外的数据
                 .peek(k -> rebuildLatitudeAndLongitude(dto, k, scale))
+                .map(this::tran)
                 .toList();
     }
 
@@ -135,22 +137,10 @@ public class PointSearchManager {
         return distance <= removeKm;
     }
 
-    private void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointSimpleVO k, double scale) {
+    private void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointTemp k, double scale) {
         if (dto.getScale() <= scale) {
-            log.error("偏移经纬度");
-            // 对经纬度进行偏移，保护隐私，控制在2公里范围内
-            // 15 0.0005
-            // 14
-            // 13
-            // 12
-            // 11
-            // 10
-            //  9
-            //  8
-            //  7
-            //  6
-            k.setLatitude(offsetLatitude(k.getLatitude(), 0.0005));
-            k.setLongitude(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.0005));
+            k.setLatitude(k.getLatitudeFake());
+            k.setLongitude(k.getLongitudeFake());
         }
     }
 
