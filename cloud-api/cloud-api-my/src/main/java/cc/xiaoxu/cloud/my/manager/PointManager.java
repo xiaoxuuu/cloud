@@ -59,9 +59,28 @@ public class PointManager {
                 .map(this::tranFake)
                 .peek(this::createFakeLatLon)
                 .toList();
-        pointMap = pointList.stream()
-                .collect(Collectors.toMap(Point::getId, a -> a));
+        pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
         log.debug("查询到 {} 条点位数据...", pointList.size());
+    }
+
+    public void updatePointMapList() {
+
+        pointMapList = pointMapService.lambdaQuery()
+                // 无效数据排除
+                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
+                .list();
+        pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getPointId, a -> a));
+        log.debug("查询到 {} 条点位地图数据...", pointMapList.size());
+    }
+
+    public void updatePointSourceList() {
+
+        pointSourceList = pointSourceService.lambdaQuery()
+                // 无效数据排除
+                .eq(PointSource::getState, StateEnum.ENABLE.getCode())
+                .list();
+        pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
+        log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 
     private PointTemp tranFake(Point point) {
@@ -87,7 +106,8 @@ public class PointManager {
 
     /**
      * 对纬度进行偏移
-     * @param lat 原始纬度
+     *
+     * @param lat       原始纬度
      * @param maxOffset 最大偏移量（度）
      * @return 偏移后的纬度
      */
@@ -100,8 +120,9 @@ public class PointManager {
 
     /**
      * 对经度进行偏移
-     * @param lon 原始经度
-     * @param lat 纬度（用于计算经度偏移）
+     *
+     * @param lon       原始经度
+     * @param lat       纬度（用于计算经度偏移）
      * @param maxOffset 最大偏移量（度）
      * @return 偏移后的经度
      */
@@ -112,25 +133,5 @@ public class PointManager {
         double offsetFactor = Math.cos(Math.toRadians(latitude));
         double offsetValue = (Math.random() * 2 - 1) * maxOffset * offsetFactor;
         return String.valueOf(longitude + offsetValue);
-    }
-
-    public void updatePointMapList() {
-
-        pointMapList = pointMapService.lambdaQuery()
-                // 无效数据排除
-                .ne(PointMap::getState, StateEnum.DELETE.getCode())
-                .list();
-        pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getId, a -> a));
-        log.debug("查询到 {} 条点位地图数据...", pointMapList.size());
-    }
-
-    public void updatePointSourceList() {
-
-        pointSourceList = pointSourceService.lambdaQuery()
-                // 无效数据排除
-                .ne(PointSource::getState, StateEnum.DELETE.getCode())
-                .list();
-        pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
-        log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 }
