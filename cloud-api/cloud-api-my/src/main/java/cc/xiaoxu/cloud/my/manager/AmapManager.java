@@ -24,8 +24,7 @@ public class AmapManager {
     private static final String ID_SEARCH_URL = "https://restapi.amap.com/v5/place/detail";
 
     /**
-     * 高德地图输入提示API
-     * 文档：<a href="https://lbs.amap.com/api/webservice/guide/api-advanced/inputtips">...</a>
+     * <a href="https://lbs.amap.com/api/webservice/guide/api-advanced/inputtips">输入提示</a>
      *
      * @param requestDTO 请求参数
      * @return 输入提示响应结果
@@ -61,8 +60,7 @@ public class AmapManager {
     }
 
     /**
-     * 高德地图搜索POI 2.0 API
-     * 文档：<a href="https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch">...</a>
+     * <a href="https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch">搜索POI</a>
      *
      * @param requestDTO 请求参数
      * @return POI搜索响应结果
@@ -100,8 +98,7 @@ public class AmapManager {
     }
 
     /**
-     * 高德地图搜索POI 2.0 API
-     * 文档：<a href="https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch">...</a>
+     * <a href="https://lbs.amap.com/api/webservice/guide/api-advanced/newpoisearch">搜索POI</a>
      *
      * @param requestDTO 请求参数
      * @return POI搜索响应结果
@@ -117,7 +114,7 @@ public class AmapManager {
      * @param requestDTO 请求参数
      * @return ID 搜索响应结果
      */
-    public String idSearch(AmapIdSearchRequestDTO requestDTO) {
+    public String idSearchString(AmapIdSearchRequestDTO requestDTO) {
         try {
             HttpUtils httpUtils = HttpUtils.builder()
                     .url(ID_SEARCH_URL)
@@ -140,5 +137,10 @@ public class AmapManager {
             log.error("调用高德地图搜索POI API失败", e);
             throw new RuntimeException("调用高德地图搜索 POI API 异常");
         }
+    }
+
+    public AmapPoiSearchResponseDTO idSearch(AmapIdSearchRequestDTO requestDTO) {
+
+        return JsonUtils.parse(idSearchString(requestDTO), AmapPoiSearchResponseDTO.class);
     }
 }

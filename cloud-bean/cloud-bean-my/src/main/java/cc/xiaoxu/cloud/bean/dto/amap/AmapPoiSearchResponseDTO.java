@@ -61,19 +61,20 @@ public class AmapPoiSearchResponseDTO {
         @Schema(description = "地址")
         private String address;
 
+        @Schema(description = "邮编")
+        private String postcode;
+
+        @Schema(description = "POI所在区县编码")
+        private String adcode;
+
+        @Schema(description = "poi 所属城市编码")
+        private String citycode;
+
         @Schema(description = "电话")
         private String tel;
 
         @Schema(description = "距离中心点的距离，单位：米")
         private String distance;
-
-
-
-        @Schema(description = "POI所在区县编码")
-        private String adcode;
-
-        @Schema(description = "邮编")
-        private String postcode;
 
         @Schema(description = "网站")
         private String website;
