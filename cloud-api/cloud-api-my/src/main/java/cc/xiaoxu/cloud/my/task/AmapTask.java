@@ -14,7 +14,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,10 +34,12 @@ public class AmapTask {
     @Resource
     private PointMapService pointMapService;
 
-    @Scheduled(cron = "0 0 2 * * *")
+//    @Scheduled(cron = "0 0 2 * * *")
     public void refreshData() {
 
+        // TODO 更新点位数据
         updateAmapData();
+        // TODO 更新点位是否存在，使用 ID 查询
     }
 
     public void updateAmapData() {
