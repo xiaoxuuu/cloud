@@ -70,11 +70,42 @@ public class AmapPoiSearchResponseDTO {
         @Schema(description = "poi 所属城市编码")
         private String citycode;
 
+        @Schema(description = "子 POI 信息")
+        private AmapChildrenDTO children;
+
         @Schema(description = "商户信息")
         private AmapBusinessDTO business;
 
         @Schema(description = "室内相关信息")
         private AmapIndoorDTO indoor;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "室内相关信息")
+    public static class AmapChildrenDTO {
+
+        @Schema(description = "子 poi 唯一标识")
+        private String id;
+
+        @Schema(description = "子 poi 名称")
+        private String name;
+
+        @Schema(description = "子 poi 经纬度")
+        private String location;
+
+        @Schema(description = "子 poi 详细地址")
+        private String address;
+
+        @Schema(description = "子 poi 所属类型")
+        private String subtype;
+
+        @Schema(description = "子 poi 分类编码")
+        private String typecode;
+
+        @Schema(description = "子 poi 分类信息")
+        private String sname;
     }
 
     @Data
