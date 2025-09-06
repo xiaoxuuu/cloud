@@ -78,6 +78,12 @@ public class AmapPoiSearchResponseDTO {
 
         @Schema(description = "室内相关信息")
         private AmapIndoorDTO indoor;
+
+        @Schema(description = "导航位置相关信息")
+        private AmapNaviDTO navi;
+
+        @Schema(description = "poi图片")
+        private AmapPhotosDTO photos;
     }
 
     @Data
@@ -165,5 +171,37 @@ public class AmapPoiSearchResponseDTO {
 
         @Schema(description = "所在楼层，一般会带有字母，例如F8；indoor_map 为0时不返回")
         private String truefloor;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "导航位置相关信息")
+    public static class AmapNaviDTO {
+
+        @Schema(description = "poi 对应的导航引导点坐标。大型面状 POI 的导航引导点，一般为各类出入口，方便结合导航、路线规划等服务使用")
+        private String navi_poiid;
+
+        @Schema(description = "poi 的入口经纬度坐标")
+        private String entr_location;
+
+        @Schema(description = "poi 的出口经纬度坐标")
+        private String exit_location;
+
+        @Schema(description = "poi 的地理格 id")
+        private String gridcode;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "poi图片")
+    public static class AmapPhotosDTO {
+
+        @Schema(description = "poi 的图片介绍")
+        private String title;
+
+        @Schema(description = "poi 图片的下载链接")
+        private String url;
     }
 }
