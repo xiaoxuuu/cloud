@@ -61,8 +61,8 @@ public class AmapPoiSearchResponseDTO {
         @Schema(description = "地址")
         private String address;
 
-        @Schema(description = "邮编")
-        private String postcode;
+        @Schema(description = "poi 所属省份编码")
+        private String pcode;
 
         @Schema(description = "POI所在区县编码")
         private String adcode;
@@ -70,20 +70,11 @@ public class AmapPoiSearchResponseDTO {
         @Schema(description = "poi 所属城市编码")
         private String citycode;
 
-        @Schema(description = "电话")
-        private String tel;
-
-        @Schema(description = "距离中心点的距离，单位：米")
-        private String distance;
-
-        @Schema(description = "网站")
-        private String website;
-
-        @Schema(description = "邮箱")
-        private String email;
-
         @Schema(description = "商户信息")
         private AmapBusinessDTO business;
+
+        @Schema(description = "室内相关信息")
+        private AmapIndoorDTO indoor;
     }
 
     @Data
@@ -92,19 +83,56 @@ public class AmapPoiSearchResponseDTO {
     @Schema(description = "商户信息")
     public static class AmapBusinessDTO {
 
-        @Schema(description = "营业时间")
-        private String opentime;
+        @Schema(description = "poi 所属商圈")
+        private String business_area;
 
-        @Schema(description = "人均消费")
-        private String cost;
+        @Schema(description = "poi 今日营业时间，如 08:30-17:30 08:30-09:00 12:00-13:30 09:00-13:00")
+        private String opentime_today;
 
-        @Schema(description = "评分")
+        @Schema(description = "poi 营业时间描述，如 周一至周五:08:30-17:30(延时服务时间:08:30-09:00；12:00-13:30)；周六延时服务时间:09:00-13:00(法定节假日除外)")
+        private String opentime_week;
+
+        @Schema(description = "poi 的联系电话")
+        private String tel;
+
+        @Schema(description = "poi 特色内容，目前仅在美食poi下返回")
+        private String tag;
+
+        @Schema(description = "poi 评分，目前仅在餐饮、酒店、景点、影院类 POI 下返回")
         private String rating;
 
-        @Schema(description = "评价数")
-        private String reviewCount;
+        @Schema(description = "poi 人均消费，目前仅在餐饮、酒店、景点、影院类 POI 下返回")
+        private String cost;
 
-        @Schema(description = "商户标签")
-        private String tag;
+        @Schema(description = "停车场类型（地下、地面、路边），目前仅在停车场类 POI 下返回")
+        private String parking_type;
+
+        @Schema(description = "poi 的别名，无别名时不返回")
+        private String alias;
+
+        @Schema(description = "poi 标识，用于确认poi信息类型")
+        private String keytag;
+
+        @Schema(description = "用于再次确认信息类型")
+        private String rectag;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Schema(description = "室内相关信息")
+    public static class AmapIndoorDTO {
+
+        @Schema(description = "是否有室内地图标志，1为有，0为没有")
+        private String indoor_map;
+
+        @Schema(description = "如果当前 POI 为建筑物类 POI，则 cpid 为自身 POI ID；如果当前 POI 为商铺类 POI，则 cpid 为其所在建筑物的 POI ID。indoor_map 为0时不返回")
+        private String cpid;
+
+        @Schema(description = "楼层索引，一般会用数字表示，例如8；indoor_map 为0时不返回")
+        private String floor;
+
+        @Schema(description = "所在楼层，一般会带有字母，例如F8；indoor_map 为0时不返回")
+        private String truefloor;
     }
 }
