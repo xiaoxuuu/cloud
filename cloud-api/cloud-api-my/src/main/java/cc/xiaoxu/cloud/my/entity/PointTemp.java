@@ -17,4 +17,14 @@ public class PointTemp extends Point {
 
     @Schema(description = "错误纬度")
     private String latitudeFake;
+
+    // TODO 增加区县数据返回
+    @Schema(description = "POI所在省份名称")
+    private String province;
+
+    @Schema(description = "POI所在城市名称")
+    private String city;
+
+    @Schema(description = "所在区县名称")
+    private String district;
 }

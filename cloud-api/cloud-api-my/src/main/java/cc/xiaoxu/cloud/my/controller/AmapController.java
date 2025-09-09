@@ -1,16 +1,19 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.PointMapSearchDTO;
+import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapInputTipsRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapInputTipsResponseDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchResponseDTO;
 import cc.xiaoxu.cloud.bean.enums.SearchMapTypeEnum;
-import cc.xiaoxu.cloud.bean.vo.PointMapSearchAddressVO;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.my.entity.PointMap;
+import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
+import cc.xiaoxu.cloud.my.manager.PointManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -20,9 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Tag(name = "高德地图", description = "高德地图接口器")
@@ -35,23 +36,35 @@ public class AmapController {
     @Resource
     private AmapManager amapManager;
 
-    @Operation(summary = "地址搜索", description = "优先调用 POI 接口，数据不足 10 条自动降级输入提示")
+    @Resource
+    private PointManager pointManager;
+
+    @Operation(summary = "地点搜索", description = "查询顺序：已有数据、POI 接口、输入提示")
     @PostMapping("/search/{code}")
-    public @ResponseBody Map<String, List<PointMapSearchVO>> search(@PathVariable("code") String code, @RequestBody PointMapSearchDTO dto) {
+    public @ResponseBody List<PointMapSearchVO> search(@PathVariable("code") String code, @RequestBody PointMapSearchDTO dto) {
 
         if (!code.equals(CloudController.getCheckCode() + authCode)) {
-            throw new CustomException("无权限");
+//            throw new CustomException("无权限");
         }
 
         if (StringUtils.isEmpty(dto.getKeywords())) {
-            return Map.of();
+            return List.of();
         }
 
-        Map<String, List<PointMapSearchVO>> map = new LinkedHashMap<>();
+        // 返回数据
+        List<PointMapSearchVO> list = new ArrayList<>();
 
-        // TODO 查询已有数据
+        // 查询已有数据
+        PointSearchDTO pointSearchDTO = new PointSearchDTO();
+        pointSearchDTO.setPointName(dto.getKeywords());
+        List<PointMapSearchVO> pointList = pointManager.getPointList()
+                .stream()
+                .filter(v -> v.getPointShortName().contains(dto.getKeywords()) || v.getPointFullName().contains(dto.getKeywords()))
+                .map(this::pointToPointMapSearchVO)
+                .toList();
+        list.addAll(pointList);
 
-        // 调用高德 POI 接口
+        // 高德 POI
         AmapPoiSearchRequestDTO amapDTO = new AmapPoiSearchRequestDTO();
         amapDTO.setShowFields("business");
         amapDTO.setExtensions("all");
@@ -59,21 +72,41 @@ public class AmapController {
         amapDTO.setRegion(dto.getCity());
         AmapPoiSearchResponseDTO amapPoiSearchResponseDTO = amapManager.searchPoi(amapDTO);
         if (CollectionUtils.isNotEmpty(amapPoiSearchResponseDTO.getPois())) {
-            map.put(SearchMapTypeEnum.AMAP_POI.getIntroduction(), amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois()));
+            List<PointMapSearchVO> pointMapSearchVOS = amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois());
+            list.addAll(pointMapSearchVOS);
         }
 
         if (amapPoiSearchResponseDTO.getPois().size() <= 10) {
-            // 调用高德输入提示接口
+            // 高德输入提示
             AmapInputTipsRequestDTO inputDTO = new AmapInputTipsRequestDTO();
             inputDTO.setLocation(dto.getCity());
             inputDTO.setKeywords(dto.getKeywords());
             AmapInputTipsResponseDTO amapInputTipsResponseDTO = amapManager.inputTips(inputDTO);
             if (CollectionUtils.isNotEmpty(amapInputTipsResponseDTO.getTips())) {
-                map.put(SearchMapTypeEnum.AMAP_INPUT.getIntroduction(), amapInputToPointMapSearchVO(amapInputTipsResponseDTO.getTips()));
+                List<PointMapSearchVO> pointMapSearchVOS = amapInputToPointMapSearchVO(amapInputTipsResponseDTO.getTips());
+                list.addAll(pointMapSearchVOS);
             }
         }
 
-        return map;
+        return list;
+    }
+
+    private PointMapSearchVO pointToPointMapSearchVO(PointTemp pointTemp) {
+
+        PointMap pointMap = pointManager.getPointMapMap().get(pointTemp.getId());
+        PointMapSearchVO vo = new PointMapSearchVO();
+        vo.setSearchMapType(SearchMapTypeEnum.EXISTS_DATA);
+        if (null != pointMap) {
+            vo.setMapId(pointMap.getAmapId());
+        }
+        vo.setName(pointTemp.getPointFullName());
+        vo.setLocation(pointTemp.getLongitude() + ","+ pointTemp.getLatitude());
+        vo.setProvince(pointTemp.getProvince());
+        vo.setCity(pointTemp.getCity());
+        vo.setDistrict(pointTemp.getDistrict());
+        vo.setDistrictCode(pointTemp.getAddressCode());
+        vo.setAddress(pointTemp.getAddress());
+        return null;
     }
 
     private List<PointMapSearchVO> amapPoiToPointMapSearchVO(List<AmapPoiSearchResponseDTO.AmapPoiDTO> poiDTOList) {
@@ -83,21 +116,19 @@ public class AmapController {
         for (AmapPoiSearchResponseDTO.AmapPoiDTO poi : poiDTOList) {
 
             PointMapSearchVO searchVO = new PointMapSearchVO();
-            PointMapSearchAddressVO addressVO = new PointMapSearchAddressVO();
-            searchVO.setAddressVO(addressVO);
+            searchVO.setSearchMapType(SearchMapTypeEnum.AMAP_POI);
 
             // 基础字段
             searchVO.setMapId(poi.getId());
             searchVO.setName(poi.getName());
-            searchVO.setType(poi.getType());
 
             // 地址信息
-            addressVO.setAddress(poi.getAddress());
-            addressVO.setLocation(poi.getLocation());
-            addressVO.setProvince(poi.getPname());
-            addressVO.setCity(poi.getCityname());
-            addressVO.setDistrict(poi.getAdname());
-            addressVO.setDistrictCode(poi.getAdcode());
+            searchVO.setAddress(poi.getAddress());
+            searchVO.setLocation(poi.getLocation());
+            searchVO.setProvince(poi.getPname());
+            searchVO.setCity(poi.getCityname());
+            searchVO.setDistrict(poi.getAdname());
+            searchVO.setDistrictCode(poi.getAdcode());
             searchVOList.add(searchVO);
         }
         return searchVOList;
@@ -136,41 +167,39 @@ public class AmapController {
         for (AmapInputTipsResponseDTO.AmapInputTipDTO tip : tips) {
 
             PointMapSearchVO poi = new PointMapSearchVO();
-            PointMapSearchAddressVO addressVO = new PointMapSearchAddressVO();
-            poi.setAddressVO(addressVO);
 
             // 基础字段
             poi.setMapId(tip.getId());
             poi.setName(tip.getName());
 
             // 地址信息
-            addressVO.setAddress(tip.getAddress());
-            addressVO.setLocation(tip.getLocation());
-            addressVO.setDistrictCode(tip.getAdcode());
+            poi.setAddress(tip.getAddress());
+            poi.setLocation(tip.getLocation());
+            poi.setDistrictCode(tip.getAdcode());
 
             // 拆分 district 字段为 pname、cityname、adname
             if (tip.getDistrict() != null && !tip.getDistrict().isEmpty()) {
                 String[] districts = tip.getDistrict().split("省|市|区|县|自治区|特别行政区");
 
                 if (districts.length >= 1 && !districts[0].isEmpty()) {
-                    addressVO.setProvince(districts[0] + (tip.getDistrict().contains("省") ? "省" :
+                    poi.setProvince(districts[0] + (tip.getDistrict().contains("省") ? "省" :
                             tip.getDistrict().contains("自治区") ? "自治区" :
                                     tip.getDistrict().contains("特别行政区") ? "特别行政区" : ""));
                 }
 
                 if (districts.length >= 2 && !districts[1].isEmpty()) {
-                    addressVO.setCity(districts[1] + "市");
+                    poi.setCity(districts[1] + "市");
                 }
 
                 if (districts.length >= 3 && !districts[2].isEmpty()) {
-                    addressVO.setDistrict(districts[2] + (tip.getDistrict().contains("区") ? "区" :
+                    poi.setDistrict(districts[2] + (tip.getDistrict().contains("区") ? "区" :
                             tip.getDistrict().contains("县") ? "县" : ""));
                 }
 
                 // 如果拆分结果不足，尝试更智能的解析
-                if (addressVO.getProvince() == null && addressVO.getCity() == null && addressVO.getDistrict() == null) {
+                if (poi.getProvince() == null && poi.getCity() == null && poi.getDistrict() == null) {
                     // 简单情况：直接使用原始 district 作为 adname
-                    addressVO.setDistrict(tip.getDistrict());
+                    poi.setDistrict(tip.getDistrict());
                 }
             }
 
