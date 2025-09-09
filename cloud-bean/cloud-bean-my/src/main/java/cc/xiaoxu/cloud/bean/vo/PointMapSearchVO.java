@@ -22,7 +22,4 @@ public class PointMapSearchVO {
 
     @Schema(description = "地址信息")
     private PointMapSearchAddressVO addressVO;
-
-    @Schema(description = "营业信息")
-    private PointMapSearchBusinessVO businessVO;
 }

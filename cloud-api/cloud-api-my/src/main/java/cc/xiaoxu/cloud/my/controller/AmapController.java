@@ -7,7 +7,6 @@ import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchResponseDTO;
 import cc.xiaoxu.cloud.bean.enums.SearchMapTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchAddressVO;
-import cc.xiaoxu.cloud.bean.vo.PointMapSearchBusinessVO;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
@@ -86,8 +85,6 @@ public class AmapController {
             PointMapSearchVO searchVO = new PointMapSearchVO();
             PointMapSearchAddressVO addressVO = new PointMapSearchAddressVO();
             searchVO.setAddressVO(addressVO);
-            PointMapSearchBusinessVO businessVO = new PointMapSearchBusinessVO();
-            searchVO.setBusinessVO(businessVO);
 
             // 基础字段
             searchVO.setMapId(poi.getId());
@@ -101,17 +98,6 @@ public class AmapController {
             addressVO.setCity(poi.getCityname());
             addressVO.setDistrict(poi.getAdname());
             addressVO.setDistrictCode(poi.getAdcode());
-
-            // 商户信息
-            businessVO.setTel(poi.getTel());
-            businessVO.setWebsite(poi.getWebsite());
-            businessVO.setEmail(poi.getEmail());
-            AmapPoiSearchResponseDTO.AmapBusinessDTO business = poi.getBusiness();
-            businessVO.setOpenTime(business.getOpentime());
-            businessVO.setAverageCost(business.getCost());
-            businessVO.setRating(business.getRating());
-            businessVO.setTag(business.getTag());
-
             searchVOList.add(searchVO);
         }
         return searchVOList;
@@ -152,8 +138,6 @@ public class AmapController {
             PointMapSearchVO poi = new PointMapSearchVO();
             PointMapSearchAddressVO addressVO = new PointMapSearchAddressVO();
             poi.setAddressVO(addressVO);
-            PointMapSearchBusinessVO businessVO = new PointMapSearchBusinessVO();
-            poi.setBusinessVO(businessVO);
 
             // 基础字段
             poi.setMapId(tip.getId());
