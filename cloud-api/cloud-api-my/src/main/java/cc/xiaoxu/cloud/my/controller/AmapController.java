@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,13 +56,7 @@ public class AmapController {
         List<PointMapSearchVO> list = new ArrayList<>();
 
         // 查询已有数据
-        PointSearchDTO pointSearchDTO = new PointSearchDTO();
-        pointSearchDTO.setPointName(dto.getKeywords());
-        List<PointMapSearchVO> pointList = pointManager.getPointList()
-                .stream()
-                .filter(v -> v.getPointShortName().contains(dto.getKeywords()) || v.getPointFullName().contains(dto.getKeywords()))
-                .map(this::pointToPointMapSearchVO)
-                .toList();
+        List<PointMapSearchVO> pointList = getExistsData(dto);
         list.addAll(pointList);
 
         // 高德 POI
@@ -89,6 +84,18 @@ public class AmapController {
         }
 
         return list;
+    }
+
+    @NotNull
+    private List<PointMapSearchVO> getExistsData(PointMapSearchDTO dto) {
+        PointSearchDTO pointSearchDTO = new PointSearchDTO();
+        pointSearchDTO.setPointName(dto.getKeywords());
+        List<PointMapSearchVO> pointList = pointManager.getPointList()
+                .stream()
+                .filter(v -> v.getPointShortName().contains(dto.getKeywords()) || v.getPointFullName().contains(dto.getKeywords()))
+                .map(this::pointToPointMapSearchVO)
+                .toList();
+        return pointList;
     }
 
     private PointMapSearchVO pointToPointMapSearchVO(PointTemp pointTemp) {
