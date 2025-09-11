@@ -41,14 +41,25 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
 
-        // TODO 地图
-        if (StringUtils.isNotBlank(dto.getAmapId())) {
-            //
-        }
+        // 地图
+        addOrEditPointMap(point.getId(), dto.getAmapId());
 
         // 来源
         List<PointSourceAddDTO> sourceAddDTOList = dto.getSource();
         addSource(sourceAddDTOList, point.getId());
+    }
+
+    private void addOrEditPointMap(Integer id, String amapId) {
+
+        // TODO 查询数据是否存在
+        List<PointMap> pointMapList = pointMapService.lambdaQuery()
+                .eq(PointMap::getPointId, id)
+                .orderByDesc(PointMap::getId)
+                .list();
+
+        // 判断 mapId 是否变动
+        // 未变动，编辑
+        // 变动，删除再新增
     }
 
     private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList, Integer pointId) {
@@ -81,10 +92,8 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .eq(Point::getId, dto.getId())
                 .update();
 
-        // TODO 地图
-        if (StringUtils.isNotBlank(dto.getAmapId())) {
-            //
-        }
+        // 地图
+        addOrEditPointMap(dto.getId(), dto.getAmapId());
 
         // 来源
         List<PointSourceEditDTO> sourceList = dto.getSourceEdit();
