@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +33,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     private final PointSourceService pointSourceService;
     private final PointMapService pointMapService;
 
+    @Transactional(rollbackFor = Exception.class)
     public void add(PointAddDTO dto) {
 
         Point point = new Point();
@@ -39,21 +41,29 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         point.setState(StateEnum.ENABLE.getCode());
         save(point);
 
+        // TODO 地图
+        if (StringUtils.isNotBlank(dto.getAmapId())) {
+            //
+        }
+
+        // 来源
         List<PointSourceAddDTO> sourceAddDTOList = dto.getSource();
-        addSource(sourceAddDTOList);
+        addSource(sourceAddDTOList, point.getId());
     }
 
-    private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList) {
+    private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList, Integer pointId) {
         if (CollectionUtils.isNotEmpty(sourceAddDTOList)) {
             List<PointSource> list = sourceAddDTOList.stream().map(source -> {
                 PointSource pointSource = new PointSource();
                 BeanUtils.populate(source, pointSource);
+                pointSource.setPointId(pointId);
                 return pointSource;
             }).toList();
             pointSourceService.saveBatch(list);
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void edit(PointEditDTO dto) {
 
         lambdaUpdate()
@@ -64,18 +74,24 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .set(StringUtils.isNotBlank(dto.getAddress()), Point::getAddress, dto.getAddress())
                 .set(StringUtils.isNotBlank(dto.getLongitude()), Point::getLongitude, dto.getLongitude())
                 .set(StringUtils.isNotBlank(dto.getLatitude()), Point::getLatitude, dto.getLatitude())
-                .set(dto.getCollectTimes() != null, Point::getCollectTimes, dto.getCollectTimes())
                 .set(dto.getVisitedTimes() != null, Point::getVisitedTimes, dto.getVisitedTimes())
                 .set(StringUtils.isNotBlank(dto.getAddressCode()), Point::getAddressCode, dto.getAddressCode())
                 .set(null != dto.getState(), Point::getState, dto.getState())
                 .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
-                .eq(Point::getId, Integer.parseInt(dto.getId()))
+                .eq(Point::getId, dto.getId())
                 .update();
 
+        // TODO 地图
+        if (StringUtils.isNotBlank(dto.getAmapId())) {
+            //
+        }
+
+        // 来源
         List<PointSourceEditDTO> sourceList = dto.getSourceEdit();
         // 新增
         List<PointSourceEditDTO> addSourceList = sourceList.stream().filter(k -> StringUtils.isEmpty(k.getId())).toList();
-        addSource(addSourceList);
+        addSource(addSourceList, dto.getId());
+
         // 编辑
         List<PointSourceEditDTO> editSourceList = sourceList.stream().filter(k -> StringUtils.isNotEmpty(k.getId())).toList();
         for (PointSourceEditDTO sourceDTO : editSourceList) {
@@ -257,7 +273,8 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     /**
      * 对纬度进行偏移
-     * @param lat 原始纬度
+     *
+     * @param lat       原始纬度
      * @param maxOffset 最大偏移量（度）
      * @return 偏移后的纬度
      */
@@ -270,8 +287,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     /**
      * 对经度进行偏移
-     * @param lon 原始经度
-     * @param lat 纬度（用于计算经度偏移）
+     *
+     * @param lon       原始经度
+     * @param lat       纬度（用于计算经度偏移）
      * @param maxOffset 最大偏移量（度）
      * @return 偏移后的经度
      */
@@ -287,6 +305,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     /**
      * 计算两个经纬度点之间的距离（单位：公里）
      * 使用 Haversine 公式
+     *
      * @param lat1 点1纬度
      * @param lon1 点1经度
      * @param lat2 点2纬度

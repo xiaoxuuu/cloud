@@ -17,7 +17,7 @@ import java.util.List;
 public class PointEditDTO extends PointAddDTO {
 
     @Schema(description = "数据id")
-    private String id;
+    private Integer id;
 
     @Schema(description = "状态")
     private StateEnum state;

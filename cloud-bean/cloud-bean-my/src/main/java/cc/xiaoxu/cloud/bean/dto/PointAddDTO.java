@@ -35,18 +35,15 @@ public class PointAddDTO {
     @Schema(description = "纬度")
     private String latitude;
 
-    @Schema(description = "收藏次数")
-    private Integer collectTimes;
-
     @Schema(description = "我去过的次数")
     private Integer visitedTimes;
-
-    @Schema(description = "来源")
-    private List<PointSourceAddDTO> source;
 
     @Schema(description = "地址code")
     private String addressCode;
 
-    @Schema(description = "高德地图")
-    private String amap;
+    @Schema(description = "来源")
+    private List<PointSourceAddDTO> source;
+
+    @Schema(description = "高德地图ID")
+    private String amapId;
 }
