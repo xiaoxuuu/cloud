@@ -17,7 +17,6 @@ import cc.xiaoxu.cloud.my.manager.PointManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,46 +55,49 @@ public class AmapController {
         List<PointMapSearchVO> list = new ArrayList<>();
 
         // 查询已有数据
-        List<PointMapSearchVO> pointList = getExistsData(dto);
-        list.addAll(pointList);
+        list.addAll(getExistsData(dto));
 
         // 高德 POI
-        AmapPoiSearchRequestDTO amapDTO = new AmapPoiSearchRequestDTO();
-        amapDTO.setShowFields("business");
-        amapDTO.setExtensions("all");
-        amapDTO.setKeywords(dto.getKeywords());
-        amapDTO.setRegion(dto.getCity());
-        AmapPoiSearchResponseDTO amapPoiSearchResponseDTO = amapManager.searchPoi(amapDTO);
-        if (CollectionUtils.isNotEmpty(amapPoiSearchResponseDTO.getPois())) {
-            List<PointMapSearchVO> pointMapSearchVOS = amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois());
-            list.addAll(pointMapSearchVOS);
-        }
+        list.addAll(getPoiData(dto));
 
-        if (amapPoiSearchResponseDTO.getPois().size() <= 10) {
-            // 高德输入提示
-            AmapInputTipsRequestDTO inputDTO = new AmapInputTipsRequestDTO();
-            inputDTO.setLocation(dto.getCity());
-            inputDTO.setKeywords(dto.getKeywords());
-            AmapInputTipsResponseDTO amapInputTipsResponseDTO = amapManager.inputTips(inputDTO);
-            if (CollectionUtils.isNotEmpty(amapInputTipsResponseDTO.getTips())) {
-                List<PointMapSearchVO> pointMapSearchVOS = amapInputToPointMapSearchVO(amapInputTipsResponseDTO.getTips());
-                list.addAll(pointMapSearchVOS);
-            }
+        // 高德输入提示
+        if (list.size() <= 20) {
+            list.addAll(getTipData(dto));
         }
 
         return list;
     }
 
     @NotNull
+    private List<PointMapSearchVO> getTipData(PointMapSearchDTO dto) {
+        AmapInputTipsRequestDTO inputDTO = new AmapInputTipsRequestDTO();
+        inputDTO.setLocation(dto.getCity());
+        inputDTO.setKeywords(dto.getKeywords());
+        AmapInputTipsResponseDTO amapInputTipsResponseDTO = amapManager.inputTips(inputDTO);
+        return amapInputToPointMapSearchVO(amapInputTipsResponseDTO.getTips());
+    }
+
+    @NotNull
+    private List<PointMapSearchVO> getPoiData(PointMapSearchDTO dto) {
+        AmapPoiSearchRequestDTO amapDTO = new AmapPoiSearchRequestDTO();
+        amapDTO.setShowFields("business");
+        amapDTO.setExtensions("all");
+        amapDTO.setKeywords(dto.getKeywords());
+        amapDTO.setRegion(dto.getCity());
+        AmapPoiSearchResponseDTO amapPoiSearchResponseDTO = amapManager.searchPoi(amapDTO);
+        return amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois());
+    }
+
+    @NotNull
     private List<PointMapSearchVO> getExistsData(PointMapSearchDTO dto) {
         PointSearchDTO pointSearchDTO = new PointSearchDTO();
         pointSearchDTO.setPointName(dto.getKeywords());
-        List<PointMapSearchVO> pointList = pointManager.getPointList()
+        return pointManager.getPointList()
                 .stream()
                 .filter(v -> v.getPointShortName().contains(dto.getKeywords()) || v.getPointFullName().contains(dto.getKeywords()))
                 .map(this::pointToPointMapSearchVO)
+                .limit(20)
                 .toList();
-        return pointList;
     }
 
     private PointMapSearchVO pointToPointMapSearchVO(PointTemp pointTemp) {
