@@ -55,7 +55,9 @@ public class AmapController {
         List<PointMapSearchVO> list = new ArrayList<>();
 
         // 查询已有数据
-        list.addAll(getExistsData(dto));
+        if (dto.getExists()) {
+            list.addAll(getExistsData(dto));
+        }
 
         // 高德 POI
         list.addAll(getPoiData(dto));

@@ -16,4 +16,7 @@ public class PointMapSearchDTO {
 
     @Schema(description = "搜索城市")
     private String city;
+
+    @Schema(description = "包含已有")
+    private Boolean exists;
 }
