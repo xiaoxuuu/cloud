@@ -63,7 +63,7 @@ public class AmapTask {
         for (Point point : needHandleList) {
 
             AmapPoiSearchRequestDTO amapDTO = new AmapPoiSearchRequestDTO();
-            amapDTO.setShowFields("business");
+            amapDTO.setShowFields("children,business,indoor,navi,photos");
             amapDTO.setExtensions("all");
             amapDTO.setKeywords(point.getPointFullName());
             amapDTO.setRegion(point.getAddressCode());

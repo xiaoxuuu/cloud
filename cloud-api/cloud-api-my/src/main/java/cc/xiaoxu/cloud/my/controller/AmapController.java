@@ -82,7 +82,7 @@ public class AmapController {
     @NotNull
     private List<PointMapSearchVO> getPoiData(PointMapSearchDTO dto) {
         AmapPoiSearchRequestDTO amapDTO = new AmapPoiSearchRequestDTO();
-        amapDTO.setShowFields("business");
+        amapDTO.setShowFields("children,business,indoor,navi,photos");
         amapDTO.setExtensions("all");
         amapDTO.setKeywords(dto.getKeywords());
         amapDTO.setRegion(dto.getCity());
@@ -152,7 +152,7 @@ public class AmapController {
         if (!code.equals(CloudController.getCheckCode() + authCode)) {
             throw new CustomException("无权限");
         }
-        dto.setShowFields("business");
+        dto.setShowFields("children,business,indoor,navi,photos");
         dto.setExtensions("all");
         return amapManager.searchPoi(dto);
     }

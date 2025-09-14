@@ -25,6 +25,6 @@ public class AmapPoiSearchRequestDTO extends AmapBaseRequestDTO {
     @Schema(description = "POI搜索类型，可选值：0-普通搜索；1-分类搜索")
     private String type = "0";
 
-    @Schema(description = "显示字段控制，可选值：children,business")
-    private String showFields = "business";
+    @Schema(description = "显示字段控制，可选值：children,business,indoor,navi,photos")
+    private String showFields = "children,business,indoor,navi,photos";
 }

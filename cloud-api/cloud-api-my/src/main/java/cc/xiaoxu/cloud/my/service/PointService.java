@@ -72,8 +72,10 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .update();
         // 再新增
         PointMap pointMap = new PointMap();
-        pointMap.setPointId( id);
+        pointMap.setPointId(id);
         pointMap.setAmapId(amapId);
+
+        // TODO 触发自动更新地图任务
     }
 
     private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList, Integer pointId) {
