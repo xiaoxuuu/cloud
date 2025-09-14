@@ -51,15 +51,29 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private void addOrEditPointMap(Integer id, String amapId) {
 
-        // TODO 查询数据是否存在
+        // 查询数据
         List<PointMap> pointMapList = pointMapService.lambdaQuery()
                 .eq(PointMap::getPointId, id)
+                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
                 .orderByDesc(PointMap::getId)
                 .list();
 
-        // 判断 mapId 是否变动
+        PointMap first = pointMapList.getFirst();
+
         // 未变动，编辑
-        // 变动，删除再新增
+        if (amapId.equals(first.getAmapId())) {
+            pointMapList.removeFirst();
+        }
+        // 变动，删除
+        pointMapService.lambdaUpdate()
+                .in(PointMap::getPointId, pointMapList.stream().map(PointMap::getId).toList())
+                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
+                .set(PointMap::getState, StateEnum.DELETE.getCode())
+                .update();
+        // 再新增
+        PointMap pointMap = new PointMap();
+        pointMap.setPointId( id);
+        pointMap.setAmapId(amapId);
     }
 
     private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList, Integer pointId) {
