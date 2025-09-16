@@ -83,7 +83,7 @@ public class AmapPoiSearchResponseDTO {
         private AmapNaviDTO navi;
 
         @Schema(description = "poi图片")
-        private AmapPhotosDTO photos;
+        private List<AmapPhotosDTO> photos;
     }
 
     @Data
