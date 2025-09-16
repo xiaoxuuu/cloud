@@ -50,7 +50,7 @@ public class AmapManager {
             }
 
             String response = httpUtils.get();
-            log.info("高德地图输入提示API响应: {}", response);
+            log.debug("高德地图输入提示API响应: {}", response);
 
             return JsonUtils.parse(response, AmapInputTipsResponseDTO.class);
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class AmapManager {
             }
 
             String response = httpUtils.get();
-            log.info("高德地图搜索POI API响应: {}", response);
+            log.debug("高德地图搜索POI API响应: {}", response);
             return response;
         } catch (Exception e) {
             log.error("调用高德地图搜索POI API失败", e);
