@@ -12,12 +12,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PointTemp extends Point {
 
-    @Schema(description = "错误经度")
-    private String longitudeFake;
-
-    @Schema(description = "错误纬度")
-    private String latitudeFake;
-
     // TODO 增加区县数据返回
     @Schema(description = "POI所在省份名称")
     private String province;

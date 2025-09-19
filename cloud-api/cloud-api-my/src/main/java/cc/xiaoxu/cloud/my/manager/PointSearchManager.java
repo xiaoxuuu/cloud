@@ -8,7 +8,6 @@ import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import cc.xiaoxu.cloud.my.entity.Constant;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointSource;
-import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import lombok.AllArgsConstructor;
@@ -53,8 +52,6 @@ public class PointSearchManager {
                 .filter(k -> authorVisit(dto, k))
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
                 .filter(k -> removeByScale(dto, k, scale, removeKm))
-                // scale 大于一定数值，移除距离中心点指定距离外的数据
-                .peek(k -> rebuildLatitudeAndLongitude(dto, k, scale))
                 .map(this::tran)
                 .toList();
     }
@@ -135,13 +132,6 @@ public class PointSearchManager {
                 dto.getCenterLongitude()
         );
         return distance <= removeKm;
-    }
-
-    private void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointTemp k, double scale) {
-        if (dto.getScale() <= scale) {
-            k.setLatitude(k.getLatitudeFake());
-            k.setLongitude(k.getLongitudeFake());
-        }
     }
 
     /**

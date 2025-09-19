@@ -57,7 +57,6 @@ public class PointManager {
                 .ne(Point::getState, StateEnum.DELETE.getCode())
                 .list().stream()
                 .map(this::tranFake)
-                .peek(this::createFakeLatLon)
                 .toList();
         pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
         log.debug("查询到 {} 条点位数据...", pointList.size());
@@ -87,21 +86,6 @@ public class PointManager {
         PointTemp pointTemp = new PointTemp();
         BeanUtils.populate(point, pointTemp);
         return pointTemp;
-    }
-
-    private void createFakeLatLon(PointTemp k) {
-        // 15 0.0005
-        // 14
-        // 13
-        // 12
-        // 11
-        // 10
-        //  9
-        //  8
-        //  7
-        //  6
-        k.setLatitudeFake(offsetLatitude(k.getLatitude(), 0.001));
-        k.setLongitudeFake(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.001));
     }
 
     /**
