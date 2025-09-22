@@ -1,6 +1,5 @@
 package cc.xiaoxu.cloud.my.service;
 
-import cc.xiaoxu.cloud.core.utils.text.StringUtils;
 import cc.xiaoxu.cloud.my.dao.AreaMapper;
 import cc.xiaoxu.cloud.my.entity.Area;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
@@ -44,14 +43,5 @@ public class AreaService extends ServiceImpl<AreaMapper, Area> {
                             .update();
                 })
                 .collect(Collectors.toMap(Area::getCode, Area::getLocation));
-    }
-
-    private static String fill(String addressCode) {
-
-        // 如果 addressCode 位数不足 12，在后面补 0
-        if (addressCode.length() < 12) {
-            return addressCode + StringUtils.addMultiple("0", 12 - addressCode.length());
-        }
-        return addressCode;
     }
 }
