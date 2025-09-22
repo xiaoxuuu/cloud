@@ -23,21 +23,15 @@ public class Area extends BaseIdEntity {
     @Schema(description = "本层级 code")
     private String code;
 
-    @Schema(description = "本层级名称")
-    private String name;
-
-    @Schema(description = "状态：0 删除，1 启用")
-    private String state;
-
-    @Schema(description = "更新时间")
-    private String updateTime;
-
-    @Schema(description = "数据年份")
-    private String dataYear;
-
     @Schema(description = "短code")
     private String shortCode;
 
+    @Schema(description = "本层级名称")
+    private String name;
+
     @Schema(description = "办公地点所在经纬度")
     private String location;
+
+    @Schema(description = "更新时间")
+    private String updateTime;
 }

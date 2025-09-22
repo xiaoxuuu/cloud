@@ -108,7 +108,7 @@ public class AmapManager {
         return JsonUtils.parse(searchPoiString(requestDTO), AmapPoiSearchResponseDTO.class);
     }
 
-    public String searchPoi(String poiName, String cityName) {
+    public String getPoiLocation(String poiName, String cityName) {
 
         AmapPoiSearchRequestDTO amapDTO = new AmapPoiSearchRequestDTO();
         amapDTO.setShowFields("children,business,indoor,navi,photos");
