@@ -71,7 +71,7 @@ public class AmapPoiSearchResponseDTO {
         private String citycode;
 
         @Schema(description = "子 POI 信息")
-        private AmapChildrenDTO children;
+        private List<AmapChildrenDTO> children;
 
         @Schema(description = "商户信息")
         private AmapBusinessDTO business;
