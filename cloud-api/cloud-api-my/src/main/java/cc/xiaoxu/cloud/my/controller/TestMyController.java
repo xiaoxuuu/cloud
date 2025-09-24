@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.controller;
 
+import cc.xiaoxu.cloud.my.service.AreaService;
 import cc.xiaoxu.cloud.my.task.AmapTask;
 import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ public class TestMyController {
 
     private final WebsiteCheckScheduled websiteCheckScheduled;
     private final AmapTask amapTask;
+    private final AreaService areaService;
 
     @Operation(summary = "获取描述", description = "网站首页信息")
     @GetMapping("/get")
@@ -33,5 +35,13 @@ public class TestMyController {
     void updateAmapData() {
 
         amapTask.updateAmapData();
+    }
+
+    @Operation(summary = "更新点位数据")
+    @GetMapping("/updateLocation")
+    public @ResponseBody
+    void updateLocation() {
+
+        areaService.updateLocation();
     }
 }
