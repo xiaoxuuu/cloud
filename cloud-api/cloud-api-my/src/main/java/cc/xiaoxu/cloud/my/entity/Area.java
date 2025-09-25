@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.entity;
 
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.bean.entity.BaseIdEntity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -8,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -33,5 +36,11 @@ public class Area extends BaseIdEntity {
     private String location;
 
     @Schema(description = "更新时间")
-    private String updateTime;
+    private LocalDateTime updateTime;
+
+    /**
+     * {@link StateEnum StateEnum}
+     */
+    @Schema(description = "状态")
+    private String state;
 }
