@@ -29,7 +29,7 @@ public class AreaService extends ServiceImpl<AreaMapper, Area> {
                 .list();
         log.error("更新：" + areaList.size());
         for (Area area : areaList) {
-            log.error("更新：" + area.getName());
+            log.error("更新 " + area.getCode() + " " + area.getName());
             String location = null;
             if ("1".equals(area.getLevel())) {
                 location = amapManager.getPoiLocation(area.getName() + "政府", null);
