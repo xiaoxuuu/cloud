@@ -66,7 +66,7 @@ public class PointManager {
                 // 无效数据排除
                 .ne(Point::getState, StateEnum.DELETE.getCode())
                 .list().stream()
-                .map(this::tranFake)
+                .map(this::tran)
                 .toList();
         pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
         log.debug("查询到 {} 条点位数据...", pointList.size());
@@ -92,40 +92,9 @@ public class PointManager {
         log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 
-    private PointTemp tranFake(Point point) {
+    private PointTemp tran(Point point) {
         PointTemp pointTemp = new PointTemp();
         BeanUtils.populate(point, pointTemp);
         return pointTemp;
-    }
-
-    /**
-     * 对纬度进行偏移
-     *
-     * @param lat       原始纬度
-     * @param maxOffset 最大偏移量（度）
-     * @return 偏移后的纬度
-     */
-    private static String offsetLatitude(String lat, double maxOffset) {
-        double latitude = Double.parseDouble(lat);
-        // 添加随机偏移，范围在 -maxOffset 到 +maxOffset 之间，控制在约2公里内
-        double offsetValue = (Math.random() * 2 - 1) * maxOffset;
-        return String.valueOf(latitude + offsetValue);
-    }
-
-    /**
-     * 对经度进行偏移
-     *
-     * @param lon       原始经度
-     * @param lat       纬度（用于计算经度偏移）
-     * @param maxOffset 最大偏移量（度）
-     * @return 偏移后的经度
-     */
-    private static String offsetLongitude(String lon, String lat, double maxOffset) {
-        double longitude = Double.parseDouble(lon);
-        double latitude = Double.parseDouble(lat);
-        // 根据纬度调整经度偏移量，保证偏移距离大致相同
-        double offsetFactor = Math.cos(Math.toRadians(latitude));
-        double offsetValue = (Math.random() * 2 - 1) * maxOffset * offsetFactor;
-        return String.valueOf(longitude + offsetValue);
     }
 }
