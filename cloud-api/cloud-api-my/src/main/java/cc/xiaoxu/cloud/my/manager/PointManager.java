@@ -47,6 +47,16 @@ public class PointManager {
     private List<PointSource> pointSourceList = new ArrayList<>();
     private Map<Integer, PointSource> pointSourceMap = new HashMap<>();
 
+    public void updateAreaList() {
+
+        areaList = areaService.lambdaQuery()
+                // 无效数据排除
+                .eq(Area::getState, StateEnum.ENABLE.getCode())
+                .list();
+        areaMap = areaList.stream().collect(Collectors.toMap(Area::getCode, a -> a));
+        log.debug("查询到 {} 条地点数据...", areaList.size());
+    }
+
     public void updatePointList() {
 
         pointList = pointService.lambdaQuery()
@@ -80,16 +90,6 @@ public class PointManager {
                 .list();
         pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
         log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
-    }
-
-    public void updateAreaList() {
-
-        areaList = areaService.lambdaQuery()
-                // 无效数据排除
-                .eq(Area::getState, StateEnum.ENABLE.getCode())
-                .list();
-        areaMap = areaList.stream().collect(Collectors.toMap(Area::getCode, a -> a));
-        log.debug("查询到 {} 条地点数据...", areaList.size());
     }
 
     private PointTemp tranFake(Point point) {

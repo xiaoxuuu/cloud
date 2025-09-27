@@ -16,6 +16,7 @@ public class PointScheduled {
     @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
 
+        pointManager.updateAreaList();
         pointManager.updatePointList();
         pointManager.updatePointMapList();
         pointManager.updatePointSourceList();
