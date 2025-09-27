@@ -2,14 +2,8 @@ package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
-import cc.xiaoxu.cloud.my.entity.Point;
-import cc.xiaoxu.cloud.my.entity.PointMap;
-import cc.xiaoxu.cloud.my.entity.PointSource;
-import cc.xiaoxu.cloud.my.entity.PointTemp;
-import cc.xiaoxu.cloud.my.service.ConstantService;
-import cc.xiaoxu.cloud.my.service.PointMapService;
-import cc.xiaoxu.cloud.my.service.PointService;
-import cc.xiaoxu.cloud.my.service.PointSourceService;
+import cc.xiaoxu.cloud.my.entity.*;
+import cc.xiaoxu.cloud.my.service.*;
 import jakarta.annotation.Resource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +24,9 @@ public class PointManager {
     private ConstantService constantService;
 
     @Resource
+    private AreaService areaService;
+
+    @Resource
     private PointService pointService;
 
     @Resource
@@ -37,6 +34,9 @@ public class PointManager {
 
     @Resource
     private PointSourceService pointSourceService;
+
+    private List<Area> areaList = new ArrayList<>();
+    private Map<String, Area> areaMap = new HashMap<>();
 
     private List<PointTemp> pointList = new ArrayList<>();
     private Map<Integer, PointTemp> pointMap = new HashMap<>();
@@ -80,6 +80,16 @@ public class PointManager {
                 .list();
         pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
         log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
+    }
+
+    public void updateAreaList() {
+
+        areaList = areaService.lambdaQuery()
+                // 无效数据排除
+                .eq(Area::getState, StateEnum.ENABLE.getCode())
+                .list();
+        areaMap = areaList.stream().collect(Collectors.toMap(Area::getCode, a -> a));
+        log.debug("查询到 {} 条地点数据...", areaList.size());
     }
 
     private PointTemp tranFake(Point point) {
