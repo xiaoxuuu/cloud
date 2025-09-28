@@ -50,7 +50,8 @@ public class PointSearchManager {
                 .filter(k -> pointType(dto, k))
                 // 作者访问过
                 .filter(k -> authorVisit(dto, k))
-                // scale 小于一定数值，移除距离中心点指定距离外的数据
+                // TODO scale 小于一定数值，移除距离中心点指定距离外的数据
+                // TODO scale 大于一定数值，只按区县返回数据
                 .filter(k -> removeByScale(dto, k, scale, removeKm))
                 .map(this::tran)
                 .toList();
