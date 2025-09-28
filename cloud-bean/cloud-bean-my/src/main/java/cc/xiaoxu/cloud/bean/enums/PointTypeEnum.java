@@ -13,6 +13,8 @@ public enum PointTypeEnum implements EnumInterface<String> {
     FUN_NAME("fun_name", "有趣地名"),
     SCENERY("scenery", "美景"),
     UNCATEGORIZED("uncategorized", "未分类"),
+
+    AGGREGATION("aggregation", "聚合点位"),
     ;
 
     @EnumValue
