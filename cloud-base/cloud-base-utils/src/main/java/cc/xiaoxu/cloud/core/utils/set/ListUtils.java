@@ -21,6 +21,11 @@ public class ListUtils {
         throw new IllegalAccessError(this.getClass().getName());
     }
 
+    public static <T> List<T> of(T... t) {
+
+        return new ArrayList<>(Arrays.asList(t));
+    }
+
     /**
      * <p>集合判空，null 或集合 size 为 0 都返回 true</p>
      *
