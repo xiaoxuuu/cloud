@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 /**
  * <p>StopWatch 输出优化</p>
- *
+ * <p>
  * 2022/7/6 下午 04:48
  *
  * @author 小徐
@@ -112,33 +112,8 @@ public class StopWatchUtil extends StopWatch {
         TaskInfo taskHead = new TaskInfo("TimeSpent", "pct.", "TaskName", delimiter);
         TaskInfo taskTotal = new TaskInfo(totalTimeNanos, stopWatchName, totalTimeNanos, delimiter);
 
-        // 计算总长度
-        int timeLength = getStream(taskInfoList, taskHead, taskTotal).map(TaskInfo::getTime).map(StopWatchUtil::getLength).reduce(Integer::max).orElse(0);
-        int percentageLength = getStream(taskInfoList, taskHead, taskTotal).map(TaskInfo::getPercentage).map(StopWatchUtil::getLength).reduce(Integer::max).orElse(0);
-        int taskNameLength = getStream(taskInfoList, taskHead, taskTotal).map(TaskInfo::getTaskName).map(StopWatchUtil::getLength).reduce(Integer::max).orElse(0);
-        int maxLength = timeLength + percentageLength + taskNameLength + delimiter.length() * 2;
-
-        StringBuilder builder = new StringBuilder();
-
-        String head = Util.addMultiple("=", maxLength);
-        String body = Util.addMultiple("-", maxLength);
-        builder.append(lineSeparator);
-        builder.append(head);
-        builder.append(lineSeparator);
-        builder.append(getLine(taskHead, timeLength, percentageLength, taskNameLength, delimiter));
-        builder.append(lineSeparator);
-        builder.append(head);
-        builder.append(lineSeparator);
-        builder.append(getLine(taskTotal, timeLength, percentageLength, taskNameLength, delimiter));
-        builder.append(lineSeparator);
-        builder.append(body);
-        builder.append(lineSeparator);
-        for (TaskInfo task : taskInfoList) {
-            builder.append(getLine(task, timeLength, percentageLength, taskNameLength, delimiter));
-            builder.append(lineSeparator);
-        }
-        builder.append(head);
-        return builder.toString();
+        List<List<String>> list = getStream(taskHead, taskInfoList, taskTotal).map(k -> List.of(k.getTime(), k.getPercentage(), k.getTaskName())).toList();
+        return TableUtils.formatTable(list);
     }
 
     private static int getLength(String str) {
@@ -146,8 +121,8 @@ public class StopWatchUtil extends StopWatch {
         return str.length() + Util.getHanNum(str);
     }
 
-    private static Stream<TaskInfo> getStream(List<TaskInfo> taskInfoList, TaskInfo taskHead, TaskInfo taskTotal) {
-        return Stream.concat(taskInfoList.stream(), Stream.of(taskHead, taskTotal));
+    private static Stream<TaskInfo> getStream(TaskInfo taskHead, List<TaskInfo> taskInfoList, TaskInfo taskTotal) {
+        return Stream.concat( Stream.concat(Stream.of(taskHead),taskInfoList.stream()), Stream.of(taskTotal));
     }
 
     private static String fillBlanks(String str, int length) {
