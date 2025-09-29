@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 /**
@@ -116,28 +114,8 @@ public class StopWatchUtil extends StopWatch {
         return TableUtils.formatTable(list);
     }
 
-    private static int getLength(String str) {
-
-        return str.length() + Util.getHanNum(str);
-    }
-
     private static Stream<TaskInfo> getStream(TaskInfo taskHead, List<TaskInfo> taskInfoList, TaskInfo taskTotal) {
         return Stream.concat( Stream.concat(Stream.of(taskHead),taskInfoList.stream()), Stream.of(taskTotal));
-    }
-
-    private static String fillBlanks(String str, int length) {
-
-        int i = length - str.length() - Util.getHanNum(str);
-        return i == 0 ? str : (str + Util.addMultiple(" ", i));
-    }
-
-    private static String getLine(TaskInfo taskInfo, int timeLength, int percentageLength, int taskNameLength, String delimiter) {
-
-        return fillBlanks(taskInfo.getTime(), timeLength) +
-                delimiter +
-                fillBlanks(taskInfo.getPercentage(), percentageLength) +
-                delimiter +
-                fillBlanks(taskInfo.getTaskName(), taskNameLength);
     }
 
     @Data
@@ -180,33 +158,6 @@ public class StopWatchUtil extends StopWatch {
     }
 
     private static class Util {
-
-        public static String addMultiple(Object o, int num) {
-
-            StringBuilder builder = new StringBuilder();
-            if (num <= 0) {
-                return "";
-            }
-            for (int i = 0; i < num; i++) {
-                builder.append(o.toString());
-            }
-            return builder.toString();
-        }
-
-        public static int getHanNum(String str) {
-            int count = 0;
-            String regEx = "[\\u4e00-\\u9fa5]";
-            Pattern p = Pattern.compile(regEx);
-            Matcher m = p.matcher(str);
-            //boolean b=m.matches();//可判断是否符合正则表达式条件
-            // 进行累计汉字数量
-            while (m.find()) {
-                for (int i = 0; i <= m.groupCount(); i++) {
-                    count++;
-                }
-            }
-            return count;
-        }
 
         /**
          * @param s      原始数据
