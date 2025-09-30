@@ -249,7 +249,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 .list();
 
         double scale = 14.5;
-        double removeKm = 2;
+        double removeKm = 10;
 
         return pointList.stream()
                 // scale 小于一定数值，移除距离中心点指定距离外的数据
@@ -259,7 +259,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                     BeanUtils.populate(k, vo);
                     vo.setPointName(k.getPointShortName());
                     // scale 大于一定数值，移除距离中心点指定距离外的数据
-                    rebuildLatitudeAndLongitude(dto, vo, scale);
                     return vo;
                 }).toList();
     }
@@ -275,56 +274,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                 dto.getCenterLongitude()
         );
         return distance <= removeKm;
-    }
-
-    private static void rebuildLatitudeAndLongitude(PointSearchDTO dto, PointSimpleVO k, double scale) {
-        if (null != dto.getScale() && dto.getScale() <= scale) {
-            log.error("偏移经纬度");
-            // 对经纬度进行偏移，保护隐私，控制在2公里范围内
-            // 15 0.0005
-            // 14
-            // 13
-            // 12
-            // 11
-            // 10
-            //  9
-            //  8
-            //  7
-            //  6
-            k.setLatitude(offsetLatitude(k.getLatitude(), 0.0005));
-            k.setLongitude(offsetLongitude(k.getLongitude(), k.getLatitude(), 0.0005));
-        }
-    }
-
-    /**
-     * 对纬度进行偏移
-     *
-     * @param lat       原始纬度
-     * @param maxOffset 最大偏移量（度）
-     * @return 偏移后的纬度
-     */
-    private static String offsetLatitude(String lat, double maxOffset) {
-        double latitude = Double.parseDouble(lat);
-        // 添加随机偏移，范围在 -maxOffset 到 +maxOffset 之间，控制在约2公里内
-        double offsetValue = (Math.random() * 2 - 1) * maxOffset;
-        return String.valueOf(latitude + offsetValue);
-    }
-
-    /**
-     * 对经度进行偏移
-     *
-     * @param lon       原始经度
-     * @param lat       纬度（用于计算经度偏移）
-     * @param maxOffset 最大偏移量（度）
-     * @return 偏移后的经度
-     */
-    private static String offsetLongitude(String lon, String lat, double maxOffset) {
-        double longitude = Double.parseDouble(lon);
-        double latitude = Double.parseDouble(lat);
-        // 根据纬度调整经度偏移量，保证偏移距离大致相同
-        double offsetFactor = Math.cos(Math.toRadians(latitude));
-        double offsetValue = (Math.random() * 2 - 1) * maxOffset * offsetFactor;
-        return String.valueOf(longitude + offsetValue);
     }
 
     /**

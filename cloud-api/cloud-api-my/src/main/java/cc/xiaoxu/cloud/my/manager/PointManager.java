@@ -65,7 +65,8 @@ public class PointManager {
                 .isNotNull(Point::getLatitude)
                 // 无效数据排除
                 .ne(Point::getState, StateEnum.DELETE.getCode())
-                .list().stream()
+                .list()
+                .stream()
                 .map(this::tran)
                 .toList();
         pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));

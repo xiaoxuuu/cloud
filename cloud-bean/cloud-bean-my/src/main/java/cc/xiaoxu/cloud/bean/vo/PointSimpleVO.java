@@ -30,6 +30,9 @@ public class PointSimpleVO extends BaseIdVO {
     @Schema(description = "纬度")
     private String latitude;
 
+    @Schema(description = "距离中心点距离")
+    private Double distance;
+
     @Schema(description = "营业状态")
     private OperatingStatusEnum operatingStatus;
 }

@@ -15,6 +15,7 @@ public enum PointTypeEnum implements EnumInterface<String> {
     UNCATEGORIZED("uncategorized", "未分类"),
 
     AGGREGATION("aggregation", "聚合点位"),
+    DISTRICT("district", "区县"),
     ;
 
     @EnumValue
