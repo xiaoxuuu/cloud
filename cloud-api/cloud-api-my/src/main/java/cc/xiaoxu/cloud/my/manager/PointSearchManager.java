@@ -5,9 +5,7 @@ import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
-import cc.xiaoxu.cloud.my.entity.Constant;
-import cc.xiaoxu.cloud.my.entity.Point;
-import cc.xiaoxu.cloud.my.entity.PointSource;
+import cc.xiaoxu.cloud.my.entity.*;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import lombok.AllArgsConstructor;
@@ -17,10 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -41,20 +38,59 @@ public class PointSearchManager {
                 .one();
         double scale = Double.parseDouble(pointScale.getValue());
 
-        // 搜索
-        return pointManager.getPointList()
+        Stream<PointTemp> pointFilterStream = pointManager.getPointList()
                 .stream()
                 // 模糊匹配
                 .filter(k -> pointNameLike(dto, k))
                 // 点位类型
                 .filter(k -> pointType(dto, k))
                 // 作者访问过
-                .filter(k -> authorVisit(dto, k))
-                // TODO scale 小于一定数值，移除距离中心点指定距离外的数据
-                // TODO scale 大于一定数值，只按区县返回数据
-                .filter(k -> removeByScale(dto, k, scale, removeKm))
-                .map(this::tran)
+                .filter(k -> authorVisit(dto, k));
+        Stream<PointSimpleVO> pointStream;
+        if (dto.getScale() > scale) {
+            // 正常返回数据
+            pointStream = pointFilterStream.map(this::tran);
+        } else {
+            // 区县
+            Map<String, Area> areaMap = pointManager.getAreaMap();
+             pointStream = pointFilterStream
+                    // 转换区县数据
+                    .map(k -> {
+                        Area area = areaMap.get(k.getAddressCode());
+                        return buildDistrict(area);
+                    })
+                    //分组，只保留一条
+                    .collect(Collectors.groupingBy(PointSimpleVO::getPointName))
+                    .values()
+                    .stream()
+                    .map(k -> {
+                        PointSimpleVO pointSimpleVO = k.getFirst();
+                        String newName = pointSimpleVO.getPointName() + " " + k.size() + " 个";
+                        pointSimpleVO.setPointName(newName);
+                        pointSimpleVO.setPointShortName(newName);
+                        return pointSimpleVO;
+                    });
+        }
+        return pointStream
+//                    // 计算距离中心点位置
+                .peek(k -> addDistance(dto, k, scale, removeKm))
+                .sorted(Comparator.comparingDouble(PointSimpleVO::getDistance))
+//                    // 限制返回数据
+                .limit(200)
                 .toList();
+    }
+
+    @NotNull
+    private PointSimpleVO buildDistrict(Area area) {
+
+        PointSimpleVO vo = new PointSimpleVO();
+        vo.setPointName(area.getName());
+        vo.setPointShortName(area.getName());
+        vo.setPointType(PointTypeEnum.DISTRICT);
+        String[] split = area.getLocation().split(",");
+        vo.setLongitude(split[0]);
+        vo.setLatitude(split[1]);
+        return vo;
     }
 
     @NotNull
@@ -122,51 +158,22 @@ public class PointSearchManager {
         return pointTypeSet;
     }
 
-    private boolean removeByScale(PointSearchDTO dto, Point k, double scale, double removeKm) {
-        if (dto.getScale() <= scale) {
-            return true;
-        }
+    private void addDistance(PointSearchDTO dto, PointSimpleVO k, double scale, double removeKm) {
+
+        // 优化，不同省份数据可以移除
         double distance = calculateDistance(
                 Double.parseDouble(k.getLatitude()),
                 Double.parseDouble(k.getLongitude()),
                 dto.getCenterLatitude(),
                 dto.getCenterLongitude()
         );
-        return distance <= removeKm;
-    }
-
-    /**
-     * 对纬度进行偏移
-     * @param lat 原始纬度
-     * @param maxOffset 最大偏移量（度）
-     * @return 偏移后的纬度
-     */
-    private static String offsetLatitude(String lat, double maxOffset) {
-        double latitude = Double.parseDouble(lat);
-        // 添加随机偏移，范围在 -maxOffset 到 +maxOffset 之间，控制在约2公里内
-        double offsetValue = (Math.random() * 2 - 1) * maxOffset;
-        return String.valueOf(latitude + offsetValue);
-    }
-
-    /**
-     * 对经度进行偏移
-     * @param lon 原始经度
-     * @param lat 纬度（用于计算经度偏移）
-     * @param maxOffset 最大偏移量（度）
-     * @return 偏移后的经度
-     */
-    private static String offsetLongitude(String lon, String lat, double maxOffset) {
-        double longitude = Double.parseDouble(lon);
-        double latitude = Double.parseDouble(lat);
-        // 根据纬度调整经度偏移量，保证偏移距离大致相同
-        double offsetFactor = Math.cos(Math.toRadians(latitude));
-        double offsetValue = (Math.random() * 2 - 1) * maxOffset * offsetFactor;
-        return String.valueOf(longitude + offsetValue);
+        k.setDistance(distance);
     }
 
     /**
      * 计算两个经纬度点之间的距离（单位：公里）
      * 使用 Haversine 公式
+     *
      * @param lat1 点1纬度
      * @param lon1 点1经度
      * @param lat2 点2纬度
