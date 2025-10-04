@@ -106,5 +106,4 @@ docker pull xxx
 docker run -itd xxx
 
 cd /data/docker/ && sh updateV2.sh -r cloud-api-all && docker logs -f cloud-api-all
-cd /data/docker/ && sh updateV2.sh -r cloud-api-all-test && docker logs -f cloud-api-all-test
 ```
