@@ -68,14 +68,6 @@ public class PointController {
         return pointSearchManager.search(dto);
     }
 
-    @Operation(summary = "列表", description = "获取地点列表")
-    @PostMapping("/list")
-    public @ResponseBody
-    List<? extends PointSimpleVO> list(@RequestBody PointSearchDTO dto) {
-
-        return pointService.lists(dto);
-    }
-
     @Operation(summary = "获取待处理数量", description = "获取待处理数量")
     @PostMapping("/count_progressing")
     public @ResponseBody

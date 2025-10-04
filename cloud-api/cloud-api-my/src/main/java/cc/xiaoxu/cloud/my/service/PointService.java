@@ -3,7 +3,6 @@ package cc.xiaoxu.cloud.my.service;
 import cc.xiaoxu.cloud.bean.dto.*;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
-import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
@@ -131,10 +130,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         }
     }
 
-    private void handle(PointSearchDTO dto, List<? extends PointSimpleVO> pointVOList) {
-
-    }
-
     public PointFullVO get(IdDTO dto) {
 
         Point point;
@@ -209,92 +204,5 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public Integer countProgressing() {
         return baseMapper.countProgressing();
-    }
-
-    public List<? extends PointSimpleVO> lists(PointSearchDTO dto) {
-
-        // 来源搜索
-        List<PointSource> sourceList = pointSourceService.lambdaQuery()
-                .and(wrapper -> wrapper.or(orWrapper -> orWrapper
-                        .like(PointSource::getSource, dto.getPointName())
-                        .or().like(PointSource::getTitle, dto.getPointName())
-                        .or().like(PointSource::getContent, dto.getPointName())
-                        .or().like(PointSource::getUrl, dto.getPointName())
-                ))
-                // 删除数据排除
-                .ne(PointSource::getState, StateEnum.DELETE.getCode())
-                .list();
-        List<Integer> idList = sourceList.stream().map(PointSource::getPointId).distinct().toList();
-
-        // 搜索
-        boolean or = CollectionUtils.isNotEmpty(idList) || StringUtils.isNotEmpty(dto.getPointName());
-        List<Point> pointList = lambdaQuery()
-                .and(or, wrapper -> wrapper.or(orWrapper -> orWrapper
-                        .like(Point::getPointFullName, dto.getPointName())
-                        .or().like(Point::getPointFullName, dto.getPointName())
-                        .or().like(Point::getDescribe, dto.getPointName())
-                        .or().like(Point::getAddress, dto.getPointName())
-                        .or().like(Point::getLongitude, dto.getPointName())
-                        .or().like(Point::getLatitude, dto.getPointName())
-                        .or().in(CollectionUtils.isNotEmpty(idList), Point::getId, idList)
-                ))
-//                .in(CollectionUtils.isNotEmpty(dto.getPointType()), Point::getPointType, dto.getPointType())
-                .in(Point::getState, List.of(StateEnum.ENABLE.getCode(), StateEnum.PROGRESSING.getCode()))
-                .ge(null != dto.getVisit() && dto.getVisit(), Point::getVisitedTimes, 1)
-                // 异常数据排除
-                .isNotNull(Point::getLongitude)
-                .isNotNull(Point::getLatitude)
-                // 删除数据排除
-                .ne(Point::getState, StateEnum.DELETE.getCode())
-                .list();
-
-        double scale = 14.5;
-        double removeKm = 10;
-
-        return pointList.stream()
-                // scale 小于一定数值，移除距离中心点指定距离外的数据
-                .filter(k -> removeByScale(k, dto, scale, removeKm))
-                .map(k -> {
-                    PointSimpleVO vo = new PointSimpleVO();
-                    BeanUtils.populate(k, vo);
-                    vo.setPointName(k.getPointShortName());
-                    // scale 大于一定数值，移除距离中心点指定距离外的数据
-                    return vo;
-                }).toList();
-    }
-
-    private boolean removeByScale(Point k, PointSearchDTO dto, double scale, double removeKm) {
-        if (null == dto.getScale() || dto.getScale() <= scale) {
-            return true;
-        }
-        double distance = calculateDistance(
-                Double.parseDouble(k.getLatitude()),
-                Double.parseDouble(k.getLongitude()),
-                dto.getCenterLatitude(),
-                dto.getCenterLongitude()
-        );
-        return distance <= removeKm;
-    }
-
-    /**
-     * 计算两个经纬度点之间的距离（单位：公里）
-     * 使用 Haversine 公式
-     *
-     * @param lat1 点1纬度
-     * @param lon1 点1经度
-     * @param lat2 点2纬度
-     * @param lon2 点2经度
-     * @return 距离（公里）
-     */
-    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        final double EARTH_RADIUS = 6371; // 地球半径（公里）
-
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
     }
 }
