@@ -37,6 +37,10 @@ public class PointSearchManager {
                 .eq(Constant::getName, "point_scale")
                 .one();
         double scale = Double.parseDouble(pointScale.getValue());
+        Constant count = constantService.lambdaQuery()
+                .eq(Constant::getName, "point_count_per")
+                .one();
+        int countConstant = Integer.parseInt(count.getValue());
 
         Stream<PointTemp> pointFilterStream = pointManager.getPointList()
                 .stream()
@@ -77,7 +81,7 @@ public class PointSearchManager {
                 .peek(k -> addDistance(dto, k, scale, removeKm))
                 .sorted(Comparator.comparingDouble(PointSimpleVO::getDistance))
 //                    // 限制返回数据
-                .limit(100)
+                .limit(countConstant)
                 .toList();
     }
 
