@@ -52,8 +52,9 @@ public class PointSearchManager {
             pointStream = pointFilterStream.map(this::tran);
         } else {
             // 区县
+            // TODO 标记自身点位数量
             Map<String, Area> areaMap = pointManager.getAreaMap();
-             pointStream = pointFilterStream
+            pointStream = pointFilterStream
                     // 转换区县数据
                     .map(k -> {
                         Area area = areaMap.get(k.getAddressCode());
@@ -76,7 +77,7 @@ public class PointSearchManager {
                 .peek(k -> addDistance(dto, k, scale, removeKm))
                 .sorted(Comparator.comparingDouble(PointSimpleVO::getDistance))
 //                    // 限制返回数据
-                .limit(200)
+                .limit(100)
                 .toList();
     }
 
