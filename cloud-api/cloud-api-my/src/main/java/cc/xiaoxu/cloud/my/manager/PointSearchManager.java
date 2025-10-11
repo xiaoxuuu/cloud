@@ -29,10 +29,6 @@ public class PointSearchManager {
 
     public List<? extends PointSimpleVO> search(PointSearchDTO dto) {
 
-        Constant pointRemoveKm = constantService.lambdaQuery()
-                .eq(Constant::getName, "point_remove_km")
-                .one();
-        double removeKm = Double.parseDouble(pointRemoveKm.getValue());
         Constant pointScale = constantService.lambdaQuery()
                 .eq(Constant::getName, "point_scale")
                 .one();
@@ -78,7 +74,7 @@ public class PointSearchManager {
         }
         return pointStream
 //                    // 计算距离中心点位置
-                .peek(k -> addDistance(dto, k, scale, removeKm))
+                .peek(k -> addDistance(dto, k))
                 .sorted(Comparator.comparingDouble(PointSimpleVO::getDistance))
 //                    // 限制返回数据
                 .limit(countConstant)
@@ -163,7 +159,7 @@ public class PointSearchManager {
         return pointTypeSet;
     }
 
-    private void addDistance(PointSearchDTO dto, PointSimpleVO k, double scale, double removeKm) {
+    private void addDistance(PointSearchDTO dto, PointSimpleVO k) {
 
         // 优化，不同省份数据可以移除
         double distance = calculateDistance(
