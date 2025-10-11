@@ -52,7 +52,6 @@ public class PointSearchManager {
             pointStream = pointFilterStream.map(this::tran);
         } else {
             // 区县
-            // TODO 标记自身点位数量
             Map<String, Area> areaMap = pointManager.getAreaMap();
             pointStream = pointFilterStream
                     // 转换区县数据
