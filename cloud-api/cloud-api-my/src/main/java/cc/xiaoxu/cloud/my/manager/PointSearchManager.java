@@ -65,7 +65,7 @@ public class PointSearchManager {
                     .stream()
                     .map(k -> {
                         PointSimpleVO pointSimpleVO = k.getFirst();
-                        String newName = pointSimpleVO.getPointName() + " " + k.size() + " 个";
+                        String newName = pointSimpleVO.getPointName() + ": " + k.size() + " 个";
                         pointSimpleVO.setPointName(newName);
                         pointSimpleVO.setPointShortName(newName);
                         return pointSimpleVO;
