@@ -14,13 +14,13 @@ import java.util.List;
 public class PointSearchDTO {
 
     @Schema(description = "地图缩放层级", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Double scale;
+    private String scale;
 
     @Schema(description = "中心点纬度", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Double centerLatitude;
+    private String centerLatitude;
 
     @Schema(description = "中心点纬度", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Double centerLongitude;
+    private String centerLongitude;
 
     @Schema(description = "点位类型")
     private List<String> pointType;

@@ -47,7 +47,7 @@ public class PointSearchManager {
                 // 作者访问过
                 .filter(k -> authorVisit(dto, k));
         Stream<PointSimpleVO> pointStream;
-        if (dto.getScale() > scale) {
+        if (Double.parseDouble(dto.getScale()) > scale) {
             // 正常返回数据
             pointStream = pointFilterStream.map(this::tran);
         } else {
@@ -164,8 +164,8 @@ public class PointSearchManager {
         double distance = calculateDistance(
                 Double.parseDouble(k.getLatitude()),
                 Double.parseDouble(k.getLongitude()),
-                dto.getCenterLatitude(),
-                dto.getCenterLongitude()
+                Double.parseDouble(dto.getCenterLatitude()),
+                Double.parseDouble(dto.getCenterLongitude())
         );
         k.setDistance(distance);
     }

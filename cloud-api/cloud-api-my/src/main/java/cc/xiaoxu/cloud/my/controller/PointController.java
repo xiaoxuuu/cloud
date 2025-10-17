@@ -10,17 +10,21 @@ import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.my.manager.PointSearchManager;
 import cc.xiaoxu.cloud.my.service.PointService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Tag(name = "点位", description = "点位控制器")
 @RequestMapping("/point")
@@ -62,7 +66,8 @@ public class PointController {
     public @ResponseBody
     List<? extends PointSimpleVO> search(@RequestBody PointSearchDTO dto) {
 
-        if (null == dto.getScale() || null == dto.getCenterLatitude() || null == dto.getCenterLongitude()) {
+        if (StringUtils.isBlank(dto.getScale()) || StringUtils.isBlank(dto.getCenterLatitude()) || StringUtils.isBlank(dto.getCenterLongitude())) {
+            log.error(JsonUtils.toString(dto));
             throw new CustomException("参数错误");
         }
         return pointSearchManager.search(dto);
