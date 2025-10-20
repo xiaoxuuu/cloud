@@ -38,22 +38,23 @@ public class PointSearchManager {
                 .one();
         int countConstant = Integer.parseInt(count.getValue());
 
-        Stream<PointTemp> pointFilterStream = pointManager.getPointList()
+        List<PointTemp> pointFilterList = pointManager.getPointList()
                 .stream()
                 // 模糊匹配
                 .filter(k -> pointNameLike(dto, k))
                 // 点位类型
                 .filter(k -> pointType(dto, k))
                 // 作者访问过
-                .filter(k -> authorVisit(dto, k));
+                .filter(k -> authorVisit(dto, k))
+                .toList();
         Stream<PointSimpleVO> pointStream;
-        if (Double.parseDouble(dto.getScale()) > scale) {
-            // 正常返回数据
-            pointStream = pointFilterStream.map(this::tran);
+        if (Double.parseDouble(dto.getScale()) > scale || pointFilterList.size() < countConstant) {
+            // 缩放达到一定程度 或 点位数量小于一定数量 按正常返回数据
+            pointStream = pointFilterList.stream().map(this::tran);
         } else {
             // 区县
             Map<String, Area> areaMap = pointManager.getAreaMap();
-            pointStream = pointFilterStream
+            pointStream = pointFilterList.stream()
                     // 转换区县数据
                     .map(k -> {
                         Area area = areaMap.get(k.getAddressCode());
