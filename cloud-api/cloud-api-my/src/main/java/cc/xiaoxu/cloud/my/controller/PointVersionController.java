@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PointVersionController {
 
     @Operation(summary = "获取检测版本", description = "获取检测版本")
-    @GetMapping("/get")
+    @GetMapping("/check_version")
     public @ResponseBody
-    String getPointVersion() {
+    String getCheckVersion() {
 
         return "0.0.9";
     }
