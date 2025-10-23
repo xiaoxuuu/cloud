@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
+import cc.xiaoxu.cloud.bean.vo.PointDistrictVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
@@ -47,7 +48,7 @@ public class PointSearchManager {
                 // 作者访问过
                 .filter(k -> authorVisit(dto, k))
                 .toList();
-        Stream<PointSimpleVO> pointStream;
+        Stream<? extends PointSimpleVO> pointStream;
         if (Double.parseDouble(dto.getScale()) > scale || pointFilterList.size() < countConstant) {
             // 缩放达到一定程度 或 点位数量小于一定数量 按正常返回数据
             pointStream = pointFilterList.stream().map(this::tran);
@@ -58,7 +59,7 @@ public class PointSearchManager {
                     // 转换区县数据
                     .map(k -> {
                         Area area = areaMap.get(k.getAddressCode());
-                        return buildDistrict(area);
+                        return buildDistrict(area, k);
                     })
                     //分组，只保留一条
                     .collect(Collectors.groupingBy(PointSimpleVO::getPointName))
@@ -82,9 +83,9 @@ public class PointSearchManager {
     }
 
     @NotNull
-    private PointSimpleVO buildDistrict(Area area) {
+    private PointDistrictVO buildDistrict(Area area, PointTemp pointTemp) {
 
-        PointSimpleVO vo = new PointSimpleVO();
+        PointDistrictVO vo = new PointDistrictVO();
         vo.setId(Integer.parseInt(area.getCode()));
         vo.setPointName(area.getName());
         vo.setPointShortName(area.getName());
@@ -92,6 +93,8 @@ public class PointSearchManager {
         String[] split = area.getLocation().split(",");
         vo.setLongitude(split[0]);
         vo.setLatitude(split[1]);
+        vo.setNextLatitude(pointTemp.getLatitude());
+        vo.setNextLongitude(pointTemp.getLongitude());
         return vo;
     }
 
