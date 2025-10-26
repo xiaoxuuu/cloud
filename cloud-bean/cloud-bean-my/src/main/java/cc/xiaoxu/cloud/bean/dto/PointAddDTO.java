@@ -14,6 +14,9 @@ import java.util.List;
 @Schema(description = "点位 - 新增 - 请求参数")
 public class PointAddDTO {
 
+    @Schema(description = "code")
+    private String code;
+
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;
 

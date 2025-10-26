@@ -40,22 +40,22 @@ public class PointController {
     private PointSearchManager pointSearchManager;
 
     @Operation(summary = "新增", description = "新增地点")
-    @PostMapping("/add/{code}")
+    @PostMapping("/add")
     public @ResponseBody
-    void add(@PathVariable("code") String code, @RequestBody PointAddDTO dto) {
+    void add(@RequestBody PointAddDTO dto) {
 
-        if (!code.equals(CloudController.getCheckCode() + authCode)) {
+        if (!(CloudController.getCheckCode() + authCode).equals(dto.getCode())) {
             throw new CustomException("无权限");
         }
         pointService.add(dto);
     }
 
     @Operation(summary = "编辑", description = "编辑地点")
-    @PostMapping("/edit/{code}")
+    @PostMapping("/edit")
     public @ResponseBody
-    void edit(@PathVariable("code") String code, @RequestBody PointEditDTO dto) {
+    void edit(@RequestBody PointEditDTO dto) {
 
-        if (!code.equals(CloudController.getCheckCode() + authCode)) {
+        if (!(CloudController.getCheckCode() + authCode).equals(dto.getCode())) {
             throw new CustomException("无权限");
         }
         pointService.edit(dto);
