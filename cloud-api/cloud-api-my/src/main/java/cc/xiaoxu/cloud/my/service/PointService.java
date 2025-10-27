@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.service;
 
-import cc.xiaoxu.cloud.bean.dto.*;
+import cc.xiaoxu.cloud.bean.dto.IdDTO;
+import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
@@ -15,7 +16,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,99 +35,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     @Transactional(rollbackFor = Exception.class)
     public void add(PointAddDTO dto) {
 
-        Point point = new Point();
-        BeanUtils.populate(dto, point);
-        point.setState(StateEnum.ENABLE.getCode());
-        save(point);
-
-        // 地图
-        addOrEditPointMap(point.getId(), dto.getAmapId());
-
-        // 来源
-        List<PointSourceAddDTO> sourceAddDTOList = dto.getSource();
-        addSource(sourceAddDTOList, point.getId());
-    }
-
-    private void addOrEditPointMap(Integer id, String amapId) {
-
-        // 查询数据
-        List<PointMap> pointMapList = pointMapService.lambdaQuery()
-                .eq(PointMap::getPointId, id)
-                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
-                .orderByDesc(PointMap::getId)
-                .list();
-
-        PointMap first = pointMapList.getFirst();
-
-        // 未变动，编辑
-        if (amapId.equals(first.getAmapId())) {
-            pointMapList.removeFirst();
-        }
-        // 变动，删除
-        pointMapService.lambdaUpdate()
-                .in(PointMap::getPointId, pointMapList.stream().map(PointMap::getId).toList())
-                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
-                .set(PointMap::getState, StateEnum.DELETE.getCode())
-                .update();
-        // 再新增
-        PointMap pointMap = new PointMap();
-        pointMap.setPointId(id);
-        pointMap.setAmapId(amapId);
-
-        // TODO 触发自动更新地图任务
-    }
-
-    private void addSource(List<? extends PointSourceAddDTO> sourceAddDTOList, Integer pointId) {
-        if (CollectionUtils.isNotEmpty(sourceAddDTOList)) {
-            List<PointSource> list = sourceAddDTOList.stream().map(source -> {
-                PointSource pointSource = new PointSource();
-                BeanUtils.populate(source, pointSource);
-                pointSource.setPointId(pointId);
-                return pointSource;
-            }).toList();
-            pointSourceService.saveBatch(list);
-        }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public void edit(PointEditDTO dto) {
-
-        lambdaUpdate()
-                .set(null != dto.getPointType(), Point::getPointType, dto.getPointType())
-                .set(StringUtils.isNotBlank(dto.getPointShortName()), Point::getPointShortName, dto.getPointShortName())
-                .set(StringUtils.isNotBlank(dto.getPointFullName()), Point::getPointFullName, dto.getPointFullName())
-                .set(StringUtils.isNotBlank(dto.getDescribe()), Point::getDescribe, dto.getDescribe())
-                .set(StringUtils.isNotBlank(dto.getAddress()), Point::getAddress, dto.getAddress())
-                .set(StringUtils.isNotBlank(dto.getLongitude()), Point::getLongitude, dto.getLongitude())
-                .set(StringUtils.isNotBlank(dto.getLatitude()), Point::getLatitude, dto.getLatitude())
-                .set(dto.getVisitedTimes() != null, Point::getVisitedTimes, dto.getVisitedTimes())
-                .set(StringUtils.isNotBlank(dto.getAddressCode()), Point::getAddressCode, dto.getAddressCode())
-                .set(null != dto.getState(), Point::getState, dto.getState())
-                .set(null == dto.getState(), Point::getState, StateEnum.ENABLE)
-                .eq(Point::getId, dto.getId())
-                .update();
-
-        // 地图
-        addOrEditPointMap(dto.getId(), dto.getAmapId());
-
-        // 来源
-        List<PointSourceEditDTO> sourceList = dto.getSourceEdit();
-        // 新增
-        List<PointSourceEditDTO> addSourceList = sourceList.stream().filter(k -> StringUtils.isEmpty(k.getId())).toList();
-        addSource(addSourceList, dto.getId());
-
-        // 编辑
-        List<PointSourceEditDTO> editSourceList = sourceList.stream().filter(k -> StringUtils.isNotEmpty(k.getId())).toList();
-        for (PointSourceEditDTO sourceDTO : editSourceList) {
-            pointSourceService.lambdaUpdate()
-                    .set(null != sourceDTO.getType(), PointSource::getType, sourceDTO.getType())
-                    .set(StringUtils.isNotBlank(sourceDTO.getSource()), PointSource::getSource, sourceDTO.getSource())
-                    .set(StringUtils.isNotBlank(sourceDTO.getTitle()), PointSource::getTitle, sourceDTO.getTitle())
-                    .set(StringUtils.isNotBlank(sourceDTO.getContent()), PointSource::getContent, sourceDTO.getContent())
-                    .set(StringUtils.isNotBlank(sourceDTO.getUrl()), PointSource::getUrl, sourceDTO.getUrl())
-                    .eq(PointSource::getId, sourceDTO.getId())
-                    .update();
-        }
+        // TODO 高德地图查询地点信息
+        // TODO 构建地图数据
+        // TODO 构建来源
     }
 
     public PointFullVO get(IdDTO dto) {

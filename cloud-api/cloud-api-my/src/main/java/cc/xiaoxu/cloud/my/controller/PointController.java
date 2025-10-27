@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
-import cc.xiaoxu.cloud.bean.dto.PointEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
@@ -48,17 +47,6 @@ public class PointController {
             throw new CustomException("无权限");
         }
         pointService.add(dto);
-    }
-
-    @Operation(summary = "编辑", description = "编辑地点")
-    @PostMapping("/edit")
-    public @ResponseBody
-    void edit(@RequestBody PointEditDTO dto) {
-
-        if (!(CloudController.getCheckCode() + authCode).equals(dto.getCode())) {
-            throw new CustomException("无权限");
-        }
-        pointService.edit(dto);
     }
 
     @Operation(summary = "搜索", description = "搜索地点列表")
