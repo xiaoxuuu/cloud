@@ -7,7 +7,6 @@ import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
-import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.my.manager.PointSearchManager;
@@ -43,9 +42,6 @@ public class PointController {
     public @ResponseBody
     void add(@RequestBody PointAddDTO dto) {
 
-        if (!(CloudController.getCheckCode() + authCode).equals(dto.getCode())) {
-            throw new CustomException("无权限");
-        }
         pointService.add(dto);
     }
 

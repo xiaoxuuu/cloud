@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "点位 - 新增 - 请求参数")
 public class PointAddDTO {
 
-    @Schema(description = "code")
-    private String code;
-
     @Schema(description = "简称")
     private String pointShortName;
 
