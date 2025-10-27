@@ -40,13 +40,10 @@ public class AmapController {
     private PointManager pointManager;
 
     @Operation(summary = "地点搜索", description = "查询顺序：已有数据、POI 接口、输入提示")
-    @PostMapping("/search/{code}")
-    public @ResponseBody List<PointMapSearchVO> search(@PathVariable("code") String code, @RequestBody PointMapSearchDTO dto) {
+    @PostMapping("/search")
+    public @ResponseBody List<PointMapSearchVO> search(@RequestBody PointMapSearchDTO dto) {
 
-        if (!code.equals(CloudController.getCheckCode() + authCode)) {
-//            throw new CustomException("无权限");
-        }
-
+        dto.setExists(false);
         if (StringUtils.isEmpty(dto.getKeywords())) {
             return List.of();
         }
