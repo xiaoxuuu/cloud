@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.bean.vo.AreaTreeVO;
 import cc.xiaoxu.cloud.my.dao.AreaMapper;
 import cc.xiaoxu.cloud.my.entity.Area;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
@@ -12,7 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Slf4j
@@ -82,5 +86,55 @@ public class AreaService extends ServiceImpl<AreaMapper, Area> {
                         .update();
             }
         }
+    }
+
+    public List<AreaTreeVO> tree() {
+
+        List<Area> treeList = baseMapper.tree();
+        return buildTree(treeList);
+    }
+
+    public List<AreaTreeVO> buildTree(List<Area> treeList) {
+        // 1. 边界检查：如果数据为空，直接返回空列表
+        if (treeList == null || treeList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        // 2. 预处理：将所有 Area 转换为 AreaTreeVO，并存储在 Map 中方便快速查找
+        // Key: code, Value: AreaTreeVO
+        Map<String, AreaTreeVO> voMap = new HashMap<>(treeList.size());
+
+        for (Area area : treeList) {
+            AreaTreeVO vo = new AreaTreeVO();
+            vo.setName(area.getName());
+            vo.setCode(area.getCode());
+            // 初始化子列表，避免后续空指针
+            vo.setChildrenList(new ArrayList<>());
+
+            voMap.put(area.getCode(), vo);
+        }
+        // 3. 构建树形结构
+        List<AreaTreeVO> result = new ArrayList<>();
+        for (Area area : treeList) {
+            AreaTreeVO currentVo = voMap.get(area.getCode());
+            String level = area.getLevel();
+            if ("1".equals(level)) {
+                //如果是省级（Level 1），直接作为根节点加入结果集
+                result.add(currentVo);
+            } else if ("2".equals(level)) {
+                // 如果是市级（Level 2），需要找到它的父节点
+                // 逻辑：130100 (石家庄) -> 父节点代码应该是 130000 (河北)
+                // 截取前两位 + "0000"
+                if (area.getCode() != null && area.getCode().length() >= 2) {
+                    String parentCode = area.getCode().substring(0, 2) + "0000";
+
+                    AreaTreeVO parentVo = voMap.get(parentCode);
+                    if (parentVo != null) {
+                        // 将当前节点加入到父节点的 childrenList 中
+                        parentVo.getChildrenList().add(currentVo);
+                    }
+                }
+            }
+        }
+        return result;
     }
 }
