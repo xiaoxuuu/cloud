@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
-import cc.xiaoxu.cloud.bean.vo.PointDistrictVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
@@ -83,18 +82,15 @@ public class PointSearchManager {
     }
 
     @NotNull
-    private PointDistrictVO buildDistrict(Area area, PointTemp pointTemp) {
+    private PointSimpleVO buildDistrict(Area area, PointTemp pointTemp) {
 
-        PointDistrictVO vo = new PointDistrictVO();
+        PointSimpleVO vo = new PointSimpleVO();
         vo.setId(Integer.parseInt(area.getCode()));
         vo.setPointName(area.getName());
         vo.setPointShortName(area.getName());
         vo.setPointType(PointTypeEnum.DISTRICT);
-        String[] split = area.getLocation().split(",");
-        vo.setLongitude(split[0]);
-        vo.setLatitude(split[1]);
-        vo.setNextLatitude(pointTemp.getLatitude());
-        vo.setNextLongitude(pointTemp.getLongitude());
+        vo.setLongitude(pointTemp.getLongitude());
+        vo.setLatitude(pointTemp.getLatitude());
         return vo;
     }
 
