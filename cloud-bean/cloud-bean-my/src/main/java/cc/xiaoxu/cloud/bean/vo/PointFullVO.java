@@ -24,9 +24,6 @@ public class PointFullVO extends PointVO {
     @Schema(description = "电话")
     private List<String> telList;
 
-    @Schema(description = "消费")
-    private String cost;
-
     @Schema(description = "评分")
     private String rating;
 

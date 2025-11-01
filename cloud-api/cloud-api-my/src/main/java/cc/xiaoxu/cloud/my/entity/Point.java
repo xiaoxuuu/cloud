@@ -57,4 +57,16 @@ public class Point extends BaseInfoEntity {
 
     @Schema(description = "营业状态")
     private OperatingStatusEnum operatingStatus;
+
+    @Schema(description = "推荐距离(米）")
+    private Integer recommendedDistance;
+
+    @Schema(description = "营业时间")
+    private String openingHours;
+
+    @Schema(description = "联系电话")
+    private String telephone;
+
+    @Schema(description = "人均（分）")
+    private Integer cost;
 }
