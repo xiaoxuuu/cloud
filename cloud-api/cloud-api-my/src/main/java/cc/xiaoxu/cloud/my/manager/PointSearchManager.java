@@ -61,13 +61,13 @@ public class PointSearchManager {
                         return buildDistrict(area, k);
                     })
                     //分组，只保留一条
-                    .collect(Collectors.groupingBy(PointSimpleVO::getPointName))
+                    .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName))
                     .values()
                     .stream()
                     .map(k -> {
                         PointSimpleVO pointSimpleVO = k.getFirst();
-                        String newName = pointSimpleVO.getPointName() + ": " + k.size() + " 个";
-                        pointSimpleVO.setPointName(newName);
+                        String newName = pointSimpleVO.getPointShortName() + ": " + k.size() + " 个";
+                        pointSimpleVO.setPointShortName(newName);
                         pointSimpleVO.setPointShortName(newName);
                         return pointSimpleVO;
                     });
@@ -86,7 +86,6 @@ public class PointSearchManager {
 
         PointSimpleVO vo = new PointSimpleVO();
         vo.setId(Integer.parseInt(area.getCode()));
-        vo.setPointName(area.getName());
         vo.setPointShortName(area.getName());
         vo.setPointType(PointTypeEnum.DISTRICT);
         vo.setLongitude(pointTemp.getLongitude());
@@ -99,7 +98,7 @@ public class PointSearchManager {
 
         PointSimpleVO vo = new PointSimpleVO();
         BeanUtils.populate(k, vo);
-        vo.setPointName(k.getPointShortName());
+        vo.setPointShortName(k.getPointShortName());
         return vo;
     }
 

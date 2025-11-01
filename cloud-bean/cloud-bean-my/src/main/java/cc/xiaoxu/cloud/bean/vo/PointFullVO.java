@@ -24,9 +24,6 @@ public class PointFullVO extends PointVO {
     @Schema(description = "电话")
     private List<String> telList;
 
-    @Schema(description = "评分")
-    private String rating;
-
     @Schema(description = "营业时间")
     private String openTime;
 }

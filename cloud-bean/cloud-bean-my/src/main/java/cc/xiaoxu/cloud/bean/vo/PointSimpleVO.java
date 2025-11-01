@@ -15,9 +15,6 @@ import lombok.NoArgsConstructor;
 @Schema(description = "点位 - 精简参数 - 响应参数")
 public class PointSimpleVO extends BaseIdVO {
 
-    @Schema(description = "展示名称")
-    private String pointName;
-
     @Schema(description = "简称")
     private String pointShortName;
 

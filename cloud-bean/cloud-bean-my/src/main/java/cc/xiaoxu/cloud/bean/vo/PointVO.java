@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @Schema(description = "点位 - 业务参数 - 响应参数")
 public class PointVO extends PointSimpleVO {
 
+    @Schema(description = "全称")
+    private String pointFullName;
+
     @Schema(description = "地点描述")
     private String describe;
 
