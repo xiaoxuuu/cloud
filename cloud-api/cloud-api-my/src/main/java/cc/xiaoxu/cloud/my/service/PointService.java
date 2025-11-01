@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Getter
 @Slf4j
 @Service
@@ -44,7 +46,10 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         PointFullVO vo = new PointFullVO();
         BeanUtils.populate(pointTemp, vo);
 
-        // TODO 标签
+        // 标签
+        if (vo.getVisitedTimes() != null && vo.getVisitedTimes() > 0) {
+            vo.setTagList(List.of("作者去过"));
+        }
 
         return vo;
     }
