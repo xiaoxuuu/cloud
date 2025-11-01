@@ -7,6 +7,8 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
+import cc.xiaoxu.cloud.my.entity.PointTemp;
+import cc.xiaoxu.cloud.my.manager.PointManager;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +24,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private final PointSourceService pointSourceService;
     private final PointMapService pointMapService;
+    private final PointManager pointManager;
 
     @Transactional(rollbackFor = Exception.class)
     public void add(PointAddDTO dto) {
@@ -33,14 +36,13 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(IdDTO dto) {
 
-        int id = Integer.parseInt(dto.getId());
-        Point point = getById(id);
+        PointTemp pointTemp = pointManager.getPointMap().get(Integer.parseInt(dto.getId()));
 
-        if (null == point) {
-            throw new CustomException("无数据");
+        if (null == pointTemp) {
+            throw new CustomException("未查询到数据");
         }
         PointFullVO vo = new PointFullVO();
-        BeanUtils.populate(point, vo);
+        BeanUtils.populate(pointTemp, vo);
 
         // TODO 标签
 
