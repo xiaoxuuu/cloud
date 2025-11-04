@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
@@ -62,6 +63,10 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                     Double.parseDouble(dto.getLongitude())
             );
             vo.setDistance(distance);
+        }
+        // 电话
+        if (StringUtils.isNotBlank(pointTemp.getTelephone())) {
+            vo.setTelList(Arrays.stream(pointTemp.getTelephone().split(",")).toList());
         }
 
         return vo;
