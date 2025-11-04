@@ -7,6 +7,7 @@ import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import cc.xiaoxu.cloud.my.entity.*;
 import cc.xiaoxu.cloud.my.service.ConstantService;
+import cc.xiaoxu.cloud.my.utils.DistanceUtils;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -161,34 +162,12 @@ public class PointSearchManager {
     private void addDistance(PointSearchDTO dto, PointSimpleVO k) {
 
         // 优化，不同省份数据可以移除
-        double distance = calculateDistance(
+        double distance = DistanceUtils.calculateDistanceSimple(
                 Double.parseDouble(k.getLatitude()),
                 Double.parseDouble(k.getLongitude()),
                 Double.parseDouble(dto.getCenterLatitude()),
                 Double.parseDouble(dto.getCenterLongitude())
         );
         k.setDistance(distance);
-    }
-
-    /**
-     * 计算两个经纬度点之间的距离（单位：公里）
-     * 使用 Haversine 公式
-     *
-     * @param lat1 点1纬度
-     * @param lon1 点1经度
-     * @param lat2 点2纬度
-     * @param lon2 点2经度
-     * @return 距离（公里）
-     */
-    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        final double EARTH_RADIUS = 6371; // 地球半径（公里）
-
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return EARTH_RADIUS * c;
     }
 }

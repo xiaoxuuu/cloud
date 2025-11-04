@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.service;
 
-import cc.xiaoxu.cloud.bean.dto.IdDTO;
 import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
+import cc.xiaoxu.cloud.bean.dto.PointGetDTO;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
@@ -9,10 +9,12 @@ import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.PointManager;
+import cc.xiaoxu.cloud.my.utils.DistanceUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         // TODO 构建来源
     }
 
-    public PointFullVO get(IdDTO dto) {
+    public PointFullVO get(PointGetDTO dto) {
 
         PointTemp pointTemp = pointManager.getPointMap().get(Integer.parseInt(dto.getId()));
 
@@ -49,6 +51,17 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         // 标签
         if (vo.getVisitedTimes() != null && vo.getVisitedTimes() > 0) {
             vo.setTagList(List.of("作者去过"));
+        }
+
+        // 距离
+        if (StringUtils.isNotBlank(dto.getLatitude()) && StringUtils.isNotBlank(dto.getLongitude())) {
+            double distance = DistanceUtils.calculateDistance(
+                    Double.parseDouble(pointTemp.getLatitude()),
+                    Double.parseDouble(pointTemp.getLongitude()),
+                    Double.parseDouble(dto.getLatitude()),
+                    Double.parseDouble(dto.getLongitude())
+            );
+            vo.setDistance(distance);
         }
 
         return vo;
