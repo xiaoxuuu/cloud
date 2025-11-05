@@ -1,6 +1,6 @@
 package cc.xiaoxu.cloud.my.service;
 
-import cc.xiaoxu.cloud.bean.dto.PointAddDTO;
+import cc.xiaoxu.cloud.bean.dto.PointAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointGetDTO;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
@@ -32,11 +32,10 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     private final PointManager pointManager;
 
     @Transactional(rollbackFor = Exception.class)
-    public void add(PointAddDTO dto) {
+    public void addOrEdit(PointAddOrEditDTO dto) {
 
-        // TODO 高德地图查询地点信息
-        // TODO 构建地图数据
-        // TODO 构建来源
+        // 新增或编辑 cc.xiaoxu.cloud.my.entity.Point 的基础字段
+        // BaseInfoEntity 中的 remark 也可以编辑
     }
 
     public PointFullVO get(PointGetDTO dto) {

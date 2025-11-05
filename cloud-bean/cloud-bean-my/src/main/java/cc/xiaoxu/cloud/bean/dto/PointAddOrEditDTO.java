@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "点位 - 新增 - 请求参数")
-public class PointAddDTO {
+public class PointAddOrEditDTO {
+
+    @Schema(description = "数据id")
+    private Integer id;
 
     @Schema(description = "简称")
     private String pointShortName;
