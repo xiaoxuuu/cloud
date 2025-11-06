@@ -34,8 +34,9 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     @Transactional(rollbackFor = Exception.class)
     public void addOrEdit(PointAddOrEditDTO dto) {
 
-        // 新增或编辑 cc.xiaoxu.cloud.my.entity.Point 的基础字段
-        // BaseInfoEntity 中的 remark 也可以编辑
+        Point point = new Point();
+        BeanUtils.populate(dto, point);
+        this.saveOrUpdate(point);
     }
 
     public PointFullVO get(PointGetDTO dto) {

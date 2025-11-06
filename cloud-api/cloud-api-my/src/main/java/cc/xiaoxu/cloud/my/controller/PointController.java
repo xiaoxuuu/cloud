@@ -16,7 +16,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -27,9 +26,6 @@ import java.util.List;
 @Tag(name = "点位", description = "点位控制器")
 @RequestMapping("/point")
 public class PointController {
-
-    @Value("${app.config.auth-code}")
-    private String authCode;
 
     @Resource
     private PointService pointService;
