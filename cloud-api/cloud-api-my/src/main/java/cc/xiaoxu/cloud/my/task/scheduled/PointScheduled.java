@@ -48,7 +48,7 @@ public class PointScheduled {
                 // 无效数据排除
                 .eq(Area::getState, StateEnum.ENABLE.getCode())
                 .list();
-        Map<String, Area> areaMap = areaList.stream().collect(Collectors.toMap(Area::getCode, a -> a));
+        Map<Integer, Area> areaMap = areaList.stream().collect(Collectors.toMap(a-> Integer.parseInt(a.getCode()), a -> a));
         pointManager.setAreaList(areaList);
         pointManager.setAreaMap(areaMap);
         log.debug("查询到 {} 条地点数据...", areaList.size());

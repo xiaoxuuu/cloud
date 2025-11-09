@@ -54,7 +54,7 @@ public class PointSearchManager {
             pointStream = pointFilterList.stream().map(this::tran);
         } else {
             // 区县
-            Map<String, Area> areaMap = pointManager.getAreaMap();
+            Map<Integer, Area> areaMap = pointManager.getAreaMap();
             pointStream = pointFilterList.stream()
                     // 转换区县数据
                     .map(k -> {
@@ -142,7 +142,6 @@ public class PointSearchManager {
                 SearchUtils.containsValue(k.getPointFullName(), dto.getPointName()) ||
                 SearchUtils.containsValue(k.getPointShortName(), dto.getPointName()) ||
                 SearchUtils.containsValue(k.getAddress(), dto.getPointName()) ||
-                SearchUtils.containsValue(k.getAddressCode(), dto.getPointName()) ||
                 SearchUtils.containsValue(k.getDescribe(), dto.getPointName());
     }
 

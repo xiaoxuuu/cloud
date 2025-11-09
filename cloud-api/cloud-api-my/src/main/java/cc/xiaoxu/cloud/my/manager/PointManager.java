@@ -19,7 +19,7 @@ import java.util.Map;
 public class PointManager {
 
     private List<Area> areaList = new ArrayList<>();
-    private Map<String, Area> areaMap = new HashMap<>();
+    private Map<Integer, Area> areaMap = new HashMap<>();
 
     private List<PointTemp> pointList = new ArrayList<>();
     private Map<Integer, PointTemp> pointMap = new HashMap<>();

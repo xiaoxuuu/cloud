@@ -47,7 +47,7 @@ public class PointAddOrEditDTO {
     private Integer visitedTimes;
 
     @Schema(description = "地址code")
-    private String addressCode;
+    private Integer addressCode;
 
     @Schema(description = "营业状态")
     private OperatingStatusEnum operatingStatus;

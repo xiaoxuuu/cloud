@@ -66,7 +66,7 @@ public class AmapTask {
             amapDTO.setShowFields("children,business,indoor,navi,photos");
             amapDTO.setExtensions("all");
             amapDTO.setKeywords(point.getPointFullName());
-            amapDTO.setRegion(point.getAddressCode());
+            amapDTO.setRegion(String.valueOf(point.getAddressCode()));
             String amapResponse = amapManager.searchPoiString(amapDTO);
             JSONObject jsonObject = JSON.parseObject(amapResponse);
             Object poiListObj = jsonObject.get("pois");

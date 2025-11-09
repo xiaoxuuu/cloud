@@ -136,7 +136,7 @@ public class AmapController {
             searchVO.setProvince(poi.getPname());
             searchVO.setCity(poi.getCityname());
             searchVO.setDistrict(poi.getAdname());
-            searchVO.setDistrictCode(poi.getAdcode());
+            searchVO.setDistrictCode(Integer.parseInt(poi.getAdcode()));
             searchVOList.add(searchVO);
         }
         return searchVOList;
@@ -183,7 +183,7 @@ public class AmapController {
             // 地址信息
             poi.setAddress(tip.getAddress());
             poi.setLocation(tip.getLocation());
-            poi.setDistrictCode(tip.getAdcode());
+            poi.setDistrictCode(Integer.parseInt(tip.getAdcode()));
 
             // 拆分 district 字段为 pname、cityname、adname
             if (tip.getDistrict() != null && !tip.getDistrict().isEmpty()) {

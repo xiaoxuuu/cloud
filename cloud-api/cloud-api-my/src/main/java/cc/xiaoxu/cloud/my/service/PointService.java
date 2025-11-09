@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.bean.dto.PointAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointGetDTO;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -36,6 +38,11 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
         Point point = new Point();
         BeanUtils.populate(dto, point);
+        point.setState(StateEnum.ENABLE.getCode());
+        point.setCreateTime(new Date());
+        if (null != dto.getId()) {
+            point.setModifyTime(new Date());
+        }
         this.saveOrUpdate(point);
     }
 

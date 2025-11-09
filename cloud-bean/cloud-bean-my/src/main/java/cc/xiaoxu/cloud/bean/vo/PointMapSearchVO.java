@@ -34,7 +34,7 @@ public class PointMapSearchVO {
     private String district;
 
     @Schema(description = "所在区县编码")
-    private String districtCode;
+    private Integer districtCode;
 
     @Schema(description = "地址")
     private String address;
