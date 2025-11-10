@@ -11,6 +11,7 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.my.manager.PointSearchManager;
 import cc.xiaoxu.cloud.my.service.PointService;
+import cc.xiaoxu.cloud.my.task.scheduled.PointScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -33,12 +34,16 @@ public class PointController {
     @Resource
     private PointSearchManager pointSearchManager;
 
+    @Resource
+    private PointScheduled pointScheduled;
+
     @Operation(summary = "新增或编辑", description = "新增或编辑地点")
     @PostMapping("/add_or_edit")
     public @ResponseBody
     void addOrEdit(@RequestBody PointAddOrEditDTO dto) {
 
         pointService.addOrEdit(dto);
+        pointScheduled.updatePointList();
     }
 
     @Operation(summary = "搜索", description = "搜索地点列表")
