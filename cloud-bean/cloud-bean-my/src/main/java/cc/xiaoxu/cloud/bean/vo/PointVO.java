@@ -35,7 +35,7 @@ public class PointVO extends PointSimpleVO {
     private Integer visitedTimes;
 
     @Schema(description = "地址code")
-    private String addressCode;
+    private Integer addressCode;
 
     @Schema(description = "推荐距离(米）")
     private Integer recommendedDistance;
