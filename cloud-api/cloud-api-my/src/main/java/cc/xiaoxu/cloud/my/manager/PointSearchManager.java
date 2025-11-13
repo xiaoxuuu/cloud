@@ -108,10 +108,10 @@ public class PointSearchManager {
             return true;
         }
         if (dto.getVisit()) {
-            if (null == k.getVisitedTimes()) {
+            if (StringUtils.isBlank(k.getTagIdList())) {
                 return false;
             }
-            return k.getVisitedTimes() > 1;
+            return k.getTagIdList().contains("-1");
         } else {
             return true;
         }
