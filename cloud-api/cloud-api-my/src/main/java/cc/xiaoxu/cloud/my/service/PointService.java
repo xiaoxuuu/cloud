@@ -8,6 +8,7 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
+import cc.xiaoxu.cloud.my.entity.PointTag;
 import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.utils.DistanceUtils;
@@ -19,9 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Slf4j
@@ -57,8 +56,14 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         BeanUtils.populate(pointTemp, vo);
 
         // 标签
-        if (vo.getVisitedTimes() != null && vo.getVisitedTimes() > 0) {
-            vo.setTagList(List.of("作者去过"));
+        if (StringUtils.isNotBlank(vo.getTagIdList())) {
+            List<String> list = Arrays.stream(vo.getTagIdList().split(","))
+                    .map(k -> pointManager.getPointTagMap().get(Integer.parseInt(k)))
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparing(PointTag::getId))
+                    .map(PointTag::getTagName)
+                    .toList();
+            vo.setTagList(list);
         }
 
         // 距离

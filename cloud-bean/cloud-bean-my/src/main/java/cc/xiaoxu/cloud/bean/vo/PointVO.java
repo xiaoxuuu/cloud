@@ -48,4 +48,7 @@ public class PointVO extends PointSimpleVO {
 
     @Schema(description = "人均（分）")
     private Integer cost;
+
+    @Schema(description = "标签id集合")
+    private String tagIdList;
 }

@@ -66,4 +66,7 @@ public class PointAddOrEditDTO {
 
     @Schema(description = "备注")
     private String remark;
+
+    @Schema(description = "标签id集合")
+    private String tagIdList;
 }
