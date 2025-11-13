@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.core.bean.entity.BaseIdEntity;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.entity.*;
 import cc.xiaoxu.cloud.my.manager.PointManager;
@@ -31,6 +32,9 @@ public class PointScheduled {
     private PointSourceService pointSourceService;
 
     @Resource
+    private PointTagService pointTagService;
+
+    @Resource
     private PointManager pointManager;
 
     @Scheduled(cron = "${app.config.refresh-data}")
@@ -40,6 +44,19 @@ public class PointScheduled {
         updatePointList();
         updatePointMapList();
         updatePointSourceList();
+        updatePointTagList();
+    }
+
+    public void updatePointTagList() {
+
+        List<PointTag> list = pointTagService.lambdaQuery()
+                // 无效数据排除
+                .eq(PointTag::getState, StateEnum.ENABLE.getCode())
+                .list();
+        Map<Integer, PointTag> areaMap = list.stream().collect(Collectors.toMap(BaseIdEntity::getId, a -> a));
+        pointManager.setPointTagList(list);
+        pointManager.setPointTagMap(areaMap);
+        log.debug("查询到 {} 条标签数据...", list.size());
     }
 
     public void updateAreaList() {

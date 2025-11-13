@@ -1,9 +1,6 @@
 package cc.xiaoxu.cloud.my.manager;
 
-import cc.xiaoxu.cloud.my.entity.Area;
-import cc.xiaoxu.cloud.my.entity.PointMap;
-import cc.xiaoxu.cloud.my.entity.PointSource;
-import cc.xiaoxu.cloud.my.entity.PointTemp;
+import cc.xiaoxu.cloud.my.entity.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,4 +26,7 @@ public class PointManager {
 
     private List<PointSource> pointSourceList = new ArrayList<>();
     private Map<Integer, PointSource> pointSourceMap = new HashMap<>();
+
+    private List<PointTag> pointTagList = new ArrayList<>();
+    private Map<Integer, PointTag> pointTagMap = new HashMap<>();
 }
