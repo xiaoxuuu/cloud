@@ -47,6 +47,8 @@ public class PointSearchManager {
                 .filter(k -> pointType(dto, k))
                 // 作者访问过
                 .filter(k -> authorVisit(dto, k))
+                // 标签
+                .filter(k -> tag(dto, k))
                 .toList();
         Stream<? extends PointSimpleVO> pointStream;
         if (Double.parseDouble(dto.getScale()) > scale || pointFilterList.size() < countConstant) {
@@ -80,6 +82,18 @@ public class PointSearchManager {
 //                    // 限制返回数据
                 .limit(countConstant)
                 .toList();
+    }
+
+    private boolean tag(PointSearchDTO dto, PointTemp k) {
+        if (CollectionUtils.isEmpty(dto.getTagIdList())) {
+            return true;
+        }
+        for (String id : dto.getTagIdList()) {
+            if (k.getTagIdSet().contains(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @NotNull

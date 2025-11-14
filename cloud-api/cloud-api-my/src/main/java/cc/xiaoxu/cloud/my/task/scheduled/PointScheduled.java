@@ -117,7 +117,7 @@ public class PointScheduled {
     private PointTemp tran(Point point) {
         PointTemp pointTemp = new PointTemp();
         BeanUtils.populate(point, pointTemp);
-        pointTemp.setTagList(Arrays.stream(point.getTagIdList().split(",")).toList());
+        pointTemp.setTagIdSet(Arrays.stream(point.getTagIdList().split(",")).collect(Collectors.toSet()));
         return pointTemp;
     }
 }

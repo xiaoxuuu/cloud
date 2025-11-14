@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -25,5 +25,5 @@ public class PointTemp extends Point {
     private String district;
 
     @Schema(description = "标签列表")
-    private List<String> tagList;
+    private Set<String> tagIdSet;
 }
