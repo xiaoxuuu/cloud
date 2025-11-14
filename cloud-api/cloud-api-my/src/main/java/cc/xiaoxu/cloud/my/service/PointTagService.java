@@ -1,7 +1,6 @@
 package cc.xiaoxu.cloud.my.service;
 
 import cc.xiaoxu.cloud.bean.dto.PointTagAddOrEditDTO;
-import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointTagMapper;
 import cc.xiaoxu.cloud.my.entity.PointTag;
@@ -25,7 +24,7 @@ public class PointTagService extends ServiceImpl<PointTagMapper, PointTag> {
 
         PointTag entity = new PointTag();
         BeanUtils.populate(dto, entity);
-        entity.setState(StateEnum.ENABLE.getCode());
+        entity.setState(dto.getState());
         entity.setCreateTime(new Date());
         if (null != dto.getId()) {
             entity.setModifyTime(new Date());
