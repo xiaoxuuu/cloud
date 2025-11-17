@@ -8,6 +8,7 @@ import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.service.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -66,7 +67,7 @@ public class PointScheduled {
                 // 无效数据排除
                 .eq(Area::getState, StateEnum.ENABLE.getCode())
                 .list();
-        Map<Integer, Area> areaMap = areaList.stream().collect(Collectors.toMap(a-> Integer.parseInt(a.getCode()), a -> a));
+        Map<Integer, Area> areaMap = areaList.stream().collect(Collectors.toMap(a -> Integer.parseInt(a.getCode()), a -> a));
         pointManager.setAreaList(areaList);
         pointManager.setAreaMap(areaMap);
         log.debug("查询到 {} 条地点数据...", areaList.size());
@@ -117,7 +118,9 @@ public class PointScheduled {
     private PointTemp tran(Point point) {
         PointTemp pointTemp = new PointTemp();
         BeanUtils.populate(point, pointTemp);
-        pointTemp.setTagIdSet(Arrays.stream(point.getTagIdList().split(",")).collect(Collectors.toSet()));
+        if (StringUtils.isNotEmpty(point.getTagIdList())) {
+            pointTemp.setTagIdSet(Arrays.stream(point.getTagIdList().split(",")).collect(Collectors.toSet()));
+        }
         return pointTemp;
     }
 }
