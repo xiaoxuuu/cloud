@@ -28,9 +28,6 @@ public class PointSearchDTO {
     @Schema(description = "点位名称")
     private String pointName;
 
-    @Schema(description = "作者去过")
-    private Boolean visit;
-
     @Schema(description = "标签列表")
     private List<String> tagIdList;
 }

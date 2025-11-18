@@ -45,8 +45,6 @@ public class PointSearchManager {
                 .filter(k -> pointNameLike(dto, k))
                 // 点位类型
                 .filter(k -> pointType(dto, k))
-                // 作者访问过
-                .filter(k -> authorVisit(dto, k))
                 // 标签
                 .filter(k -> tag(dto, k))
                 .toList();
@@ -115,20 +113,6 @@ public class PointSearchManager {
         BeanUtils.populate(k, vo);
         vo.setPointShortName(k.getPointShortName());
         return vo;
-    }
-
-    private boolean authorVisit(PointSearchDTO dto, Point k) {
-        if (null == dto.getVisit()) {
-            return true;
-        }
-        if (dto.getVisit()) {
-            if (StringUtils.isBlank(k.getTagIdList())) {
-                return false;
-            }
-            return k.getTagIdList().contains("-1");
-        } else {
-            return true;
-        }
     }
 
     private boolean pointType(PointSearchDTO dto, Point k) {
