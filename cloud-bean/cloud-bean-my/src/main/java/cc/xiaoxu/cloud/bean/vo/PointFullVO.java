@@ -19,7 +19,7 @@ public class PointFullVO extends PointVO {
     private List<PointSourceVO> pointSourceList;
 
     @Schema(description = "标签")
-    private List<String> tagList;
+    private List<PointTagVO> tagList;
 
     @Schema(description = "电话")
     private List<String> telList;

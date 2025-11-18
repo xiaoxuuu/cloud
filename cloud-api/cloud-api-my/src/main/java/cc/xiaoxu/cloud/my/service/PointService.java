@@ -4,6 +4,7 @@ import cc.xiaoxu.cloud.bean.dto.PointAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointGetDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
+import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
@@ -57,11 +58,11 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
         // 标签
         if (StringUtils.isNotBlank(vo.getTagIdList())) {
-            List<String> list = Arrays.stream(vo.getTagIdList().split(","))
+            List<PointTagVO> list = Arrays.stream(vo.getTagIdList().split(","))
                     .map(k -> pointManager.getPointTagMap().get(Integer.parseInt(k)))
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparing(PointTag::getId))
-                    .map(PointTag::getTagName)
+                    .map(this::toPointTagVO)
                     .toList();
             vo.setTagList(list);
         }
@@ -81,6 +82,14 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             vo.setTelList(Arrays.stream(pointTemp.getTelephone().split(",")).toList());
         }
 
+        return vo;
+    }
+
+    private PointTagVO toPointTagVO(PointTag entity) {
+        PointTagVO vo = new PointTagVO();
+        vo.setId(entity.getId());
+        vo.setColor(entity.getColor());
+        vo.setTagName(entity.getTagName());
         return vo;
     }
 
