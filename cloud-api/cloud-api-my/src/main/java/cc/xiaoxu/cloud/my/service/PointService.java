@@ -66,7 +66,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             Point point = new Point();
             BeanUtils.populate(dto, point);
             point.setTagIdList(dto.getTagList().stream().distinct().collect(Collectors.joining(",")));
-            point.setCode(MD5Utils.toMd5(dto.getPointFullName() + dto.getAddress()).toLowerCase());
+            point.setCode(MD5Utils.toMd5(dto.getPointFullName() + dto.getAddress() + new Random().nextInt()).toLowerCase());
             point.setState(StateEnum.ENABLE.getCode());
             point.setCreateTime(new Date());
             this.save(point);
