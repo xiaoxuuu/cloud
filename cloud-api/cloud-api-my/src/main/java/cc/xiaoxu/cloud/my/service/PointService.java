@@ -13,7 +13,6 @@ import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointTag;
 import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.PointManager;
-import cc.xiaoxu.cloud.my.utils.DistanceUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -75,7 +74,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(PointGetDTO dto) {
 
-        PointTemp pointTemp = pointManager.getPointMap().get(Integer.parseInt(dto.getId()));
+        PointTemp pointTemp = pointManager.getPointMapCode().get(dto.getCode());
 
         if (null == pointTemp) {
             throw new CustomException("未查询到数据");
@@ -94,16 +93,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             vo.setTagList(list);
         }
 
-        // 距离
-        if (StringUtils.isNotBlank(dto.getLatitude()) && StringUtils.isNotBlank(dto.getLongitude())) {
-            double distance = DistanceUtils.calculateDistance(
-                    Double.parseDouble(pointTemp.getLatitude()),
-                    Double.parseDouble(pointTemp.getLongitude()),
-                    Double.parseDouble(dto.getLatitude()),
-                    Double.parseDouble(dto.getLongitude())
-            );
-            vo.setDistance(distance);
-        }
         // 电话
         if (StringUtils.isNotBlank(pointTemp.getTelephone())) {
             vo.setTelList(Arrays.stream(pointTemp.getTelephone().split(",")).toList());

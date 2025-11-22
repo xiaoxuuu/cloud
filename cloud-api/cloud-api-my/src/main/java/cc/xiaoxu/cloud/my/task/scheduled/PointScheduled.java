@@ -86,8 +86,10 @@ public class PointScheduled {
                 .map(this::tran)
                 .toList();
         Map<Integer, PointTemp> pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
+        Map<String, PointTemp> pointMapCode = pointList.stream().collect(Collectors.toMap(Point::getCode, a -> a));
         pointManager.setPointList(pointList);
         pointManager.setPointMap(pointMap);
+        pointManager.setPointMapCode(pointMapCode);
         log.debug("查询到 {} 条点位数据...", pointList.size());
     }
 
