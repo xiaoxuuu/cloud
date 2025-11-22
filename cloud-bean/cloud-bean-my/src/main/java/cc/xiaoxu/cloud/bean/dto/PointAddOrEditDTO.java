@@ -7,14 +7,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "点位 - 新增或编辑 - 请求参数")
 public class PointAddOrEditDTO {
 
-    @Schema(description = "数据id")
-    private Integer id;
+    @Schema(description = "地点code")
+    private String code;
 
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;
@@ -68,5 +70,5 @@ public class PointAddOrEditDTO {
     private String remark;
 
     @Schema(description = "标签id集合")
-    private String tagIdList;
+    private List<String> tagList;
 }
