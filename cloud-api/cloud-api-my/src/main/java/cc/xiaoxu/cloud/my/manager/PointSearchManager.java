@@ -126,6 +126,9 @@ public class PointSearchManager {
 
     private boolean pointNameLike(PointSearchDTO dto, Point k) {
 
+        if (StringUtils.isBlank(dto.getPointName())) {
+            return true;
+        }
         Set<Integer> pointSourceSet = pointManager.getPointSourceList().stream()
                 .filter(v -> {
                     if (StringUtils.isNotBlank(dto.getPointName())) {
