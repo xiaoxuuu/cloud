@@ -7,7 +7,6 @@ import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
-import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointTag;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Getter
@@ -65,11 +65,20 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             Point point = new Point();
             BeanUtils.populate(dto, point);
             point.setTagIdList(dto.getTagList().stream().distinct().collect(Collectors.joining(",")));
-            point.setCode(MD5Utils.toMd5(dto.getPointFullName() + dto.getAddress() + new Random().nextInt()).toLowerCase());
+            point.setCode(getCode());
             point.setState(StateEnum.ENABLE.getCode());
             point.setCreateTime(new Date());
             this.save(point);
         }
+    }
+
+    private String getCode() {
+
+        String code;
+        do {
+            code = String.valueOf(ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1));
+        } while (!lambdaQuery().eq(Point::getCode, code).exists());
+        return code;
     }
 
     public PointFullVO get(PointGetDTO dto) {
