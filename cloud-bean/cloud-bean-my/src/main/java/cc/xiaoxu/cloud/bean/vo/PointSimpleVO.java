@@ -29,7 +29,10 @@ public class PointSimpleVO {
     private String latitude;
 
     @Schema(description = "距离中心点距离")
-    private Double distance;
+    private Integer distance;
+
+    @Schema(description = "排序")
+    private Integer sort;
 
     @Schema(description = "营业状态")
     private OperatingStatusEnum operatingStatus;

@@ -5,6 +5,7 @@ import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
+import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import cc.xiaoxu.cloud.my.entity.*;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.DistanceUtils;
@@ -74,10 +75,8 @@ public class PointSearchManager {
                     });
         }
         return pointStream
-//                    // 计算距离中心点位置
                 .peek(k -> addDistance(dto, k))
                 .sorted(Comparator.comparingDouble(PointSimpleVO::getDistance))
-//                    // 限制返回数据
                 .limit(countConstant)
                 .toList();
     }
@@ -168,6 +167,7 @@ public class PointSearchManager {
                 Double.parseDouble(dto.getCenterLatitude()),
                 Double.parseDouble(dto.getCenterLongitude())
         );
-        k.setDistance(distance);
+        k.setDistance(MathUtils.toInteger(distance));
+        k.setSort(MathUtils.toInteger(distance));
     }
 }
