@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 public class Point extends BaseInfoEntity {
 
     @Schema(description = "地点code")
-    private String code;
+    private Integer code;
 
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;

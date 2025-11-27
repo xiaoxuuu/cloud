@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class PointGetDTO {
 
     @Schema(description = "code")
-    private String code;
+    private Integer code;
 }

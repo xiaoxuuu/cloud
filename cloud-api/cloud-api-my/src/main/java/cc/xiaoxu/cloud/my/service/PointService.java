@@ -72,11 +72,11 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         }
     }
 
-    private String getCode() {
+    private Integer getCode() {
 
-        String code;
+        int code;
         do {
-            code = String.valueOf(ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1));
+            code = ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1);
         } while (!lambdaQuery().eq(Point::getCode, code).exists());
         return code;
     }
