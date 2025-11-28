@@ -60,6 +60,9 @@ public class PointSearchManager {
                     // 转换区县数据
                     .map(k -> {
                         Area area = areaMap.get(k.getAddressCode());
+                        if (null == area) {
+                            log.error("{}", k.getAddressCode());
+                        }
                         return buildDistrict(area, k);
                     })
                     //分组，只保留一条
