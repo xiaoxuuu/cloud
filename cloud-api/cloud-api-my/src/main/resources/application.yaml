@@ -60,6 +60,13 @@ wx:
         token: @env.api.wechat.mp.token@
         # 接口配置里的 EncodingAESKey 值
         aesKey: @env.api.wechat.mp.aes.key@
+  ma:
+    configs:
+      - appId: @env.api.wechat.ma.app.id@
+        secret: @env.api.wechat.ma.secret@
+        token: @env.api.wechat.ma.token@
+        aesKey: @env.api.wechat.ma.aes.key@
+        msgDataFormat: JSON
 
 knife4j:
   basic:
