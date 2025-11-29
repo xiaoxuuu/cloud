@@ -130,11 +130,11 @@ public class NavWebsiteService extends ServiceImpl<NavWebsiteMapper, NavWebsite>
     public void addVisitNum(IdDTO dto) {
 
         for (NavWebsite navWebsite : navList) {
-            if (navWebsite.getId().equals(Integer.parseInt(dto.getId()))) {
+            if (navWebsite.getId().equals(dto.getId())) {
                 navWebsite.setVisitNum(navWebsite.getVisitNum() + 1);
             }
         }
-        this.baseMapper.updateNum(Integer.parseInt(dto.getId()));
+        this.baseMapper.updateNum(dto.getId());
     }
 
     public Page<NavWebsiteShowVO> pages(NavWebsitePageDTO dto) {
