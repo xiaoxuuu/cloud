@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,23 @@ public class PointTagService extends ServiceImpl<PointTagMapper, PointTag> {
     @Transactional(rollbackFor = Exception.class)
     public void addOrEdit(PointTagAddOrEditDTO dto) {
 
-        PointTag entity = new PointTag();
-        BeanUtils.populate(dto, entity);
-        entity.setCreateTime(new Date());
-        entity.setState(StateEnum.ENABLE.getCode());
         if (null != dto.getId()) {
-            entity.setModifyTime(new Date());
+            // 更新
+            lambdaUpdate()
+                    .eq(PointTag::getId, dto.getId())
+                    .set(PointTag::getTagName, dto.getTagName())
+                    .set(PointTag::getColor, dto.getColor())
+                    .set(StringUtils.isNotBlank(dto.getState()), PointTag::getState, dto.getState())
+                    .set(PointTag::getModifyTime, new Date())
+                    .update();
+        } else {
+            PointTag entity = new PointTag();
+            BeanUtils.populate(dto, entity);
+            entity.setTagName(dto.getTagName());
+            entity.setColor(dto.getColor());
+            entity.setState(StateEnum.ENABLE.getCode());
+            entity.setCreateTime(new Date());
+            this.save(entity);
         }
-        this.saveOrUpdate(entity);
     }
 }

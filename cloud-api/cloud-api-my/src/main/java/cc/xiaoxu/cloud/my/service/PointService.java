@@ -9,7 +9,6 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
-import cc.xiaoxu.cloud.my.entity.PointTag;
 import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -96,8 +95,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             List<PointTagVO> list = Arrays.stream(vo.getTagIdList().split(","))
                     .map(k -> pointManager.getPointTagMap().get(Integer.parseInt(k)))
                     .filter(Objects::nonNull)
-                    .sorted(Comparator.comparing(PointTag::getId))
-                    .map(this::toPointTagVO)
+                    .sorted(Comparator.comparingInt(PointTagVO::getId))
                     .toList();
             vo.setTagList(list);
         }
@@ -107,14 +105,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             vo.setTelList(Arrays.stream(pointTemp.getTelephone().split(",")).toList());
         }
 
-        return vo;
-    }
-
-    private PointTagVO toPointTagVO(PointTag entity) {
-        PointTagVO vo = new PointTagVO();
-        vo.setId(entity.getId());
-        vo.setColor(entity.getColor());
-        vo.setTagName(entity.getTagName());
         return vo;
     }
 

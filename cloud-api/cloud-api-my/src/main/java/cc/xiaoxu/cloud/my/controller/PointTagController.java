@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.PointTagAddOrEditDTO;
-import cc.xiaoxu.cloud.my.entity.PointTag;
+import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.service.PointTagService;
 import cc.xiaoxu.cloud.my.task.scheduled.PointScheduled;
@@ -31,7 +31,7 @@ public class PointTagController {
     @Operation(summary = "标签列表", description = "新增或编辑地点")
     @PostMapping("/list")
     public @ResponseBody
-    List<PointTag> pointTagList() {
+    List<PointTagVO> pointTagList() {
 
         return pointManager.getPointTagList();
     }
