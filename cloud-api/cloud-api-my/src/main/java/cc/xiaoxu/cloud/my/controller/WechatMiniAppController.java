@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 @Tag(name = "微信小程序认证接口")
-@RequestMapping("/wx/miniapp/user/{appid}")
+@RequestMapping("/wx/ma/user/{appid}")
 public class WechatMiniAppController {
 
     private final WxMaService wxMaService;
