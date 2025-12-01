@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -90,7 +89,6 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         }
         PointFullVO vo = new PointFullVO();
         BeanUtils.populate(pointTemp, vo);
-        vo.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(pointTemp.getModifyTime()));
 
         // 标签
         if (StringUtils.isNotBlank(vo.getTagIdList())) {

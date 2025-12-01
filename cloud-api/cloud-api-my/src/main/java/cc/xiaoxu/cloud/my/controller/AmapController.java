@@ -17,6 +17,7 @@ import cc.xiaoxu.cloud.my.manager.PointManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -121,6 +122,9 @@ public class AmapController {
 
         List<PointMapSearchVO> searchVOList = new ArrayList<>();
 
+        if (CollectionUtils.isEmpty(poiDTOList)) {
+            return searchVOList;
+        }
         for (AmapPoiSearchResponseDTO.AmapPoiDTO poi : poiDTOList) {
 
             PointMapSearchVO searchVO = new PointMapSearchVO();

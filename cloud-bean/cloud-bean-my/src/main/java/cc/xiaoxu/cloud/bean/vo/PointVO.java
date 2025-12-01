@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
@@ -51,4 +53,10 @@ public class PointVO extends PointSimpleVO {
 
     @Schema(description = "标签id集合")
     private String tagIdList;
+
+    @Schema(description = "描述")
+    private String remark;
+
+    @Schema(description = "更新时间")
+    private Date modifyTime;
 }
