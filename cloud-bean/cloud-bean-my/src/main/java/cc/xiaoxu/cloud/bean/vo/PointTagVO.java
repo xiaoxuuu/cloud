@@ -11,11 +11,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "区划 - 响应参数")
-public class PointTagVO extends BaseIdVO{
+public class PointTagVO extends BaseIdVO {
 
     @Schema(description = "标签名")
     private String tagName;
 
     @Schema(description = "颜色")
     private String color;
+
+    @Schema(description = "排序")
+    private Integer sort;
+
+    @Schema(description = "分类")
+    private String category;
 }

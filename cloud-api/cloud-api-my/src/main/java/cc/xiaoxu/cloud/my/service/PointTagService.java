@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,9 @@ public class PointTagService extends ServiceImpl<PointTagMapper, PointTag> {
                     .eq(PointTag::getId, dto.getId())
                     .set(PointTag::getTagName, dto.getTagName())
                     .set(PointTag::getColor, dto.getColor())
-                    .set(StringUtils.isNotBlank(dto.getState()), PointTag::getState, dto.getState())
+                    .set(PointTag::getCategory, dto.getCategory())
+                    .set(PointTag::getSort, dto.getSort())
+//                    .set(StringUtils.isNotBlank(dto.getState()), PointTag::getState, dto.getState())
                     .set(PointTag::getModifyTime, new Date())
                     .update();
         } else {
@@ -38,6 +39,8 @@ public class PointTagService extends ServiceImpl<PointTagMapper, PointTag> {
             BeanUtils.populate(dto, entity);
             entity.setTagName(dto.getTagName());
             entity.setColor(dto.getColor());
+            entity.setCategory(dto.getCategory());
+            entity.setSort(dto.getSort());
             entity.setState(StateEnum.ENABLE.getCode());
             entity.setCreateTime(new Date());
             this.save(entity);

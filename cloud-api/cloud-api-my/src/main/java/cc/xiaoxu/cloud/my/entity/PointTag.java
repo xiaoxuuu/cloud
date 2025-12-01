@@ -22,4 +22,10 @@ public class PointTag extends BaseInfoEntity {
 
     @Schema(description = "颜色")
     private String color;
+
+    @Schema(description = "排序")
+    private Integer sort;
+
+    @Schema(description = "分类")
+    private String category;
 }

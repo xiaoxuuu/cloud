@@ -19,6 +19,12 @@ public class PointTagAddOrEditDTO extends IdDTO {
     @Schema(description = "颜色")
     private String color;
 
-    @Schema(description = "状态")
-    private String state;
+    @Schema(description = "排序")
+    private Integer sort;
+
+    @Schema(description = "分类")
+    private String category;
+
+//    @Schema(description = "状态")
+//    private String state;
 }

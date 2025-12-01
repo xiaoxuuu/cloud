@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,7 +56,10 @@ public class PointScheduled {
                 // 无效数据排除
                 .eq(PointTag::getState, StateEnum.ENABLE.getCode())
                 .list()
-                .stream().map(this::toPointTagVO).toList();
+                .stream()
+                .map(this::toPointTagVO)
+                .sorted(Comparator.comparing(PointTagVO::getSort))
+                .toList();
         Map<Integer, PointTagVO> areaMap = list.stream().collect(Collectors.toMap(PointTagVO::getId, a -> a));
         pointManager.setPointTagList(list);
         pointManager.setPointTagMap(areaMap);
