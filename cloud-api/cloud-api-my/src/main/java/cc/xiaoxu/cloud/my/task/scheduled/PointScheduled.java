@@ -71,6 +71,8 @@ public class PointScheduled {
         vo.setId(entity.getId());
         vo.setColor(entity.getColor());
         vo.setTagName(entity.getTagName());
+        vo.setCategory(entity.getCategory());
+        vo.setSort(entity.getSort());
         return vo;
     }
 
