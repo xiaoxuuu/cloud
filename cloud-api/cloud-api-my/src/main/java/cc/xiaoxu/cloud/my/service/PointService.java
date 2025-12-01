@@ -90,6 +90,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         }
         PointFullVO vo = new PointFullVO();
         BeanUtils.populate(pointTemp, vo);
+        vo.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(pointTemp.getModifyTime()));
 
         // 标签
         if (StringUtils.isNotBlank(vo.getTagIdList())) {

@@ -26,4 +26,7 @@ public class PointFullVO extends PointVO {
 
     @Schema(description = "营业时间")
     private String openTime;
+
+    @Schema(description = "更新时间")
+    private String modifyTime;
 }
