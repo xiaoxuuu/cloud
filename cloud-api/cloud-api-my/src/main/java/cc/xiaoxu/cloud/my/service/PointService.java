@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -95,7 +96,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
             List<PointTagVO> list = Arrays.stream(vo.getTagIdList().split(","))
                     .map(k -> pointManager.getPointTagMap().get(Integer.parseInt(k)))
                     .filter(Objects::nonNull)
-                    .sorted(Comparator.comparingInt(PointTagVO::getId))
+                    .sorted(Comparator.comparingInt(PointTagVO::getSort))
                     .toList();
             vo.setTagList(list);
         }
