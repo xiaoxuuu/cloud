@@ -94,6 +94,9 @@ public class PointSearchManager {
         if (CollectionUtils.isEmpty(dto.getTagIdList())) {
             return true;
         }
+        if (CollectionUtils.isEmpty(k.getTagIdSet())) {
+            return false;
+        }
         for (String id : dto.getTagIdList()) {
             if (k.getTagIdSet().contains(id)) {
                 return true;

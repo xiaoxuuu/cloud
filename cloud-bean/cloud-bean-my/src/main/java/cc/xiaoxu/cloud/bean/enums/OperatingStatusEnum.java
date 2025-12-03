@@ -11,7 +11,7 @@ public enum OperatingStatusEnum implements EnumInterface<String> {
 
     OPEN("OPEN", "营业"),
     CLOSE("CLOSE", "关闭"),
-    ING("ING", "处理中"),
+    ING("ING", "待核实"),
     ;
 
     @EnumValue
