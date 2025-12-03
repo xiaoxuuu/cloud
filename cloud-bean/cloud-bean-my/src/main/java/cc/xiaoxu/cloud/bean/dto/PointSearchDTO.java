@@ -1,11 +1,13 @@
 package cc.xiaoxu.cloud.bean.dto;
 
+import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -30,4 +32,7 @@ public class PointSearchDTO {
 
     @Schema(description = "标签列表")
     private List<String> tagIdList;
+
+    @Schema(description = "营业状态")
+    private Set<OperatingStatusEnum> operatingStatusSet;
 }

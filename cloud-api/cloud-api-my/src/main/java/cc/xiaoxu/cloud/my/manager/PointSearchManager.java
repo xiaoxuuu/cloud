@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
+import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
@@ -40,6 +41,9 @@ public class PointSearchManager {
                 .one();
         int countConstant = Integer.parseInt(count.getValue());
 
+        // 营业状态
+        Set<OperatingStatusEnum> operatingStatusSet = dto.getOperatingStatusSet();
+
         List<PointTemp> pointFilterList = pointManager.getPointList()
                 .stream()
                 // 模糊匹配
@@ -48,6 +52,8 @@ public class PointSearchManager {
                 .filter(k -> pointType(dto, k))
                 // 标签
                 .filter(k -> tag(dto, k))
+                // 营业状态
+                .filter(k -> operatingStatusSet.contains(k.getOperatingStatus()))
                 .toList();
         Stream<? extends PointSimpleVO> pointStream;
         if (Double.parseDouble(dto.getScale()) > scale || pointFilterList.size() < countConstant) {
