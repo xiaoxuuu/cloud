@@ -42,11 +42,9 @@ public class PointSearchManager {
         int countConstant = Integer.parseInt(count.getValue());
 
         // 营业状态
-        Set<OperatingStatusEnum> operatingStatusSet = dto.getOperatingStatusSet();
-        if (CollectionUtils.isEmpty(operatingStatusSet)) {
-            operatingStatusSet.add(OperatingStatusEnum.OPEN);
-            operatingStatusSet.add(OperatingStatusEnum.ING);
-        }
+        Set<OperatingStatusEnum> operatingStatusSet = CollectionUtils.isNotEmpty(dto.getOperatingStatusSet())
+                ? dto.getOperatingStatusSet()
+                : Set.of(OperatingStatusEnum.OPEN, OperatingStatusEnum.ING);
 
         List<PointTemp> pointFilterList = pointManager.getPointList()
                 .stream()
