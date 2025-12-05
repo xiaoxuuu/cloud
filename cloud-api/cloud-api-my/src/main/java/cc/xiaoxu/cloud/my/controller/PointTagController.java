@@ -28,15 +28,23 @@ public class PointTagController {
     @Resource
     private PointManager pointManager;
 
-    @Operation(summary = "标签列表", description = "新增或编辑地点")
-    @PostMapping("/list")
+    @Operation(summary = "全部标签列表", description = "全部标签列表")
+    @PostMapping("/list_all")
     public @ResponseBody
     List<PointTagVO> pointTagList() {
 
         return pointManager.getPointTagList();
     }
 
-    @Operation(summary = "新增或编辑标签", description = "新增或编辑地点")
+    @Operation(summary = "标签列表", description = "标签列表")
+    @PostMapping("/list")
+    public @ResponseBody
+    List<PointTagVO> pointTagUsedList() {
+
+        return pointManager.getPointTagList();
+    }
+
+    @Operation(summary = "新增或编辑标签", description = "新增或编辑标签")
     @PostMapping("/add_or_edit")
     public @ResponseBody
     void addOrEditTag(@RequestBody PointTagAddOrEditDTO dto) {

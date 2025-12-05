@@ -12,10 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -48,6 +45,22 @@ public class PointScheduled {
         updatePointMapList();
         updatePointSourceList();
         updatePointTagList();
+        updatePointTagUsedList();
+    }
+
+    private void updatePointTagUsedList() {
+        List<PointTagVO> pointTagList = pointManager.getPointTagList();
+        List<PointTemp> pointList = pointManager.getPointList();
+        Set<Integer> usedTagIdSet = pointList.stream()
+                .map(PointTemp::getTagIdList)
+                .filter(Objects::nonNull)
+                .map(k -> k.split(","))
+                .flatMap(Arrays::stream)
+                .filter(StringUtils::isNotBlank)
+                .map(Integer::parseInt)
+                .collect(Collectors.toSet());
+        List<PointTagVO> usedList = pointTagList.stream().filter(k -> usedTagIdSet.contains(k.getId())).toList();
+        pointManager.setPointTagUsedList(usedList);
     }
 
     public void updatePointTagList() {

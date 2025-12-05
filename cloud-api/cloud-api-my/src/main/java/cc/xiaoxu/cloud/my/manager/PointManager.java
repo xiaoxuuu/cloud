@@ -34,4 +34,7 @@ public class PointManager {
 
     private List<PointTagVO> pointTagList = new ArrayList<>();
     private Map<Integer, PointTagVO> pointTagMap = new HashMap<>();
+
+    // 下列数据为聚合调整数据
+    private List<PointTagVO> pointTagUsedList = new ArrayList<>();
 }
