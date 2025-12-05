@@ -48,7 +48,7 @@ public class PointScheduled {
         updatePointTagUsedList();
     }
 
-    private void updatePointTagUsedList() {
+    public void updatePointTagUsedList() {
         List<PointTagVO> pointTagList = pointManager.getPointTagList();
         List<PointTemp> pointList = pointManager.getPointList();
         Set<Integer> usedTagIdSet = pointList.stream()

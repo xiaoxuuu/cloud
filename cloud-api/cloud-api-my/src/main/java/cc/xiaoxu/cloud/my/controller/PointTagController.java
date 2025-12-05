@@ -50,6 +50,6 @@ public class PointTagController {
     void addOrEditTag(@RequestBody PointTagAddOrEditDTO dto) {
 
         pointTagService.addOrEdit(dto);
-        pointScheduled.updatePointTagList();
+        pointScheduled.refreshData();
     }
 }

@@ -43,7 +43,7 @@ public class PointController {
     void addOrEdit(@RequestBody PointAddOrEditDTO dto) {
 
         pointService.addOrEdit(dto);
-        pointScheduled.updatePointList();
+        pointScheduled.refreshData();
     }
 
     @Operation(summary = "搜索", description = "搜索地点列表")
