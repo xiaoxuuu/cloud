@@ -61,6 +61,7 @@ public class PointScheduled {
                 .collect(Collectors.toSet());
         List<PointTagVO> usedList = pointTagList.stream().filter(k -> usedTagIdSet.contains(k.getId())).toList();
         pointManager.setPointTagUsedList(usedList);
+        log.info("查询到 {} 条使用中标签数据...", usedList.size());
     }
 
     public void updatePointTagList() {
@@ -76,7 +77,7 @@ public class PointScheduled {
         Map<Integer, PointTagVO> areaMap = list.stream().collect(Collectors.toMap(PointTagVO::getId, a -> a));
         pointManager.setPointTagList(list);
         pointManager.setPointTagMap(areaMap);
-        log.debug("查询到 {} 条标签数据...", list.size());
+        log.info("查询到 {} 条标签数据...", list.size());
     }
 
     private PointTagVO toPointTagVO(PointTag entity) {
@@ -98,7 +99,7 @@ public class PointScheduled {
         Map<Integer, Area> areaMap = areaList.stream().collect(Collectors.toMap(a -> Integer.parseInt(a.getCode()), a -> a));
         pointManager.setAreaList(areaList);
         pointManager.setAreaMap(areaMap);
-        log.debug("查询到 {} 条地点数据...", areaList.size());
+        log.info("查询到 {} 条地点数据...", areaList.size());
     }
 
     public void updatePointList() {
@@ -118,7 +119,7 @@ public class PointScheduled {
         pointManager.setPointList(pointList);
         pointManager.setPointMap(pointMap);
         pointManager.setPointMapCode(pointMapCode);
-        log.debug("查询到 {} 条点位数据...", pointList.size());
+        log.info("查询到 {} 条点位数据...", pointList.size());
     }
 
     public void updatePointMapList() {
@@ -130,7 +131,7 @@ public class PointScheduled {
         Map<Integer, PointMap> pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getPointId, a -> a));
         pointManager.setPointMapList(pointMapList);
         pointManager.setPointMapMap(pointMapMap);
-        log.debug("查询到 {} 条点位地图数据...", pointMapList.size());
+        log.info("查询到 {} 条点位地图数据...", pointMapList.size());
     }
 
     public void updatePointSourceList() {
@@ -142,7 +143,7 @@ public class PointScheduled {
         Map<Integer, PointSource> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
         pointManager.setPointSourceList(pointSourceList);
         pointManager.setPointSourceMap(pointSourceMap);
-        log.debug("查询到 {} 条点位来源数据...", pointSourceList.size());
+        log.info("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 
     private PointTemp tran(Point point) {
