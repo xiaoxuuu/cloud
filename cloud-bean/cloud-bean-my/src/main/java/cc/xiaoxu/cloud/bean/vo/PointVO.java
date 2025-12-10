@@ -59,4 +59,8 @@ public class PointVO extends PointSimpleVO {
 
     @Schema(description = "更新时间")
     private Date modifyTime;
+
+    // TODO 需移除
+    @Schema(description = "高德地图id")
+    private String amapId;
 }
