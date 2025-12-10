@@ -57,6 +57,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                     .set(Point::getTelephone, dto.getTelephone())
                     .set(Point::getCost, dto.getCost())
                     .set(Point::getRemark, dto.getRemark())
+                    .set(Point::getAmapId, dto.getAmapId())
                     .set(Point::getTagIdList, dto.getTagList().stream().distinct().collect(Collectors.joining(",")))
                     .set(Point::getModifyTime, new Date())
                     .update();

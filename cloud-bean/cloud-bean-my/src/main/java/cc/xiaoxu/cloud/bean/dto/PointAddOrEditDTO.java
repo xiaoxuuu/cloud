@@ -71,4 +71,7 @@ public class PointAddOrEditDTO {
 
     @Schema(description = "标签id集合")
     private List<String> tagList;
+
+    @Schema(description = "高德地图id")
+    private String amapId;
 }
