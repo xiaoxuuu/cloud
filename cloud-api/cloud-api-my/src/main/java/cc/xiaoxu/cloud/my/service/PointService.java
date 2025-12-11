@@ -6,6 +6,7 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.exception.CustomShowException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
@@ -76,11 +77,14 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private String getCode() {
 
-        int code;
-        do {
-            code = ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1);
-        } while (!lambdaQuery().eq(Point::getCode, code).exists());
-        return MD5Utils.toMd5(code + "-" + System.currentTimeMillis() + "-" + LocalDateTime.now());
+        for (int i = 0; i < 3; i++) {
+           String code = MD5Utils.toMd5(ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1) + "-" + System.currentTimeMillis() + "-" + LocalDateTime.now());
+            if (lambdaQuery().eq(Point::getCode, code).exists()) {
+                continue;
+            }
+            return code;
+        }
+        throw new CustomShowException("code 重复");
     }
 
     public PointFullVO get(PointGetDTO dto) {

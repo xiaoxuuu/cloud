@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomException extends RuntimeException {
 
     private final R<String> result;
-    private static String error = "";
+    private static String error = "服务不可用，请稍后再试";
 
     public CustomException(REnum rEnum) {
         super(rEnum.getIntroduction());
