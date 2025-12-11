@@ -13,10 +13,12 @@ import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
+import cc.xiaoxu.cloud.my.manager.PointDataManager;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @Tag(name = "高德地图", description = "高德地图接口器")
 @RequestMapping("/amap")
@@ -39,6 +42,9 @@ public class AmapController {
 
     @Resource
     private PointManager pointManager;
+
+    @Resource
+    private PointDataManager pointDataManager;
 
     @Operation(summary = "地点搜索", description = "查询顺序：已有数据、POI 接口、输入提示")
     @PostMapping("/search")
@@ -281,5 +287,15 @@ public class AmapController {
         }
 
         return result;
+    }
+
+    @Operation(summary = "重新加载数据", description = "加载数据")
+    @GetMapping("/reload_data/{code}")
+    public void reloadDataFromMap(@PathVariable("code") String code) {
+        if (!code.equals(CloudController.getCheckCode() + authCode)) {
+            log.error(CloudController.getCheckCode() + authCode);
+            throw new CustomException("无权限");
+        }
+        pointDataManager.reloadDataFromMap();
     }
 }
