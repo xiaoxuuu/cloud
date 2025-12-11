@@ -16,7 +16,7 @@ import java.util.List;
 public class PointAddOrEditDTO {
 
     @Schema(description = "地点code")
-    private Integer code;
+    private String code;
 
     @Schema(description = "点位类型")
     private PointTypeEnum pointType;

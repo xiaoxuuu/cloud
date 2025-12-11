@@ -24,7 +24,7 @@ public class PointManager {
 
     private List<PointTemp> pointList = new ArrayList<>();
     private Map<Integer, PointTemp> pointMap = new HashMap<>();
-    private Map<Integer, PointTemp> pointMapCode = new HashMap<>();
+    private Map<String, PointTemp> pointMapCode = new HashMap<>();
 
     private List<PointMap> pointMapList = new ArrayList<>();
     private Map<Integer, PointMap> pointMapMap = new HashMap<>();

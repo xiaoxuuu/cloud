@@ -7,6 +7,7 @@ import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
+import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
 import cc.xiaoxu.cloud.my.entity.PointTemp;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -72,13 +74,13 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
         }
     }
 
-    private Integer getCode() {
+    private String getCode() {
 
         int code;
         do {
             code = ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1);
         } while (!lambdaQuery().eq(Point::getCode, code).exists());
-        return code;
+        return MD5Utils.toMd5(code + "-" + System.currentTimeMillis() + "-" + LocalDateTime.now());
     }
 
     public PointFullVO get(PointGetDTO dto) {

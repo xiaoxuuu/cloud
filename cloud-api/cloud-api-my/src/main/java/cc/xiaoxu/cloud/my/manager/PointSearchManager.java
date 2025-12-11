@@ -111,7 +111,7 @@ public class PointSearchManager {
     private PointSimpleVO buildDistrict(Area area, PointTemp pointTemp) {
 
         PointSimpleVO vo = new PointSimpleVO();
-        vo.setCode(Integer.parseInt(area.getCode()));
+        vo.setCode(area.getCode());
         vo.setPointShortName(area.getName());
         vo.setPointType(PointTypeEnum.DISTRICT);
         vo.setLongitude(pointTemp.getLongitude());

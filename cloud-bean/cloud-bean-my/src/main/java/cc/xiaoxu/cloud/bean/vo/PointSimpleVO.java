@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class PointSimpleVO {
 
     @Schema(description = "code")
-    private Integer code;
+    private String code;
 
     @Schema(description = "简称")
     private String pointShortName;
