@@ -1,5 +1,6 @@
 package cc.xiaoxu.cloud.my.entity;
 
+import cc.xiaoxu.cloud.bean.enums.MapTypeEnum;
 import cc.xiaoxu.cloud.core.bean.entity.BaseInfoEntity;
 import cc.xiaoxu.cloud.core.handler.JsonbTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -19,16 +20,13 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 public class PointMap extends BaseInfoEntity {
 
+    @Schema(description = "地点类型")
+    private MapTypeEnum mapType;
+
     @Schema(description = "地点id")
-    private Integer pointId;
+    private String mapId;
 
-    @Schema(description = "高德地图 - 地点id")
-    private String amapId;
-
-    @Schema(description = "高德地图 - WIA 坐标（来源高德小程序）")
-    private String amapWia;
-
-    @Schema(description = "高德地图 - 详细数据")
-    @TableField(value = "amap_result", typeHandler = JsonbTypeHandler.class)
-    private Object amapResult;
+    @Schema(description = "详细数据")
+    @TableField(value = "map_result", typeHandler = JsonbTypeHandler.class)
+    private Object mapResult;
 }

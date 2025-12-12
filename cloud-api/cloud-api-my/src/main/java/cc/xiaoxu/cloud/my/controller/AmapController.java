@@ -6,6 +6,7 @@ import cc.xiaoxu.cloud.bean.dto.amap.AmapInputTipsRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapInputTipsResponseDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchResponseDTO;
+import cc.xiaoxu.cloud.bean.enums.MapTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.SearchMapTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
@@ -15,6 +16,7 @@ import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
 import cc.xiaoxu.cloud.my.manager.PointDataManager;
 import cc.xiaoxu.cloud.my.manager.PointManager;
+import cc.xiaoxu.cloud.my.service.PointMapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -42,6 +44,9 @@ public class AmapController {
 
     @Resource
     private PointManager pointManager;
+
+    @Resource
+    private PointMapService pointMapService;
 
     @Resource
     private PointDataManager pointDataManager;
@@ -91,7 +96,15 @@ public class AmapController {
         amapDTO.setKeywords(dto.getKeywords());
         amapDTO.setRegion(dto.getCity());
         AmapPoiSearchResponseDTO amapPoiSearchResponseDTO = amapManager.searchPoi(amapDTO);
+        saveAmapSearchResult(amapPoiSearchResponseDTO);
         return amapPoiToPointMapSearchVO(amapPoiSearchResponseDTO.getPois());
+    }
+
+    private void saveAmapSearchResult(AmapPoiSearchResponseDTO amapPoiSearchResponseDTO) {
+
+        List<AmapPoiSearchResponseDTO.AmapPoiDTO> pois = amapPoiSearchResponseDTO.getPois();
+        List<PointMap> list = pois.stream().map(k -> new PointMap(MapTypeEnum.AMAP, k.getId(), k)).toList();
+        pointMapService.saveBatch(list);
     }
 
     @NotNull
@@ -112,16 +125,16 @@ public class AmapController {
         PointMapSearchVO vo = new PointMapSearchVO();
         vo.setSearchMapType(SearchMapTypeEnum.EXISTS_DATA);
         if (null != pointMap) {
-            vo.setMapId(pointMap.getAmapId());
+            vo.setMapId(pointMap.getMapId());
         }
         vo.setName(pointTemp.getPointFullName());
-        vo.setLocation(pointTemp.getLongitude() + ","+ pointTemp.getLatitude());
+        vo.setLocation(pointTemp.getLongitude() + "," + pointTemp.getLatitude());
         vo.setProvince(pointTemp.getProvince());
         vo.setCity(pointTemp.getCity());
         vo.setDistrict(pointTemp.getDistrict());
         vo.setDistrictCode(pointTemp.getAddressCode());
         vo.setAddress(pointTemp.getAddress());
-        return null;
+        return vo;
     }
 
     private List<PointMapSearchVO> amapPoiToPointMapSearchVO(List<AmapPoiSearchResponseDTO.AmapPoiDTO> poiDTOList) {
