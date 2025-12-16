@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
+import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.entity.*;
@@ -35,6 +36,9 @@ public class PointScheduled {
     private PointTagService pointTagService;
 
     @Resource
+    private PointSourceAuthorService pointSourceAuthorService;
+
+    @Resource
     private PointManager pointManager;
 
     @Scheduled(cron = "${app.config.refresh-data}")
@@ -46,6 +50,7 @@ public class PointScheduled {
         updatePointSourceList();
         updatePointTagList();
         updatePointTagUsedList();
+        updatePointSourceAuthorList();
     }
 
     public void updatePointTagUsedList() {
@@ -128,7 +133,7 @@ public class PointScheduled {
                 // 无效数据排除
                 .eq(PointMap::getState, StateEnum.ENABLE.getCode())
                 .list();
-        Map<Integer, PointMap> pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getPointId, a -> a));
+        Map<String, PointMap> pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getMapId, a -> a));
         pointManager.setPointMapList(pointMapList);
         pointManager.setPointMapMap(pointMapMap);
         log.info("查询到 {} 条点位地图数据...", pointMapList.size());
@@ -153,5 +158,31 @@ public class PointScheduled {
             pointTemp.setTagIdSet(Arrays.stream(point.getTagIdList().split(",")).collect(Collectors.toSet()));
         }
         return pointTemp;
+    }
+
+    public void updatePointSourceAuthorList() {
+
+        List<PointSourceAuthorVO> list = pointSourceAuthorService.lambdaQuery()
+                // 无效数据排除
+                .eq(PointSourceAuthor::getState, StateEnum.ENABLE.getCode())
+                .list()
+                .stream()
+                .map(this::toPointSourceAuthorVO)
+                .toList();
+        Map<Integer, PointSourceAuthorVO> authorMap = list.stream().collect(Collectors.toMap(PointSourceAuthorVO::getId, a -> a));
+        pointManager.setPointSourceAuthorList(list);
+        pointManager.setPointSourceAuthorMap(authorMap);
+        log.info("查询到 {} 条来源作者数据...", list.size());
+    }
+
+    private PointSourceAuthorVO toPointSourceAuthorVO(PointSourceAuthor entity) {
+        PointSourceAuthorVO vo = new PointSourceAuthorVO();
+        vo.setId(entity.getId());
+        vo.setName(entity.getName());
+        vo.setTiktokUrl(entity.getTiktokUrl());
+        vo.setRedbookUrl(entity.getRedbookUrl());
+        vo.setBilibiliUrl(entity.getBilibiliUrl());
+        vo.setContent(entity.getContent());
+        return vo;
     }
 }
