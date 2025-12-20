@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
+import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.entity.*;
@@ -48,6 +49,7 @@ public class PointScheduled {
         updatePointList();
         updatePointMapList();
         updatePointSourceList();
+        updatePointSourceVOList();
         updatePointTagList();
         updatePointTagUsedList();
         updatePointSourceAuthorList();
@@ -145,7 +147,7 @@ public class PointScheduled {
                 // 无效数据排除
                 .eq(PointSource::getState, StateEnum.ENABLE.getCode())
                 .list();
-        Map<Integer, PointSource> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getPointId, a -> a));
+        Map<Integer, PointSource> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getId, a -> a));
         pointManager.setPointSourceList(pointSourceList);
         pointManager.setPointSourceMap(pointSourceMap);
         log.info("查询到 {} 条点位来源数据...", pointSourceList.size());
@@ -183,6 +185,38 @@ public class PointScheduled {
         vo.setRedbookUrl(entity.getRedbookUrl());
         vo.setBilibiliUrl(entity.getBilibiliUrl());
         vo.setContent(entity.getContent());
+        return vo;
+    }
+
+    public void updatePointSourceVOList() {
+
+        List<PointSourceVO> list = pointSourceService.lambdaQuery()
+                // 无效数据排除
+                .eq(PointSource::getState, StateEnum.ENABLE.getCode())
+                .list()
+                .stream()
+                .map(this::toPointSourceVO)
+                .toList();
+        Map<Integer, PointSourceVO> pointSourceMap = list.stream().collect(Collectors.toMap(PointSourceVO::getId, a -> a));
+        pointManager.setPointSourceVOList(list);
+        pointManager.setPointSourceVOMap(pointSourceMap);
+        log.info("查询到 {} 条点位来源数据...", list.size());
+    }
+
+    private PointSourceVO toPointSourceVO(PointSource entity) {
+        PointSourceVO vo = new PointSourceVO();
+        vo.setId(entity.getId());
+        vo.setAuthorId(entity.getAuthorId());
+        vo.setType(entity.getType());
+        vo.setTitle(entity.getTitle());
+        vo.setContent(entity.getContent());
+        vo.setUrl(entity.getUrl());
+        vo.setRemark(entity.getRemark());
+        // 获取作者名称并设置
+        PointSourceAuthorVO authorVO = pointManager.getPointSourceAuthorMap().get(entity.getAuthorId());
+        if (authorVO != null) {
+            vo.setAuthorName(authorVO.getName());
+        }
         return vo;
     }
 }

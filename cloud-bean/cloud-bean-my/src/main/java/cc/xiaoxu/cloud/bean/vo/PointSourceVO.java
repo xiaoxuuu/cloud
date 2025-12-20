@@ -11,8 +11,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "点位来源 - 业务参数 - 响应参数")
+@Schema(description = "点位来源 - 响应参数")
 public class PointSourceVO extends BaseIdVO {
+
+    @Schema(description = "作者id")
+    private Integer authorId;
+
+    @Schema(description = "作者名称")
+    private String authorName;
 
     @Schema(description = "类型")
     private PointSourceTypeEnum type;
@@ -28,4 +34,7 @@ public class PointSourceVO extends BaseIdVO {
 
     @Schema(description = "链接")
     private String url;
+
+    @Schema(description = "备注")
+    private String remark;
 }

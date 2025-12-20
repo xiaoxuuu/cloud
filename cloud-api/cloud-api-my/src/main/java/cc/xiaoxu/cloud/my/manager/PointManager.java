@@ -1,6 +1,7 @@
 package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
+import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.my.entity.Area;
 import cc.xiaoxu.cloud.my.entity.PointMap;
@@ -41,4 +42,7 @@ public class PointManager {
 
     // 下列数据为聚合调整数据
     private List<PointTagVO> pointTagUsedList = new ArrayList<>();
+
+    private List<PointSourceVO> pointSourceVOList = new ArrayList<>();
+    private Map<Integer, PointSourceVO> pointSourceVOMap = new HashMap<>();
 }

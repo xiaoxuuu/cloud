@@ -16,10 +16,11 @@ import lombok.experimental.Accessors;
 @TableName("t_point_source")
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "收藏点位来源 - 实体")
 public class PointSource extends BaseInfoEntity {
 
-    @Schema(description = "点位id")
-    private Integer pointId;
+    @Schema(description = "作者id")
+    private Integer authorId;
 
     @Schema(description = "类型")
     private PointSourceTypeEnum type;

@@ -150,7 +150,7 @@ public class PointSearchManager {
                     }
                     return true;
                 })
-                .map(PointSource::getPointId)
+                .map(PointSource::getId)
                 .collect(Collectors.toSet());
         return pointSourceSet.contains(k.getId()) ||
                 SearchUtils.containsValue(k.getPointFullName(), dto.getPointName()) ||

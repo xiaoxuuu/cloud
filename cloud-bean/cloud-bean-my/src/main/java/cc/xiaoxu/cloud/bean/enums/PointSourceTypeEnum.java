@@ -9,12 +9,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PointSourceTypeEnum implements EnumInterface<String> {
 
-    SEE("see", "亲眼所见"),
     FRIEND("friend", "朋友"),
     TIKTOK("tiktok", "抖音"),
     BILIBILI("bilibili", "bilibili"),
-    AMAP("amap", "高德"),
     RED_BOOK("red_book", "小红书"),
+    AMAP("amap", "高德"),
     ;
 
     @EnumValue
