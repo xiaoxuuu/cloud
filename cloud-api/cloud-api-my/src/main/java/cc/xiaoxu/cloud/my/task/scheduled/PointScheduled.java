@@ -28,9 +28,6 @@ public class PointScheduled {
     private PointService pointService;
 
     @Resource
-    private PointMapService pointMapService;
-
-    @Resource
     private PointSourceService pointSourceService;
 
     @Resource
@@ -45,30 +42,16 @@ public class PointScheduled {
     @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
 
+        // 地区
         updateAreaList();
-        updatePointList();
-        updatePointMapList();
-        updatePointSourceList();
-        updatePointSourceVOList();
+        // 标签
         updatePointTagList();
-        updatePointTagUsedList();
+        // 来源作者
         updatePointSourceAuthorList();
-    }
-
-    public void updatePointTagUsedList() {
-        List<PointTagVO> pointTagList = pointManager.getPointTagList();
-        List<PointTemp> pointList = pointManager.getPointList();
-        Set<Integer> usedTagIdSet = pointList.stream()
-                .map(PointTemp::getTagIdList)
-                .filter(Objects::nonNull)
-                .map(k -> k.split(","))
-                .flatMap(Arrays::stream)
-                .filter(StringUtils::isNotBlank)
-                .map(Integer::parseInt)
-                .collect(Collectors.toSet());
-        List<PointTagVO> usedList = pointTagList.stream().filter(k -> usedTagIdSet.contains(k.getId())).toList();
-        pointManager.setPointTagUsedList(usedList);
-        log.info("查询到 {} 条使用中标签数据...", usedList.size());
+        // 来源
+        updatePointSourceList();
+        // 点位
+        updatePointList();
     }
 
     public void updatePointTagList() {
@@ -129,25 +112,15 @@ public class PointScheduled {
         log.info("查询到 {} 条点位数据...", pointList.size());
     }
 
-    public void updatePointMapList() {
-
-        List<PointMap> pointMapList = pointMapService.lambdaQuery()
-                // 无效数据排除
-                .eq(PointMap::getState, StateEnum.ENABLE.getCode())
-                .list();
-        Map<String, PointMap> pointMapMap = pointMapList.stream().collect(Collectors.toMap(PointMap::getMapId, a -> a));
-        pointManager.setPointMapList(pointMapList);
-        pointManager.setPointMapMap(pointMapMap);
-        log.info("查询到 {} 条点位地图数据...", pointMapList.size());
-    }
-
     public void updatePointSourceList() {
 
-        List<PointSource> pointSourceList = pointSourceService.lambdaQuery()
+        List<PointSourceVO> pointSourceList = pointSourceService.lambdaQuery()
                 // 无效数据排除
                 .eq(PointSource::getState, StateEnum.ENABLE.getCode())
-                .list();
-        Map<Integer, PointSource> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSource::getId, a -> a));
+                .list()
+                .stream().map(this::toPointSourceVO)
+                .toList();
+        Map<Integer, PointSourceVO> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSourceVO::getId, a -> a));
         pointManager.setPointSourceList(pointSourceList);
         pointManager.setPointSourceMap(pointSourceMap);
         log.info("查询到 {} 条点位来源数据...", pointSourceList.size());
@@ -188,35 +161,12 @@ public class PointScheduled {
         return vo;
     }
 
-    public void updatePointSourceVOList() {
-
-        List<PointSourceVO> list = pointSourceService.lambdaQuery()
-                // 无效数据排除
-                .eq(PointSource::getState, StateEnum.ENABLE.getCode())
-                .list()
-                .stream()
-                .map(this::toPointSourceVO)
-                .toList();
-        Map<Integer, PointSourceVO> pointSourceMap = list.stream().collect(Collectors.toMap(PointSourceVO::getId, a -> a));
-        pointManager.setPointSourceVOList(list);
-        pointManager.setPointSourceVOMap(pointSourceMap);
-        log.info("查询到 {} 条点位来源数据...", list.size());
-    }
-
     private PointSourceVO toPointSourceVO(PointSource entity) {
         PointSourceVO vo = new PointSourceVO();
         vo.setId(entity.getId());
-        vo.setAuthorId(entity.getAuthorId());
         vo.setType(entity.getType());
         vo.setTitle(entity.getTitle());
-        vo.setContent(entity.getContent());
         vo.setUrl(entity.getUrl());
-        vo.setRemark(entity.getRemark());
-        // 获取作者名称并设置
-        PointSourceAuthorVO authorVO = pointManager.getPointSourceAuthorMap().get(entity.getAuthorId());
-        if (authorVO != null) {
-            vo.setAuthorName(authorVO.getName());
-        }
         return vo;
     }
 }

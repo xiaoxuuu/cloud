@@ -29,19 +29,11 @@ public class PointTagController {
     private PointManager pointManager;
 
     @Operation(summary = "全部标签列表", description = "全部标签列表")
-    @PostMapping("/list_all")
+    @PostMapping("/list")
     public @ResponseBody
     List<PointTagVO> pointTagList() {
 
         return pointManager.getPointTagList();
-    }
-
-    @Operation(summary = "标签列表", description = "使用中的标签列表")
-    @PostMapping("/list")
-    public @ResponseBody
-    List<PointTagVO> pointTagUsedList() {
-
-        return pointManager.getPointTagUsedList();
     }
 
     @Operation(summary = "新增或编辑标签", description = "新增或编辑标签")

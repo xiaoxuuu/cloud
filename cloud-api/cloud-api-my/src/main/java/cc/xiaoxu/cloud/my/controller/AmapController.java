@@ -121,12 +121,9 @@ public class AmapController {
 
     private PointMapSearchVO pointToPointMapSearchVO(PointTemp pointTemp) {
 
-        PointMap pointMap = pointManager.getPointMapMap().get(pointTemp.getId());
         PointMapSearchVO vo = new PointMapSearchVO();
         vo.setSearchMapType(SearchMapTypeEnum.EXISTS_DATA);
-        if (null != pointMap) {
-            vo.setMapId(pointMap.getMapId());
-        }
+        vo.setMapId(pointTemp.getAmapId());
         vo.setName(pointTemp.getPointFullName());
         vo.setLocation(pointTemp.getLongitude() + "," + pointTemp.getLatitude());
         vo.setProvince(pointTemp.getProvince());
