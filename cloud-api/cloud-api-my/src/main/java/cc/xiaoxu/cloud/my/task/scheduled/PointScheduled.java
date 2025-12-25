@@ -1,9 +1,7 @@
 package cc.xiaoxu.cloud.my.task.scheduled;
 
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
-import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
-import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
-import cc.xiaoxu.cloud.bean.vo.PointTagVO;
+import cc.xiaoxu.cloud.bean.vo.*;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.entity.*;
 import cc.xiaoxu.cloud.my.manager.PointManager;
@@ -94,7 +92,7 @@ public class PointScheduled {
 
     public void updatePointList() {
 
-        List<PointTemp> pointList = pointService.lambdaQuery()
+        List<PointFullVO> pointList = pointService.lambdaQuery()
                 // 异常数据排除
                 .isNotNull(Point::getLongitude)
                 .isNotNull(Point::getLatitude)
@@ -102,12 +100,10 @@ public class PointScheduled {
                 .ne(Point::getState, StateEnum.DELETE.getCode())
                 .list()
                 .stream()
-                .map(this::tran)
+                .map(this::toPointFullVO)
                 .toList();
-        Map<Integer, PointTemp> pointMap = pointList.stream().collect(Collectors.toMap(Point::getId, a -> a));
-        Map<String, PointTemp> pointMapCode = pointList.stream().collect(Collectors.toMap(Point::getCode, a -> a));
+        Map<String, PointFullVO> pointMapCode = pointList.stream().collect(Collectors.toMap(PointFullVO::getCode, a -> a));
         pointManager.setPointList(pointList);
-        pointManager.setPointMap(pointMap);
         pointManager.setPointMapCode(pointMapCode);
         log.info("查询到 {} 条点位数据...", pointList.size());
     }
@@ -126,13 +122,66 @@ public class PointScheduled {
         log.info("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 
-    private PointTemp tran(Point point) {
-        PointTemp pointTemp = new PointTemp();
-        BeanUtils.populate(point, pointTemp);
-        if (StringUtils.isNotEmpty(point.getTagIdList())) {
-            pointTemp.setTagIdSet(Arrays.stream(point.getTagIdList().split(",")).collect(Collectors.toSet()));
+    private PointFullVO toPointFullVO(Point point) {
+
+        PointFullVO vo = new PointFullVO();
+        BeanUtils.populate(point, vo);
+
+        // 来源
+        if (StringUtils.isNotBlank(point.getSourceIdList())) {
+            List<PointSourceVO> list = Arrays.stream(vo.getSourceIdList().split(","))
+                    .map(k -> pointManager.getPointSourceMap().get(Integer.parseInt(k)))
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparingInt(k -> k.getType().getSortingWeight() + k.getId()))
+                    .toList();
+            vo.setSourceList(list.stream().map(this::toPointSourceShowVO).toList());
+            vo.setSourceIdSet(list.stream().map(PointSourceVO::getId).collect(Collectors.toSet()));
         }
-        return pointTemp;
+
+        // 标签
+        if (StringUtils.isNotBlank(point.getTagIdList())) {
+            List<PointTagVO> list = Arrays.stream(point.getTagIdList().split(","))
+                    .map(k -> pointManager.getPointTagMap().get(Integer.parseInt(k)))
+                    .filter(Objects::nonNull)
+                    .sorted(Comparator.comparingInt(PointTagVO::getSort))
+                    .toList();
+            vo.setTagList(list.stream().map(this::toPointTagShowVO).toList());
+            vo.setTagIdSet(list.stream().map(PointTagVO::getId).collect(Collectors.toSet()));
+        }
+
+        // 电话
+        if (StringUtils.isNotBlank(point.getTelephone())) {
+            vo.setTelList(Arrays.stream(point.getTelephone().split(",")).toList());
+        }
+
+        // 模糊匹配字段
+        String searchValue = vo.getPointFullName() + "," + vo.getAddress() + "," + vo.getDescribe() + "," +
+                vo.getTagList().stream().map(PointTagShowVO::getTagName).collect(Collectors.joining(",")) + "," +
+                vo.getSourceList().stream().map(PointSourceShowVO::getTitle).collect(Collectors.joining(",")) + "," +
+                vo.getSourceList().stream().map(PointSourceShowVO::getAuthorName).collect(Collectors.joining(","));
+        vo.setSearchValue(searchValue);
+        return vo;
+    }
+
+    private PointSourceShowVO toPointSourceShowVO(PointSourceVO pointSourceVO) {
+
+        PointSourceShowVO vo = new PointSourceShowVO();
+        PointSourceAuthorVO pointSourceAuthorVO = pointManager.getPointSourceAuthorMap().get(pointSourceVO.getAuthorId());
+        if (pointSourceAuthorVO != null) {
+            vo.setAuthorName(pointSourceAuthorVO.getName());
+        }
+        vo.setType(pointSourceVO.getType());
+        vo.setTitle(pointSourceVO.getTitle());
+        vo.setUrl(pointSourceVO.getUrl());
+        return vo;
+    }
+
+    private PointTagShowVO toPointTagShowVO(PointTagVO pointTagVO) {
+
+        PointTagShowVO vo = new PointTagShowVO();
+        vo.setTagName(pointTagVO.getTagName());
+        vo.setColor(pointTagVO.getColor());
+        return vo;
     }
 
     public void updatePointSourceAuthorList() {

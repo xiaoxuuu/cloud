@@ -1,10 +1,10 @@
 package cc.xiaoxu.cloud.my.manager;
 
+import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
 import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.my.entity.Area;
-import cc.xiaoxu.cloud.my.entity.PointTemp;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,6 @@ public class PointManager {
     private List<PointSourceVO> pointSourceList = new ArrayList<>();
     private Map<Integer, PointSourceVO> pointSourceMap = new HashMap<>();
 
-    private List<PointTemp> pointList = new ArrayList<>();
-    private Map<Integer, PointTemp> pointMap = new HashMap<>();
-    private Map<String, PointTemp> pointMapCode = new HashMap<>();
+    private List<PointFullVO> pointList = new ArrayList<>();
+    private Map<String, PointFullVO> pointMapCode = new HashMap<>();
 }

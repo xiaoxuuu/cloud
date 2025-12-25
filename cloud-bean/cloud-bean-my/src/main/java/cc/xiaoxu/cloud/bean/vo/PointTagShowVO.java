@@ -3,25 +3,17 @@ package cc.xiaoxu.cloud.bean.vo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "点位标签 - 响应参数")
-public class PointTagVO extends BaseIdVO {
+@Schema(description = "点位标签 - 展示 - 响应参数")
+public class PointTagShowVO {
 
     @Schema(description = "标签名")
     private String tagName;
 
     @Schema(description = "颜色")
     private String color;
-
-    @Schema(description = "排序")
-    private Integer sort;
-
-    @Schema(description = "分类")
-    private String category;
 }

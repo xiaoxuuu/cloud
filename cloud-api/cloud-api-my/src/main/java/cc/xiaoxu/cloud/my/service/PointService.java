@@ -4,25 +4,22 @@ import cc.xiaoxu.cloud.bean.dto.PointAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.dto.PointGetDTO;
 import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
-import cc.xiaoxu.cloud.bean.vo.PointTagVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.exception.CustomShowException;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
-import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -78,7 +75,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
     private String getCode() {
 
         for (int i = 0; i < 3; i++) {
-           String code = MD5Utils.toMd5(ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1) + "-" + System.currentTimeMillis() + "-" + LocalDateTime.now());
+            String code = MD5Utils.toMd5(ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1) + "-" + System.currentTimeMillis() + "-" + LocalDateTime.now());
             if (lambdaQuery().eq(Point::getCode, code).exists()) {
                 continue;
             }
@@ -89,29 +86,11 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(PointGetDTO dto) {
 
-        PointTemp pointTemp = pointManager.getPointMapCode().get(dto.getCode());
+        PointFullVO vo = pointManager.getPointMapCode().get(dto.getCode());
 
-        if (null == pointTemp) {
+        if (null == vo) {
             throw new CustomException("未查询到数据");
         }
-        PointFullVO vo = new PointFullVO();
-        BeanUtils.populate(pointTemp, vo);
-
-        // 标签
-        if (StringUtils.isNotBlank(vo.getTagIdList())) {
-            List<PointTagVO> list = Arrays.stream(vo.getTagIdList().split(","))
-                    .map(k -> pointManager.getPointTagMap().get(Integer.parseInt(k)))
-                    .filter(Objects::nonNull)
-                    .sorted(Comparator.comparingInt(PointTagVO::getSort))
-                    .toList();
-            vo.setTagList(list);
-        }
-
-        // 电话
-        if (StringUtils.isNotBlank(pointTemp.getTelephone())) {
-            vo.setTelList(Arrays.stream(pointTemp.getTelephone().split(",")).toList());
-        }
-
         return vo;
     }
 

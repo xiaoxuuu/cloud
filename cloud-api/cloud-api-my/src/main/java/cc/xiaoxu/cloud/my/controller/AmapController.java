@@ -8,11 +8,11 @@ import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchResponseDTO;
 import cc.xiaoxu.cloud.bean.enums.MapTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.SearchMapTypeEnum;
+import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.my.entity.PointMap;
-import cc.xiaoxu.cloud.my.entity.PointTemp;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
 import cc.xiaoxu.cloud.my.manager.PointDataManager;
 import cc.xiaoxu.cloud.my.manager.PointManager;
@@ -119,16 +119,16 @@ public class AmapController {
                 .toList();
     }
 
-    private PointMapSearchVO pointToPointMapSearchVO(PointTemp pointTemp) {
+    private PointMapSearchVO pointToPointMapSearchVO(PointFullVO pointTemp) {
 
         PointMapSearchVO vo = new PointMapSearchVO();
         vo.setSearchMapType(SearchMapTypeEnum.EXISTS_DATA);
         vo.setMapId(pointTemp.getAmapId());
         vo.setName(pointTemp.getPointFullName());
         vo.setLocation(pointTemp.getLongitude() + "," + pointTemp.getLatitude());
-        vo.setProvince(pointTemp.getProvince());
-        vo.setCity(pointTemp.getCity());
-        vo.setDistrict(pointTemp.getDistrict());
+//        vo.setProvince(pointTemp.getProvince());
+//        vo.setCity(pointTemp.getCity());
+//        vo.setDistrict(pointTemp.getDistrict());
         vo.setDistrictCode(pointTemp.getAddressCode());
         vo.setAddress(pointTemp.getAddress());
         return vo;

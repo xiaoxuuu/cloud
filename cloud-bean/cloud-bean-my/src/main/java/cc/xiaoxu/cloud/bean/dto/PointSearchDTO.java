@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -24,14 +23,8 @@ public class PointSearchDTO {
     @Schema(description = "中心点纬度", requiredMode = Schema.RequiredMode.REQUIRED)
     private String centerLongitude;
 
-    @Schema(description = "点位类型")
-    private List<String> pointType;
-
     @Schema(description = "点位名称")
     private String pointName;
-
-    @Schema(description = "标签列表")
-    private List<String> tagIdList;
 
     @Schema(description = "营业状态")
     private Set<OperatingStatusEnum> operatingStatusSet;

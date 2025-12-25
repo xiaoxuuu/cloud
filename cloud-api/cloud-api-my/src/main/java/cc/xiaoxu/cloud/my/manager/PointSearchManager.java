@@ -3,11 +3,12 @@ package cc.xiaoxu.cloud.my.manager;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.OperatingStatusEnum;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
+import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
-import cc.xiaoxu.cloud.core.utils.enums.EnumUtils;
 import cc.xiaoxu.cloud.core.utils.math.MathUtils;
-import cc.xiaoxu.cloud.my.entity.*;
+import cc.xiaoxu.cloud.my.entity.Area;
+import cc.xiaoxu.cloud.my.entity.Constant;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.DistanceUtils;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
@@ -46,14 +47,10 @@ public class PointSearchManager {
                 ? dto.getOperatingStatusSet()
                 : Set.of(OperatingStatusEnum.OPEN, OperatingStatusEnum.ING);
 
-        List<PointTemp> pointFilterList = pointManager.getPointList()
+        List<PointFullVO> pointFilterList = pointManager.getPointList()
                 .stream()
                 // 模糊匹配
                 .filter(k -> pointNameLike(dto, k))
-                // 点位类型
-                .filter(k -> pointType(dto, k))
-                // 标签
-                .filter(k -> tag(dto, k))
                 // 营业状态
                 .filter(k -> operatingStatusSet.contains(k.getOperatingStatus()))
                 .toList();
@@ -70,9 +67,11 @@ public class PointSearchManager {
                         Area area = areaMap.get(k.getAddressCode());
                         if (null == area) {
                             log.error("{}", k.getAddressCode());
+                            return null;
                         }
                         return buildDistrict(area, k);
                     })
+                    .filter(Objects::nonNull)
                     //分组，只保留一条
                     .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName))
                     .values()
@@ -92,23 +91,7 @@ public class PointSearchManager {
                 .toList();
     }
 
-    private boolean tag(PointSearchDTO dto, PointTemp k) {
-        if (CollectionUtils.isEmpty(dto.getTagIdList())) {
-            return true;
-        }
-        if (CollectionUtils.isEmpty(k.getTagIdSet())) {
-            return false;
-        }
-        for (String id : dto.getTagIdList()) {
-            if (k.getTagIdSet().contains(id)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @NotNull
-    private PointSimpleVO buildDistrict(Area area, PointTemp pointTemp) {
+    private PointSimpleVO buildDistrict(Area area, PointFullVO pointTemp) {
 
         PointSimpleVO vo = new PointSimpleVO();
         vo.setCode(area.getCode());
@@ -120,7 +103,7 @@ public class PointSearchManager {
     }
 
     @NotNull
-    private PointSimpleVO tran(Point k) {
+    private PointSimpleVO tran(PointFullVO k) {
 
         PointSimpleVO vo = new PointSimpleVO();
         BeanUtils.populate(k, vo);
@@ -128,48 +111,16 @@ public class PointSearchManager {
         return vo;
     }
 
-    private boolean pointType(PointSearchDTO dto, Point k) {
-
-        Set<PointTypeEnum> pointTypeSet = getPointTypeFilter(dto);
-        if (CollectionUtils.isEmpty(pointTypeSet)) {
-            return true;
-        }
-        return pointTypeSet.contains(k.getPointType());
-    }
-
-    private boolean pointNameLike(PointSearchDTO dto, Point k) {
+    private boolean pointNameLike(PointSearchDTO dto, PointFullVO k) {
 
         if (StringUtils.isBlank(dto.getPointName())) {
             return true;
         }
-        Set<Integer> pointSourceSet = pointManager.getPointSourceList().stream()
-                .filter(v -> {
-                    if (StringUtils.isNotBlank(dto.getPointName())) {
-                        return SearchUtils.containsValue(v.getTitle(), dto.getPointName()) ||
-                                SearchUtils.containsValue(v.getContent(), dto.getPointName());
-                    }
-                    return true;
-                })
-                .map(PointSource::getId)
-                .collect(Collectors.toSet());
-        return pointSourceSet.contains(k.getId()) ||
-                SearchUtils.containsValue(k.getPointFullName(), dto.getPointName()) ||
-                SearchUtils.containsValue(k.getPointShortName(), dto.getPointName()) ||
-                SearchUtils.containsValue(k.getAddress(), dto.getPointName()) ||
-                SearchUtils.containsValue(k.getDescribe(), dto.getPointName());
-    }
-
-    @NotNull
-    private static Set<PointTypeEnum> getPointTypeFilter(PointSearchDTO dto) {
-        Set<PointTypeEnum> pointTypeSet;
-        if (CollectionUtils.isNotEmpty(dto.getPointType())) {
-            pointTypeSet = dto.getPointType().stream()
-                    .map(k -> EnumUtils.getByClass(dto.getPointType(), PointTypeEnum.class))
-                    .collect(Collectors.toSet());
-        } else {
-            pointTypeSet = new HashSet<>();
+        if (",".equals(dto.getPointName())) {
+            return false;
         }
-        return pointTypeSet;
+
+        return SearchUtils.containsValue(k.getSearchValue(), dto.getPointName());
     }
 
     private void addDistance(PointSearchDTO dto, PointSimpleVO k) {

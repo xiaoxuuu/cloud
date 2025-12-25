@@ -76,6 +76,9 @@ public class Point extends BaseInfoEntity {
     @Schema(description = "标签id集合")
     private String tagIdList;
 
+    @Schema(description = "来源id集合")
+    private String sourceIdList;
+
     @Schema(description = "高德地图id")
     private String amapId;
 }

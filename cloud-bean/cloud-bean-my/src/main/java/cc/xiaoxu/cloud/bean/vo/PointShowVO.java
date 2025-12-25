@@ -7,13 +7,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "点位 - 业务参数 - 响应参数")
-public class PointVO extends PointSimpleVO {
+public class PointShowVO extends PointSimpleVO {
 
     @Schema(description = "全称")
     private String pointFullName;
@@ -23,21 +24,6 @@ public class PointVO extends PointSimpleVO {
 
     @Schema(description = "详细地址")
     private String address;
-
-    @Schema(description = "上级id，用于数据归总")
-    private Integer parentId;
-
-    @Schema(description = "收藏次数")
-    private Integer collectTimes;
-
-    @Schema(description = "照片")
-    private String photo;
-
-    @Schema(description = "我去过的次数")
-    private Integer visitedTimes;
-
-    @Schema(description = "地址code")
-    private Integer addressCode;
 
     @Schema(description = "推荐距离(米）")
     private Integer recommendedDistance;
@@ -51,18 +37,15 @@ public class PointVO extends PointSimpleVO {
     @Schema(description = "人均（分）")
     private Integer cost;
 
-    @Schema(description = "标签id集合")
-    private String tagIdList;
-
-    @Schema(description = "来源id集合")
-    private String sourceIdList;
-
-    @Schema(description = "描述")
-    private String remark;
-
     @Schema(description = "更新时间")
     private Date modifyTime;
 
-    @Schema(description = "高德地图id")
-    private String amapId;
+    @Schema(description = "标签")
+    private List<PointTagShowVO> tagList;
+
+    @Schema(description = "来源")
+    private List<PointSourceShowVO> sourceList;
+
+    @Schema(description = "电话")
+    private List<String> telList;
 }
