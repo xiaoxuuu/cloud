@@ -1,9 +1,6 @@
 package cc.xiaoxu.cloud.my.manager;
 
-import cc.xiaoxu.cloud.bean.vo.PointFullVO;
-import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
-import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
-import cc.xiaoxu.cloud.bean.vo.PointTagVO;
+import cc.xiaoxu.cloud.bean.vo.*;
 import cc.xiaoxu.cloud.my.entity.Area;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -33,4 +30,5 @@ public class PointManager {
 
     private List<PointFullVO> pointList = new ArrayList<>();
     private Map<String, PointFullVO> pointMapCode = new HashMap<>();
+    private Map<String, PointShowVO> pointShowMapCode = new HashMap<>();
 }

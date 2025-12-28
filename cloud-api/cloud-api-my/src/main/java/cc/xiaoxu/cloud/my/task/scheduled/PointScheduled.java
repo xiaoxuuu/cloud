@@ -105,6 +105,12 @@ public class PointScheduled {
         Map<String, PointFullVO> pointMapCode = pointList.stream().collect(Collectors.toMap(PointFullVO::getCode, a -> a));
         pointManager.setPointList(pointList);
         pointManager.setPointMapCode(pointMapCode);
+
+        // 精简参数
+        Map<String, PointShowVO> pointShowMapCode = pointList.stream()
+                .map(k -> (PointShowVO) BeanUtils.populate(k, PointShowVO.class))
+                .collect(Collectors.toMap(PointShowVO::getCode, a -> a));
+        pointManager.setPointShowMapCode(pointShowMapCode);
         log.info("查询到 {} 条点位数据...", pointList.size());
     }
 

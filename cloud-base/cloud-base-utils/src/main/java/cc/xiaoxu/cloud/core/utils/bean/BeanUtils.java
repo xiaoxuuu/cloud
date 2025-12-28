@@ -31,6 +31,42 @@ public final class BeanUtils {
      * @param src    转换前对象
      * @param target 转换后对象
      */
+    public static <T> Object populate(Object src, Class<T> targetClass) {
+        Method[] srcMethods = src.getClass().getMethods();
+        try {
+            Object target = targetClass.getDeclaredConstructor().newInstance();
+            Method[] targetMethods = target.getClass().getMethods();
+            for (Method srcMethod : srcMethods) {
+                String srcName = srcMethod.getName();
+                if (srcName.startsWith("get")) {
+                    try {
+                        for (Method targetMethod : targetMethods) {
+                            String targetName = targetMethod.getName();
+                            if (targetName.startsWith("set") && targetName.substring(3).equals(srcName.substring(3))) {
+                                Object result = srcMethod.invoke(src);
+                                targetMethod.invoke(target, result);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // 某个方法反射异常
+                        throw new RuntimeException("populate fail");
+                    }
+                }
+            }
+            return target;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * <p>将dto和entity之间的属性互相转换,dto中属性一般为String等基本类型</p>
+     * <p>但是entity中可能有复合主键等复杂类型,需要注意同名问题</p>
+     *
+     * @param src    转换前对象
+     * @param target 转换后对象
+     */
     public static void populate(Object src, Object target) {
         Method[] srcMethods = src.getClass().getMethods();
         Method[] targetMethods = target.getClass().getMethods();
@@ -52,7 +88,6 @@ public final class BeanUtils {
                 }
             }
         }
-
     }
 
     /**

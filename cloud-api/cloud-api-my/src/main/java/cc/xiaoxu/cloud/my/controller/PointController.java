@@ -9,14 +9,14 @@ import cc.xiaoxu.cloud.bean.vo.PointShowVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
-import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
+import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.manager.PointSearchManager;
 import cc.xiaoxu.cloud.my.service.PointService;
 import cc.xiaoxu.cloud.my.task.scheduled.PointScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -26,18 +26,15 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@AllArgsConstructor
 @Tag(name = "点位", description = "点位控制器")
 @RequestMapping("/point")
 public class PointController {
 
-    @Resource
-    private PointService pointService;
-
-    @Resource
-    private PointSearchManager pointSearchManager;
-
-    @Resource
-    private PointScheduled pointScheduled;
+    private final PointService pointService;
+    private final PointSearchManager pointSearchManager;
+    private final PointScheduled pointScheduled;
+    private final PointManager pointManager;
 
     @Operation(summary = "新增或编辑", description = "新增或编辑地点")
     @PostMapping("/add_or_edit")
@@ -73,8 +70,10 @@ public class PointController {
     public @ResponseBody
     PointShowVO get(@RequestBody PointGetDTO dto) {
 
-        PointShowVO vo = new PointShowVO();
-        BeanUtils.populate(pointService.get(dto), vo);
+        PointShowVO vo = pointManager.getPointShowMapCode().get(dto.getCode());
+        if (null == vo) {
+            throw new CustomException("未查询到数据");
+        }
         return vo;
     }
 
@@ -83,7 +82,11 @@ public class PointController {
     public @ResponseBody
     PointFullVO getFull(@RequestBody PointGetDTO dto) {
 
-        return pointService.get(dto);
+        PointFullVO vo = pointManager.getPointMapCode().get(dto.getCode());
+        if (null == vo) {
+            throw new CustomException("未查询到数据");
+        }
+        return vo;
     }
 
     @Operation(summary = "地点类型", description = "获取地点类型列表，用于条件查询")
