@@ -5,9 +5,11 @@ import cc.xiaoxu.cloud.bean.dto.PointGetDTO;
 import cc.xiaoxu.cloud.bean.dto.PointSearchDTO;
 import cc.xiaoxu.cloud.bean.enums.PointTypeEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
+import cc.xiaoxu.cloud.bean.vo.PointShowVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
 import cc.xiaoxu.cloud.my.manager.PointSearchManager;
 import cc.xiaoxu.cloud.my.service.PointService;
@@ -69,7 +71,17 @@ public class PointController {
     @Operation(summary = "详情", description = "获取地点列表")
     @PostMapping("/get")
     public @ResponseBody
-    PointFullVO get(@RequestBody PointGetDTO dto) {
+    PointShowVO get(@RequestBody PointGetDTO dto) {
+
+        PointShowVO vo = new PointShowVO();
+        BeanUtils.populate(pointService.get(dto), vo);
+        return vo;
+    }
+
+    @Operation(summary = "详情", description = "获取地点列表")
+    @PostMapping("/get_full")
+    public @ResponseBody
+    PointFullVO getFull(@RequestBody PointGetDTO dto) {
 
         return pointService.get(dto);
     }

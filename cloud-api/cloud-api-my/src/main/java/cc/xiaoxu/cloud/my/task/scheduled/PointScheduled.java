@@ -136,6 +136,9 @@ public class PointScheduled {
                     .toList();
             vo.setSourceList(list.stream().map(this::toPointSourceShowVO).toList());
             vo.setSourceIdSet(list.stream().map(PointSourceVO::getId).collect(Collectors.toSet()));
+        } else {
+            vo.setSourceList(Collections.emptyList());
+            vo.setSourceIdSet(Collections.emptySet());
         }
 
         // 标签
@@ -147,19 +150,27 @@ public class PointScheduled {
                     .toList();
             vo.setTagList(list.stream().map(this::toPointTagShowVO).toList());
             vo.setTagIdSet(list.stream().map(PointTagVO::getId).collect(Collectors.toSet()));
+        } else {
+            vo.setTagList(Collections.emptyList());
+            vo.setTagIdSet(Collections.emptySet());
         }
 
         // 电话
         if (StringUtils.isNotBlank(point.getTelephone())) {
             vo.setTelList(Arrays.stream(point.getTelephone().split(",")).toList());
+        } else {
+            vo.setTelList(Collections.emptyList());
         }
 
         // 模糊匹配字段
-        String searchValue = vo.getPointFullName() + "," + vo.getAddress() + "," + vo.getDescribe() + "," +
-                vo.getTagList().stream().map(PointTagShowVO::getTagName).collect(Collectors.joining(",")) + "," +
-                vo.getSourceList().stream().map(PointSourceShowVO::getTitle).collect(Collectors.joining(",")) + "," +
-                vo.getSourceList().stream().map(PointSourceShowVO::getAuthorName).collect(Collectors.joining(","));
-        vo.setSearchValue(searchValue);
+        List<String> searchValueList = new ArrayList<>();
+        searchValueList.add(vo.getPointFullName());
+        searchValueList.add(vo.getAddress());
+        searchValueList.add(vo.getDescribe());
+        searchValueList.addAll(vo.getTagList().stream().map(PointTagShowVO::getTagName).toList());
+        searchValueList.addAll(vo.getSourceList().stream().map(PointSourceShowVO::getTitle).toList());
+        searchValueList.addAll(vo.getSourceList().stream().map(PointSourceShowVO::getAuthorName).toList());
+        vo.setSearchValue(String.join(",", searchValueList));
         return vo;
     }
 

@@ -25,9 +25,6 @@ public class PointSource extends BaseInfoEntity {
     @Schema(description = "类型")
     private PointSourceTypeEnum type;
 
-    @Schema(description = "来源")
-    private String source;
-
     @Schema(description = "标题")
     private String title;
 

@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.PointSourceAddOrEditDTO;
-import cc.xiaoxu.cloud.my.entity.PointSource;
+import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.service.PointSourceService;
 import cc.xiaoxu.cloud.my.task.scheduled.PointScheduled;
@@ -31,7 +31,7 @@ public class PointSourceController {
     @Operation(summary = "全部来源列表", description = "全部来源列表")
     @PostMapping("/list")
     public @ResponseBody
-    List<PointSource> pointSourceList() {
+    List<PointSourceVO> pointSourceList() {
 
         return pointManager.getPointSourceList();
     }
