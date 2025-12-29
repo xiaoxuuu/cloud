@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 @Getter
 @Slf4j
@@ -58,13 +57,13 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                     .set(Point::getCost, dto.getCost())
                     .set(Point::getRemark, dto.getRemark())
                     .set(Point::getAmapId, dto.getAmapId())
-                    .set(Point::getTagIdList, dto.getTagList().stream().distinct().collect(Collectors.joining(",")))
+                    .set(Point::getTagIdList, dto.getTagIdList())
                     .set(Point::getModifyTime, new Date())
                     .update();
         } else {
             Point point = new Point();
             BeanUtils.populate(dto, point);
-            point.setTagIdList(dto.getTagList().stream().distinct().collect(Collectors.joining(",")));
+            point.setTagIdList(dto.getTagIdList());
             point.setCode(getCode());
             point.setState(StateEnum.ENABLE.getCode());
             point.setCreateTime(new Date());
