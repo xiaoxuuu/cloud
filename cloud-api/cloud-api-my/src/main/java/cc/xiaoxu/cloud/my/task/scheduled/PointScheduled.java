@@ -230,6 +230,7 @@ public class PointScheduled {
     private PointSourceVO toPointSourceVO(PointSource entity) {
         PointSourceVO vo = new PointSourceVO();
         vo.setId(entity.getId());
+        vo.setAuthorId(entity.getAuthorId());
         vo.setType(entity.getType());
         vo.setTitle(entity.getTitle());
         vo.setUrl(entity.getUrl());
