@@ -65,7 +65,7 @@ public class PointController {
         return pointService.countProgressing();
     }
 
-    @Operation(summary = "详情", description = "获取地点列表")
+    @Operation(summary = "详情", description = "获取地点详情")
     @PostMapping("/get")
     public @ResponseBody
     PointShowVO get(@RequestBody PointGetDTO dto) {
@@ -77,7 +77,7 @@ public class PointController {
         return vo;
     }
 
-    @Operation(summary = "详情", description = "获取地点列表")
+    @Operation(summary = "详情-全量", description = "获取地点全量详情")
     @PostMapping("/get_full")
     public @ResponseBody
     PointFullVO getFull(@RequestBody PointGetDTO dto) {
