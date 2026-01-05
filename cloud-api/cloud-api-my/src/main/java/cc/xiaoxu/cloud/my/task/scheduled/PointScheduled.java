@@ -232,6 +232,7 @@ public class PointScheduled {
         vo.setId(entity.getId());
         vo.setAuthorId(entity.getAuthorId());
         vo.setType(entity.getType());
+        vo.setContent(entity.getContent());
         vo.setTitle(entity.getTitle());
         vo.setUrl(entity.getUrl());
         return vo;
