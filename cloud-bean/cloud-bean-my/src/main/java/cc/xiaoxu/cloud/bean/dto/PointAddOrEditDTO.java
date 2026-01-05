@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -71,6 +69,9 @@ public class PointAddOrEditDTO {
 
     @Schema(description = "标签id集合")
     private String tagIdList;
+
+    @Schema(description = "来源id集合")
+    private String sourceIdList;
 
     @Schema(description = "高德地图id")
     private String amapId;

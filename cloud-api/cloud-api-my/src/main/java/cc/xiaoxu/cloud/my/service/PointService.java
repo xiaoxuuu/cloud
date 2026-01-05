@@ -58,6 +58,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
                     .set(Point::getRemark, dto.getRemark())
                     .set(Point::getAmapId, dto.getAmapId())
                     .set(Point::getTagIdList, dto.getTagIdList())
+                    .set(Point::getSourceIdList, dto.getSourceIdList())
                     .set(Point::getModifyTime, new Date())
                     .update();
         } else {
