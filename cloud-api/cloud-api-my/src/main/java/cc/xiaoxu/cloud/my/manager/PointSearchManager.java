@@ -50,7 +50,7 @@ public class PointSearchManager {
                 // 营业状态
                 .filter(k -> operatingStatusSet.contains(k.getOperatingStatus()))
                 // 筛选作者
-                .filter(k -> SetUtils.hasCommonElements(k.getAuthorIdSet(), dto.getAuthorIdSet()))
+                .filter(k -> CollectionUtils.isEmpty(dto.getAuthorIdSet()) || SetUtils.hasCommonElements(k.getAuthorIdSet(), dto.getAuthorIdSet()))
                 .toList();
         Stream<? extends PointSimpleVO> pointStream;
         if (Double.parseDouble(dto.getScale()) > pointScaleToDistrict || pointFilterList.size() < pointMaxNum) {
