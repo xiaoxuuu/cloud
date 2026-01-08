@@ -7,6 +7,7 @@ import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.math.MathUtils;
+import cc.xiaoxu.cloud.core.utils.set.SetUtils;
 import cc.xiaoxu.cloud.my.entity.Area;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.DistanceUtils;
@@ -48,6 +49,8 @@ public class PointSearchManager {
                 .filter(k -> pointNameLike(dto, k))
                 // 营业状态
                 .filter(k -> operatingStatusSet.contains(k.getOperatingStatus()))
+                // 筛选作者
+                .filter(k -> SetUtils.hasCommonElements(k.getAuthorIdSet(), dto.getAuthorIdSet()))
                 .toList();
         Stream<? extends PointSimpleVO> pointStream;
         if (Double.parseDouble(dto.getScale()) > pointScaleToDistrict || pointFilterList.size() < pointMaxNum) {

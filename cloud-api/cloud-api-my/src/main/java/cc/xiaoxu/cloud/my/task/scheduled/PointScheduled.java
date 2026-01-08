@@ -142,9 +142,11 @@ public class PointScheduled {
                     .toList();
             vo.setSourceList(list.stream().map(this::toPointSourceShowVO).toList());
             vo.setSourceIdSet(list.stream().map(PointSourceVO::getId).collect(Collectors.toSet()));
+            vo.setAuthorIdSet(list.stream().map(PointSourceVO::getAuthorId).collect(Collectors.toSet()));
         } else {
             vo.setSourceList(Collections.emptyList());
             vo.setSourceIdSet(Collections.emptySet());
+            vo.setAuthorIdSet(Collections.emptySet());
         }
 
         // 标签

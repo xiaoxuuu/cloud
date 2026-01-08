@@ -28,4 +28,7 @@ public class PointSearchDTO {
 
     @Schema(description = "营业状态")
     private Set<OperatingStatusEnum> operatingStatusSet;
+
+    @Schema(description = "作者筛选")
+    private Set<Integer> authorIdSet;
 }

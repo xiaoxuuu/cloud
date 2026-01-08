@@ -45,6 +45,9 @@ public class PointFullVO extends PointShowVO {
     @Schema(description = "来源")
     private Set<Integer> sourceIdSet;
 
+    @Schema(description = "作者id集合")
+    private Set<Integer> authorIdSet;
+
     @Schema(description = "高德地图id")
     private String amapId;
 
