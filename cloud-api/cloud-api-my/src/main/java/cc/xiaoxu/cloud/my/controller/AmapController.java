@@ -8,6 +8,7 @@ import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchRequestDTO;
 import cc.xiaoxu.cloud.bean.dto.amap.AmapPoiSearchResponseDTO;
 import cc.xiaoxu.cloud.bean.enums.MapTypeEnum;
 import cc.xiaoxu.cloud.bean.enums.SearchMapTypeEnum;
+import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -103,7 +105,11 @@ public class AmapController {
     private void saveAmapSearchResult(AmapPoiSearchResponseDTO amapPoiSearchResponseDTO) {
 
         List<AmapPoiSearchResponseDTO.AmapPoiDTO> pois = amapPoiSearchResponseDTO.getPois();
-        List<PointMap> list = pois.stream().map(k -> new PointMap(MapTypeEnum.AMAP, k.getId(), k)).toList();
+        List<PointMap> list = pois.stream()
+                .map(k -> new PointMap(MapTypeEnum.AMAP, k.getId(), k))
+                .peek(k-> k.setCreateTime(new Date()))
+                .peek(k-> k.setState(StateEnum.ENABLE.getCode()))
+                .toList();
         pointMapService.saveBatch(list);
     }
 
