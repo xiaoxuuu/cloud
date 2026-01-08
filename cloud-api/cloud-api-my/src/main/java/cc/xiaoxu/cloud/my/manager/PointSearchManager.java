@@ -8,7 +8,6 @@ import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import cc.xiaoxu.cloud.my.entity.Area;
-import cc.xiaoxu.cloud.my.entity.Constant;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cc.xiaoxu.cloud.my.utils.DistanceUtils;
 import cc.xiaoxu.cloud.my.utils.SearchUtils;
@@ -33,14 +32,10 @@ public class PointSearchManager {
 
     public List<? extends PointSimpleVO> search(PointSearchDTO dto) {
 
-        Constant pointScale = constantService.lambdaQuery()
-                .eq(Constant::getName, "point_scale")
-                .one();
-        double scale = Double.parseDouble(pointScale.getValue());
-        Constant count = constantService.lambdaQuery()
-                .eq(Constant::getName, "point_count_per")
-                .one();
-        int countConstant = Integer.parseInt(count.getValue());
+        // 小于此数值的缩放，转为区县
+        double pointScaleToDistrict = Double.parseDouble(constantService.getValue("point_scale_to_district"));
+        // 点位最大展示数量
+        int pointMaxNum = Integer.parseInt(constantService.getValue("point_max_num"));
 
         // 营业状态
         Set<OperatingStatusEnum> operatingStatusSet = CollectionUtils.isNotEmpty(dto.getOperatingStatusSet())
@@ -55,7 +50,7 @@ public class PointSearchManager {
                 .filter(k -> operatingStatusSet.contains(k.getOperatingStatus()))
                 .toList();
         Stream<? extends PointSimpleVO> pointStream;
-        if (Double.parseDouble(dto.getScale()) > scale || pointFilterList.size() < countConstant) {
+        if (Double.parseDouble(dto.getScale()) > pointScaleToDistrict || pointFilterList.size() < pointMaxNum) {
             // 缩放达到一定程度 或 点位数量小于一定数量 按正常返回数据
             pointStream = pointFilterList.stream().map(this::tran);
         } else {
@@ -87,7 +82,7 @@ public class PointSearchManager {
         return pointStream
                 .peek(k -> addDistance(dto, k))
                 .sorted(Comparator.comparingDouble(PointSimpleVO::getDistance))
-                .limit(countConstant)
+                .limit(pointMaxNum)
                 .toList();
     }
 

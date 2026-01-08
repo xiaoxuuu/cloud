@@ -2,7 +2,6 @@ package cc.xiaoxu.cloud.my.controller;
 
 import ai.djl.util.JsonUtils;
 import cc.xiaoxu.cloud.core.exception.CustomException;
-import cc.xiaoxu.cloud.my.entity.Constant;
 import cc.xiaoxu.cloud.my.service.ConstantService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
@@ -49,13 +48,11 @@ public class WechatMiniAppController {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
             log.info(session.getSessionKey());
             log.info(session.getOpenid());
-            Constant admin = constantService.lambdaQuery()
-                    .eq(Constant::getName, "admin")
-                    .one();
-            if (null == admin || StringUtils.isBlank(admin.getValue())) {
+            String value = constantService.getValue("admin");
+            if (StringUtils.isBlank(value)) {
                 return null;
             }
-            Set<String> adminOpenIdSet = Arrays.stream(admin.getValue().split(",")).collect(Collectors.toSet());
+            Set<String> adminOpenIdSet = Arrays.stream(value.split(",")).collect(Collectors.toSet());
             if (adminOpenIdSet.contains(session.getOpenid())) {
                 return "ADMIN";
             }
