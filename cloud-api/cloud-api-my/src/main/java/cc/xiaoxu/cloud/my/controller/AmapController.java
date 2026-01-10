@@ -170,8 +170,12 @@ public class AmapController {
             if (null != poi.getBusiness()) {
                 searchVO.setOpeningHours(poi.getBusiness().getOpentime_week());
                 String cost = poi.getBusiness().getCost();
-                if (StringUtils.isNotEmpty(cost) && StringUtils.isNumeric(cost)) {
-                    searchVO.setCost(MathUtils.multiply(cost, 100).intValue());
+                if (StringUtils.isNotEmpty(cost)) {
+                    try {
+                        searchVO.setCost(MathUtils.multiply(cost, 100).intValue());
+                    } catch (Exception e) {
+                        log.warn("解析 POI 消费失败，cost：{}", cost);
+                    }
                 }
                 searchVO.setTagSet(TagUtils.getTagSet(poi.getBusiness().getTag(), poi.getBusiness().getKeytag(), poi.getBusiness().getRectag()));
             }
