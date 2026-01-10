@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,4 +40,13 @@ public class PointMapSearchVO {
 
     @Schema(description = "地址")
     private String address;
+
+    @Schema(description = "营业时间")
+    private String openingHours;
+
+    @Schema(description = "人均（分）")
+    private Integer cost;
+
+    @Schema(description = "标签集合")
+    private Set<String>  tagSet;
 }

@@ -13,11 +13,13 @@ import cc.xiaoxu.cloud.bean.vo.PointFullVO;
 import cc.xiaoxu.cloud.bean.vo.PointMapSearchVO;
 import cc.xiaoxu.cloud.core.controller.CloudController;
 import cc.xiaoxu.cloud.core.exception.CustomException;
+import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
 import cc.xiaoxu.cloud.my.manager.PointDataManager;
 import cc.xiaoxu.cloud.my.manager.PointManager;
 import cc.xiaoxu.cloud.my.service.PointMapService;
+import cc.xiaoxu.cloud.my.utils.TagUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -107,8 +109,8 @@ public class AmapController {
         List<AmapPoiSearchResponseDTO.AmapPoiDTO> pois = amapPoiSearchResponseDTO.getPois();
         List<PointMap> list = pois.stream()
                 .map(k -> new PointMap(MapTypeEnum.AMAP, k.getId(), k))
-                .peek(k-> k.setCreateTime(new Date()))
-                .peek(k-> k.setState(StateEnum.ENABLE.getCode()))
+                .peek(k -> k.setCreateTime(new Date()))
+                .peek(k -> k.setState(StateEnum.ENABLE.getCode()))
                 .toList();
         pointMapService.saveBatch(list);
     }
@@ -163,6 +165,16 @@ public class AmapController {
             searchVO.setCity(poi.getCityname());
             searchVO.setDistrict(poi.getAdname());
             searchVO.setDistrictCode(Integer.parseInt(poi.getAdcode()));
+
+            // 额外信息
+            if (null != poi.getBusiness()) {
+                searchVO.setOpeningHours(poi.getBusiness().getOpentime_week());
+                String cost = poi.getBusiness().getCost();
+                if (StringUtils.isNotEmpty(cost) && StringUtils.isNumeric(cost)) {
+                    searchVO.setCost(MathUtils.multiply(cost, 100).intValue());
+                }
+                searchVO.setTagSet(TagUtils.getTagSet(poi.getBusiness().getTag(), poi.getBusiness().getKeytag(), poi.getBusiness().getRectag()));
+            }
             searchVOList.add(searchVO);
         }
         return searchVOList;
