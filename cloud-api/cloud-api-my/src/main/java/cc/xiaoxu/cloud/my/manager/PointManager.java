@@ -25,6 +25,8 @@ public class PointManager {
     private List<PointSourceAuthorVO> pointSourceAuthorList = new ArrayList<>();
     private Map<Integer, PointSourceAuthorVO> pointSourceAuthorMap = new HashMap<>();
 
+    private List<PointSourceAuthorVO> pointSourceAuthorListAll = new ArrayList<>();
+
     private List<PointSourceVO> pointSourceList = new ArrayList<>();
     private Map<Integer, PointSourceVO> pointSourceMap = new HashMap<>();
 

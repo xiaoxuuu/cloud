@@ -50,6 +50,16 @@ public class PointScheduled {
         updatePointSourceList();
         // 点位
         updatePointList();
+        // 来源作者 - 使用中
+        updatePointSourceAuthorListUsed();
+    }
+
+    private void updatePointSourceAuthorListUsed() {
+
+        Set<Integer> authorIdSet = pointManager.getPointList().stream().map(PointFullVO::getAuthorIdSet).flatMap(Collection::stream).collect(Collectors.toSet());
+        List<PointSourceAuthorVO> list = pointManager.getPointSourceAuthorList().stream().filter(k -> authorIdSet.contains(k.getId())).toList();
+        pointManager.setPointSourceAuthorListAll(list);
+        log.info("查询到 {} 条使用中来源作者数据...", list.size());
     }
 
     public void updatePointTagList() {

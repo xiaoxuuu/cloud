@@ -28,10 +28,18 @@ public class PointSourceAuthorController {
     @Resource
     private PointManager pointManager;
 
-    @Operation(summary = "全部作者列表", description = "全部作者列表")
+    @Operation(summary = "使用中作者列表", description = "使用中作者列表")
     @PostMapping("/list")
     public @ResponseBody
     List<PointSourceAuthorVO> pointSourceAuthorList() {
+
+        return pointManager.getPointSourceAuthorListAll();
+    }
+
+    @Operation(summary = "全部作者列表", description = "全部作者列表")
+    @PostMapping("/list_all")
+    public @ResponseBody
+    List<PointSourceAuthorVO> pointSourceAuthorListAll() {
 
         return pointManager.getPointSourceAuthorList();
     }
