@@ -57,7 +57,10 @@ public class PointScheduled {
     private void updatePointSourceAuthorListUsed() {
 
         Set<Integer> authorIdSet = pointManager.getPointList().stream().map(PointFullVO::getAuthorIdSet).flatMap(Collection::stream).collect(Collectors.toSet());
-        List<PointSourceAuthorVO> list = pointManager.getPointSourceAuthorList().stream().filter(k -> authorIdSet.contains(k.getId())).toList();
+        List<PointSourceAuthorVO> list = pointManager.getPointSourceAuthorList().stream()
+                .filter(k -> authorIdSet.contains(k.getId()))
+                .sorted(Comparator.comparing(PointSourceAuthorVO::getId))
+                .toList();
         pointManager.setPointSourceAuthorListAll(list);
         log.info("查询到 {} 条使用中来源作者数据...", list.size());
     }
@@ -131,6 +134,7 @@ public class PointScheduled {
                 .eq(PointSource::getState, StateEnum.ENABLE.getCode())
                 .list()
                 .stream().map(this::toPointSourceVO)
+                .sorted(Comparator.comparing(PointSourceVO::getId))
                 .toList();
         Map<Integer, PointSourceVO> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSourceVO::getId, a -> a));
         pointManager.setPointSourceList(pointSourceList);
@@ -221,6 +225,7 @@ public class PointScheduled {
                 .list()
                 .stream()
                 .map(this::toPointSourceAuthorVO)
+                .sorted(Comparator.comparing(PointSourceAuthorVO::getId))
                 .toList();
         Map<Integer, PointSourceAuthorVO> authorMap = list.stream().collect(Collectors.toMap(PointSourceAuthorVO::getId, a -> a));
         pointManager.setPointSourceAuthorList(list);
