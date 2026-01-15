@@ -17,7 +17,7 @@ import cc.xiaoxu.cloud.core.utils.math.MathUtils;
 import cc.xiaoxu.cloud.my.entity.PointMap;
 import cc.xiaoxu.cloud.my.manager.AmapManager;
 import cc.xiaoxu.cloud.my.manager.PointDataManager;
-import cc.xiaoxu.cloud.my.manager.PointManager;
+import cc.xiaoxu.cloud.my.manager.CacheManager;
 import cc.xiaoxu.cloud.my.service.PointMapService;
 import cc.xiaoxu.cloud.my.utils.TagUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,7 +47,7 @@ public class AmapController {
     private AmapManager amapManager;
 
     @Resource
-    private PointManager pointManager;
+    private CacheManager cacheManager;
 
     @Resource
     private PointMapService pointMapService;
@@ -119,7 +119,7 @@ public class AmapController {
     private List<PointMapSearchVO> getExistsData(PointMapSearchDTO dto) {
         PointSearchDTO pointSearchDTO = new PointSearchDTO();
         pointSearchDTO.setPointName(dto.getKeywords());
-        return pointManager.getPointList()
+        return cacheManager.getPointList()
                 .stream()
                 .filter(v -> v.getPointShortName().contains(dto.getKeywords()) || v.getPointFullName().contains(dto.getKeywords()))
                 .map(this::pointToPointMapSearchVO)

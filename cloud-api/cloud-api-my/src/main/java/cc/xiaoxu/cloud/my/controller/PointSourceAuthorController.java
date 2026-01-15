@@ -2,9 +2,9 @@ package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.PointSourceAuthorAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.vo.PointSourceAuthorVO;
-import cc.xiaoxu.cloud.my.manager.PointManager;
+import cc.xiaoxu.cloud.my.manager.CacheManager;
 import cc.xiaoxu.cloud.my.service.PointSourceAuthorService;
-import cc.xiaoxu.cloud.my.task.scheduled.PointScheduled;
+import cc.xiaoxu.cloud.my.task.scheduled.CacheScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -23,17 +23,17 @@ public class PointSourceAuthorController {
     private PointSourceAuthorService pointSourceAuthorService;
 
     @Resource
-    private PointScheduled pointScheduled;
+    private CacheScheduled cacheScheduled;
 
     @Resource
-    private PointManager pointManager;
+    private CacheManager cacheManager;
 
     @Operation(summary = "使用中作者列表", description = "使用中作者列表")
     @PostMapping("/list")
     public @ResponseBody
     List<PointSourceAuthorVO> pointSourceAuthorList() {
 
-        return pointManager.getPointSourceAuthorListAll();
+        return cacheManager.getPointSourceAuthorListAll();
     }
 
     @Operation(summary = "全部作者列表", description = "全部作者列表")
@@ -41,7 +41,7 @@ public class PointSourceAuthorController {
     public @ResponseBody
     List<PointSourceAuthorVO> pointSourceAuthorListAll() {
 
-        return pointManager.getPointSourceAuthorList();
+        return cacheManager.getPointSourceAuthorList();
     }
 
     @Operation(summary = "新增或编辑作者", description = "新增或编辑作者")
@@ -50,6 +50,6 @@ public class PointSourceAuthorController {
     void addOrEditAuthor(@RequestBody PointSourceAuthorAddOrEditDTO dto) {
 
         pointSourceAuthorService.addOrEdit(dto);
-        pointScheduled.refreshData();
+        cacheScheduled.refreshData();
     }
 }

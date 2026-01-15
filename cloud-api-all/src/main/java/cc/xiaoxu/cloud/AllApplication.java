@@ -1,7 +1,7 @@
 package cc.xiaoxu.cloud;
 
 import cc.xiaoxu.cloud.core.utils.GetStartInfoUtils;
-import cc.xiaoxu.cloud.my.task.scheduled.PointScheduled;
+import cc.xiaoxu.cloud.my.task.scheduled.CacheScheduled;
 import cc.xiaoxu.cloud.my.task.scheduled.WebsiteCheckScheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -23,8 +23,8 @@ public class AllApplication {
         ConfigurableApplicationContext ctx = SpringApplication.run(AllApplication.class, args);
         WebsiteCheckScheduled websiteCheckScheduled = ctx.getBean(WebsiteCheckScheduled.class);
         websiteCheckScheduled.refreshData();
-        PointScheduled pointScheduled = ctx.getBean(PointScheduled.class);
-        pointScheduled.refreshData();
+        CacheScheduled cacheScheduled = ctx.getBean(CacheScheduled.class);
+        cacheScheduled.refreshData();
         log.error(GetStartInfoUtils.getLog(ctx));
     }
 }

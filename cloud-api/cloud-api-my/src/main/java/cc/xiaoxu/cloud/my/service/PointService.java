@@ -10,7 +10,7 @@ import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.core.utils.text.MD5Utils;
 import cc.xiaoxu.cloud.my.dao.PointMapper;
 import cc.xiaoxu.cloud.my.entity.Point;
-import cc.xiaoxu.cloud.my.manager.PointManager;
+import cc.xiaoxu.cloud.my.manager.CacheManager;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     private final PointSourceService pointSourceService;
     private final PointMapService pointMapService;
-    private final PointManager pointManager;
+    private final CacheManager cacheManager;
 
     @Transactional(rollbackFor = Exception.class)
     public void addOrEdit(PointAddOrEditDTO dto) {
@@ -86,7 +86,7 @@ public class PointService extends ServiceImpl<PointMapper, Point> {
 
     public PointFullVO get(PointGetDTO dto) {
 
-        PointFullVO vo = pointManager.getPointMapCode().get(dto.getCode());
+        PointFullVO vo = cacheManager.getPointMapCode().get(dto.getCode());
 
         if (null == vo) {
             throw new CustomException("未查询到数据");
