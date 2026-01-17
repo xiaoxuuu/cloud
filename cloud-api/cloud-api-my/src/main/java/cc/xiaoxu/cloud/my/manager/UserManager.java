@@ -27,6 +27,8 @@ public class UserManager {
             entity.setOpenId(openId);
             entity.setState(StateEnum.ENABLE.getCode());
             entity.setCreateTime(new Date());
+            cacheManager.getUserMap().put(openId, entity);
+            cacheManager.getUserList().add(entity);
             userService.save(entity);
             return entity;
         } catch (Exception e) {
