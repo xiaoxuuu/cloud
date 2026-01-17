@@ -15,20 +15,20 @@ import java.util.Date;
 public class UserManager {
 
     private final UserService userService;
-    private final CacheManager cacheManager;
+    private final DataCacheManager dataCacheManager;
 
     public User add(String openId){
 
         try {
-            if (cacheManager.getUserMap().containsKey(openId)) {
-                return cacheManager.getUserMap().get(openId);
+            if (dataCacheManager.getUserMap().containsKey(openId)) {
+                return dataCacheManager.getUserMap().get(openId);
             }
             User entity = new User();
             entity.setOpenId(openId);
             entity.setState(StateEnum.ENABLE.getCode());
             entity.setCreateTime(new Date());
-            cacheManager.getUserMap().put(openId, entity);
-            cacheManager.getUserList().add(entity);
+            dataCacheManager.getUserMap().put(openId, entity);
+            dataCacheManager.getUserList().add(entity);
             userService.save(entity);
             return entity;
         } catch (Exception e) {

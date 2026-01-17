@@ -2,9 +2,9 @@ package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.PointSourceAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.vo.PointSourceVO;
-import cc.xiaoxu.cloud.my.manager.CacheManager;
+import cc.xiaoxu.cloud.my.manager.DataCacheManager;
 import cc.xiaoxu.cloud.my.service.PointSourceService;
-import cc.xiaoxu.cloud.my.task.scheduled.CacheScheduled;
+import cc.xiaoxu.cloud.my.task.scheduled.DataCacheScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -23,17 +23,17 @@ public class PointSourceController {
     private PointSourceService pointSourceService;
 
     @Resource
-    private CacheScheduled cacheScheduled;
+    private DataCacheScheduled dataCacheScheduled;
 
     @Resource
-    private CacheManager cacheManager;
+    private DataCacheManager dataCacheManager;
 
     @Operation(summary = "全部来源列表", description = "全部来源列表")
     @PostMapping("/list")
     public @ResponseBody
     List<PointSourceVO> pointSourceList() {
 
-        return cacheManager.getPointSourceList();
+        return dataCacheManager.getPointSourceList();
     }
 
     @Operation(summary = "新增或编辑来源", description = "新增或编辑来源")
@@ -42,6 +42,6 @@ public class PointSourceController {
     void addOrEditSource(@RequestBody PointSourceAddOrEditDTO dto) {
 
         pointSourceService.addOrEdit(dto);
-        cacheScheduled.refreshData();
+        dataCacheScheduled.refreshData();
     }
 }

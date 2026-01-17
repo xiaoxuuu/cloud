@@ -2,9 +2,9 @@ package cc.xiaoxu.cloud.my.controller;
 
 import cc.xiaoxu.cloud.bean.dto.PointTagAddOrEditDTO;
 import cc.xiaoxu.cloud.bean.vo.PointTagVO;
-import cc.xiaoxu.cloud.my.manager.CacheManager;
+import cc.xiaoxu.cloud.my.manager.DataCacheManager;
 import cc.xiaoxu.cloud.my.service.PointTagService;
-import cc.xiaoxu.cloud.my.task.scheduled.CacheScheduled;
+import cc.xiaoxu.cloud.my.task.scheduled.DataCacheScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -23,17 +23,17 @@ public class PointTagController {
     private PointTagService pointTagService;
 
     @Resource
-    private CacheScheduled cacheScheduled;
+    private DataCacheScheduled dataCacheScheduled;
 
     @Resource
-    private CacheManager cacheManager;
+    private DataCacheManager dataCacheManager;
 
     @Operation(summary = "全部标签列表", description = "全部标签列表")
     @PostMapping("/list")
     public @ResponseBody
     List<PointTagVO> pointTagList() {
 
-        return cacheManager.getPointTagList();
+        return dataCacheManager.getPointTagList();
     }
 
     @Operation(summary = "新增或编辑标签", description = "新增或编辑标签")
@@ -42,6 +42,6 @@ public class PointTagController {
     void addOrEditTag(@RequestBody PointTagAddOrEditDTO dto) {
 
         pointTagService.addOrEdit(dto);
-        cacheScheduled.refreshData();
+        dataCacheScheduled.refreshData();
     }
 }

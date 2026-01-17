@@ -4,7 +4,7 @@ import cc.xiaoxu.cloud.bean.enums.StateEnum;
 import cc.xiaoxu.cloud.bean.vo.*;
 import cc.xiaoxu.cloud.core.utils.bean.BeanUtils;
 import cc.xiaoxu.cloud.my.entity.*;
-import cc.xiaoxu.cloud.my.manager.CacheManager;
+import cc.xiaoxu.cloud.my.manager.DataCacheManager;
 import cc.xiaoxu.cloud.my.service.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class CacheScheduled {
+public class DataCacheScheduled {
 
     @Resource
     private AreaService areaService;
@@ -35,7 +35,7 @@ public class CacheScheduled {
     private PointSourceAuthorService pointSourceAuthorService;
 
     @Resource
-    private CacheManager cacheManager;
+    private DataCacheManager dataCacheManager;
 
     @Resource
     private UserService userService;
@@ -61,12 +61,12 @@ public class CacheScheduled {
 
     private void updatePointSourceAuthorListUsed() {
 
-        Set<Integer> authorIdSet = cacheManager.getPointList().stream().map(PointFullVO::getAuthorIdSet).flatMap(Collection::stream).collect(Collectors.toSet());
-        List<PointSourceAuthorVO> list = cacheManager.getPointSourceAuthorList().stream()
+        Set<Integer> authorIdSet = dataCacheManager.getPointList().stream().map(PointFullVO::getAuthorIdSet).flatMap(Collection::stream).collect(Collectors.toSet());
+        List<PointSourceAuthorVO> list = dataCacheManager.getPointSourceAuthorList().stream()
                 .filter(k -> authorIdSet.contains(k.getId()))
                 .sorted(Comparator.comparing(PointSourceAuthorVO::getId))
                 .toList();
-        cacheManager.setPointSourceAuthorListAll(list);
+        dataCacheManager.setPointSourceAuthorListAll(list);
         log.info("查询到 {} 条使用中来源作者数据...", list.size());
     }
 
@@ -81,8 +81,8 @@ public class CacheScheduled {
                 .sorted(Comparator.comparing(PointTagVO::getSort))
                 .toList();
         Map<Integer, PointTagVO> areaMap = list.stream().collect(Collectors.toMap(PointTagVO::getId, a -> a));
-        cacheManager.setPointTagList(list);
-        cacheManager.setPointTagMap(areaMap);
+        dataCacheManager.setPointTagList(list);
+        dataCacheManager.setPointTagMap(areaMap);
         log.info("查询到 {} 条标签数据...", list.size());
     }
 
@@ -103,8 +103,8 @@ public class CacheScheduled {
                 .eq(Area::getState, StateEnum.ENABLE.getCode())
                 .list();
         Map<Integer, Area> areaMap = areaList.stream().collect(Collectors.toMap(a -> Integer.parseInt(a.getCode()), a -> a));
-        cacheManager.setAreaList(areaList);
-        cacheManager.setAreaMap(areaMap);
+        dataCacheManager.setAreaList(areaList);
+        dataCacheManager.setAreaMap(areaMap);
         log.info("查询到 {} 条地点数据...", areaList.size());
     }
 
@@ -121,14 +121,14 @@ public class CacheScheduled {
                 .map(this::toPointFullVO)
                 .toList();
         Map<String, PointFullVO> pointMapCode = pointList.stream().collect(Collectors.toMap(PointFullVO::getCode, a -> a));
-        cacheManager.setPointList(pointList);
-        cacheManager.setPointMapCode(pointMapCode);
+        dataCacheManager.setPointList(pointList);
+        dataCacheManager.setPointMapCode(pointMapCode);
 
         // 精简参数
         Map<String, PointShowVO> pointShowMapCode = pointList.stream()
                 .map(k -> (PointShowVO) BeanUtils.populate(k, PointShowVO.class))
                 .collect(Collectors.toMap(PointShowVO::getCode, a -> a));
-        cacheManager.setPointShowMapCode(pointShowMapCode);
+        dataCacheManager.setPointShowMapCode(pointShowMapCode);
         log.info("查询到 {} 条点位数据...", pointList.size());
     }
 
@@ -142,8 +142,8 @@ public class CacheScheduled {
                 .sorted(Comparator.comparing(PointSourceVO::getId))
                 .toList();
         Map<Integer, PointSourceVO> pointSourceMap = pointSourceList.stream().collect(Collectors.toMap(PointSourceVO::getId, a -> a));
-        cacheManager.setPointSourceList(pointSourceList);
-        cacheManager.setPointSourceMap(pointSourceMap);
+        dataCacheManager.setPointSourceList(pointSourceList);
+        dataCacheManager.setPointSourceMap(pointSourceMap);
         log.info("查询到 {} 条点位来源数据...", pointSourceList.size());
     }
 
@@ -155,7 +155,7 @@ public class CacheScheduled {
         // 来源
         if (StringUtils.isNotBlank(point.getSourceIdList())) {
             List<PointSourceVO> list = Arrays.stream(vo.getSourceIdList().split(","))
-                    .map(k -> cacheManager.getPointSourceMap().get(Integer.parseInt(k)))
+                    .map(k -> dataCacheManager.getPointSourceMap().get(Integer.parseInt(k)))
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparingInt(k -> k.getType().getSortingWeight() + k.getId()))
                     .toList();
@@ -171,7 +171,7 @@ public class CacheScheduled {
         // 标签
         if (StringUtils.isNotBlank(point.getTagIdList())) {
             List<PointTagVO> list = Arrays.stream(point.getTagIdList().split(","))
-                    .map(k -> cacheManager.getPointTagMap().get(Integer.parseInt(k)))
+                    .map(k -> dataCacheManager.getPointTagMap().get(Integer.parseInt(k)))
                     .filter(Objects::nonNull)
                     .sorted(Comparator.comparingInt(PointTagVO::getSort))
                     .toList();
@@ -204,7 +204,7 @@ public class CacheScheduled {
     private PointSourceShowVO toPointSourceShowVO(PointSourceVO pointSourceVO) {
 
         PointSourceShowVO vo = new PointSourceShowVO();
-        PointSourceAuthorVO pointSourceAuthorVO = cacheManager.getPointSourceAuthorMap().get(pointSourceVO.getAuthorId());
+        PointSourceAuthorVO pointSourceAuthorVO = dataCacheManager.getPointSourceAuthorMap().get(pointSourceVO.getAuthorId());
         if (pointSourceAuthorVO != null) {
             vo.setAuthorName(pointSourceAuthorVO.getName());
         }
@@ -233,8 +233,8 @@ public class CacheScheduled {
                 .sorted(Comparator.comparing(PointSourceAuthorVO::getId))
                 .toList();
         Map<Integer, PointSourceAuthorVO> authorMap = list.stream().collect(Collectors.toMap(PointSourceAuthorVO::getId, a -> a));
-        cacheManager.setPointSourceAuthorList(list);
-        cacheManager.setPointSourceAuthorMap(authorMap);
+        dataCacheManager.setPointSourceAuthorList(list);
+        dataCacheManager.setPointSourceAuthorMap(authorMap);
         log.info("查询到 {} 条来源作者数据...", list.size());
     }
 
@@ -267,8 +267,8 @@ public class CacheScheduled {
                 .eq(User::getState, StateEnum.ENABLE.getCode())
                 .list();
         Map<String, User> userMap = list.stream().collect(Collectors.toMap(User::getOpenId, a -> a));
-        cacheManager.setUserList(list);
-        cacheManager.setUserMap(userMap);
+        dataCacheManager.setUserList(list);
+        dataCacheManager.setUserMap(userMap);
         log.info("查询到 {} 条用户数据...", list.size());
     }
 }

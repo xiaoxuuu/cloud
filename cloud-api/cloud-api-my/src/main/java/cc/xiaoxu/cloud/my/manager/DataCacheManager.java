@@ -15,7 +15,7 @@ import java.util.Map;
 @Slf4j
 @Data
 @Service
-public class CacheManager {
+public class DataCacheManager {
 
     private List<Area> areaList = new ArrayList<>();
     private Map<Integer, Area> areaMap = new HashMap<>();

@@ -10,10 +10,10 @@ import cc.xiaoxu.cloud.bean.vo.PointSimpleVO;
 import cc.xiaoxu.cloud.bean.vo.PointTypeVO;
 import cc.xiaoxu.cloud.core.exception.CustomException;
 import cc.xiaoxu.cloud.core.utils.bean.JsonUtils;
-import cc.xiaoxu.cloud.my.manager.CacheManager;
+import cc.xiaoxu.cloud.my.manager.DataCacheManager;
 import cc.xiaoxu.cloud.my.manager.PointSearchManager;
 import cc.xiaoxu.cloud.my.service.PointService;
-import cc.xiaoxu.cloud.my.task.scheduled.CacheScheduled;
+import cc.xiaoxu.cloud.my.task.scheduled.DataCacheScheduled;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
@@ -33,8 +33,8 @@ public class PointController {
 
     private final PointService pointService;
     private final PointSearchManager pointSearchManager;
-    private final CacheScheduled cacheScheduled;
-    private final CacheManager cacheManager;
+    private final DataCacheScheduled dataCacheScheduled;
+    private final DataCacheManager dataCacheManager;
 
     @Operation(summary = "新增或编辑", description = "新增或编辑地点")
     @PostMapping("/add_or_edit")
@@ -42,7 +42,7 @@ public class PointController {
     void addOrEdit(@RequestBody PointAddOrEditDTO dto) {
 
         pointService.addOrEdit(dto);
-        cacheScheduled.refreshData();
+        dataCacheScheduled.refreshData();
     }
 
     @Operation(summary = "搜索", description = "搜索地点列表")
@@ -70,7 +70,7 @@ public class PointController {
     public @ResponseBody
     PointShowVO get(@RequestBody PointGetDTO dto) {
 
-        PointShowVO vo = cacheManager.getPointShowMapCode().get(dto.getCode());
+        PointShowVO vo = dataCacheManager.getPointShowMapCode().get(dto.getCode());
         if (null == vo) {
             throw new CustomException("未查询到数据");
         }
@@ -82,7 +82,7 @@ public class PointController {
     public @ResponseBody
     PointFullVO getFull(@RequestBody PointGetDTO dto) {
 
-        PointFullVO vo = cacheManager.getPointMapCode().get(dto.getCode());
+        PointFullVO vo = dataCacheManager.getPointMapCode().get(dto.getCode());
         if (null == vo) {
             throw new CustomException("未查询到数据");
         }

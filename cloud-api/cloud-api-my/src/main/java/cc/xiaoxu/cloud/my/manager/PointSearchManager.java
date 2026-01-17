@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 public class PointSearchManager {
 
     private final ConstantService constantService;
-    private final CacheManager cacheManager;
+    private final DataCacheManager dataCacheManager;
 
     public List<? extends PointSimpleVO> search(PointSearchDTO dto) {
 
@@ -43,7 +43,7 @@ public class PointSearchManager {
                 ? dto.getOperatingStatusSet()
                 : Set.of(OperatingStatusEnum.OPEN, OperatingStatusEnum.ING);
 
-        List<PointFullVO> pointFilterList = cacheManager.getPointList()
+        List<PointFullVO> pointFilterList = dataCacheManager.getPointList()
                 .stream()
                 // 模糊匹配
                 .filter(k -> pointNameLike(dto, k))
@@ -58,7 +58,7 @@ public class PointSearchManager {
             pointStream = pointFilterList.stream().map(this::tran);
         } else {
             // 区县
-            Map<Integer, Area> areaMap = cacheManager.getAreaMap();
+            Map<Integer, Area> areaMap = dataCacheManager.getAreaMap();
             pointStream = pointFilterList.stream()
                     // 转换区县数据
                     .map(k -> {
