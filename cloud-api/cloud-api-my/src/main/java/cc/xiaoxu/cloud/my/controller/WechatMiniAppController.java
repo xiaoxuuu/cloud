@@ -2,7 +2,8 @@ package cc.xiaoxu.cloud.my.controller;
 
 import ai.djl.util.JsonUtils;
 import cc.xiaoxu.cloud.core.exception.CustomException;
-import cc.xiaoxu.cloud.my.service.ConstantService;
+import cc.xiaoxu.cloud.my.entity.User;
+import cc.xiaoxu.cloud.my.manager.UserManager;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
@@ -19,10 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @RestController
 @AllArgsConstructor
 @Slf4j
@@ -31,7 +28,7 @@ import java.util.stream.Collectors;
 public class WechatMiniAppController {
 
     private final WxMaService wxMaService;
-    private final ConstantService constantService;
+    private final UserManager userManager;
 
     @Operation(summary = "登陆", description = "静默登陆")
     @GetMapping("/login/{code}")
@@ -46,17 +43,11 @@ public class WechatMiniAppController {
 
         try {
             WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
-            log.info(session.getSessionKey());
-            log.info(session.getOpenid());
-            String value = constantService.getValue("admin");
-            if (StringUtils.isBlank(value)) {
+            User user = userManager.add(session.getOpenid());
+            if (null == user) {
                 return null;
             }
-            Set<String> adminOpenIdSet = Arrays.stream(value.split(",")).collect(Collectors.toSet());
-            if (adminOpenIdSet.contains(session.getOpenid())) {
-                return "ADMIN";
-            }
-            return null;
+            return user.getUserRole();
         } catch (WxErrorException e) {
             log.error(e.getMessage(), e);
             return e.toString();

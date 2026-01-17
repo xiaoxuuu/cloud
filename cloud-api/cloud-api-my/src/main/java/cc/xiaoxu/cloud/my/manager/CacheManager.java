@@ -2,6 +2,7 @@ package cc.xiaoxu.cloud.my.manager;
 
 import cc.xiaoxu.cloud.bean.vo.*;
 import cc.xiaoxu.cloud.my.entity.Area;
+import cc.xiaoxu.cloud.my.entity.User;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,4 +34,7 @@ public class CacheManager {
     private List<PointFullVO> pointList = new ArrayList<>();
     private Map<String, PointFullVO> pointMapCode = new HashMap<>();
     private Map<String, PointShowVO> pointShowMapCode = new HashMap<>();
+
+    private List<User> userList = new ArrayList<>();
+    private Map<String, User> userMap = new HashMap<>();
 }

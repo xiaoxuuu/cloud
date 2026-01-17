@@ -37,6 +37,9 @@ public class CacheScheduled {
     @Resource
     private CacheManager cacheManager;
 
+    @Resource
+    private UserService userService;
+
     @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
 
@@ -52,6 +55,8 @@ public class CacheScheduled {
         updatePointList();
         // 来源作者 - 使用中
         updatePointSourceAuthorListUsed();
+        // 用户
+        updateUserList();
     }
 
     private void updatePointSourceAuthorListUsed() {
@@ -253,5 +258,17 @@ public class CacheScheduled {
         vo.setTitle(entity.getTitle());
         vo.setUrl(entity.getUrl());
         return vo;
+    }
+
+    public void updateUserList() {
+
+        List<User> list = userService.lambdaQuery()
+                // 无效数据排除
+                .eq(User::getState, StateEnum.ENABLE.getCode())
+                .list();
+        Map<String, User> userMap = list.stream().collect(Collectors.toMap(User::getOpenId, a -> a));
+        cacheManager.setUserList(list);
+        cacheManager.setUserMap(userMap);
+        log.info("查询到 {} 条用户数据...", list.size());
     }
 }
