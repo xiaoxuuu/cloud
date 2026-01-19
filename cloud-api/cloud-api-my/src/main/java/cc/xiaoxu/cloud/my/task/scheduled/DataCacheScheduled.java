@@ -131,7 +131,7 @@ public class DataCacheScheduled {
             String[] lo = area.getLocation().split(",");
             double distance = calculateDistance(Double.parseDouble(vo.getLongitude()), Double.parseDouble(vo.getLatitude()),
                     Double.parseDouble(lo[1]), Double.parseDouble(lo[0]));
-            vo.setDistance(distance);
+            vo.setDistanceToDistrict(distance);
         }
 
         Map<String, PointFullVO> pointMapCode = pointList.stream().collect(Collectors.toMap(PointFullVO::getCode, a -> a));

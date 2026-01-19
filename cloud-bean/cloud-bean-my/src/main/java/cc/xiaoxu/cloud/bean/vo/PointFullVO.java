@@ -58,5 +58,5 @@ public class PointFullVO extends PointShowVO {
     private String searchValue;
 
     @Schema(description = "距离所在区县距离，单位米")
-    private double distance;
+    private double distanceToDistrict;
 }
