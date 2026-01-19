@@ -74,7 +74,7 @@ public class PointSearchManager {
                     .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName, Collectors.collectingAndThen(
                             Collectors.toList(),
                             list -> list.stream()
-                                    .sorted(Comparator.comparing(PointSimpleVO::getSort))
+                                    .sorted(Comparator.comparing(PointSimpleVO::getSort, Comparator.naturalOrder()))
                                     .toList()
                     )))
                     .values()

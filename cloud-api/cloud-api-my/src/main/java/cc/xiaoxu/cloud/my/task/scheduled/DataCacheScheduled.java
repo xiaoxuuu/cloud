@@ -129,7 +129,7 @@ public class DataCacheScheduled {
                 continue;
             }
             String[] lo = area.getLocation().split(",");
-            double distance = calculateDistance(Double.parseDouble(vo.getLongitude()), Double.parseDouble(vo.getLatitude()),
+            double distance = calculateDistance( Double.parseDouble(vo.getLatitude()),Double.parseDouble(vo.getLongitude()),
                     Double.parseDouble(lo[1]), Double.parseDouble(lo[0]));
             vo.setDistanceToDistrict((int) distance);
         }

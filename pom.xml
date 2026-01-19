@@ -78,8 +78,8 @@
         <env.knife4j.password>0</env.knife4j.password>
 
         <!-- JVM 设置 -->
-        <env.jvm.xms>-Xms256m</env.jvm.xms>
-        <env.jvm.xmx>-Xmx256m</env.jvm.xmx>
+        <env.jvm.xms>-Xms1024m</env.jvm.xms>
+        <env.jvm.xmx>-Xmx1024m</env.jvm.xmx>
 
         <!-- nacos -->
         <env.nacos.server>127.0.0.1:8848</env.nacos.server>
