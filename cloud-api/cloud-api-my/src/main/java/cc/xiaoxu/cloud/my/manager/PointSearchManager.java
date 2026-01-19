@@ -71,7 +71,12 @@ public class PointSearchManager {
                     })
                     .filter(Objects::nonNull)
                     //分组，只保留一条
-                    .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName))
+                    .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName, Collectors.collectingAndThen(
+                            Collectors.toList(),
+                            list -> list.stream()
+                                    .sorted(Comparator.comparing(PointSimpleVO::getSort))
+                                    .toList()
+                    )))
                     .values()
                     .stream()
                     .map(k -> {
@@ -97,6 +102,7 @@ public class PointSearchManager {
         vo.setPointType(PointTypeEnum.DISTRICT);
         vo.setLongitude(pointTemp.getLongitude());
         vo.setLatitude(pointTemp.getLatitude());
+        vo.setSort(pointTemp.getDistanceToDistrict());
         return vo;
     }
 
