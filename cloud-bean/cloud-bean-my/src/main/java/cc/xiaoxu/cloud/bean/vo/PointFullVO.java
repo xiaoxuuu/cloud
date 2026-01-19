@@ -56,4 +56,7 @@ public class PointFullVO extends PointShowVO {
 
     @Schema(description = "模糊匹配字段")
     private String searchValue;
+
+    @Schema(description = "距离所在区县距离，单位米")
+    private double distance;
 }

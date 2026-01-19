@@ -120,6 +120,20 @@ public class DataCacheScheduled {
                 .stream()
                 .map(this::toPointFullVO)
                 .toList();
+
+        // 区县数据
+        Map<Integer, Area> areaMap = dataCacheManager.getAreaMap();
+        for (PointFullVO vo : pointList) {
+            Area area = areaMap.get(vo.getAddressCode());
+            if (area == null || area.getLocation()==null || !area.getLocation().contains(",")) {
+                continue;
+            }
+            String[] lo = area.getLocation().split(",");
+            double distance = calculateDistance(Double.parseDouble(vo.getLongitude()), Double.parseDouble(vo.getLatitude()),
+                    Double.parseDouble(lo[1]), Double.parseDouble(lo[0]));
+            vo.setDistance(distance);
+        }
+
         Map<String, PointFullVO> pointMapCode = pointList.stream().collect(Collectors.toMap(PointFullVO::getCode, a -> a));
         dataCacheManager.setPointList(pointList);
         dataCacheManager.setPointMapCode(pointMapCode);
@@ -130,6 +144,28 @@ public class DataCacheScheduled {
                 .collect(Collectors.toMap(PointShowVO::getCode, a -> a));
         dataCacheManager.setPointShowMapCode(pointShowMapCode);
         log.info("查询到 {} 条点位数据...", pointList.size());
+    }
+
+    /**
+     * 计算两个经纬度点之间的距离（单位：公里）
+     * 使用 Haversine 公式
+     *
+     * @param lat1 点1纬度
+     * @param lon1 点1经度
+     * @param lat2 点2纬度
+     * @param lon2 点2经度
+     * @return 距离（公里）
+     */
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final double EARTH_RADIUS = 6371; // 地球半径（公里）
+
+        double latDistance = Math.toRadians(lat2 - lat1);
+        double lonDistance = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return EARTH_RADIUS * c;
     }
 
     public void updatePointSourceList() {
@@ -189,9 +225,26 @@ public class DataCacheScheduled {
             vo.setTelList(Collections.emptyList());
         }
 
+
+
         // 模糊匹配字段
         List<String> searchValueList = new ArrayList<>();
         searchValueList.add(vo.getPointFullName());
+
+        // 省市区
+        Area areaProvince = dataCacheManager.getAreaMap().get(replaceDigit(vo.getAddressCode(), 3, 4, 0));
+        if (null != areaProvince) {
+            searchValueList.add(areaProvince.getName());
+        }
+        Area areaCity = dataCacheManager.getAreaMap().get(replaceDigit(vo.getAddressCode(), 5, 2, 0));
+        if (null != areaCity) {
+            searchValueList.add(areaCity.getName());
+        }
+        Area area = dataCacheManager.getAreaMap().get(vo.getAddressCode());
+        if (null != area) {
+            searchValueList.add(area.getName());
+        }
+
         searchValueList.add(vo.getAddress());
         searchValueList.add(vo.getDescribe());
         searchValueList.addAll(vo.getTagList().stream().map(PointTagShowVO::getTagName).toList());
@@ -199,6 +252,42 @@ public class DataCacheScheduled {
         searchValueList.addAll(vo.getSourceList().stream().map(PointSourceShowVO::getAuthorName).toList());
         vo.setSearchValue(String.join(",", searchValueList));
         return vo;
+    }
+
+    public static void main(String[] args) {
+        long originalNum = 510101L;
+        // 替换第5、6位（startPos=5，replaceLen=2）为0
+        System.out.println("替换后数字：" + replaceDigit(originalNum, 3, 4, 0)); // 输出：510100
+        System.out.println("替换后数字：" + replaceDigit(originalNum, 5, 2, 0)); // 输出：510100
+    }
+
+    /**
+     * 替换数字指定位置的数字为指定值
+     * @param originalNum 原始数字
+     * @param startPos 要替换的起始位置（从1开始数，比如第5位传5）
+     * @param replaceLen 替换的位数
+     * @param replaceNum 替换的数字（如00对应传0）
+     * @return 替换后的数字
+     */
+    public static int replaceDigit(long originalNum, int startPos, int replaceLen, long replaceNum) {
+        // 转字符串
+        String numStr = String.valueOf(originalNum);
+        // 校验起始位置合法性（startPos从1开始，对应索引startPos-1）
+        if (startPos < 1 || startPos + replaceLen - 1 > numStr.length()) {
+            throw new IllegalArgumentException("替换位置超出数字长度");
+        }
+        // 计算起始索引（位置转索引：pos-1）
+        int startIdx = startPos - 1;
+        // 生成替换的字符串（如replaceNum=0，replaceLen=2 → "00"）
+        String replaceStr = String.format("%0" + replaceLen + "d", replaceNum);
+
+        // 执行替换
+        String replacedStr = numStr.substring(0, startIdx)
+                + replaceStr
+                + numStr.substring(startIdx + replaceLen);
+
+        // 转回数字
+        return Integer.parseInt(replacedStr);
     }
 
     private PointSourceShowVO toPointSourceShowVO(PointSourceVO pointSourceVO) {
