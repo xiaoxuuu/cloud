@@ -43,7 +43,7 @@ public class WebsiteCheckScheduled {
     @Resource
     private SearchManager searchManager;
 
-    @Scheduled(cron = "${app.config.refresh-data}")
+//    @Scheduled(cron = "${app.config.refresh-data}")
     public void refreshData() {
 
         refreshIcon();
