@@ -106,5 +106,9 @@ mvn -DsendCredentialsOverHttp=true -Dmaven.test.skip=true clean install -T 12 -P
 docker pull xxx
 docker run -itd xxx
 
+# 腾讯云
 cd /data/docker/ && sh updateV2.sh -r cloud-api-all && docker logs -f cloud-api-all
+
+# 阿里云
+cd /home/root/docker/ && bash update.sh -r api && docker logs -f api
 ```
