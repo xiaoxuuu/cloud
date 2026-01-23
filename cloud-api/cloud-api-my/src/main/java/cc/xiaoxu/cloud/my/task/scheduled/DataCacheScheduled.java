@@ -111,11 +111,11 @@ public class DataCacheScheduled {
     public void updatePointList() {
 
         List<PointFullVO> pointList = pointService.lambdaQuery()
-                // 异常数据排除
+                // 仅查询有效数据
                 .isNotNull(Point::getLongitude)
                 .isNotNull(Point::getLatitude)
-                // 无效数据排除
-                .ne(Point::getState, StateEnum.DELETE.getCode())
+                .notLike(Point::getRemark, "D")
+                .eq(Point::getState, StateEnum.ENABLE.getCode())
                 .list()
                 .stream()
                 .map(this::toPointFullVO)
