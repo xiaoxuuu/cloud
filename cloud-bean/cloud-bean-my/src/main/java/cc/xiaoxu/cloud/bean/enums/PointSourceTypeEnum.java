@@ -9,15 +9,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PointSourceTypeEnum implements EnumInterface<String> {
 
-    AUTHOR("AUTHOR", "作者", 10000),
+    RANK_NOODLE_CD_50("RANK_NOODLE_CD_50", "成都面馆50强", 100),
 
-    TIKTOK("TIKTOK", "抖音", 1000),
-    BILIBILI("BILIBILI", "bilibili", 1000),
-    RED_BOOK("RED_BOOK", "小红书", 1000),
+    TIKTOK("TIKTOK", "抖音", 2000),
+    BILIBILI("BILIBILI", "bilibili", 2000),
+    RED_BOOK("RED_BOOK", "小红书", 2000),
+
+    AUTHOR("AUTHOR", "作者", 3000),
+
+    INTERNET("INTERNET", "互联网", 10000),
 
 //    AMAP("AMAP", "高德", 100),
-    INTERNET("INTERNET", "互联网", 100),
-
 //    AI("AI", "ai", 10),
     ;
 
