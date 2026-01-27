@@ -16,6 +16,8 @@ public enum PointTypeEnum implements EnumInterface<String> {
 
     AGGREGATION("aggregation", "聚合点位"),
     DISTRICT("district", "区县"),
+    CITY("city", "市"),
+    PROVINCE("province", "省"),
     ;
 
     @EnumValue

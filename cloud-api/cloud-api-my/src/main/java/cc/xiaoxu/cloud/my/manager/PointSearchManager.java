@@ -31,10 +31,18 @@ public class PointSearchManager {
     private final ConstantService constantService;
     private final DataCacheManager dataCacheManager;
 
+    private enum LevelType {
+        DISTRICT,
+        CITY,
+        PROVINCE
+    }
+
     public List<? extends PointSimpleVO> search(PointSearchDTO dto) {
 
-        // 小于此数值的缩放，转为区县
+        // 小于此数值的缩放，转为区县、市、省
         double pointScaleToDistrict = Double.parseDouble(constantService.getValue("point_scale_to_district"));
+        double pointScaleToCity = Double.parseDouble(constantService.getValue("point_scale_to_city"));
+        double pointScaleToProvince = Double.parseDouble(constantService.getValue("point_scale_to_province"));
         // 点位最大展示数量
         int pointMaxNum = Integer.parseInt(constantService.getValue("point_max_num"));
 
@@ -53,39 +61,18 @@ public class PointSearchManager {
                 .filter(k -> CollectionUtils.isEmpty(dto.getAuthorIdSet()) || SetUtils.hasCommonElements(k.getAuthorIdSet(), dto.getAuthorIdSet()))
                 .toList();
         Stream<? extends PointSimpleVO> pointStream;
+
         if (Double.parseDouble(dto.getScale()) > pointScaleToDistrict || pointFilterList.size() < pointMaxNum) {
-            // 缩放达到一定程度 或 点位数量小于一定数量 按正常返回数据
             pointStream = pointFilterList.stream().map(this::tran);
-        } else {
-            // 区县
+        } else if (Double.parseDouble(dto.getScale()) > pointScaleToCity) {
             Map<Integer, Area> areaMap = dataCacheManager.getAreaMap();
-            pointStream = pointFilterList.stream()
-                    // 转换区县数据
-                    .map(k -> {
-                        Area area = areaMap.get(k.getAddressCode());
-                        if (null == area) {
-                            log.error("{}", k.getAddressCode());
-                            return null;
-                        }
-                        return buildDistrict(area, k);
-                    })
-                    .filter(Objects::nonNull)
-                    //分组，只保留一条
-                    .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName, Collectors.collectingAndThen(
-                            Collectors.toList(),
-                            list -> list.stream()
-                                    .sorted(Comparator.comparing(PointSimpleVO::getSort, Comparator.naturalOrder()))
-                                    .toList()
-                    )))
-                    .values()
-                    .stream()
-                    .map(k -> {
-                        PointSimpleVO pointSimpleVO = k.getFirst();
-                        String newName = pointSimpleVO.getPointShortName() + ": " + k.size() + " 个";
-                        pointSimpleVO.setPointShortName(newName);
-                        pointSimpleVO.setPointShortName(newName);
-                        return pointSimpleVO;
-                    });
+            pointStream = buildByLevel(pointFilterList, areaMap, LevelType.DISTRICT);
+        } else if (Double.parseDouble(dto.getScale()) > pointScaleToProvince) {
+            Map<Integer, Area> areaMap = dataCacheManager.getAreaMap();
+            pointStream = buildByLevel(pointFilterList, areaMap, LevelType.CITY);
+        } else {
+            Map<Integer, Area> areaMap = dataCacheManager.getAreaMap();
+            pointStream = buildByLevel(pointFilterList, areaMap, LevelType.PROVINCE);
         }
         return pointStream
                 .peek(k -> addDistance(dto, k))
@@ -94,16 +81,75 @@ public class PointSearchManager {
                 .toList();
     }
 
-    private PointSimpleVO buildDistrict(Area area, PointFullVO pointTemp) {
+    private Stream<PointSimpleVO> buildByLevel(List<PointFullVO> pointFilterList, Map<Integer, Area> areaMap, LevelType levelType) {
+
+        return pointFilterList.stream()
+                .map(k -> {
+                    Area area = areaMap.get(k.getAddressCode());
+                    if (null == area) {
+                        log.error("{}", k.getAddressCode());
+                        return null;
+                    }
+                    return buildByLevelType(area, k, levelType, areaMap);
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.groupingBy(PointSimpleVO::getPointShortName, Collectors.collectingAndThen(
+                        Collectors.toList(),
+                        list -> list.stream()
+                                .sorted(Comparator.comparing(PointSimpleVO::getSort, Comparator.naturalOrder()))
+                                .toList()
+                )))
+                .values()
+                .stream()
+                .map(k -> {
+                    PointSimpleVO pointSimpleVO = k.getFirst();
+                    String newName = pointSimpleVO.getPointShortName() + ": " + k.size() + " 个";
+                    pointSimpleVO.setPointShortName(newName);
+                    return pointSimpleVO;
+                });
+    }
+
+    private PointSimpleVO buildByLevelType(Area area, PointFullVO pointTemp, LevelType levelType, Map<Integer, Area> areaMap) {
 
         PointSimpleVO vo = new PointSimpleVO();
-        vo.setCode(area.getCode());
-        vo.setPointShortName(area.getName());
-        vo.setPointType(PointTypeEnum.DISTRICT);
+        String code = area.getCode();
+        String groupCode;
+        String name;
+        PointTypeEnum pointType;
+
+        switch (levelType) {
+            case CITY -> {
+                groupCode = code.substring(0, 4) + "00";
+                name = getAreaName(areaMap, groupCode, area.getName());
+                // TODO 暂时使用区县类型，后续可以增加市、省类型
+                pointType = PointTypeEnum.DISTRICT;
+            }
+            case PROVINCE -> {
+                groupCode = code.substring(0, 2) + "0000";
+                name = getAreaName(areaMap, groupCode, area.getName());
+                // TODO 暂时使用区县类型，后续可以增加市、省类型
+                pointType = PointTypeEnum.DISTRICT;
+            }
+            default -> {
+                groupCode = code;
+                name = area.getName();
+                pointType = PointTypeEnum.DISTRICT;
+            }
+        }
+
+        vo.setCode(groupCode);
+        vo.setPointShortName(name);
+        vo.setPointType(pointType);
         vo.setLongitude(pointTemp.getLongitude());
         vo.setLatitude(pointTemp.getLatitude());
         vo.setSort(pointTemp.getDistanceToDistrict());
         return vo;
+    }
+
+    private String getAreaName(Map<Integer, Area> areaMap, String code, String defaultName) {
+
+        Area area = areaMap.get(Integer.parseInt(code));
+        return area != null ? area.getName() : defaultName;
     }
 
     @NotNull
