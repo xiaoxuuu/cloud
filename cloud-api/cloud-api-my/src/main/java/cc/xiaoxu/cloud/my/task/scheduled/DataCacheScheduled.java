@@ -114,7 +114,6 @@ public class DataCacheScheduled {
                 // 仅查询有效数据
                 .isNotNull(Point::getLongitude)
                 .isNotNull(Point::getLatitude)
-                .notLike(Point::getRemark, "D")
                 .eq(Point::getState, StateEnum.ENABLE.getCode())
                 .list()
                 .stream()
