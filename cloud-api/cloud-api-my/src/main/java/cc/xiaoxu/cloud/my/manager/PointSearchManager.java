@@ -105,6 +105,7 @@ public class PointSearchManager {
                     PointSimpleVO pointSimpleVO = k.getFirst();
                     String newName = pointSimpleVO.getPointShortName() + ": " + k.size() + " 个";
                     pointSimpleVO.setPointShortName(newName);
+                    pointSimpleVO.setSort(k.size());
                     return pointSimpleVO;
                 });
     }
