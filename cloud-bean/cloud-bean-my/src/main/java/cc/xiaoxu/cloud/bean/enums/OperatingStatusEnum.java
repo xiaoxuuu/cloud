@@ -10,7 +10,7 @@ import lombok.Getter;
 public enum OperatingStatusEnum implements EnumInterface<String> {
 
     OPEN("OPEN", "营业", true),
-    PROCESSING("PROCESSING", "营业状态未知", true),
+    ING("ING", "营业状态未知", true),
     DISSENT("DISSENT", "有争议", true),
     CLOSE("CLOSE", "已关闭", true),
     BELOW_STANDARD("BELOW_STANDARD", "不合标准", false),
