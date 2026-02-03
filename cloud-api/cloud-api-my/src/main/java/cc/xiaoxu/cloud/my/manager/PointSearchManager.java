@@ -49,7 +49,7 @@ public class PointSearchManager {
         // 营业状态
         Set<OperatingStatusEnum> operatingStatusSet = CollectionUtils.isNotEmpty(dto.getOperatingStatusSet())
                 ? dto.getOperatingStatusSet()
-                : Set.of(OperatingStatusEnum.OPEN, OperatingStatusEnum.ING);
+                : Set.of(OperatingStatusEnum.OPEN, OperatingStatusEnum.PROCESSING);
 
         List<PointFullVO> pointFilterList = dataCacheManager.getPointList()
                 .stream()
